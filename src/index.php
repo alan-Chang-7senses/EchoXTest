@@ -1,45 +1,69 @@
 <?php
 
-$pdo;
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT_PROCESSOR', 'Processors');
 
-$id = filter_input(INPUT_GET, 'id');
-$key = 'id_'.$id;
+spl_autoload_register(function($className){
+    $file = __DIR__.DS.'classes'.DS.str_replace('\\', DS, $className.'.php');
+    if(file_exists($file)) require $file;
+});
 
-$memcache = new Memcache();
-$memcache->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
-//$memcache->delete($key);
-//exit;
-$result = $memcache->get($key);
+use Consts\ErrorCode;
+use Consts\Globals;
+use Consts\HTTPCode;
+use Exceptions\NormalException;
+use Helpers\LogHelper;
+use Holders\ResultData;
+
+$redirectURL = filter_input(INPUT_SERVER, 'REDIRECT_URL');
+$path = substr($redirectURL, -1) == '/' ? substr($redirectURL, 0 , -1) : $redirectURL;
+$class = ROOT_PROCESSOR.str_replace('/', '\\', $path);
+
+$GLOBALS[Globals::REDIRECT_URL] = $redirectURL;
+$GLOBALS[Globals::ROOT] = __DIR__.DS;
+
+session_start();
+//session_destroy();
+
+try{
+    
+    $reflectionClass = new ReflectionClass($class);
+    if(!$reflectionClass->isInstantiable()) throw new ReflectionException ('Class '.$class.' does not instantiable.');
+
+    $result = (new $class)->Process();
+    
+} catch (ReflectionException $ex){
+    
+    http_response_code(HTTPCode::NotFound);
+    $result = new ResultData(ErrorCode::Unknown, 'Unknown request or it does not exist');
+    LogHelper::Save($ex);
+    
+} catch (PDOException $ex){
+    
+    http_response_code(HTTPCode::BadRequest);
+    $result = new ResultData(ErrorCode::SQLError, 'Data access error');
+    LogHelper::Save($ex);
+    
+}catch (NormalException $ex){
+    
+    $result = new ResultData($ex->getCode(), $ex->getMessage());
+    $result->signOut = $ex->signOut;
+    
+    LogHelper::Save ($ex);
+    
+}catch (Exception $ex) {
+    
+    http_response_code(HTTPCode::BadRequest);
+    $result = new ResultData($ex->getCode(), $ex->getMessage());
+    LogHelper::Save($ex);
+    
+} catch (Throwable $ex){
+    
+    http_response_code(HTTPCode::InternalServerError);
+    $result = new ResultData(ErrorCode::Unknown, 'The system has encountered a situation it doesn\'t know how to handle.');
+    LogHelper::Save($ex);
+}
 
 header('Content-Type: application/json');
 
-if(!empty($result)){
-    
-    echo $result;
-    exit;
-}
-
-try{
-
-    $pdo = new PDO('mysql:dbname='. getenv('DB_NAME').';host='. getenv('DB_HOST').';port='. getenv('DB_PORT') , getenv('DB_USERNAME') , getenv('DB_PASSWORD') , [
-//        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET time_zone = \''.TIMEZONE.'\'' ,
-        PDO::ATTR_EMULATE_PREPARES => false
-    ]);
-    $pdo->exec('SET NAMES UTF8');
-
-} catch (Exception $ex) {
-
-    exit(json_encode([$ex->getMessage(), $ex->getTrace()]));
-}
-
-$statement = 'SELECT * FROM test WHERE Serial = :serial';
-
-$sth = $pdo->prepare($statement);
-$sth->execute(['serial' => $id]);
-
-//$rows = $sth->fetchAll(PDO::FETCH_OBJ);
-$row = $sth->fetch(PDO::FETCH_OBJ);
-
-$result = json_encode($row);
-echo $result;
-if(!empty($result)) $memcache->set ($key, $result);
+echo json_encode ($result, JSON_UNESCAPED_UNICODE);
