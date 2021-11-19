@@ -1,0 +1,40 @@
+## YAML Template.
+---
+version: '3.3'
+
+services:
+    api:
+        build:
+            context: .
+#            target: development
+#            target: production
+        image: koa_api
+#        image: asia.gcr.io/p2-stage/ali88_agent
+        container_name: KoaAPI
+        ports: 
+            - 37001:80
+        volumes: 
+            - ./src:/var/www/html
+        environment:
+            SYSENV: developement
+            DB_LABEL: KoaRead
+            DB_HOST: db
+            DB_PORT: 3306
+            DB_USERNAME: root
+            DB_PASSWORD: 1111
+            DB_NAME: koa_main
+            MEMCACHED_HOST: memcached
+            MEMCACHED_PORT: 11211
+    memcached:
+        image: memcached:1.6.9
+        container_name: KoaMemcached
+    db:
+        image: mariadb
+        container_name: KoaDatabase
+        ports:
+            - 37002:3306
+        volumes:
+            - ./data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 1111
+            
