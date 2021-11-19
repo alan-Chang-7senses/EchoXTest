@@ -8,8 +8,8 @@ RUN pecl channel-update pecl.php.net \
 RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-enable memcache
 COPY src/ /var/www/html/
-#RUN chmod 777 /var/www/html/logs/ \
-#    && chown www-data:www-data -R /var/www/html/logs/
+RUN chmod 777 /var/www/html/logs/ \
+    && chown www-data:www-data -R /var/www/html/logs/
 
 FROM base AS development
 COPY php.ini-development $PHP_INI_DIR/conf.d/php.ini
