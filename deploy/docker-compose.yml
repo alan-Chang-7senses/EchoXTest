@@ -17,7 +17,7 @@ services:
             - ./src:/var/www/html
         environment:
             SYSENV: developement
-            DB_LABEL: KoaRead
+            DB_LABEL: KoaMain
             DB_HOST: db
             DB_PORT: 3306
             DB_USERNAME: root
