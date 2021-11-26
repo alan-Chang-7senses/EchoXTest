@@ -63,6 +63,7 @@ class PDOAccessor {
         return $this->executeBind($statement, $bind);
     }
     
+
     public function AddAll(array $rows, bool $insert = true) : bool{
         
         $values = [];
@@ -96,6 +97,17 @@ class PDOAccessor {
         return $this->executeBind($statement, $bind);
     }
     
+    public function Delete() : bool {
+        
+        $where = new SQLWhereStatement($this->conditions);
+        
+        $statement = 'DELETE FROM '. $this->table.$where->statement;
+        if($this->limit !== null) $statement .= $this->limit;
+        
+        $this->LogExtra($statement, $where->bind);
+        return $this->executeBind($statement, $where->bind);
+    }
+    
     public function SelectExpr(string $expr): PDOAccessor{
         $this->selectExpr = $expr;
         return $this;
@@ -112,13 +124,20 @@ class PDOAccessor {
     }
     
     public function WhereEqual(string $column, string|int $value, string|null $bindName = null) : PDOAccessor{
-        $bindName = $bindName ?? $column;
-        return $this->bindCondition($column.' = :'.$bindName, [$bindName => $value]);
+        return $this->WhereCondition($column, '=', $value, $bindName);
     }
     
     public function WhereGreater(string $column, int $value, string|null $bindName = null) : PDOAccessor{
+        return $this->WhereCondition($column, '>', $value, $bindName);
+    }
+    
+    public function WhereLess(string $column, int $value, string|null $bindName = null) : PDOAccessor{
+        return $this->WhereCondition($column, '<', $value, $bindName);
+    }
+    
+    public function WhereCondition(string $column, string $operator , int|string $value, string|null $bindName = null) : PDOAccessor{
         $bindName = $bindName ?? $column;
-        return $this->bindCondition($column.' > :'.$bindName, [$bindName => $value]);
+        return $this->bindCondition($column.' '.$operator.' :'.$bindName, [$bindName => $value]);
     }
 
     public function WhereIn(string $column, array $values, string|null $bindName = null) : PDOAccessor{

@@ -7,8 +7,9 @@ namespace Consts;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class Session {
+class Sessions {
     
     const Signed = 'Signed';
     const UserInfo = 'User';
+    const UserID = 'UserID';
 }

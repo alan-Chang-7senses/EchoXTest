@@ -12,8 +12,11 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Exceptions\NormalException;
+use Handlers\SessionToDBHandler;
 use Helpers\LogHelper;
 use Holders\ResultData;
+
+session_set_save_handler(new SessionToDBHandler());
 
 $redirectURL = filter_input(INPUT_SERVER, 'REDIRECT_URL');
 $path = substr($redirectURL, -1) == '/' ? substr($redirectURL, 0 , -1) : $redirectURL;
@@ -22,10 +25,10 @@ $class = ROOT_PROCESSOR.str_replace('/', '\\', $path);
 $GLOBALS[Globals::REDIRECT_URL] = $redirectURL;
 $GLOBALS[Globals::ROOT] = __DIR__.DS;
 
-session_start();
-//session_destroy();
 
 try{
+    session_start();
+//    session_destroy();
     
     $reflectionClass = new ReflectionClass($class);
     if(!$reflectionClass->isInstantiable()) throw new ReflectionException ('Class '.$class.' does not instantiable.');
