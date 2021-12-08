@@ -25,10 +25,10 @@ $class = ROOT_PROCESSOR.str_replace('/', '\\', $path);
 $GLOBALS[Globals::REDIRECT_URL] = $redirectURL;
 $GLOBALS[Globals::ROOT] = __DIR__.DS;
 
+session_start();
+//session_destroy();
 
 try{
-    session_start();
-//    session_destroy();
     
     $reflectionClass = new ReflectionClass($class);
     if(!$reflectionClass->isInstantiable()) throw new ReflectionException ('Class '.$class.' does not instantiable.');

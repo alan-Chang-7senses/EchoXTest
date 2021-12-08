@@ -22,7 +22,7 @@ class SessionToDBHandler extends SessionHandler {
     
     public function read(string $id): string {
         
-        $row = $this->accessor->FromTable('Sessions')
+        $row = $this->accessor->ClearCondition()->FromTable('Sessions')
                 ->SelectExpr('SessionData')
                 ->WhereEqual('SessionID', $id)
                 ->Fetch();
@@ -42,6 +42,8 @@ class SessionToDBHandler extends SessionHandler {
             }
         }
         
+        $this->accessor->ClearCondition();
+        
         return $userID == 0 ? 
                 $this->accessor->FromTable('Sessions')->WhereEqual('SessionID', $userID)->Delete() : 
                 $this->accessor->FromTable('Sessions')->Add([
@@ -49,7 +51,7 @@ class SessionToDBHandler extends SessionHandler {
                     'SessionExpires' => $_SERVER['REQUEST_TIME'],
                     'SessionData' => $data,
                     'UserID' => $userID
-                ], false);
+                ], true);
     }
     
     public function destroy(string $id): bool {
@@ -58,6 +60,6 @@ class SessionToDBHandler extends SessionHandler {
     }
     
     public function gc(int $max_lifetime): int|bool {
-        return $this->accessor->FromTable('Sessions')->WhereLess('SessionExpires', $_SERVER['REQUEST_TIME'] - $max_lifetime)->Delete();
+        return $this->accessor->ClearCondition()->FromTable('Sessions')->WhereLess('SessionExpires', $_SERVER['REQUEST_TIME'] - $max_lifetime)->Delete();
     }
 }

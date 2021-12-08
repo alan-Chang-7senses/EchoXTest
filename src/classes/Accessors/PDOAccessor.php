@@ -55,10 +55,10 @@ class PDOAccessor {
         return $this->ph->$func($where->bind , $this->fetchStyle);
     }
     
-    public function Add(array $bind, bool $insert = true) : bool{
+    public function Add(array $bind, bool $replace = true) : bool{
         $columns = array_keys($bind);
         $values = array_map(function($val){ return ':'.$val; }, $columns);
-        $statement = ($insert ? 'INSERT' : 'REPLACE').' INTO '.$this->table.' ('. implode(',', $columns).') VALUES ('. implode(',', $values).')';
+        $statement = (!$replace ? 'INSERT' : 'REPLACE').' INTO '.$this->table.' ('. implode(',', $columns).') VALUES ('. implode(',', $values).')';
         $this->LogExtra($statement, $bind);
         return $this->executeBind($statement, $bind);
     }
