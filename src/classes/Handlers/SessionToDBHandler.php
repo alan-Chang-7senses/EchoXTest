@@ -45,7 +45,7 @@ class SessionToDBHandler extends SessionHandler {
         $this->accessor->ClearCondition();
         
         return $userID == 0 ? 
-                $this->accessor->FromTable('Sessions')->WhereEqual('SessionID', $userID)->Delete() : 
+                $this->accessor->FromTable('Sessions')->WhereEqual('SessionID', $id)->Delete() : 
                 $this->accessor->FromTable('Sessions')->Add([
                     'SessionID' => $id,
                     'SessionExpires' => $_SERVER['REQUEST_TIME'],

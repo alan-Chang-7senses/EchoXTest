@@ -39,7 +39,6 @@ class Verify extends BaseProcessor{
 
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $row->UserID;
-        $_SESSION[Sessions::UserInfo] = $row;
 
         unset($row->Password);
         

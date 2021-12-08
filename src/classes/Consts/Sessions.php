@@ -10,6 +10,5 @@ namespace Consts;
 class Sessions {
     
     const Signed = 'Signed';
-    const UserInfo = 'User';
-    const UserID = 'userID';
+    const UserID = 'UserID';
 }
