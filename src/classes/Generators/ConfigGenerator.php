@@ -25,17 +25,17 @@ class ConfigGenerator {
         
         $key = 'Config'.$property;
         $memcache = MemcacheAccessor::Instance();
-        $data = $memcache->get($key);
+        $value = $memcache->get($key);
         
-        if($data === false){
+        if($value === false){
             
             $row = (new PDOAccessor(getenv(EnvVar::DBLabel)))->FromTable('Configs')->WhereEqual('Name', $property)->Fetch();
             if(empty($row)) throw new Exception ('Config '.$property.' undefined', ErrorCode::ConfigError);
             
-            $memcache->set($key, json_encode($row));
-            $this->$property = $row;
+            $memcache->set($key, $row->Value);
+            $this->$property = $row->Value;
             
-        }else $this->$property = json_decode($data);
+        }else $this->$property = $value;
         
         return $this->$property;
     }

@@ -42,7 +42,7 @@ class Verify extends BaseProcessor{
 
         unset($row->Password);
         
-        $result = new ResultData(ErrorCode::Success, 'Login verification succeeded');
+        $result = new ResultData(ErrorCode::Success);
         $result->userInfo = $row;
         
         return $result;

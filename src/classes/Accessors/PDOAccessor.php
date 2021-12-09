@@ -118,6 +118,16 @@ class PDOAccessor {
         return $this;
     }
     
+    public function FromTableJoinUsing(string $tableA, string $tableB, string $joinType, string $usingColumn) : PDOAccessor{
+        $this->table = $tableA.' '.$joinType.' JOIN '.$tableB.' USING(`'.$usingColumn.'`)';
+        return $this;
+    }
+    
+    public function FromTableJoinOn(string $tableA, string $tableB, string $joinType, string $columnA, string $columnB) : PDOAccessor{
+        $this->table = $tableA.' AS a '.$joinType.' JOIN '.$tableB.' AS b ON a.`'.$columnA.'` = b.`'.$columnB.'`';
+        return $this;
+    }
+
     private function bindCondition(string $condition, array $bind) : PDOAccessor{
         $this->conditions[] = ['where' => $condition, 'bind' => $bind];
         return $this;
@@ -175,8 +185,8 @@ class PDOAccessor {
         return $this;
     }
     
-    public function Limit(int $offset, int $rowCount) : PDOAccessor{
-        $this->limit = ' LIMIT '.$offset.', '.$rowCount;
+    public function Limit(int $count, int|null $offset = null) : PDOAccessor{
+        $this->limit = ' LIMIT '.($offset === null ? $count : $offset.', '.$count);
         return $this;
     }
     
