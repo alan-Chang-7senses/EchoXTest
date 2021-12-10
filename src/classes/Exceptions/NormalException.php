@@ -13,8 +13,8 @@ use Throwable;
  */
 class NormalException extends Exception{
     
-    public bool $signOut = false;
-
+    const SignOut = 1000;
+    
     public function __construct(int $code = 0, array $bind = [], Throwable $previous = NULL) {
         
         $lang = new InfoHelper(Folders::Exception);

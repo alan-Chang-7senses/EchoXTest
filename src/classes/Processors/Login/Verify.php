@@ -10,6 +10,7 @@ use Exceptions\LoginException;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
+use stdClass;
 /**
  * Description of Login
  *
@@ -39,11 +40,17 @@ class Verify extends BaseProcessor{
 
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $row->UserID;
-
-        unset($row->Password);
+        
+        $userInfo = new stdClass();
+        $userInfo->userID = $row->UserID;
+        $userInfo->nickname = $row->Nickname;
+        $userInfo->level = $row->Level;
+        $userInfo->exp = $row->Exp;
+        $userInfo->vitality = $row->Vitality;
+        $userInfo->money = $row->Money;
         
         $result = new ResultData(ErrorCode::Success);
-        $result->userInfo = $row;
+        $result->userInfo = $userInfo;
         
         return $result;
     }
