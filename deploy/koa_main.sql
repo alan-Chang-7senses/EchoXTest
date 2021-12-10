@@ -131,7 +131,8 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 -- 正在傾印表格  koa_main.Configs 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
-	('AmountRoomPeopleMax', '8', '開房最大人數');
+	('AmountRoomPeopleMax', '8', '開房最大人數'),
+	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.DatabaseInfo 結構
