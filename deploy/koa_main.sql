@@ -30,24 +30,16 @@ CREATE TABLE IF NOT EXISTS `CharacterCounts` (
   PRIMARY KEY (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
 
--- 正在傾印表格  koa_main.CharacterCounts 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `CharacterCounts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CharacterCounts` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_main.CharacterHolder 結構
 CREATE TABLE IF NOT EXISTS `CharacterHolder` (
   `CharacterID` bigint(20) unsigned NOT NULL,
   `UserID` int(10) unsigned NOT NULL DEFAULT 0,
-  `Nickname` varchar(50) NOT NULL COMMENT '角色暱稱',
+  `Nickname` varchar(50) DEFAULT NULL COMMENT '角色暱稱',
   `SyncRate` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '同步率',
   PRIMARY KEY (`CharacterID`),
   UNIQUE KEY `CharacterID_UserID` (`CharacterID`,`UserID`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
-
--- 正在傾印表格  koa_main.CharacterHolder 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `CharacterHolder` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CharacterHolder` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.CharacterLevel 結構
 CREATE TABLE IF NOT EXISTS `CharacterLevel` (
@@ -58,10 +50,6 @@ CREATE TABLE IF NOT EXISTS `CharacterLevel` (
   `SlotNumber` bigint(20) unsigned NOT NULL DEFAULT 4 COMMENT '技能插槽數量',
   PRIMARY KEY (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
-
--- 正在傾印表格  koa_main.CharacterLevel 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `CharacterLevel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CharacterLevel` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.CharacterNFT 結構
 CREATE TABLE IF NOT EXISTS `CharacterNFT` (
@@ -80,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `CharacterNFT` (
   PRIMARY KEY (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
--- 正在傾印表格  koa_main.CharacterNFT 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_main.CharacterNFT 的資料：~38 rows (近似值)
 /*!40000 ALTER TABLE `CharacterNFT` DISABLE KEYS */;
 INSERT INTO `CharacterNFT` (`CharacterID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`) VALUES
 	(1010000000000001, 40, 37, 44, 36, 1, '110101701101027012030170', '110101701101047011020530', '110101701101027011010470', '110101701101037021030170', '110101701203017011010270', '110101703102017011010370'),
@@ -132,10 +120,6 @@ CREATE TABLE IF NOT EXISTS `CharacterSkill` (
   KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.CharacterSkill 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `CharacterSkill` DISABLE KEYS */;
-/*!40000 ALTER TABLE `CharacterSkill` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_main.Configs 結構
 CREATE TABLE IF NOT EXISTS `Configs` (
   `Name` varchar(255) NOT NULL,
@@ -178,10 +162,6 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   KEY `SessionExpires` (`SessionExpires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 正在傾印表格  koa_main.Sessions 的資料：~3 rows (近似值)
-/*!40000 ALTER TABLE `Sessions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Sessions` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
   `UserID` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -199,10 +179,10 @@ CREATE TABLE IF NOT EXISTS `Users` (
   UNIQUE KEY `Username` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_main.Users 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_main.Users 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `CreateTime`, `UpdateTime`) VALUES
-	(2, 1, 'zhiwei', 'Zhiwei', '$2y$10$YmrheBdMXp2mUcLCuHOu7e6u6tkik7C7qzTp1R1CcGLqU5eyqtAQ2', 1, 0, 0, 0, 0, 0);
+	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$YmrheBdMXp2mUcLCuHOu7e6u6tkik7C7qzTp1R1CcGLqU5eyqtAQ2', 1, 0, 0, 0, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
