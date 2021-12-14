@@ -1,11 +1,9 @@
 <?php
 namespace Games\Characters;
 
-use Games\Consts\NFTDNA;
-use Consts\ErrorCode;
-use Consts\Sessions;
-use Games\Exceptions\CharacterException;
 use Accessors\PDOAccessor;
+use Games\Consts\NFTDNA;
+use Games\Exceptions\CharacterException;
 use Games\Holders\CharacterPart;
 use stdClass;
 /**
