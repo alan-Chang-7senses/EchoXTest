@@ -1,6 +1,7 @@
 <?php
 namespace Holders;
 
+use stdClass;
 /**
  * Description of ResultData
  *
@@ -8,14 +9,12 @@ namespace Holders;
  */
 class ResultData {
     
-    public int|string $code;
-    public string $message;
-    public int $time;
-
+    public stdClass $error;
+    
     public function __construct(int|string $code, string $message = '') {
-        
-        $this->code = $code;
-        $this->message = $message;
-        $this->time = time();
+    
+        $this->error = new stdClass();
+        $this->error->code = $code;
+        $this->error->message = $message;
     }
 }
