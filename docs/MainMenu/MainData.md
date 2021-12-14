@@ -1,10 +1,7 @@
-[<< Back](../index.md)
-
-# 主畫面資料 /MainMenu/MainData/
-
+# 主介面 - 主要資料
 ## 介紹
 
-- 使用於取得主介面所需資料。
+- 使用於取得主介面的主要資料。
 - 需要完成登入驗證才可正常使用此 API。
 - 依據所提供參數 characterID 的值取得一個角色資料。
 - 若未提供參數 characterID，則依據資料庫中的資料順序取得一個角色資料。
@@ -25,7 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| characterID | int | 角色編號，16 碼 |
+| characterID | int | 角色編號（可不提供） |
 
 ## Response
 
@@ -35,8 +32,6 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| code | int | 狀態碼，0 表示成功，其餘詳見代碼對應 |
-| message | string | 狀態訊息，若成功則為空字串 |
 | time | int | 回應時間的 Unix Time |
 | name | string | 使用者暱稱 |
 | money | int | 金錢 |
@@ -86,12 +81,11 @@ Content Type: `application/json`
 
 ### Example
 
-#### 成功
-
 	{
-	    "code": 0,
-	    "message": "",
-	    "time": 1639463241,
+	    "error": {
+	        "code": 0,
+	        "message": ""
+	    },
 	    "name": "UserNickname",
 	    "money": 0,
 	    "energy": 0,
@@ -113,20 +107,3 @@ Content Type: `application/json`
 	        "hat": "110101"
 	    }
 	}
-
-#### 失敗
-
-	{
-	    "code": 2001,
-	    "message": "No character found",
-	    "time": 1639465537
-	}
-
-
-## Error Code
-
-| 錯誤碼 | 說明 |
-|:-:|:-:|
-| 2001 | 查無角色 |
-
-[<< Back](../index.md)
