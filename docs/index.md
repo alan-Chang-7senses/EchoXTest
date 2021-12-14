@@ -2,7 +2,7 @@
 
 ## 版本
 
-0.1.0
+0.2.0
 
 ## 介紹
 
@@ -10,8 +10,36 @@
 
 ## APIs
 
-- 登入驗證：[Login/Verify](Login/Verify.md)。
-- 主畫面資料：[MainMenu/MainData](MainMenu/MainData.md)。
+- [登入驗證](Login/Verify.md)。
+- 主畫面
+	- [主要資料](MainMenu/MainData.md)。
+	- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
+
+## Response
+
+Content Type: `application/json`
+
+### 回應格式
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| [error](#error) | object | 狀態碼及訊息 |
+| _`- other -`_| - | _`其它回傳資料，詳見個別的 API 說明`_ |
+
+#### <span id="error">error</span> 內容
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| code | int | 狀態碼，0 表示成功，其餘詳見 [Error Code](#errorCode) |
+| message | string | 狀態訊息，若成功則為空字串 |
+
+### Example
+
+	{
+	    "error": {
+		    "code": 1004,
+		    "message": "Password is wrong"
+	    }
+    }
 
 ## Http Code
 
@@ -23,7 +51,7 @@
 | 500 | 發生未知或無法處理的錯誤 |
 | 501 | 不支援的請求方法 |
 
-## Error Code
+## <span id="errorCode">Error Code</span>
 
 | 錯誤碼 | 說明 |
 |:-:|:-:|
@@ -35,8 +63,12 @@
 | 27 | 資料驗證失敗 |
 | 28 | 處理失敗 |
 | 999 | 未知錯誤 |
+|:-:|:-:|
 | 1000 | 使用者權限已登出 |
+| 1001 | 帳號或密碼格式錯誤 |
+| 1002 | 無此帳號 |
+| 1003 | 密碼錯誤 |
+| 1004 | 帳號被禁用 |
+| 2001 | 查無角色 |
 |:-:|:-:|
 | 23000 | 寫入資料重複 |
-
-> 其它錯誤碼，詳見個別的 API 說明

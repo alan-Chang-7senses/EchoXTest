@@ -5,8 +5,7 @@ namespace Processors\MainMenu;
 use Accessors\PDOAccessor;
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Consts\NFTDNA;
-use Games\Exceptions\CharacterException;
+use Games\Characters\Avatar;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Holders\ResultData;
@@ -44,21 +43,7 @@ class MainData extends BaseProcessor{
         $map->lighting = $sceneClimate->Lighting;
         
         $characterID = filter_input(INPUT_POST, 'characterID');
-        $accessorMain->ClearCondition();
-        if(!empty($characterID)) $accessorMain->WhereEqual('CharacterID', $characterID);
-        $character = $accessorMain->FromTableJoinUsing('CharacterNFT', 'CharacterHolder', 'INNER', 'CharacterID')
-                ->WhereEqual('UserID', $userID)->Limit(1)->Fetch();
-        
-        if($character === false) throw new CharacterException(CharacterException::NotFound);
-
-        $player = new stdClass();
-        $player->id = $character->CharacterID;
-        $player->head = substr($character->HeadDNA, NFTDNA::PartStart, NFTDNA::PartLength);
-        $player->body = substr($character->BodyDNA, NFTDNA::PartStart, NFTDNA::PartLength);
-        $player->hand = substr($character->HandDNA, NFTDNA::PartStart, NFTDNA::PartLength);
-        $player->leg = substr($character->LegDNA, NFTDNA::PartStart, NFTDNA::PartLength);
-        $player->back = substr($character->BackDNA, NFTDNA::PartStart, NFTDNA::PartLength);
-        $player->hat = substr($character->HatDNA, NFTDNA::PartStart, NFTDNA::PartLength);
+        $player = Avatar::CharacterPartByID($userID, $characterID);
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $user->Nickname;

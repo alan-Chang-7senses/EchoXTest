@@ -1,6 +1,4 @@
-[<< Back](../index.md)
-
-# 登入驗證 /Login/Verify/
+# 登入驗證
 
 ## 介紹
 
@@ -35,9 +33,6 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| code | int | 狀態碼，0 表示成功，其餘詳見代碼對應 |
-| message | string | 狀態訊息，若成功則為空字串 |
-| time | int | 回應時間的 Unix Time |
 | [userInfo](#userInfo) | object | 使用者資訊 |
 
 #### <span id="userInfo">userInfo 內容</span>
@@ -56,9 +51,10 @@ Content Type: `application/json`
 #### 成功
 
 	{
-	    "code": 0,
-	    "message": "",
-	    "time": 1639132785,
+	    "error": {
+	        "code": 0,
+	        "message": ""
+	    },
 	    "userInfo": {
 	        "userID": 1,
 	        "nickname": "Zhiwei",
@@ -68,23 +64,3 @@ Content Type: `application/json`
 	        "money": 0
 	    }
 	}
-
-#### 失敗
-
-	{
-	    "code": 1004,
-	    "message": "Password is wrong",
-	    "time": 1639133385
-	}
-
-
-## Error Code
-
-| 錯誤碼 | 說明 |
-|:-:|:-:|
-| 1001 | 帳號或密碼格式錯誤 |
-| 1002 | 無此帳號 |
-| 1003 | 密碼錯誤 |
-| 1004 | 帳號被禁用 |
-
-[<< Back](../index.md)
