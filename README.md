@@ -1,7 +1,5 @@
 # 30點競速遊戲 API
 
--
-
 提供給 30 點競速遊戲前端 Unity 使用的後端邏輯與資料存取相關 API。
 
 ## 資料夾
@@ -12,6 +10,10 @@
  - __docker-compose.yml：__ 用於 build image 以及開發期部署環境用的 YAML 檔案，通常用於開發期，正式環境部署需要視需求更動。
  - __php.ini-development：__ 開發環境用的 php.ini。
  - __php.ini-production：__ 發行環境用的 php.ini。
+
+### docs - API 說明文件資料夾
+
+- [文件首頁](docs/index.md)。
 
 ### src - 程式原始碼檔案與資料夾
 

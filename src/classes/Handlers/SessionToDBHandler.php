@@ -59,7 +59,7 @@ class SessionToDBHandler extends SessionHandler {
         return $this->accessor->ClearCondition()->FromTable('Sessions')->WhereEqual('SessionID', $id)->Delete();
     }
     
-    public function gc(int $max_lifetime): int|bool {
+    public function gc(int $max_lifetime): int|false {
         return $this->accessor->ClearCondition()->FromTable('Sessions')->WhereLess('SessionExpires', $_SERVER['REQUEST_TIME'] - $max_lifetime)->Delete();
     }
 }

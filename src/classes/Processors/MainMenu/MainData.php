@@ -22,6 +22,7 @@ class MainData extends BaseProcessor{
     public function Process(): ResultData {
         
         $userID = $_SESSION[Sessions::UserID];
+        $configs = ConfigGenerator::Instance();
         
         $accessorMain = new PDOAccessor('KoaMain');
         $user = $accessorMain->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
@@ -29,7 +30,7 @@ class MainData extends BaseProcessor{
         $accessorStatic = new PDOAccessor('KoaStatic');
         $sceneInfo = $accessorStatic->FromTable('SceneInfo')->Fetch();
         
-        $todaySecond = DataGenerator::TodaySecondByTimezone(8);
+        $todaySecond = DataGenerator::TodaySecondByTimezone($configs->TimezoneDefault);
         $sceneClimate = $accessorStatic->ClearCondition()->FromTable('SceneClimate')
                 ->WhereEqual('SceneID', $sceneInfo->SceneID)
                 ->WhereLess('StartTime', $todaySecond)
@@ -63,7 +64,7 @@ class MainData extends BaseProcessor{
         $result->name = $user->Nickname;
         $result->money = $user->Money;
         $result->energy = $user->Vitality;
-        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRoomPeopleMax;
+        $result->roomMax = (int)$configs->AmountRoomPeopleMax;
         $result->map = $map;
         $result->player = $player;
         

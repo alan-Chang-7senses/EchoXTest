@@ -50,8 +50,6 @@ try{
 }catch (NormalException $ex){
     
     $result = new ResultData($ex->getCode(), $ex->getMessage());
-    $result->signOut = $ex->signOut;
-    
     LogHelper::Save ($ex);
     
 }catch (Exception $ex) {

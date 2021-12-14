@@ -31,21 +31,27 @@ CREATE TABLE IF NOT EXISTS `SceneClimate` (
   KEY `StartTime` (`StartTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景氣候';
 
--- 正在傾印表格  koa_static.SceneClimate 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SceneClimate 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `SceneClimate` DISABLE KEYS */;
+INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirection`, `WindSpeed`, `StartTime`, `Lighting`) VALUES
+	(1, 1, 0, 0, 100, 0, 1),
+	(2, 1, 0, 1, 100, 28800, 0),
+	(3, 1, 0, 2, 100, 64800, 1);
 /*!40000 ALTER TABLE `SceneClimate` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneInfo 結構
 CREATE TABLE IF NOT EXISTS `SceneInfo` (
   `SceneID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `SceneName` varchar(50) DEFAULT NULL COMMENT '場景代號（名稱）',
-  `ReadyToStart` tinyint(3) unsigned DEFAULT NULL COMMENT '起跑準備（秒）',
-  `SceneEnv` tinyint(3) unsigned DEFAULT NULL COMMENT '場景環境',
+  `SceneName` varchar(50) NOT NULL DEFAULT '' COMMENT '場景代號（名稱）',
+  `ReadyToStart` tinyint(3) unsigned NOT NULL DEFAULT 7 COMMENT '起跑準備（秒）',
+  `SceneEnv` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '場景環境',
   PRIMARY KEY (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景主要資訊';
 
 -- 正在傾印表格  koa_static.SceneInfo 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
+INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VALUES
+	(1, 'CloseBeta', 7, 0);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ScenePitStop 結構
@@ -59,8 +65,11 @@ CREATE TABLE IF NOT EXISTS `ScenePitStop` (
   KEY `SceneID` (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景休息站';
 
--- 正在傾印表格  koa_static.ScenePitStop 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.ScenePitStop 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `ScenePitStop` DISABLE KEYS */;
+INSERT INTO `ScenePitStop` (`ScenePitStopID`, `SceneID`, `SortOrder`, `Length`) VALUES
+	(1, 1, 0, 7),
+	(2, 1, 1, 7);
 /*!40000 ALTER TABLE `ScenePitStop` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneTracks 結構
@@ -78,8 +87,15 @@ CREATE TABLE IF NOT EXISTS `SceneTracks` (
   KEY `SceneID` (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景賽道';
 
--- 正在傾印表格  koa_static.SceneTracks 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SceneTracks 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SceneTracks` DISABLE KEYS */;
+INSERT INTO `SceneTracks` (`SceneTrackID`, `SceneID`, `SortOrder`, `TrackType`, `Step`, `Length`, `Shape`, `Direction`) VALUES
+	(1, 1, 0, 2, 0, 300, 0, 2),
+	(2, 1, 1, 0, 0, 400, 1, 1),
+	(3, 1, 2, 1, 1, 300, 0, 0),
+	(4, 1, 3, 2, 1, 300, 0, 0),
+	(5, 1, 4, 0, 2, 400, 1, 3),
+	(6, 1, 5, 1, 2, 300, 0, 2);
 /*!40000 ALTER TABLE `SceneTracks` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

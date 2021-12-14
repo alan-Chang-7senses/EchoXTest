@@ -3,7 +3,7 @@
 namespace Processors;
 
 use Consts\Sessions;
-use Exceptions\LoginException;
+use Exceptions\NormalException;
 use Holders\ResultData;
 /**
  * Description of BaseProcessor
@@ -18,6 +18,7 @@ abstract class BaseProcessor {
     
     public function __construct() {
         
-        if($this->mustSigned && empty($_SESSION[Sessions::Signed])) throw new LoginException(LoginException::SignOut);
+        if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
+            throw new NormalException(NormalException::SignOut);
     }
 }
