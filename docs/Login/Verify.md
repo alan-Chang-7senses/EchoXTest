@@ -1,8 +1,6 @@
 [<< Back](../index.md)
 
-# /Login/Verify/ 登入驗證
-
----
+# 登入驗證 /Login/Verify/
 
 ## 介紹
 
