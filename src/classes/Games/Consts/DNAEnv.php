@@ -7,7 +7,7 @@ namespace Games\Consts;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class EnvType {
+class DNAEnv {
     const Dune = '01';
     const Volcano = '02';
     const CraterLake = '03';

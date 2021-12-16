@@ -18,4 +18,7 @@ class NFTDNA {
     
     const AttrAdaptOffset = 2;
     const AttrAdaptLength = 2;
+    
+    const SpeciesAdaptOffset = 0;
+    const SpeciesAdaptLength = 1;
 }

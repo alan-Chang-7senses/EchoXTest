@@ -2,7 +2,7 @@
 
 namespace Games\Holders;
 
-use Games\Consts\EnvType;
+use Games\Consts\DNAEnv;
 /**
  * Description of EnvironmentAdaptability
  *
@@ -16,8 +16,8 @@ class EnvironmentAdaptability extends BaseAdaptability {
     
     public function Assign(string $code){
         
-        if($code == EnvType::Dune) ++$this->dune;
-        else if($code == EnvType::Volcano) ++$this->volcano;
-        else if($code == EnvType::CraterLake) ++$this->craterLake;
+        if($code == DNAEnv::Dune) ++$this->dune;
+        else if($code == DNAEnv::Volcano) ++$this->volcano;
+        else if($code == DNAEnv::CraterLake) ++$this->craterLake;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Games\Holders;
 
-use Games\Consts\WeatherType;
+use Games\Consts\DNAWeather;
 /**
  * Description of WeatherAdaptability
  *
@@ -16,8 +16,8 @@ class WeatherAdaptability extends BaseAdaptability {
     
     public function Assign(string $code) {
         
-        if($code == WeatherType::Sunny) ++$this->sunny;
-        else if($code == WeatherType::Aurora) ++$this->aurora;
-        else if($code == WeatherType::SandDust) ++$this->sandDust;
+        if($code == DNAWeather::Sunny) ++$this->sunny;
+        else if($code == DNAWeather::Aurora) ++$this->aurora;
+        else if($code == DNAWeather::SandDust) ++$this->sandDust;
     }
 }

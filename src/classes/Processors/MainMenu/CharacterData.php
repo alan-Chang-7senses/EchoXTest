@@ -13,6 +13,7 @@ use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
+use Games\Holders\TerrainAdaptability;
 /**
  * Description of CharacterData
  *
@@ -53,10 +54,16 @@ class CharacterData extends BaseProcessor{
         $creature->craterLake = $adaptability->craterLake;
         
         $adaptability = new WeatherAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $creature->sunny = $adaptability->sunny;
         $creature->aurora = $adaptability->aurora;
         $creature->sandDust = $adaptability->sandDust;
+        
+        $adaptability = new TerrainAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        $creature->flat = $adaptability->flat;
+        $creature->upslope = $adaptability->upslope;
+        $creature->downslope = $adaptability->downslope;
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $creature;
