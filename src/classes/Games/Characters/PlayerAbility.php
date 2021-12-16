@@ -3,6 +3,7 @@
 namespace Games\Characters;
 
 use Games\Consts\AbilityFactor;
+use Games\Consts\Habit;
 use Games\Consts\NFTDNA;
 use Games\Holders\BaseAdaptability;
 /**
@@ -51,5 +52,13 @@ class PlayerAbility {
                 $adaptability->Assign($code);
             }
         }
+    }
+    
+    public static function Habit(int $constitution, int $strength, int $dexterity, int $agility) : int {
+        
+        $habits = [Habit::Rush => $strength, Habit::Stability => $constitution, Habit::Priority => $agility, Habit::Accumulate => $dexterity];
+        arsort($habits);
+        reset($habits);
+        return key($habits);
     }
 }

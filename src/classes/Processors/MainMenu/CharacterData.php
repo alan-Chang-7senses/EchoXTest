@@ -70,9 +70,11 @@ class CharacterData extends BaseProcessor{
         PlayerAbility::Adaptability($DNAs, $adaptability,  [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
         $creature->sun = $adaptability->Value();
         
+        $creature->habit = PlayerAbility::Habit($row->Constitution, $row->Strength, $row->Dexterity, $row->Agility);
+        
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $creature;
-        $result->row = $row;
+//        $result->row = $row;
         
         return $result;
     }
