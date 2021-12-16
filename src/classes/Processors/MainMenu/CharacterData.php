@@ -7,6 +7,7 @@ use Consts\ErrorCode;
 use Games\Characters\PlayerAbility;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
+use Games\Holders\DurableAdaptability;
 use Games\Holders\EnvironmentAdaptability;
 use Games\Holders\SunAdaptability;
 use Games\Holders\TerrainAdaptability;
@@ -67,10 +68,16 @@ class CharacterData extends BaseProcessor{
         $creature->downslope = $adaptability->downslope;
         
         $adaptability = new SunAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability,  [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
         $creature->sun = $adaptability->Value();
         
         $creature->habit = PlayerAbility::Habit($row->Constitution, $row->Strength, $row->Dexterity, $row->Agility);
+        
+        $adaptability = new DurableAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        $creature->mid = $adaptability->mid;
+        $creature->long = $adaptability->long;
+        $creature->short = $adaptability->short;
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $creature;
