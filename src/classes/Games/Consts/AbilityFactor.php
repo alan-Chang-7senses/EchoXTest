@@ -10,6 +10,7 @@ namespace Games\Consts;
 class AbilityFactor {
     
     const NFTDivisor = 100;
+    const Decimals = 2;
     
     const VelocityAgilityMultiplier = 0.6;
     const VelocityStrengthMultiplier = 0.2;
