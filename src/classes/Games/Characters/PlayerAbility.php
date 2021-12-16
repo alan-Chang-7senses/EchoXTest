@@ -3,9 +3,8 @@
 namespace Games\Characters;
 
 use Games\Consts\AbilityFactor;
-use Games\Holders\EnvironmentAdaptability;
-use Games\Consts\EnvType;
 use Games\Consts\NFTDNA;
+use Games\Holders\BaseAdaptability;
 /**
  * Description of AbilityFormula
  *
@@ -43,22 +42,14 @@ class PlayerAbility {
         return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
     }
     
-    public static function EnvironmentAdaptability(array $DNA) : EnvironmentAdaptability{
+    public static function Adaptability(array $DNA, BaseAdaptability $adaptability, array $mainOffsets, int $adaptOffset, int $adaptLength) : void {
         
-        $ea = new EnvironmentAdaptability();
         $code = '';
-        foreach($DNA as $dna){
-            
-            $code = substr(substr($dna, NFTDNA::DominantOffset, NFTDNA::MainSplitLength), NFTDNA::EnvAdaptOffset, NFTDNA::EnvAdaptLength);
-            $ea->Assign($code);
-            
-            $code = substr(substr($dna, NFTDNA::RecessiveOneOffset, NFTDNA::MainSplitLength), NFTDNA::EnvAdaptOffset, NFTDNA::EnvAdaptLength);
-            $ea->Assign($code);
+        foreach ($DNA as $dna) {
+            foreach($mainOffsets as $offset){
+                $code = substr(substr($dna, $offset, NFTDNA::MainSplitLength), $adaptOffset, $adaptLength);
+                $adaptability->Assign($code);
+            }
         }
-        return $ea;
-    }
-    
-    public static function WeatherAdaptability(array $DNA) {
-        
     }
 }

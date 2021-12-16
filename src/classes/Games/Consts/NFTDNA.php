@@ -16,6 +16,6 @@ class NFTDNA {
     const RecessiveOneOffset = 8;
     const RecessiveTwoOffset = 16;
     
-    const EnvAdaptOffset = 2;
-    const EnvAdaptLength = 2;
+    const AttrAdaptOffset = 2;
+    const AttrAdaptLength = 2;
 }

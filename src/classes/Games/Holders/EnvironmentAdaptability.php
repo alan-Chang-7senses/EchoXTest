@@ -8,7 +8,7 @@ use Games\Consts\EnvType;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class EnvironmentAdaptability {
+class EnvironmentAdaptability extends BaseAdaptability {
     
     public int $dune = 0;
     public int $volcano = 0;

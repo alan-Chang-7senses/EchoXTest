@@ -2,16 +2,17 @@
 
 namespace Processors\MainMenu;
 
-use Processors\BaseProcessor;
-use Holders\ResultData;
-use Helpers\InputHelper;
-use Consts\Sessions;
-use Games\Characters\Avatar;
 use Accessors\PDOAccessor;
 use Consts\ErrorCode;
-use stdClass;
-use Games\Consts\SyncRate;
 use Games\Characters\PlayerAbility;
+use Games\Consts\NFTDNA;
+use Games\Consts\SyncRate;
+use Games\Holders\EnvironmentAdaptability;
+use Games\Holders\WeatherAdaptability;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
+use stdClass;
 /**
  * Description of CharacterData
  *
@@ -44,18 +45,22 @@ class CharacterData extends BaseProcessor{
         $creature->will = PlayerAbility::Will($row->Constitution, $row->Strength, $row->Level);
         
         $DNAs = [$row->HeadDNA, $row->BodyDNA, $row->HandDNA, $row->LegDNA, $row->BackDNA, $row->HatDNA];
-        $environmentAdaptability = PlayerAbility::EnvironmentAdaptability($DNAs);
-        $creature->dune = $environmentAdaptability->dune;
-        $creature->volcano = $environmentAdaptability->volcano;
-        $creature->craterLake = $environmentAdaptability->craterLake;
+        
+        $adaptability = new EnvironmentAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        $creature->dune = $adaptability->dune;
+        $creature->volcano = $adaptability->volcano;
+        $creature->craterLake = $adaptability->craterLake;
+        
+        $adaptability = new WeatherAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        $creature->sunny = $adaptability->sunny;
+        $creature->aurora = $adaptability->aurora;
+        $creature->sandDust = $adaptability->sandDust;
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $creature;
-//        $result->row = $row;
-//        $result->ada1 = substr($row->HeadDNA, 0, 8);
-//        $result->ada2 = substr($row->HeadDNA, 8, 8);
-//        $result->ada3 = substr($row->HeadDNA, 16, 8);
-//        $result->ea = $environmentAdaptability;
+        $result->row = $row;
         
         return $result;
     }
