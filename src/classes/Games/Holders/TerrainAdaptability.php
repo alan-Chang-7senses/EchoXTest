@@ -14,7 +14,7 @@ class TerrainAdaptability extends BaseAdaptability{
     public int $upslope = 0;
     public int $downslope = 0;
     
-    public function Assign(string $code) {
+    public function Assign(string $code) : void{
         
         if($code == DNATerrain::Flat) ++$this->flat;
         else if($code == DNATerrain::Upslope) ++$this->upslope;

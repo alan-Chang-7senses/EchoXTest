@@ -8,12 +8,13 @@ use Games\Characters\PlayerAbility;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
 use Games\Holders\EnvironmentAdaptability;
+use Games\Holders\SunAdaptability;
+use Games\Holders\TerrainAdaptability;
 use Games\Holders\WeatherAdaptability;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
-use Games\Holders\TerrainAdaptability;
 /**
  * Description of CharacterData
  *
@@ -64,6 +65,10 @@ class CharacterData extends BaseProcessor{
         $creature->flat = $adaptability->flat;
         $creature->upslope = $adaptability->upslope;
         $creature->downslope = $adaptability->downslope;
+        
+        $adaptability = new SunAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability,  [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        $creature->sun = $adaptability->Value();
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $creature;

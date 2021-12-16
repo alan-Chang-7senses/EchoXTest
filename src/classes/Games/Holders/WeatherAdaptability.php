@@ -14,7 +14,7 @@ class WeatherAdaptability extends BaseAdaptability {
     public int $aurora = 0;
     public int $sandDust = 0;
     
-    public function Assign(string $code) {
+    public function Assign(string $code) : void{
         
         if($code == DNAWeather::Sunny) ++$this->sunny;
         else if($code == DNAWeather::Aurora) ++$this->aurora;

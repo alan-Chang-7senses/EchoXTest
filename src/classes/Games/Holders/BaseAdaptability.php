@@ -9,5 +9,5 @@ namespace Games\Holders;
  */
 abstract class BaseAdaptability {
     
-    abstract function Assign(string $code);
+    abstract function Assign(string $code) : void;
 }
