@@ -10,4 +10,15 @@ class NFTDNA {
     
     const PartStart = 0;
     const PartLength = 6;
+    
+    const MainSplitLength = 8;
+    const DominantOffset = 0;
+    const RecessiveOneOffset = 8;
+    const RecessiveTwoOffset = 16;
+    
+    const AttrAdaptOffset = 2;
+    const AttrAdaptLength = 2;
+    
+    const SpeciesAdaptOffset = 0;
+    const SpeciesAdaptLength = 1;
 }

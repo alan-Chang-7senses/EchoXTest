@@ -123,6 +123,11 @@ class PDOAccessor {
         return $this;
     }
     
+    public function FromTableJoinUsingNext(string $table, string $type, string $column) : PDOAccessor{
+        $this->table .= ' '.$type.' JOIN '.$table.' USING('.$column.')';
+        return $this;
+    }
+
     public function FromTableJoinOn(string $tableA, string $tableB, string $joinType, string $columnA, string $columnB) : PDOAccessor{
         $this->table = $tableA.' AS a '.$joinType.' JOIN '.$tableB.' AS b ON a.`'.$columnA.'` = b.`'.$columnB.'`';
         return $this;

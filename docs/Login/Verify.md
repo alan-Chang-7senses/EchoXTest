@@ -33,6 +33,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| [error](../index.md#error) | object | 錯誤代碼與訊息 |
 | [userInfo](#userInfo) | object | 使用者資訊 |
 
 #### <span id="userInfo">userInfo 內容</span>

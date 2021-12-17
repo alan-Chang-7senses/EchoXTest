@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `SceneClimate` (
   KEY `StartTime` (`StartTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景氣候';
 
--- 正在傾印表格  koa_static.SceneClimate 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_static.SceneClimate 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `SceneClimate` DISABLE KEYS */;
 INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirection`, `WindSpeed`, `StartTime`, `Lighting`) VALUES
 	(1, 1, 0, 0, 100, 0, 1),
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `SceneInfo` (
   PRIMARY KEY (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景主要資訊';
 
--- 正在傾印表格  koa_static.SceneInfo 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SceneInfo 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
 INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VALUES
 	(1, 'CloseBeta', 7, 0);

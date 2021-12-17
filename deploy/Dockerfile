@@ -12,7 +12,10 @@ RUN chmod 777 /var/www/html/logs/ \
    && chown www-data:www-data -R /var/www/html/logs/
 
 FROM base AS development
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
 COPY php.ini-development $PHP_INI_DIR/conf.d/php.ini
+COPY docker-php-ext-xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 FROM base AS production
 COPY php.ini-production $PHP_INI_DIR/conf.d/php.ini
