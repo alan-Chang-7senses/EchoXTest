@@ -2,7 +2,7 @@
 
 ## 版本
 
-0.2.0
+0.3.0
 
 ## 介紹
 
@@ -11,9 +11,10 @@
 ## APIs
 
 - [登入驗證](Login/Verify.md)。
-- 主畫面
+- 主介面
 	- [主要資料](MainMenu/MainData.md)。
 	- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
+	- [角色資料](MainMenu/CharacterData.md)。
 
 ## Response
 

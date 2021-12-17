@@ -32,6 +32,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| [error](../index.md#error) | object | 錯誤代碼與訊息 |
 | time | int | 回應時間的 Unix Time |
 | name | string | 使用者暱稱 |
 | money | int | 金錢 |
@@ -62,7 +63,7 @@ Content Type: `application/json`
 - 天氣：
 	- 0：晴天。
 	- 1：極光。
-	- 2：隕石。
+	- 2：沙塵。
 - 明暗：
 	- 0：日照。
 	- 1：背光。
