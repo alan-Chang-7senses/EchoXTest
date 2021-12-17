@@ -33,6 +33,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| [error](../index.md#error) | object | 錯誤代碼與訊息 |
 | total | int | 持有角色總數 |
 | [players](#players) | array | 角色資料的物件陣列 |
 
