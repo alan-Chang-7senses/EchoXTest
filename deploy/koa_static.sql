@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.3.243
+-- 主機:                           192.168.2.148
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `SceneClimate` (
 -- 正在傾印表格  koa_static.SceneClimate 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `SceneClimate` DISABLE KEYS */;
 INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirection`, `WindSpeed`, `StartTime`, `Lighting`) VALUES
-	(1, 1, 0, 0, 100, 0, 1),
-	(2, 1, 0, 1, 100, 28800, 0),
-	(3, 1, 0, 2, 100, 64800, 1);
+	(1, 1, 1, 1, 100, 0, 2),
+	(2, 1, 1, 2, 100, 28800, 1),
+	(3, 1, 1, 3, 100, 64800, 2);
 /*!40000 ALTER TABLE `SceneClimate` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneInfo 結構
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `SceneInfo` (
 -- 正在傾印表格  koa_static.SceneInfo 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
 INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VALUES
-	(1, 'CloseBeta', 7, 0);
+	(1, 'CloseBeta', 7, 1);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ScenePitStop 結構
@@ -90,12 +90,12 @@ CREATE TABLE IF NOT EXISTS `SceneTracks` (
 -- 正在傾印表格  koa_static.SceneTracks 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SceneTracks` DISABLE KEYS */;
 INSERT INTO `SceneTracks` (`SceneTrackID`, `SceneID`, `SortOrder`, `TrackType`, `Step`, `Length`, `Shape`, `Direction`) VALUES
-	(1, 1, 0, 2, 0, 300, 0, 2),
-	(2, 1, 1, 0, 0, 400, 1, 1),
-	(3, 1, 2, 1, 1, 300, 0, 0),
-	(4, 1, 3, 2, 1, 300, 0, 0),
-	(5, 1, 4, 0, 2, 400, 1, 3),
-	(6, 1, 5, 1, 2, 300, 0, 2);
+	(1, 1, 0, 3, 1, 300, 1, 3),
+	(2, 1, 1, 1, 1, 400, 2, 2),
+	(3, 1, 2, 2, 2, 300, 1, 1),
+	(4, 1, 3, 3, 2, 300, 1, 1),
+	(5, 1, 4, 1, 3, 400, 2, 4),
+	(6, 1, 5, 2, 3, 300, 1, 3);
 /*!40000 ALTER TABLE `SceneTracks` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
