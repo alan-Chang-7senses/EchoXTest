@@ -98,6 +98,72 @@ INSERT INTO `SceneTracks` (`SceneTrackID`, `SceneID`, `SortOrder`, `TrackType`, 
 	(6, 1, 5, 2, 3, 300, 1, 3);
 /*!40000 ALTER TABLE `SceneTracks` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_static.SkillEffect 結構
+CREATE TABLE IF NOT EXISTS `SkillEffect` (
+  `SkillEffectID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `EffectName` varchar(50) DEFAULT NULL COMMENT '效果名稱或標籤',
+  `EffectType` smallint(6) NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `Target` tinyint(4) NOT NULL DEFAULT 0 COMMENT '作用對象',
+  `Duration` tinyint(4) NOT NULL DEFAULT 0 COMMENT '時效性',
+  `Formula` text DEFAULT NULL COMMENT '公式',
+  PRIMARY KEY (`SkillEffectID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能效果表';
+
+-- 正在傾印表格  koa_static.SkillEffect 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SkillEffect` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.SkillInfo 結構
+CREATE TABLE IF NOT EXISTS `SkillInfo` (
+  `SkillID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `AliasCode` varchar(50) DEFAULT NULL COMMENT '識別碼(企劃用)',
+  `SkillName` varchar(50) DEFAULT NULL COMMENT '技能名稱標籤',
+  `Description` varchar(50) DEFAULT NULL COMMENT '技能描述標籤',
+  `SourceType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '來源類型',
+  `SourceCode1` varchar(50) NOT NULL COMMENT '來源編碼1',
+  `SourceCode2` varchar(50) DEFAULT NULL COMMENT '來源編碼2',
+  `SourceCode3` varchar(50) DEFAULT NULL COMMENT '來源編碼3',
+  `TriggerType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '觸發類型',
+  `MainCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '主要條件',
+  `SubCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '次要條件',
+  `EnergyCondition` varchar(50) DEFAULT NULL COMMENT '能量條件',
+  `CardCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '牌型條件',
+  `Effect` varchar(50) DEFAULT NULL COMMENT '效果',
+  `Level1` int(11) NOT NULL DEFAULT 0 COMMENT '1級N值',
+  `Level2` int(11) NOT NULL DEFAULT 0 COMMENT '2級N值',
+  `Level3` int(11) NOT NULL DEFAULT 0 COMMENT '3級N值',
+  `Level4` int(11) NOT NULL DEFAULT 0 COMMENT '4級N值',
+  `Level5` int(11) NOT NULL DEFAULT 0 COMMENT '5級N值',
+  `MaxName` varchar(50) DEFAULT NULL COMMENT '滿等級名稱標籤',
+  `MaxDescription` varchar(50) DEFAULT NULL COMMENT '滿等級敘述標籤',
+  `MaxCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '滿等級技能條件',
+  `MaxConditionValue` tinyint(4) NOT NULL DEFAULT 0 COMMENT '滿等級技能條件值',
+  `MaxEffect` varchar(50) DEFAULT NULL COMMENT '滿等技能效果',
+  PRIMARY KEY (`SkillID`),
+  KEY `SourceType` (`SourceType`),
+  KEY `SourceType_SourceCode1` (`SourceType`,`SourceCode1`),
+  KEY `SourceType_SourceCode1_SourceCode2` (`SourceType`,`SourceCode1`,`SourceCode2`),
+  KEY `SourceType_SourceCode1_SourceCode2_SourceCode3` (`SourceType`,`SourceCode1`,`SourceCode2`,`SourceCode3`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
+
+-- 正在傾印表格  koa_static.SkillInfo 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.SkillMaxEffect 結構
+CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
+  `MaxEffectID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `EffectName` varchar(50) DEFAULT NULL COMMENT '效果名稱或標籤',
+  `EffectType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `TypeValue` tinyint(4) NOT NULL DEFAULT 0 COMMENT '效果類型值',
+  `Formula` text DEFAULT NULL COMMENT '公式(或值)',
+  PRIMARY KEY (`MaxEffectID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
+
+-- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
