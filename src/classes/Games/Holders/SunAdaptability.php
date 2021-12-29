@@ -23,7 +23,7 @@ class SunAdaptability extends BaseAdaptability{
     
     public function Value() : int {
         
-        $value = [DNASun::NormalValue => $this->normal, DNASun::DayValue => $this->day, DNASun::NightValue => $this->night];
+        $value = [DNASun::Normal => $this->normal, DNASun::Day => $this->day, DNASun::Night => $this->night];
         arsort($value);
         reset($value);
         return key($value);
