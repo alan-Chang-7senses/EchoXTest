@@ -207,6 +207,15 @@ class PDOAccessor {
         return $this;
     }
     
+    public function ClearAll() : PDOAccessor{
+        $this->conditions = [];
+        $this->groupBy = null;
+        $this->orderBy = null;
+        $this->limit = null;
+        $this->prepareName = PDOHelper::PREPARE_DEFAULT;
+        return $this;
+    }
+
     public function FetchStyle(int $style) : PDOAccessor{
         $this->fetchStyle = $style;
         return $this;
