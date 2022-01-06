@@ -7,7 +7,6 @@ use Games\Accessors\PlayerAccessor;
 use Games\Accessors\SkillAccessor;
 use Games\Characters\PlayerAbility;
 use Games\Consts\NFTDNA;
-use Games\Consts\SkillTriggerType;
 use Games\Consts\SyncRate;
 use Games\Generators\SkillGenerator;
 use Games\Holders\DurableAdaptability;
@@ -87,46 +86,54 @@ class CharacterData extends BaseProcessor{
         $skillInfo = $skillAccessor->rowsInfoByAliasCodes($aliasCodes);
         $skillIDs = [];
         $effectIDs = [];
+        $maxEffectIDs = [];
         foreach ($skillInfo as $info){
             $skillIDs[] = $info->SkillID;
             $effectIDs = array_merge($effectIDs, explode(',', $info->Effect));
+            $maxEffectIDs = array_merge($maxEffectIDs, explode(',', $info->MaxEffect));
         }
         
         $rows = $playerAccessor->rowsSkillByCharacterIDAndSkillIDs($characterID, $skillIDs);
         $playerSkills = [];
         foreach($rows as $row) $playerSkills[$row->SkillID] = $row;
         
-        $rows = $skillAccessor->rowsEffectByEffectID($effectIDs);
+        $rows = $skillAccessor->rowsEffectByEffectIDs($effectIDs);
         $skillEffects = [];
         foreach($rows as $row) $skillEffects[$row->SkillEffectID] = $row;
         
-        $creature->talent = [];
-        $creature->skillInEquip = [];
+        $rows = $skillAccessor->rowsMaxEffectByEffectIDs($maxEffectIDs);
+        $maxSkillEffects = [];
+        foreach ($rows as $row) $maxSkillEffects[$row->MaxEffectID] = $row;
+        
+        $creature->skills = [];
         $skillSlot = [];
         foreach($skillInfo as $info){
             
-            $talent = new stdClass();
-            $talent->id = $info->SkillID;
-            $talent->name = $info->SkillName;
-            $talent->level = $playerSkills[$info->SkillID]->Level;
-            $creature->talent[] = $talent;
+            $skill = new stdClass();
+            $skill->id = $info->SkillID;
+            $skill->name = $info->SkillName;
+            $skill->type = $info->TriggerType;
+            $skill->level = $playerSkills[$info->SkillID]->Level;
+            $skill->ranks = [$info->Level1, $info->Level2, $info->Level3, $info->Level4, $info->Level5];
             
-            if($info->TriggerType == SkillTriggerType::Active){
-                
-                $equip = new stdClass();
-                $equip->id = $info->SkillID;
-                $equip->name = $info->SkillName;
-                $equip->level = $playerSkills[$info->SkillID]->Level;
-                
-                $effects = explode(',', $info->Effect);
-                $equip->effectA = $skillEffects[$effects[0]]->EffectType;
-                $equip->effectValueA = $skillEffects[$effects[0]]->Formula;
-                $equip->effectB = empty($effects[1]) ? null : $skillEffects[$effects[1]]->EffectType;
-                $equip->effectValueB = empty($effects[1]) ? null : $skillEffects[$effects[1]]->Formula;
-                
-                $creature->skillInEquip[] = $equip;
-                $skillSlot[$playerSkills[$info->SkillID]->Slot] = $info->SkillID;
+            foreach(explode(',', $info->Effect) as $effectID){
+                $skill->effects[] = [
+                    'type' => $skillEffects[$effectID]->EffectType,
+                    'value' => $skillEffects[$effectID]->Formula
+                ];
             }
+            
+            foreach (explode(',', $info->MaxEffect) as $maxEffectID) {
+                $skill->maxEffects[] = [
+                    'type' => $maxSkillEffects[$maxEffectID]->EffectType,
+                    'typeValue' => $maxSkillEffects[$maxEffectID]->TypeValue,
+                    'value' => $maxSkillEffects[$maxEffectID]->Formula,
+                ];
+            }
+            
+            $creature->skills[] = $skill;
+            
+            $skillSlot[$playerSkills[$info->SkillID]->Slot] = $info->SkillID;
         }
         
         $creature->skillHole = [];
