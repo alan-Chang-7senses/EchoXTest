@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
   PRIMARY KEY (`SkillEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能效果表';
 
--- 正在傾印表格  koa_static.SkillEffect 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SkillEffect 的資料：~9 rows (近似值)
 /*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
 INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Target`, `Duration`, `Formula`) VALUES
 	(1, 'effect1', 101, 0, 1, 'H-H*N%'),
@@ -149,17 +149,17 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   UNIQUE KEY `AliasCode` (`AliasCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
 
--- 正在傾印表格  koa_static.SkillInfo 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SkillInfo 的資料：~8 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
 INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `MainCondition`, `SubCondition`, `EnergyCondition`, `CardCondition`, `Effect`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxName`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
-	(1, 'Origin00001', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(2, 'Origin00002', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(3, 'Origin00003', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(4, 'Origin00004', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(5, 'Origin00005', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(6, 'Origin00006', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(7, 'Origin00007', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(8, 'Origin00008', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1');
+	(1, 'Origin00001', 'name1', 'description1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1,2'),
+	(2, 'Origin00002', 'name2', 'description2', 1, 4, 0, '111', 0, '3', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(3, 'Origin00003', 'name3', 'description3', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(4, 'Origin00004', 'name4', 'description4', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(5, 'Origin00005', 'name5', 'description5', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(6, 'Origin00006', 'name6', 'description6', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(7, 'Origin00007', 'name7', 'description7', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(8, 'Origin00008', 'name8', 'description8', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1');
 /*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
@@ -172,11 +172,11 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
   PRIMARY KEY (`MaxEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
 
--- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~11 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
 	(1, 'max001', 1, 1, NULL),
-	(2, 'max001', 1, 1, NULL),
+	(2, 'max001', 1, 1, 'H-H*N%'),
 	(3, 'max001', 1, 1, NULL),
 	(4, 'max001', 1, 1, NULL),
 	(5, 'max001', 1, 1, NULL),
@@ -200,10 +200,10 @@ CREATE TABLE IF NOT EXISTS `SkillPart` (
   UNIQUE KEY `PartCode_PartType` (`PartCode`,`PartType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部位技能對照表';
 
--- 正在傾印表格  koa_static.SkillPart 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SkillPart 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillPart` DISABLE KEYS */;
 INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `AliasCode2`, `AliasCode3`) VALUES
-	(1, '110101', 1, 'Origin00001', 'Origin00002', NULL),
+	(1, '110104', 1, 'Origin00001', 'Origin00002', NULL),
 	(2, '110101', 2, 'Origin00001', 'Origin00001', NULL),
 	(3, '110101', 3, 'Origin00001', 'Origin00001', 'Origin00001'),
 	(4, '110101', 4, 'Origin00001', 'Origin00001', 'Origin00001'),

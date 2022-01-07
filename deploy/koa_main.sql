@@ -41,6 +41,13 @@ CREATE TABLE IF NOT EXISTS `CharacterHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
+-- 正在傾印表格  koa_main.CharacterHolder 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `CharacterHolder` DISABLE KEYS */;
+INSERT INTO `CharacterHolder` (`CharacterID`, `UserID`, `Nickname`, `SyncRate`) VALUES
+	(1010000000000005, 1, NULL, 456),
+	(1010000000000015, 1, NULL, 5347);
+/*!40000 ALTER TABLE `CharacterHolder` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.CharacterLevel 結構
 CREATE TABLE IF NOT EXISTS `CharacterLevel` (
   `CharacterID` bigint(20) unsigned NOT NULL,
@@ -51,6 +58,13 @@ CREATE TABLE IF NOT EXISTS `CharacterLevel` (
   PRIMARY KEY (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
+-- 正在傾印表格  koa_main.CharacterLevel 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `CharacterLevel` DISABLE KEYS */;
+INSERT INTO `CharacterLevel` (`CharacterID`, `Level`, `Rank`, `Exp`, `SlotNumber`) VALUES
+	(1010000000000005, 1, 1, 0, 4),
+	(1010000000000015, 1, 1, 0, 8);
+/*!40000 ALTER TABLE `CharacterLevel` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.CharacterNFT 結構
 CREATE TABLE IF NOT EXISTS `CharacterNFT` (
   `CharacterID` bigint(20) unsigned NOT NULL,
@@ -58,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `CharacterNFT` (
   `Strength` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '力量',
   `Dexterity` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '技巧',
   `Agility` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '敏捷',
-  `Attribute` tinyint(3) unsigned NOT NULL DEFAULT 100 COMMENT '屬性',
+  `Attribute` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '屬性',
   `HeadDNA` varchar(50) NOT NULL COMMENT '頭部 DNA 編碼',
   `BodyDNA` varchar(50) NOT NULL COMMENT '身體 DNA 編碼',
   `HandDNA` varchar(50) NOT NULL COMMENT '手部 DNA 編碼',
@@ -122,6 +136,13 @@ CREATE TABLE IF NOT EXISTS `CharacterSkill` (
   PRIMARY KEY (`CharacterID`,`SkillID`),
   KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
+
+-- 正在傾印表格  koa_main.CharacterSkill 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `CharacterSkill` DISABLE KEYS */;
+INSERT INTO `CharacterSkill` (`CharacterID`, `SkillID`, `Level`, `Slot`) VALUES
+	(1010000000000015, 1, 1, 2),
+	(1010000000000015, 2, 2, 6);
+/*!40000 ALTER TABLE `CharacterSkill` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Configs 結構
 CREATE TABLE IF NOT EXISTS `Configs` (
