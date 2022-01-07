@@ -6,6 +6,7 @@ use Games\Accessors\SkillAccessor;
 use Games\Consts\SkillPart;
 use Games\Utilities\PlayerUtility;
 use stdClass;
+use Games\Skills\FormulaFactory;
 /**
  * Description of SkillGenerator
  *
@@ -26,5 +27,13 @@ class SkillGenerator {
         $aliasCodes = array_merge($aliasCodes, $accessor->aliasCodesByPart(PlayerUtility::PartCodeByDNA($nft->HatDNA), SkillPart::Hat));
         
         return array_unique($aliasCodes);
+    }
+    
+    public static function valueByFormuleAndLevelN(string|null $formule, int $levelN) : float|null{
+        
+        if($formule === null) return null;
+        
+        $factory = new FormulaFactory($levelN, $formule);
+        return $factory->Process();
     }
 }
