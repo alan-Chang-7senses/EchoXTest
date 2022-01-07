@@ -65,9 +65,8 @@ Content Type: `application/json`
 | mid | int | 耐久適性 - 中距離 |
 | long | int | 耐久適性 - 長距離 |
 | short | int | 耐久適性 - 短距離 |
-| [talent](#talent) | object | 天賦**（未實作，目前無此欄位）** |
-| [skillEquip](#skillEquip) | object | 技能裝備**（未實作，目前無此欄位）** |
-| skillHole | array | 技能槽**（未實作，目前無此欄位）** |
+| [skills](#skills) | array | 角色持有的技能清單陣列 |
+| skillHole | array | 技能插槽陣列，陣列長度為插槽數量，陣列元素值為技能編號 |
 
 - <span id="ele">**ele 屬性**</span>
 	- 0：虛無，特殊的存在。
@@ -92,13 +91,36 @@ Content Type: `application/json`
 	- 3：優先。
 	- 4：蓄力。
 
-#### <span id="talent">talent 內容</span>
+#### <span id="skills">skills 內容</span>
 
-> 未實作
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| id | int | 技能編號 |
+| name | string | 技能名稱代號 |
+| [type](#triggerType) | int | 觸發類型 |
+| ranks | array | 技能星級 1 ~ 5 的 N 值陣列 |
+| [effects](#effects) | array | 技能效果陣列 |
+| [maxEffects](#maxEffects) | array | 滿星技能效果陣列 |
 
-#### <span id="skillEquip"> skillEquip 內容</span>
+- <span id="triggerType">**type 觸發類型**</span>
+	- 1：裝備的「第一類技能」（主動技能）。
+	- 2：牌型觸發的「第二類技能」（牌型技能）。
+	- 3：持有就有效與核心操作無關的「第三類技能」（王牌技能）。
 
-> 未實作
+##### <span id="effects">effects 技能效果內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| type | int | 效果類型 |
+| value | int | 效果值**（未實作，目前提供 DB 紀錄之公式或欄位值）** |
+
+##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| type | int | 效果類型 |
+| typeValue | int | 效果類型值，依據效果類型，此值代表不同意義 |
+| value | int | 效果值**（未實作，目前提供 DB 紀錄之公式或欄位值）**  |
 
 ### Example
 
@@ -109,7 +131,7 @@ Content Type: `application/json`
 	    },
 	    "creature": {
 	        "id": 1010000000000015,
-	        "name": 1010000000000015,
+	        "name": "1010000000000015",
 	        "ele": 1,
 	        "sync": 53.47,
 	        "level": 1,
@@ -130,10 +152,83 @@ Content Type: `application/json`
 	        "flat": 10,
 	        "upslope": 0,
 	        "downslope": 2,
-	        "sun": 0,
+	        "sun": 1,
 	        "habit": 1,
 	        "mid": 10,
 	        "long": 0,
-	        "short": 2
+	        "short": 2,
+	        "skills": [
+	            {
+	                "id": 1,
+	                "name": "name1",
+	                "type": 1,
+	                "level": 1,
+	                "ranks": [
+	                    5,
+	                    10,
+	                    20,
+	                    30,
+	                    40
+	                ],
+	                "effects": [
+	                    {
+	                        "type": 101,
+	                        "value": "H-H*N%"
+	                    },
+	                    {
+	                        "type": 101,
+	                        "value": "H-H*N%"
+	                    }
+	                ],
+	                "maxEffects": [
+	                    {
+	                        "type": 1,
+	                        "typeValue": 1,
+	                        "value": null
+	                    },
+	                    {
+	                        "type": 1,
+	                        "typeValue": 1,
+	                        "value": "H-H*N%"
+	                    }
+	                ]
+	            },
+	            {
+	                "id": 2,
+	                "name": "name2",
+	                "type": 1,
+	                "level": 2,
+	                "ranks": [
+	                    5,
+	                    10,
+	                    20,
+	                    30,
+	                    40
+	                ],
+	                "effects": [
+	                    {
+	                        "type": 101,
+	                        "value": "H-H*N%"
+	                    }
+	                ],
+	                "maxEffects": [
+	                    {
+	                        "type": 1,
+	                        "typeValue": 1,
+	                        "value": null
+	                    }
+	                ]
+	            }
+	        ],
+	        "skillHole": [
+	            0,
+	            1,
+	            0,
+	            0,
+	            0,
+	            2,
+	            0,
+	            0
+	        ]
 	    }
 	}

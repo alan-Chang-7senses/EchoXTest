@@ -16,6 +16,8 @@ use stdClass;
  */
 class PDOHelper {
     
+    const PREPARE_DEFAULT = 'none';
+    
     private PDO|null $pdo;
     private PDOStatement|null $sth;
     
@@ -35,31 +37,35 @@ class PDOHelper {
             
         } catch (Exception $ex) {
 
-            LogHelper::Extra('System connect error', ['message' => $ex->getMessage(), 'db' => $db]);
+            LogHelper::Extra('PDO_NEW', ['message' => $ex->getMessage(), 'db' => $db]);
             throw new Exception('System connect error', ErrorCode::SystemError, $ex);
         }
     }
     
     public function setTimezone(string $timezone) : void{
         
-        if($this->pdo->exec('SET time_zone = \''.$timezone.'\';') === false)
+        if($this->pdo->exec('SET time_zone = \''.$timezone.'\';') === false){
+            LogHelper::Extra('PDO_SET_TIMEZONE', ['timezone' => $timezone]);
             throw new Exception ('The database set timezone failure.', ErrorCode::SystemError);
+        }
     }
     
-    public function prepare(string $statement ,string $name = 'none') : void{
+    public function prepare(string $statement ,string $name = self::PREPARE_DEFAULT) : void{
         
-        if(empty($this->holder->$name) || $name == 'none'){
+        if(empty($this->holder->$name) || $name == self::PREPARE_DEFAULT){
             
-            $sth = $this->pdo->prepare($statement);
+            try {
+                
+                $sth = $this->pdo->prepare($statement);
+                
+            } catch (Exception $exc) {
+                
+                $this->_prepareLog('PDO_PREPARE_EXCEPTION', $statement, $name);
+                throw $exc;
+            }
+            
             if(!$sth){
-                
-                LogHelper::Extra('PDO_PREPARE', [
-                    'code' => $this->pdo->errorCode(),
-                    'Info' => $this->pdo->errorInfo(),
-                    'Statement' => $statement,
-                    'Prepare Name' => $name,
-                ]);
-                
+                $this->_prepareLog('PDO_PREPARE_FALSE', $statement, $name);
                 throw new Exception('The database server cannot successfully prepare the statement', ErrorCode::SQLError);
             }
             
@@ -69,6 +75,16 @@ class PDOHelper {
         $this->sth = $this->holder->$name;
     }
     
+    private function _prepareLog(string $tag, string $statement, string $name) : void{
+    
+        LogHelper::Extra($tag, [
+            'code' => $this->pdo->errorCode(),
+            'Info' => $this->pdo->errorInfo(),
+            'Statement' => $statement,
+            'Prepare Name' => $name,
+        ]);
+    }
+
     public function execute(array|null $bind = null) : bool{
         
         $result = $this->sth->execute($bind);

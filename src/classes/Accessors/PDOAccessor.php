@@ -26,11 +26,18 @@ class PDOAccessor {
     private string|null $orderBy = null;
     private string|null $limit = null;
     private int $fetchStyle = PDO::FETCH_OBJ;
+    private string $prepareName = PDOHelper::PREPARE_DEFAULT;
     
     public function __construct(string $label) {
         $this->ph = PDOHGenerator::Instance()->$label;
     }
     
+    public function PrepareName(string $name) : PDOAccessor{
+        
+        $this->prepareName = $name;
+        return $this;
+    }
+
     public function Fetch() : mixed{
         
         return $this->_Fetch('fetch');
@@ -51,7 +58,7 @@ class PDOAccessor {
         if($this->limit !== null) $statement .= $this->limit;
         
         $this->LogExtra($statement, $where->bind);
-        $this->ph->prepare($statement);
+        $this->ph->prepare($statement, $this->prepareName);
         return $this->ph->$func($where->bind , $this->fetchStyle);
     }
     
@@ -200,13 +207,22 @@ class PDOAccessor {
         return $this;
     }
     
+    public function ClearAll() : PDOAccessor{
+        $this->conditions = [];
+        $this->groupBy = null;
+        $this->orderBy = null;
+        $this->limit = null;
+        $this->prepareName = PDOHelper::PREPARE_DEFAULT;
+        return $this;
+    }
+
     public function FetchStyle(int $style) : PDOAccessor{
         $this->fetchStyle = $style;
         return $this;
     }
     
     private function executeBind(string $statement, array $bind) : bool{
-        $this->ph->prepare($statement);
+        $this->ph->prepare($statement, $this->prepareName);
         return $this->ph->execute($bind);
     }
     

@@ -1,9 +1,5 @@
 # King of Animals Games API
 
-## 版本
-
-0.3.0
-
 ## 介紹
 
 - 提供遊戲前端（Unity）存取資料以及處理遊戲邏輯的後端功能。
