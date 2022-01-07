@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.148
+-- 主機:                           192.168.2.117
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -111,6 +111,16 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
 
 -- 正在傾印表格  koa_static.SkillEffect 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
+INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Target`, `Duration`, `Formula`) VALUES
+	(1, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(2, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(3, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(4, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(5, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(6, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(7, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(8, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(9, 'effect1', 101, 0, 1, 'H-H*N%');
 /*!40000 ALTER TABLE `SkillEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillInfo 結構
@@ -119,10 +129,6 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   `AliasCode` varchar(50) DEFAULT NULL COMMENT '識別碼(企劃用)',
   `SkillName` varchar(50) DEFAULT NULL COMMENT '技能名稱標籤',
   `Description` varchar(50) DEFAULT NULL COMMENT '技能描述標籤',
-  `SourceType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '來源類型',
-  `SourceCode1` varchar(50) NOT NULL COMMENT '來源編碼1',
-  `SourceCode2` varchar(50) DEFAULT NULL COMMENT '來源編碼2',
-  `SourceCode3` varchar(50) DEFAULT NULL COMMENT '來源編碼3',
   `TriggerType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '觸發類型',
   `MainCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '主要條件',
   `SubCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '次要條件',
@@ -140,14 +146,20 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   `MaxConditionValue` tinyint(4) NOT NULL DEFAULT 0 COMMENT '滿等級技能條件值',
   `MaxEffect` varchar(50) DEFAULT NULL COMMENT '滿等技能效果',
   PRIMARY KEY (`SkillID`),
-  KEY `SourceType` (`SourceType`),
-  KEY `SourceType_SourceCode1` (`SourceType`,`SourceCode1`),
-  KEY `SourceType_SourceCode1_SourceCode2` (`SourceType`,`SourceCode1`,`SourceCode2`),
-  KEY `SourceType_SourceCode1_SourceCode2_SourceCode3` (`SourceType`,`SourceCode1`,`SourceCode2`,`SourceCode3`)
+  UNIQUE KEY `AliasCode` (`AliasCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
 
 -- 正在傾印表格  koa_static.SkillInfo 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
+INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `MainCondition`, `SubCondition`, `EnergyCondition`, `CardCondition`, `Effect`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxName`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
+	(1, 'Origin00001', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(2, 'Origin00002', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(3, 'Origin00003', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(4, 'Origin00004', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(5, 'Origin00005', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(6, 'Origin00006', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(7, 'Origin00007', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
+	(8, 'Origin00008', 'name1', 'desc1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1');
 /*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
@@ -162,7 +174,42 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
 
 -- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
+INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
+	(1, 'max001', 1, 1, NULL),
+	(2, 'max001', 1, 1, NULL),
+	(3, 'max001', 1, 1, NULL),
+	(4, 'max001', 1, 1, NULL),
+	(5, 'max001', 1, 1, NULL),
+	(6, 'max001', 1, 1, NULL),
+	(7, 'max001', 1, 1, NULL),
+	(8, 'max001', 1, 1, NULL),
+	(9, 'max001', 1, 1, NULL),
+	(10, 'max001', 1, 1, NULL),
+	(11, 'max001', 1, 1, NULL);
 /*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.SkillPart 結構
+CREATE TABLE IF NOT EXISTS `SkillPart` (
+  `SkillPartID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `PartCode` varchar(50) DEFAULT NULL COMMENT '部位外觀碼',
+  `PartType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '部位',
+  `AliasCode1` varchar(50) DEFAULT NULL COMMENT '技能識別碼',
+  `AliasCode2` varchar(50) DEFAULT NULL COMMENT '技能識別碼',
+  `AliasCode3` varchar(50) DEFAULT NULL COMMENT '技能識別碼',
+  PRIMARY KEY (`SkillPartID`),
+  UNIQUE KEY `PartCode_PartType` (`PartCode`,`PartType`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部位技能對照表';
+
+-- 正在傾印表格  koa_static.SkillPart 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillPart` DISABLE KEYS */;
+INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `AliasCode2`, `AliasCode3`) VALUES
+	(1, '110101', 1, 'Origin00001', 'Origin00002', NULL),
+	(2, '110101', 2, 'Origin00001', 'Origin00001', NULL),
+	(3, '110101', 3, 'Origin00001', 'Origin00001', 'Origin00001'),
+	(4, '110101', 4, 'Origin00001', 'Origin00001', 'Origin00001'),
+	(5, '110101', 5, 'Origin00001', 'Origin00001', 'Origin00001'),
+	(6, '110101', 6, 'Origin00001', 'Origin00001', NULL);
+/*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

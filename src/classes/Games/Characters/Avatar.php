@@ -2,9 +2,9 @@
 namespace Games\Characters;
 
 use Accessors\PDOAccessor;
-use Games\Consts\NFTDNA;
 use Games\Exceptions\CharacterException;
 use Games\Holders\CharacterPart;
+use Games\Utilities\PlayerUtility;
 use stdClass;
 /**
  * Description of Avatar
@@ -13,20 +13,16 @@ use stdClass;
  */
 class Avatar {
     
-    private static function PartCodeByDNA(string $dna) : string{
-        return substr($dna, NFTDNA::PartStart, NFTDNA::PartLength);
-    }
-    
     private static function CharacterPartByNFTData(stdClass $row) : CharacterPart{
         
         $part = new CharacterPart();
         $part->id = $row->CharacterID;
-        $part->head = self::PartCodeByDNA($row->HeadDNA);
-        $part->body = self::PartCodeByDNA($row->BodyDNA);
-        $part->hand = self::PartCodeByDNA($row->HandDNA);
-        $part->leg = self::PartCodeByDNA($row->LegDNA);
-        $part->back = self::PartCodeByDNA($row->BackDNA);
-        $part->hat = self::PartCodeByDNA($row->HatDNA);
+        $part->head = PlayerUtility::PartCodeByDNA($row->HeadDNA);
+        $part->body = PlayerUtility::PartCodeByDNA($row->BodyDNA);
+        $part->hand = PlayerUtility::PartCodeByDNA($row->HandDNA);
+        $part->leg = PlayerUtility::PartCodeByDNA($row->LegDNA);
+        $part->back = PlayerUtility::PartCodeByDNA($row->BackDNA);
+        $part->hat = PlayerUtility::PartCodeByDNA($row->HatDNA);
         
         return $part;
     }
