@@ -35,7 +35,7 @@ class CharacterData extends BaseProcessor{
         
         $creature = new stdClass();
         $creature->id = $playerFull->CharacterID;
-        $creature->name = $playerFull->Nickname ?? $playerFull->CharacterID;
+        $creature->name = $playerFull->Nickname ?? (string)$playerFull->CharacterID;
         $creature->ele = $playerFull->Attribute;
         $creature->sync = $playerFull->SyncRate / SyncRate::Divisor;
         $creature->level = $playerFull->Level;
