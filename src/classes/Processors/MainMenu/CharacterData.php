@@ -119,7 +119,8 @@ class CharacterData extends BaseProcessor{
             foreach(explode(',', $info->Effect) as $effectID){
                 $skill->effects[] = [
                     'type' => $skillEffects[$effectID]->EffectType,
-                    'value' => SkillGenerator::valueByFormuleAndLevelN($skillEffects[$effectID]->Formula, $skill->ranks[$skill->level])
+//                    'value' => SkillGenerator::valueByFormuleAndLevelN($skillEffects[$effectID]->Formula, $skill->ranks[$skill->level])
+                    'value' => $skillEffects[$effectID]->Formula
                 ];
             }
             
@@ -127,7 +128,8 @@ class CharacterData extends BaseProcessor{
                 $skill->maxEffects[] = [
                     'type' => $maxSkillEffects[$maxEffectID]->EffectType,
                     'typeValue' => $maxSkillEffects[$maxEffectID]->TypeValue,
-                    'value' => SkillGenerator::valueByFormuleAndLevelN($maxSkillEffects[$maxEffectID]->Formula, $skill->ranks[$skill->level])
+//                    'value' => SkillGenerator::valueByFormuleAndLevelN($maxSkillEffects[$maxEffectID]->Formula, $skill->ranks[$skill->level])
+                    'value' => $maxSkillEffects[$maxEffectID]->Formula
                 ];
             }
             
