@@ -2,11 +2,11 @@
 
 namespace Processors\Login;
 
-use Accessors\PDOAccessor;
 use Consts\ErrorCode;
 use Consts\Predefined;
 use Consts\Sessions;
 use Exceptions\LoginException;
+use Games\Accessors\UserAccessor;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -31,8 +31,8 @@ class Verify extends BaseProcessor{
         
         if(!preg_match(Predefined::FormatAccount, $account) || !preg_match(Predefined::FormatPassword, $password))
             throw new LoginException (LoginException::FormatError);
-        
-        $row = (new PDOAccessor('KoaMain'))->FromTable('Users')->WhereEqual('Username', $account)->Fetch();
+       
+        $row = (new UserAccessor())->rowUserByUsername($account);
         
         if($row === false) throw new LoginException(LoginException::NoAccount);
         if($row->Status != Predefined::UserEnabled) throw new LoginException(LoginException::DisabledAccount);
