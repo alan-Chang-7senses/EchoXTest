@@ -2,7 +2,6 @@
 namespace Games\Players;
 
 use Accessors\PDOAccessor;
-use Games\Exceptions\PlayerException;
 use Games\Holders\PlayerPart;
 use Games\Utilities\PlayerUtility;
 use stdClass;
@@ -25,19 +24,6 @@ class Avatar {
         $part->hat = PlayerUtility::PartCodeByDNA($row->HatDNA);
         
         return $part;
-    }
-
-    public static function PlayerPartByID(int $userID, int|null $id = null) : PlayerPart{
-        
-        $accessor = new PDOAccessor('KoaMain');
-        if($id !== null) $accessor->WhereEqual('PlayerID', $id);
-        
-        $row = $accessor->FromTableJoinUsing('PlayerNFT', 'PlayerHolder', 'INNER', 'PlayerID')
-                ->WhereEqual('UserID', $userID)->Limit(1)->Fetch();
-        
-        if($row === false) throw new PlayerException(PlayerException::NotFound);
-        
-        return self::PlayerPartByNFTData($row);
     }
     
     public static function PlayersPartByOffset(int $userID, int $offset = 0, int $count = 1) : array{

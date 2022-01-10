@@ -2,10 +2,13 @@
 
 namespace Processors\MainMenu;
 
-use Accessors\PDOAccessor;
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Players\Avatar;
+use Games\Accessors\PlayerAccessor;
+use Games\Accessors\SceneAccessor;
+use Games\Accessors\UserAccessor;
+use Games\Exceptions\PlayerException;
+use Games\Utilities\PlayerUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Holders\ResultData;
@@ -23,17 +26,27 @@ class MainData extends BaseProcessor{
         $userID = $_SESSION[Sessions::UserID];
         $configs = ConfigGenerator::Instance();
         
-        $accessorMain = new PDOAccessor('KoaMain');
-        $user = $accessorMain->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
+        $playerID = filter_input(INPUT_POST, 'characterID');
+        $playerAccessor = new PlayerAccessor();
         
-        $accessorStatic = new PDOAccessor('KoaStatic');
-        $sceneInfo = $accessorStatic->FromTable('SceneInfo')->Fetch();
+        $row = $playerID !== null ? $playerAccessor->rowPlayerJoinHolderByUserAndPlayerID($userID, $playerID) : $playerAccessor->rowPlayerJoinHolderByUserID($userID);
+        if($row === false) throw new PlayerException(PlayerException::NotFound);
+
+        $player = new stdClass();
+        $player->id = $row->PlayerID;
+        $player->head = PlayerUtility::PartCodeByDNA($row->HeadDNA);
+        $player->body = PlayerUtility::PartCodeByDNA($row->BodyDNA);
+        $player->hand = PlayerUtility::PartCodeByDNA($row->HandDNA);
+        $player->leg = PlayerUtility::PartCodeByDNA($row->LegDNA);
+        $player->back = PlayerUtility::PartCodeByDNA($row->BackDNA);
+        $player->hat = PlayerUtility::PartCodeByDNA($row->HatDNA);
+
+        $userAccessor = new UserAccessor();
+        $user = $userAccessor->rowUserByID($userID);
         
-        $todaySecond = DataGenerator::TodaySecondByTimezone($configs->TimezoneDefault);
-        $sceneClimate = $accessorStatic->ClearCondition()->FromTable('SceneClimate')
-                ->WhereEqual('SceneID', $sceneInfo->SceneID)
-                ->WhereLess('StartTime', $todaySecond)
-                ->OrderBy('StartTime', 'DESC')->Limit(1)->Fetch();
+        $sceneAccessor = new SceneAccessor();
+        $sceneInfo = $sceneAccessor->rowInfoByID(1);
+        $sceneClimate = $sceneAccessor->rowCurrentClimateBySceneID($sceneInfo->SceneID, DataGenerator::TodaySecondByTimezone($configs->TimezoneDefault));
         
         $map = new stdClass();
         $map->windDirection = $sceneClimate->WindDirection;
@@ -41,9 +54,6 @@ class MainData extends BaseProcessor{
         $map->sceneEnv = $sceneInfo->SceneEnv;
         $map->weather = $sceneClimate->Weather;
         $map->lighting = $sceneClimate->Lighting;
-        
-        $playerID = filter_input(INPUT_POST, 'characterID');
-        $player = Avatar::PlayerPartByID($userID, $playerID);
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $user->Nickname;
