@@ -4,7 +4,7 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Characters\Avatar;
+use Games\Players\Avatar;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -24,7 +24,7 @@ class CharacterSelectData extends BaseProcessor {
         
         $result = new ResultData(ErrorCode::Success);
         $result->total = Avatar::TotalByUser($userID);
-        $result->players = Avatar::CharactersPartByOffset($userID, $offset, $count);
+        $result->players = Avatar::PlayersPartByOffset($userID, $offset, $count);
         
         return $result;
     }

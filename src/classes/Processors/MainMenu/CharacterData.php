@@ -5,7 +5,6 @@ namespace Processors\MainMenu;
 use Consts\ErrorCode;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\SkillAccessor;
-use Games\Characters\PlayerAbility;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
 use Games\Generators\SkillGenerator;
@@ -14,6 +13,7 @@ use Games\Holders\EnvironmentAdaptability;
 use Games\Holders\SunAdaptability;
 use Games\Holders\TerrainAdaptability;
 use Games\Holders\WeatherAdaptability;
+use Games\Players\PlayerAbility;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -27,15 +27,15 @@ class CharacterData extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $characterID = InputHelper::post('characterID');
+        $playerID = InputHelper::post('characterID');
         
         $playerAccessor = new PlayerAccessor();
         
-        $playerFull = $playerAccessor->rowPlayerJoinHolderByCharacterID($characterID);
+        $playerFull = $playerAccessor->rowPlayerJoinHolderLevelByPlayerID($playerID);
         
         $creature = new stdClass();
-        $creature->id = $playerFull->CharacterID;
-        $creature->name = $playerFull->Nickname ?? (string)$playerFull->CharacterID;
+        $creature->id = $playerFull->PlayerID;
+        $creature->name = $playerFull->Nickname ?? (string)$playerFull->PlayerID;
         $creature->ele = $playerFull->Attribute;
         $creature->sync = $playerFull->SyncRate / SyncRate::Divisor;
         $creature->level = $playerFull->Level;
@@ -93,7 +93,7 @@ class CharacterData extends BaseProcessor{
             $maxEffectIDs = array_merge($maxEffectIDs, explode(',', $info->MaxEffect));
         }
         
-        $rows = $playerAccessor->rowsSkillByCharacterIDAndSkillIDs($characterID, $skillIDs);
+        $rows = $playerAccessor->rowsSkillByPlayerIDAndSkillIDs($playerID, $skillIDs);
         $playerSkills = [];
         foreach($rows as $row) $playerSkills[$row->SkillID] = $row;
         

@@ -5,7 +5,7 @@ namespace Processors\MainMenu;
 use Accessors\PDOAccessor;
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Characters\Avatar;
+use Games\Players\Avatar;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Holders\ResultData;
@@ -42,8 +42,8 @@ class MainData extends BaseProcessor{
         $map->weather = $sceneClimate->Weather;
         $map->lighting = $sceneClimate->Lighting;
         
-        $characterID = filter_input(INPUT_POST, 'characterID');
-        $player = Avatar::CharacterPartByID($userID, $characterID);
+        $playerID = filter_input(INPUT_POST, 'characterID');
+        $player = Avatar::PlayerPartByID($userID, $playerID);
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $user->Nickname;

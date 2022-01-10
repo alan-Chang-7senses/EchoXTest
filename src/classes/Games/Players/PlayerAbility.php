@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Characters;
+namespace Games\Players;
 
 use Games\Consts\AbilityFactor;
 use Games\Consts\Habit;

@@ -1,7 +1,7 @@
 <?php
 
-use Games\Exceptions\CharacterException;
+use Games\Exceptions\PlayerException;
 
-$lang[CharacterException::NotFound] = 'No character found';
+$lang[PlayerException::NotFound] = 'No player found';
 
 return $lang;

@@ -3,11 +3,11 @@
 namespace Games\Holders;
 
 /**
- * Description of CharacterPart
+ * Description of PlayerPart
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class CharacterPart {
+class PlayerPart {
     
     public int $id;
     public string $head;
