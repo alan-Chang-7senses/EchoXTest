@@ -5,12 +5,12 @@ namespace Processors\MainMenu;
 use Consts\ErrorCode;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\SkillAccessor;
+use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
 use Games\Generators\SkillGenerator;
 use Games\Holders\DurableAdaptability;
 use Games\Holders\EnvironmentAdaptability;
-use Games\Holders\SunAdaptability;
 use Games\Holders\TerrainAdaptability;
 use Games\Holders\WeatherAdaptability;
 use Games\Players\PlayerAbility;
@@ -68,9 +68,7 @@ class CharacterData extends BaseProcessor{
         $creature->upslope = $adaptability->upslope;
         $creature->downslope = $adaptability->downslope;
         
-        $adaptability = new SunAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
-        $creature->sun = $adaptability->Value();
+        $creature->sun = DNASun::AttrAdapt[$playerFull->Attribute];
         
         $creature->habit = PlayerAbility::Habit($playerFull->Constitution, $playerFull->Strength, $playerFull->Dexterity, $playerFull->Agility);
         
