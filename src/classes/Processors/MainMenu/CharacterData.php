@@ -8,7 +8,7 @@ use Games\Accessors\SkillAccessor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
-use Games\Generators\SkillGenerator;
+use Games\Skills\SkillGenerator;
 use Games\Holders\DurableAdaptability;
 use Games\Holders\EnvironmentAdaptability;
 use Games\Holders\TerrainAdaptability;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Generators;
+namespace Games\Skills;
 
 use Games\Accessors\SkillAccessor;
 use Games\Consts\SkillPart;
