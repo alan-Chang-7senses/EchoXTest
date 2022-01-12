@@ -1,11 +1,12 @@
 <?php
 
-namespace Games\Holders;
+namespace Games\Players\Adaptability;
 
 use Games\Consts\DNASun;
 /**
- * Description of SunAdaptability
- *
+ * 太陽適性（棄用）
+ * 太陽適性改由角色屬性決定
+ * 刪除「角色屬性與部位屬性相同時的加成規則」；且太陽適性沒有評比和其他適性不同，用部位積分去計算不適合。所以改成「角色屬性=太陽適性」
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class SunAdaptability extends BaseAdaptability{

@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Holders;
+namespace Games\Players\Adaptability;
 
 /**
  * Description of BaseAdaptability

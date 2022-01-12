@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Utilities;
+namespace Games\Players;
 
 use Games\Consts\NFTDNA;
 /**

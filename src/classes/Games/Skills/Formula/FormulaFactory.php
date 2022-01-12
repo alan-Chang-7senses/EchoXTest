@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Skills;
+namespace Games\Skills\Formula;
 /**
  * Description of SkillFormuleFactory
  *

@@ -1,12 +1,12 @@
 <?php
 
-namespace Games\Generators;
+namespace Games\Skills;
 
 use Games\Accessors\SkillAccessor;
 use Games\Consts\SkillPart;
-use Games\Utilities\PlayerUtility;
+use Games\Players\PlayerUtility;
+use Games\Skills\Formula\FormulaFactory;
 use stdClass;
-use Games\Skills\FormulaFactory;
 /**
  * Description of SkillGenerator
  *

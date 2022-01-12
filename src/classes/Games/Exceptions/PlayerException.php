@@ -5,11 +5,11 @@ namespace Games\Exceptions;
 use Exceptions\NormalException;
 
 /**
- * Description of CharacterException
+ * Description of PlayerException
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class CharacterException extends NormalException{
+class PlayerException extends NormalException{
     
     const NotFound = 2001;
 }

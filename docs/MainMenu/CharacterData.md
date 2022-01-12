@@ -81,7 +81,7 @@ Content Type: `application/json`
 	- 9：渾沌。
 
 - <span id="sun">**sun 太陽適性**</span>
-	- 0：一般。
+	- 0：無（一般）。
 	- 1：日行性。
 	- 2：夜行性。
 

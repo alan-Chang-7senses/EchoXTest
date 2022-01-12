@@ -9,7 +9,13 @@ namespace Games\Consts;
  */
 class DNASun {
     
-    const Normal = '1';
-    const Day = '2';
-    const Night = '3';
+    const Normal = 0;
+    const Day = 1;
+    const Night = 2;
+    
+    const AttrAdapt = [
+        PlayerAttr::Fire => DNASun::Normal,
+        PlayerAttr::Water => DNASun::Day,
+        PlayerAttr::Wood => DNASun::Night,
+    ];
 }

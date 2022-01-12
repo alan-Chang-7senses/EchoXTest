@@ -1,11 +1,11 @@
 <?php
 
-namespace Games\Characters;
+namespace Games\Players;
 
 use Games\Consts\AbilityFactor;
 use Games\Consts\Habit;
 use Games\Consts\NFTDNA;
-use Games\Holders\BaseAdaptability;
+use Games\Players\Adaptability\BaseAdaptability;
 /**
  * NFT 到遊戲中角色能力值換算
  *

@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Holders;
+namespace Games\Players\Adaptability;
 
 use Games\Consts\DNAWeather;
 /**
