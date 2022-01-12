@@ -8,7 +8,7 @@ use Games\Accessors\PlayerAccessor;
 use Games\Accessors\SceneAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Exceptions\PlayerException;
-use Games\Utilities\PlayerUtility;
+use Games\Players\PlayerUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Holders\ResultData;

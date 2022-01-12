@@ -5,7 +5,7 @@ namespace Processors\MainMenu;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Accessors\PlayerAccessor;
-use Games\Utilities\PlayerUtility;
+use Games\Players\PlayerUtility;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
