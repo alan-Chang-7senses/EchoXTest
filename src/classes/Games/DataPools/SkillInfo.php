@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Skills;
+namespace Games\DataPools;
 
 use Games\Consts\Keys;
 use Accessors\MemcacheAccessor;

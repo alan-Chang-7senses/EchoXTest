@@ -2,7 +2,6 @@
 
 namespace Games\DataPools;
 
-use Accessors\MemcacheAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\SkillAccessor;
 use Games\Consts\DNASun;
@@ -17,14 +16,16 @@ use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillEffectHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\Holders\PlayerSkillMaxEffectHolder;
+use Games\Players\PlayerAbility;
 use Games\Skills\SkillGenerator;
+use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerInfo {
+class PlayerInfo extends BasePool {
     
     public static PlayerInfo $instance;
     
@@ -32,24 +33,10 @@ class PlayerInfo {
         if(empty(self::$instance)) self::$instance = new PlayerInfo();
         return self::$instance;
     }
-
-    public function __get($id) {
-        
-        $key = Keys::PlayerPrefix.$id;
-        $mem = MemcacheAccessor::Instance();
-        
-        $info = $mem->get($key);
-        if($info !== false) $info = json_decode($info);
-        else{
-            $info = $this->infoFromDB($id);
-            $mem->set($key, json_encode($info));
-        }
-        
-        $this->$key = $info;
-        return $info;
-    }
     
-    private function infoFromDB(int $playerID) : PlayerInfoHolder|false{
+    protected string $keyPrefix = Keys::PlayerPrefix;
+
+    public function FromDB(int|string $playerID) : stdClass|false{
         
         $playerAccessor = new PlayerAccessor();
         $player = $playerAccessor->rowPlayerJoinHolderLevelByPlayerID($playerID);
