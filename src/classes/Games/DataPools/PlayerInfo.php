@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Players;
+namespace Games\DataPools;
 
 use Accessors\MemcacheAccessor;
 use Games\Accessors\PlayerAccessor;
@@ -39,14 +39,14 @@ class PlayerInfo {
         $mem = MemcacheAccessor::Instance();
         
         $info = $mem->get($key);
-        if($info !== false) $this->$key = json_decode($info);
-        
-        if(!isset($this->$key)){
-            $this->$key = $this->infoFromDB($id);
-            $mem->set($key, json_encode($this->$key));
+        if($info !== false) $info = json_decode($info);
+        else{
+            $info = $this->infoFromDB($id);
+            $mem->set($key, json_encode($info));
         }
         
-        return $this->$key;
+        $this->$key = $info;
+        return $info;
     }
     
     private function infoFromDB(int $playerID) : PlayerInfoHolder|false{

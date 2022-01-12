@@ -3,7 +3,7 @@
 namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
-use Games\Players\PlayerInfo;
+use Games\DataPools\PlayerInfo;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
