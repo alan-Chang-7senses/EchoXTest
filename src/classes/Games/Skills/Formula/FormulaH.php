@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\Skills;
+namespace Games\Skills\Formula;
 
+use Games\Consts\SkillFormula;
 /**
  * Description of FormulaH
  *
@@ -10,6 +11,6 @@ namespace Games\Skills;
 class FormulaH extends BaseFormula{
     
     public function Process(): float {
-        return 10.2;
+        return SkillFormula::SkillH;
     }
 }

@@ -9,6 +9,9 @@ namespace Games\Consts;
  */
 class SkillFormula {
     
+    const SkillH = 0.66;
+    const SkillS = 6.6;
+    
     const ClimateAccelerationSunny = 1;
     const ClimateAccelerationAurora = 1.2;
     const ClimateAccelerationSandDust = 1;

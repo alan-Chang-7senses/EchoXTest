@@ -10,4 +10,5 @@ namespace Games\Consts;
 class Keys {
     
     const PlayerPrefix = 'player_';
+    const SkillPrefix = 'skill_';
 }
