@@ -9,10 +9,10 @@ namespace Games\Skills\Formula;
  */
 abstract class BaseFormula {
     
-    protected int $levelN;
-    
-    public function __construct(int $levelN) {
-        $this->levelN = $levelN;
+    protected FormulaFactory $factory;
+
+    public function __construct(FormulaFactory $factory) {
+        $this->factory = $factory;
     }
     
     abstract function Process() : float;
