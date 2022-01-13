@@ -149,6 +149,6 @@ class PlayerInfo extends BasePool {
             $holder->skillHole[] = $skillSlot[$i] ?? 0;
         }
         
-        return $holder;
+        return $this->ConventToStdClass($holder);
     }
 }
