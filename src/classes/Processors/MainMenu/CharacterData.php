@@ -4,10 +4,13 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Games\DataPools\PlayerPool;
+use Games\DataPools\SkillEffectPool;
+use Games\DataPools\SkillMaxEffectPool;
 use Games\DataPools\SkillPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
+use stdClass;
 /**
  * Description of CharacterData
  *
@@ -20,13 +23,39 @@ class CharacterData extends BaseProcessor{
         $playerID = InputHelper::post('characterID');
         
         $player = PlayerPool::Instance()->$playerID;
-        
         $skillPool = SkillPool::Instance();
+        $skillEffectPool = SkillEffectPool::Instance();
+        $skillMaxEffectPool = SkillMaxEffectPool::Instance();
+        
         $skills = [];
-        foreach($player->skills as $skill){
-            $skillInfo = $skillPool->{$skill->skillID};
-            $skillInfo->level = $skill->level;
-            $skills[] = $skillInfo;
+        foreach($player->skills as $skillInfo){
+            
+            $skill = $skillPool->{$skillInfo->skillID};
+            $skill->level = $skillInfo->level;
+            
+            $effects = [];
+            $effect = new stdClass();
+            foreach($skill->effects as $effectID){
+                $row = $skillEffectPool->{$effectID};
+                $effect->type = $row->EffectType;
+                $effect->value = $row->Formula;
+                $effects[] = $effect;
+            }
+            
+            $maxEffects = [];
+            $maxEffect = new stdClass();
+            foreach ($skill->maxEffects as $maxEffectID) {
+                $row = $skillMaxEffectPool->{$maxEffectID};
+                $maxEffect->type = $row->EffectType;
+                $maxEffect->typeValue = $row->TypeValue;
+                $maxEffect->value = $row->Formula;
+                $maxEffects[] = $maxEffect;
+            }
+            
+            $skill->effects = $effects;
+            $skill->maxEffects = $maxEffects;
+            
+            $skills[] = $skill;
         }
         
         $player->skills = $skills;

@@ -4,7 +4,6 @@ namespace Games\DataPools;
 
 use Games\Accessors\PlayerAccessor;
 use Games\Consts\DNASun;
-use Games\Consts\Keys;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
 use Games\Players\Adaptability\DurableAdaptability;
@@ -30,7 +29,7 @@ class PlayerPool extends BasePool {
         return self::$instance;
     }
     
-    protected string $keyPrefix = Keys::PlayerPrefix;
+    protected string $keyPrefix = 'player_';
 
     public function FromDB(int|string $playerID) : stdClass|false{
         

@@ -3,7 +3,6 @@
 namespace Games\DataPools;
 
 use Games\Accessors\SkillAccessor;
-use Games\Consts\Keys;
 use Games\Skills\Holders\SkillEffectHolder;
 use Games\Skills\Holders\SkillInfoHolder;
 use Games\Skills\Holders\SkillMaxEffectHolder;
@@ -22,7 +21,7 @@ class SkillPool extends BasePool{
         return self::$instance;
     }
     
-    protected string $keyPrefix = Keys::SkillPrefix;
+    protected string $keyPrefix = 'skill_';
 
     public function FromDB(int|string $id): stdClass|false {
         
@@ -39,11 +38,11 @@ class SkillPool extends BasePool{
         
         $rows = $skillAccessor->rowsEffectByEffectIDs(explode(',', $skillInfo->Effect));
         $skill->effects = [];
-        foreach ($rows as $row) $skill->effects[] = new SkillEffectHolder($row->EffectType, $row->Formula);
+        foreach ($rows as $row) $skill->effects[] = $row->SkillEffectID;
         
         $rows = $skillAccessor->rowsMaxEffectByEffectIDs(explode(',', $skillInfo->MaxEffect));
         $skill->maxEffects = [];
-        foreach ($rows as $row) $skill->maxEffects[] = new SkillMaxEffectHolder ($row->EffectType, $row->TypeValue, $row->Formula);
+        foreach ($rows as $row) $skill->maxEffects[] = $row->MaxEffectID;
         
         return $this->ConventToStdClass($skill);
     }
