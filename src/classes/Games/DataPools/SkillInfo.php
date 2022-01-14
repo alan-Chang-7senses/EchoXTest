@@ -2,14 +2,18 @@
 
 namespace Games\DataPools;
 
+use Games\Accessors\SkillAccessor;
 use Games\Consts\Keys;
-use Accessors\MemcacheAccessor;
+use Games\Skills\Holders\SkillEffectHolder;
+use Games\Skills\Holders\SkillInfoHolder;
+use Games\Skills\Holders\SkillMaxEffectHolder;
+use stdClass;
 /**
  * Description of SkillInfo
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class SkillInfo {
+class SkillInfo extends BasePool{
     
     public static SkillInfo $instance;
     
@@ -18,21 +22,30 @@ class SkillInfo {
         return self::$instance;
     }
     
-    public function __get($id) {
+    protected string $keyPrefix = Keys::SkillPrefix;
+
+    public function FromDB(int|string $id): stdClass|false {
         
-        $key = Keys::SkillPrefix.$id;
-        $mem = MemcacheAccessor::Instance();
+        $skillAccessor = new SkillAccessor();
+        $skillInfo = $skillAccessor->rowInfoBySkillID($id);
+        if($skillInfo === false) return false;
         
-        $info = $mem->get($key);
-        if($info !== false) $info = json_decode ($info);
-        else {
-            
-            $mem->set($key, json_encode($info));
-        }
+        $skill = new SkillInfoHolder();
+        $skill->id = $skillInfo->SkillID;
+        $skill->type = $skillInfo->TriggerType;
+        $skill->level = 1;
+        $skill->name = $skillInfo->SkillName;
+        $skill->ranks = [$skillInfo->Level1, $skillInfo->Level2, $skillInfo->Level3, $skillInfo->Level4, $skillInfo->Level5];
         
-        $this->$key = $info;
-        return $info;
+        $rows = $skillAccessor->rowsEffectByEffectIDs(explode(',', $skillInfo->Effect));
+        $skill->effects = [];
+        foreach ($rows as $row) $skill->effects[] = new SkillEffectHolder($row->EffectType, $row->Formula);
+        
+        $rows = $skillAccessor->rowsMaxEffectByEffectIDs(explode(',', $skillInfo->MaxEffect));
+        $skill->maxEffects = [];
+        foreach ($rows as $row) $skill->maxEffects[] = new SkillMaxEffectHolder ($row->EffectType, $row->TypeValue, $row->Formula);
+        
+        return $this->ConventToStdClass($skill);
     }
-    
-    
+
 }

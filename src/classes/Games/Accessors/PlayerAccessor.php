@@ -37,6 +37,10 @@ class PlayerAccessor extends BaseAccessor{
                 ->WhereEqual('PlayerID', $id)->Fetch();
     }
     
+    public function rowsSkillByPlayerID(int $playerID) : array{
+        return $this->MainAccessor()->FromTable('PlayerSkill')->WhereEqual('PlayerID', $playerID)->FetchAll();
+    }
+
     /**
      * 透過角色ID和技能ID取得多筆角色技能等級與裝備資料
      * @param int $playerID
