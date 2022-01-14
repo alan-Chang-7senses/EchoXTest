@@ -3,8 +3,8 @@
 namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
-use Games\DataPools\PlayerInfo;
-use Games\DataPools\SkillInfo;
+use Games\DataPools\PlayerPool;
+use Games\DataPools\SkillPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -19,20 +19,20 @@ class CharacterData extends BaseProcessor{
         
         $playerID = InputHelper::post('characterID');
         
-        $playerInfo = PlayerInfo::Instance()->$playerID;
+        $player = PlayerPool::Instance()->$playerID;
         
-        $skillInfoPool = SkillInfo::Instance();
+        $skillPool = SkillPool::Instance();
         $skills = [];
-        foreach($playerInfo->skills as $skill){
-            $skillInfo = $skillInfoPool->{$skill->skillID};
+        foreach($player->skills as $skill){
+            $skillInfo = $skillPool->{$skill->skillID};
             $skillInfo->level = $skill->level;
             $skills[] = $skillInfo;
         }
         
-        $playerInfo->skills = $skills;
+        $player->skills = $skills;
         
         $result = new ResultData(ErrorCode::Success);
-        $result->creature = $playerInfo;
+        $result->creature = $player;
         
         return $result;
     }

@@ -21,12 +21,12 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerInfo extends BasePool {
+class PlayerPool extends BasePool {
     
-    public static PlayerInfo $instance;
+    public static PlayerPool $instance;
     
-    public static function Instance() : PlayerInfo{
-        if(empty(self::$instance)) self::$instance = new PlayerInfo();
+    public static function Instance() : PlayerPool{
+        if(empty(self::$instance)) self::$instance = new PlayerPool();
         return self::$instance;
     }
     

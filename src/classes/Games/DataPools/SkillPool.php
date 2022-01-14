@@ -13,12 +13,12 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class SkillInfo extends BasePool{
+class SkillPool extends BasePool{
     
-    public static SkillInfo $instance;
+    public static SkillPool $instance;
     
-    public static function Instance() : SkillInfo {
-        if(empty(self::$instance)) self::$instance = new SkillInfo();
+    public static function Instance() : SkillPool {
+        if(empty(self::$instance)) self::$instance = new SkillPool();
         return self::$instance;
     }
     
