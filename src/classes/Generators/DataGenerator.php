@@ -30,4 +30,10 @@ class DataGenerator {
     private static function DateTimeZone(int $timezone) : DateTimeZone{
         return new DateTimeZone('GMT'.($timezone >= 0 ? '+'.$timezone : $timezone));
     }
+    
+    public static function ConventType(mixed $obj, string $classFull) : mixed {
+        $result = new $classFull();
+        foreach(get_object_vars($obj) as $key => $value) $result->$key = $value;
+        return $result;
+    }
 }
