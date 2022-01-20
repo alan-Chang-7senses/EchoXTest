@@ -60,6 +60,7 @@ class CharacterData extends BaseProcessor{
         }
         
         $player->skills = $skills;
+        unset($player->hp);
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $player;
