@@ -28,7 +28,7 @@ abstract class BasePool {
             $data = $this->FromDB($id);
             $mem->set($key, json_encode($data));
         }
-        
+//        $mem->delete($key);
         $this->$key = $data;
         return $data;
     }
@@ -55,11 +55,5 @@ abstract class BasePool {
         
         MemcacheAccessor::Instance()->set($key, json_encode($data));
         $this->$key = $data;
-    }
-    
-    protected function ConventToStdClass(mixed $obj) : stdClass{
-        $resutl = new stdClass();
-        foreach (get_object_vars($obj) as $key => $value) $resutl->$key = $value;
-        return $resutl;
     }
 }

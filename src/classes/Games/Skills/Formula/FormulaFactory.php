@@ -1,6 +1,8 @@
 <?php
 
 namespace Games\Skills\Formula;
+
+use stdClass;
 /**
  * Description of SkillFormuleFactory
  *
@@ -9,20 +11,20 @@ namespace Games\Skills\Formula;
 class FormulaFactory {
     
     const OperandAll = [
-        'H','S',//'SPD','POW','FIG','INT','STA','HP','Gv','Cv',
+        'H','S','N',//'SPD','POW','FIG','INT','STA','HP','Gv','Cv',
 //        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
-    const OperandLevelN = 'N';
+    
     const OperatorPercent = '%';
     const OperatorPercentValue = '/100';
-    const PrefixFormulaClass = 'Games\Skills\Formula';
+    const PrefixFormulaClass = 'Games\Skills\Formula\Formula';
     
-    public int $playerID;
+    public stdClass $player;
+    public stdClass $skill;
     public string|null $formula = null;
     
-    public function __construct(int $playerID, string|null $formula) {
+    public function __construct(string|null $formula) {
         
-        $this->playerID = $playerID;
         $this->formula = $formula;
     }
     
@@ -34,7 +36,7 @@ class FormulaFactory {
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
-        $values = [self::OperatorPercent => self::OperatorPercentValue, self::OperandLevelN => $this->levelN];
+        $values = [self::OperatorPercent => self::OperatorPercentValue];
         foreach ($operands as $operand){
             $className = self::PrefixFormulaClass.$operand;
             $values[$operand] = (new $className($this))->Process();
@@ -42,12 +44,14 @@ class FormulaFactory {
         
         $result = 0;
         eval('$result = '.strtr($this->formula, $values).';');
-        return $result;
+        return (float) number_format($result, 3);
     }
     
-    public static function ProcessNormal(int $playerID, string|null $formula) : float|null{
+    public static function ProcessByPlayerAndSkill(string|null $formula, stdClass $player, stdClass $skill) : float|null{
         
-        $factory = new FormulaFactory($playerID, $formula);
+        $factory = new FormulaFactory($formula);
+        $factory->player = $player;
+        $factory->skill = $skill;
         return $factory->Process();
     }
 }

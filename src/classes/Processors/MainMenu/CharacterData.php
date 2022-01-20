@@ -7,6 +7,7 @@ use Games\DataPools\PlayerPool;
 use Games\DataPools\SkillEffectPool;
 use Games\DataPools\SkillMaxEffectPool;
 use Games\DataPools\SkillPool;
+use Games\Skills\Formula\FormulaFactory;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -38,7 +39,7 @@ class CharacterData extends BaseProcessor{
             foreach($skill->effects as $effectID){
                 $row = $skillEffectPool->{$effectID};
                 $effect->type = $row->EffectType;
-                $effect->value = $row->Formula;
+                $effect->value = FormulaFactory::ProcessByPlayerAndSkill($row->Formula, $player, $skill);
                 $effects[] = $effect;
             }
             
@@ -48,7 +49,7 @@ class CharacterData extends BaseProcessor{
                 $row = $skillMaxEffectPool->{$maxEffectID};
                 $maxEffect->type = $row->EffectType;
                 $maxEffect->typeValue = $row->TypeValue;
-                $maxEffect->value = $row->Formula;
+                $maxEffect->value = FormulaFactory::ProcessByPlayerAndSkill($row->Formula, $player, $skill);
                 $maxEffects[] = $maxEffect;
             }
             

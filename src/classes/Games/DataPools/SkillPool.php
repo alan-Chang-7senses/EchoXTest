@@ -3,9 +3,8 @@
 namespace Games\DataPools;
 
 use Games\Accessors\SkillAccessor;
-use Games\Skills\Holders\SkillEffectHolder;
 use Games\Skills\Holders\SkillInfoHolder;
-use Games\Skills\Holders\SkillMaxEffectHolder;
+use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of SkillInfo
@@ -44,7 +43,7 @@ class SkillPool extends BasePool{
         $skill->maxEffects = [];
         foreach ($rows as $row) $skill->maxEffects[] = $row->MaxEffectID;
         
-        return $this->ConventToStdClass($skill);
+        return DataGenerator::ConventType($skill, 'stdClass');
     }
 
 }

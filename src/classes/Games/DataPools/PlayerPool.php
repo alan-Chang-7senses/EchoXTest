@@ -13,6 +13,7 @@ use Games\Players\Adaptability\WeatherAdaptability;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
+use Generators\DataGenerator;
 use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
@@ -95,6 +96,6 @@ class PlayerPool extends BasePool {
             $holder->skillHole[] = $slot[$i] ?? 0;
         }
         
-        return $this->ConventToStdClass($holder);
+        return DataGenerator::ConventType($holder, 'stdClass');
     }
 }
