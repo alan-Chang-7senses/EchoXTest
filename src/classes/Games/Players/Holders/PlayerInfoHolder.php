@@ -19,6 +19,7 @@ class PlayerInfoHolder {
     public int $rank;
     public float $velocity;
     public float $stamina;
+    public float $hp;
     public float $intelligent;
     public float $breakOut;
     public float $will;

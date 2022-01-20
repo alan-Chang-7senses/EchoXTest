@@ -49,6 +49,7 @@ class PlayerPool extends BasePool {
         $holder->rank = $player->Rank;
         $holder->velocity = PlayerAbility::Velocity($player->Agility, $player->Strength, $player->Level);
         $holder->stamina = PlayerAbility::Stamina($player->Constitution, $player->Dexterity, $player->Level);
+        $holder->hp = $holder->stamina;
         $holder->intelligent = PlayerAbility::Intelligent($player->Dexterity, $player->Agility, $player->Level);
         $holder->breakOut = PlayerAbility::BreakOut($player->Strength, $player->Dexterity, $player->Level);
         $holder->will = PlayerAbility::Will($player->Constitution, $player->Strength, $player->Level);
