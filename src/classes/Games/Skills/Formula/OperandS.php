@@ -2,15 +2,15 @@
 
 namespace Games\Skills\Formula;
 
+use Games\Consts\SkillFormula;
 /**
- * Description of FormulaN
+ * Description of FormulaS
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class FormulaN extends BaseFormula {
+class OperandS extends BaseOperand{
     
     public function Process(): float {
-    
-        return $this->factory->skill->ranks[$this->factory->skill->level];
+        return SkillFormula::SkillS;
     }
 }

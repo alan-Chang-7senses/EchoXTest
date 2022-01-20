@@ -15,8 +15,8 @@ class FormulaFactory {
 //        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
     
-    const OperatorPercent = '%';
-    const OperatorPercentValue = '/100';
+    const OperandPercent = '%';
+    const OperandPercentValue = '/100';
     const PrefixFormulaClass = 'Games\Skills\Formula\Formula';
     
     public stdClass $player;
@@ -36,7 +36,7 @@ class FormulaFactory {
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
-        $values = [self::OperatorPercent => self::OperatorPercentValue];
+        $values = [self::OperandPercent => self::OperandPercentValue];
         foreach ($operands as $operand){
             $className = self::PrefixFormulaClass.$operand;
             $values[$operand] = (new $className($this))->Process();

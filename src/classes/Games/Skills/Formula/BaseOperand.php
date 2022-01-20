@@ -7,7 +7,7 @@ namespace Games\Skills\Formula;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-abstract class BaseFormula {
+abstract class BaseOperand {
     
     protected FormulaFactory $factory;
 

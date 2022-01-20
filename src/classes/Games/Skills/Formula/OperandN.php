@@ -3,13 +3,14 @@
 namespace Games\Skills\Formula;
 
 /**
- * Description of FormulaSPD
+ * Description of FormulaN
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class FormulaSPD extends BaseFormula{
+class OperandN extends BaseOperand {
     
     public function Process(): float {
-        
+    
+        return $this->factory->skill->ranks[$this->factory->skill->level];
     }
 }
