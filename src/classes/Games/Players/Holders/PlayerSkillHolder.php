@@ -8,13 +8,14 @@ namespace Games\Players\Holders;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class PlayerSkillHolder {
-    public int $id;
-    public string $name;
-    public int $type;
+    
+    public int $skillID;
     public int $level;
-    public array $ranks;
-    /** @var array PlayerSkillEffectHolder */
-    public array $effects;
-    /** @var array PlayerSkillMaxEffectHolder */
-    public array $maxEffects;
+    public int $slot;
+    
+    public function __construct(int $skillID, int $level, int $slot) {
+        $this->skillID = $skillID;
+        $this->level = $level;
+        $this->slot = $slot;
+    }
 }

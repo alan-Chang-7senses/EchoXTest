@@ -1,13 +1,13 @@
 <?php
 
-namespace Games\Players\Holders;
+namespace Games\Skills\Holders;
 
 /**
- * Description of PlayerSkillMaxEffectHolder
+ * Description of SkillMaxEffectHolder
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerSkillMaxEffectHolder {
+class SkillMaxEffectHolder {
     
     public int $type;
     public int $typeValue;

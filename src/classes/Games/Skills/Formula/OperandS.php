@@ -4,13 +4,13 @@ namespace Games\Skills\Formula;
 
 use Games\Consts\SkillFormula;
 /**
- * Description of FormulaH
+ * Description of FormulaS
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class FormulaH extends BaseFormula{
+class OperandS extends BaseOperand{
     
     public function Process(): float {
-        return SkillFormula::SkillH;
+        return SkillFormula::SkillS;
     }
 }

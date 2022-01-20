@@ -1,13 +1,13 @@
 <?php
 
-namespace Games\Players\Holders;
+namespace Games\Skills\Holders;
 
 /**
- * Description of PlayerSkillEffectHolder
+ * Description of SkillEffectHolder
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerSkillEffectHolder {
+class SkillEffectHolder {
     
     public int $type;
     public string|float|null $value; //暫時型別

@@ -7,7 +7,7 @@ namespace Games\Skills\Formula;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class FormulaSPD extends BaseFormula{
+class OperandSPD extends BaseOperand{
     
     public function Process(): float {
         

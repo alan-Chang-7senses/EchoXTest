@@ -14,6 +14,18 @@ class SkillAccessor extends BaseAccessor{
         return empty($row) ? [] : explode(',', $row->aliasCode);
     }
     
+    public function rowInfoBySkillID(int|string $id) : mixed{
+        return $this->StaticAcceessor()->FromTable('SkillInfo')->WhereEqual('SkillID', $id)->Fetch();
+    }
+    
+    public function rowEffectByEffectID(int|string $id) : mixed{
+        return $this->StaticAcceessor()->FromTable('SkillEffect')->WhereEqual('SkillEffectID', $id)->Fetch();
+    }
+    
+    public function rowMaxEffectByMaxEffectID(int|string $id) : mixed{
+        return $this->StaticAcceessor()->FromTable('SkillMaxEffect')->WhereEqual('MaxEffectID', $id)->Fetch();
+    }
+
     public function rowsInfoByAliasCodes(array $codes) : array{
         return $this->StaticAcceessor()->FromTable('SkillInfo')->WhereIn('AliasCode', $codes)->FetchAll();
     }

@@ -7,12 +7,12 @@ namespace Games\Skills\Formula;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-abstract class BaseFormula {
+abstract class BaseOperand {
     
-    protected int $levelN;
-    
-    public function __construct(int $levelN) {
-        $this->levelN = $levelN;
+    protected FormulaFactory $factory;
+
+    public function __construct(FormulaFactory $factory) {
+        $this->factory = $factory;
     }
     
     abstract function Process() : float;
