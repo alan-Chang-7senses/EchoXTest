@@ -10,6 +10,7 @@ use Games\Players\Adaptability\DurableAdaptability;
 use Games\Players\Adaptability\EnvironmentAdaptability;
 use Games\Players\Adaptability\TerrainAdaptability;
 use Games\Players\Adaptability\WeatherAdaptability;
+use Games\Players\Adaptability\WindAdaptability;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
@@ -61,6 +62,12 @@ class PlayerPool extends BasePool {
         $holder->dune = $adaptability->dune;
         $holder->craterLake = $adaptability->craterLake;
         $holder->volcano = $adaptability->volcano;
+        
+        $adaptability = new WindAdaptability();
+        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        $holder->tailwind = $adaptability->tailwind;
+        $holder->crosswind = $adaptability->crosswind;
+        $holder->headwind = $adaptability->headwind;
         
         $adaptability = new WeatherAdaptability();
         PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);

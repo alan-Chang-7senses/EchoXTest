@@ -26,6 +26,9 @@ class PlayerInfoHolder {
     public int $dune;
     public int $craterLake;
     public int $volcano;
+    public int $tailwind;
+    public int $crosswind;
+    public int $headwind;
     public int $sunny;
     public int $aurora;
     public int $sandDust;
