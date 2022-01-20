@@ -12,7 +12,7 @@ class FormulaFactory {
     
     const OperandAll = [
         'FIG','HP','INT','POW','SPD','STA','H','S','N',//'Gv','Cv',
-        'Env',//'Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
+        'Wind','Env',//'Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
     
     const OperandPercent = '%';

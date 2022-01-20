@@ -23,4 +23,8 @@ class SkillFormula {
     const MaxEffectEnvDune = 1;
     const MaxEffectEnvCraterLake = 2;
     const MaxEffectEnvVolcano = 3;
+    
+    const MaxEffectTailwind = 1;
+    const MaxEffectHeadwind = 2;
+    const MaxEffectCrosswind = 3;
 }
