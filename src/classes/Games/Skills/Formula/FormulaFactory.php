@@ -11,13 +11,13 @@ use stdClass;
 class FormulaFactory {
     
     const OperandAll = [
-        'H','S','N',//'SPD','POW','FIG','INT','STA','HP','Gv','Cv',
+        'SPD','H','S','N',//'POW','FIG','INT','STA','HP','Gv','Cv',
 //        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
     
     const OperandPercent = '%';
     const OperandPercentValue = '/100';
-    const PrefixFormulaClass = 'Games\Skills\Formula\Formula';
+    const PrefixOperandClass = 'Games\Skills\Formula\Operand';
     
     public stdClass $player;
     public stdClass $skill;
@@ -38,7 +38,7 @@ class FormulaFactory {
         
         $values = [self::OperandPercent => self::OperandPercentValue];
         foreach ($operands as $operand){
-            $className = self::PrefixFormulaClass.$operand;
+            $className = self::PrefixOperandClass.$operand;
             $values[$operand] = (new $className($this))->Process();
         }
         

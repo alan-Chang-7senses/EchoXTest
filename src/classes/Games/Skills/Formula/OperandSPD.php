@@ -10,6 +10,6 @@ namespace Games\Skills\Formula;
 class OperandSPD extends BaseOperand{
     
     public function Process(): float {
-        
+        return $this->factory->player->velocity;
     }
 }
