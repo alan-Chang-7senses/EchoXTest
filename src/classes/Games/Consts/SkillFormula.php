@@ -19,4 +19,8 @@ class SkillFormula {
     const ClimateLoseSunny = 0;
     const ClimateLoseAurora = 0;
     const ClimateLoseSandDust = 0.5;
+    
+    const MaxEffectEnvDune = 1;
+    const MaxEffectEnvCraterLake = 2;
+    const MaxEffectEnvVolcano = 3;
 }
