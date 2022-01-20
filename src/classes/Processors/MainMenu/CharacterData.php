@@ -49,7 +49,7 @@ class CharacterData extends BaseProcessor{
                 $row = $skillMaxEffectPool->{$maxEffectID};
                 $maxEffect->type = $row->EffectType;
                 $maxEffect->typeValue = $row->TypeValue;
-                $maxEffect->value = FormulaFactory::ProcessByPlayerAndSkill($row->Formula, $player, $skill);
+                $maxEffect->value = FormulaFactory::ProcessByPlayerSkillMaxEffect($row->Formula, $player, $skill, $row);
                 $maxEffects[] = $maxEffect;
             }
             

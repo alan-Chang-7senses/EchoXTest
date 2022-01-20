@@ -59,8 +59,8 @@ class PlayerPool extends BasePool {
         $adaptability = new EnvironmentAdaptability();
         PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $holder->dune = $adaptability->dune;
-        $holder->volcano = $adaptability->volcano;
         $holder->craterLake = $adaptability->craterLake;
+        $holder->volcano = $adaptability->volcano;
         
         $adaptability = new WeatherAdaptability();
         PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);

@@ -12,7 +12,7 @@ class FormulaFactory {
     
     const OperandAll = [
         'FIG','HP','INT','POW','SPD','STA','H','S','N',//'Gv','Cv',
-//        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
+        'Env',//'Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
     
     const OperandPercent = '%';
@@ -21,6 +21,7 @@ class FormulaFactory {
     
     public stdClass $player;
     public stdClass $skill;
+    public stdClass $maxEffect;
     public string|null $formula = null;
     
     public function __construct(string|null $formula) {
@@ -48,10 +49,17 @@ class FormulaFactory {
     }
     
     public static function ProcessByPlayerAndSkill(string|null $formula, stdClass $player, stdClass $skill) : float|null{
-        
         $factory = new FormulaFactory($formula);
         $factory->player = $player;
         $factory->skill = $skill;
+        return $factory->Process();
+    }
+    
+    public static function ProcessByPlayerSkillMaxEffect(string|null $formula, stdClass $player, stdClass $skill, stdClass $maxEffect) : float|null{
+        $factory = new FormulaFactory($formula);
+        $factory->player = $player;
+        $factory->skill = $skill;
+        $factory->maxEffect = $maxEffect;
         return $factory->Process();
     }
 }

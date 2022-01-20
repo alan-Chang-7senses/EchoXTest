@@ -24,8 +24,8 @@ class PlayerInfoHolder {
     public float $breakOut;
     public float $will;
     public int $dune;
-    public int $volcano;
     public int $craterLake;
+    public int $volcano;
     public int $sunny;
     public int $aurora;
     public int $sandDust;
