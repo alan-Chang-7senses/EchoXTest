@@ -11,7 +11,7 @@ use stdClass;
 class FormulaFactory {
     
     const OperandAll = [
-        'SPD','H','S','N',//'POW','FIG','INT','STA','HP','Gv','Cv',
+        'POW','SPD','H','S','N',//'FIG','INT','STA','HP','Gv','Cv',
 //        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
     ];
     
