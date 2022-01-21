@@ -4,7 +4,8 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Accessors\PlayerAccessor;
+use Games\DataPools\PlayerPool;
+use Games\DataPools\UserPool;
 use Games\Players\PlayerUtility;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -19,30 +20,29 @@ class CharacterSelectData extends BaseProcessor {
     
     public function Process(): ResultData {
         
-        $userID = $_SESSION[Sessions::UserID];
-        
         $offset = InputHelper::post('offset');
         $count = InputHelper::post('count');
         
-        $playerAccessor = new PlayerAccessor();
-        $rows = $playerAccessor->rowsPlayerJoinHolderByUserIDLimit($userID, $offset, $count);
-        
+        $user = UserPool::Instance()->{$_SESSION[Sessions::UserID]};
+        $playerPool = PlayerPool::Instance();
         $players = [];
-        foreach($rows as $row){
+        foreach (array_slice($user->players, $offset, $count) as $playerID){
             
+            $row = $playerPool->$playerID;
             $player = new stdClass();
-            $player->id = $row->PlayerID;
-            $player->head = PlayerUtility::PartCodeByDNA($row->HeadDNA);
-            $player->body = PlayerUtility::PartCodeByDNA($row->BodyDNA);
-            $player->hand = PlayerUtility::PartCodeByDNA($row->HandDNA);
-            $player->leg = PlayerUtility::PartCodeByDNA($row->LegDNA);
-            $player->back = PlayerUtility::PartCodeByDNA($row->BackDNA);
-            $player->hat = PlayerUtility::PartCodeByDNA($row->HatDNA);
+            $player->id = $row->id;
+            $player->head = PlayerUtility::PartCodeByDNA($row->dna->head);
+            $player->body = PlayerUtility::PartCodeByDNA($row->dna->body);
+            $player->hand = PlayerUtility::PartCodeByDNA($row->dna->hand);
+            $player->leg = PlayerUtility::PartCodeByDNA($row->dna->leg);
+            $player->back = PlayerUtility::PartCodeByDNA($row->dna->back);
+            $player->hat = PlayerUtility::PartCodeByDNA($row->dna->hat);
             $players[] = $player;
+            
         }
         
         $result = new ResultData(ErrorCode::Success);
-        $result->total = $playerAccessor->countHolderByUserID($userID);
+        $result->total = count($user->players);
         $result->players = $players;
         
         return $result;

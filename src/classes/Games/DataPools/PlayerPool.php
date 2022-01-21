@@ -25,7 +25,7 @@ use stdClass;
  */
 class PlayerPool extends BasePool {
     
-    public static PlayerPool $instance;
+    private static PlayerPool $instance;
     
     public static function Instance() : PlayerPool{
         if(empty(self::$instance)) self::$instance = new PlayerPool();
