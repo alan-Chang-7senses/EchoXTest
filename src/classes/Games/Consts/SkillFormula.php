@@ -27,4 +27,8 @@ class SkillFormula {
     const MaxEffectTailwind = 1;
     const MaxEffectHeadwind = 2;
     const MaxEffectCrosswind = 3;
+    
+    const MaxEffectClimateSunny = 1;
+    const MaxEffectClimateAurora = 2;
+    const MaxEffectClimateSandDust = 3;
 }
