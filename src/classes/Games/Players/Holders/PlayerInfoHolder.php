@@ -23,6 +23,7 @@ class PlayerInfoHolder {
     public float $intelligent;
     public float $breakOut;
     public float $will;
+    public PlayerDnaHolder $dna;
     public int $dune;
     public int $craterLake;
     public int $volcano;

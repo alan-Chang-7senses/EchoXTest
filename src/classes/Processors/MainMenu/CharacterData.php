@@ -7,6 +7,7 @@ use Games\DataPools\PlayerPool;
 use Games\DataPools\SkillEffectPool;
 use Games\DataPools\SkillMaxEffectPool;
 use Games\DataPools\SkillPool;
+use Games\Players\PlayerUtility;
 use Games\Skills\Formula\FormulaFactory;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -59,8 +60,26 @@ class CharacterData extends BaseProcessor{
             $skills[] = $skill;
         }
         
+        $player->dune = PlayerUtility::AdaptValueByPoint($player->dune);
+        $player->craterLake = PlayerUtility::AdaptValueByPoint($player->craterLake);
+        $player->volcano = PlayerUtility::AdaptValueByPoint($player->volcano);
+        $player->tailwind = PlayerUtility::AdaptValueByPoint($player->tailwind);
+        $player->crosswind = PlayerUtility::AdaptValueByPoint($player->crosswind);
+        $player->headwind = PlayerUtility::AdaptValueByPoint($player->headwind);
+        $player->sunny = PlayerUtility::AdaptValueByPoint($player->sunny);
+        $player->aurora = PlayerUtility::AdaptValueByPoint($player->aurora);
+        $player->sandDust = PlayerUtility::AdaptValueByPoint($player->sandDust);
+        $player->flat = PlayerUtility::AdaptValueByPoint($player->flat);
+        $player->upslope = PlayerUtility::AdaptValueByPoint($player->upslope);
+        $player->downslope = PlayerUtility::AdaptValueByPoint($player->downslope);
+        
+        $player->mid = PlayerUtility::AdaptValueByPoint($player->mid);
+        $player->long = PlayerUtility::AdaptValueByPoint($player->long);
+        $player->short = PlayerUtility::AdaptValueByPoint($player->short);
+        
         $player->skills = $skills;
         unset($player->hp);
+        unset($player->dna);
         
         $result = new ResultData(ErrorCode::Success);
         $result->creature = $player;

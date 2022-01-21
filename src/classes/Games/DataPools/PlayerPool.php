@@ -11,6 +11,7 @@ use Games\Players\Adaptability\EnvironmentAdaptability;
 use Games\Players\Adaptability\TerrainAdaptability;
 use Games\Players\Adaptability\WeatherAdaptability;
 use Games\Players\Adaptability\WindAdaptability;
+use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
@@ -55,28 +56,34 @@ class PlayerPool extends BasePool {
         $holder->breakOut = PlayerAbility::BreakOut($player->Strength, $player->Dexterity, $player->Level);
         $holder->will = PlayerAbility::Will($player->Constitution, $player->Strength, $player->Level);
         
-        $DNAs = [$player->HeadDNA, $player->BodyDNA, $player->HandDNA, $player->LegDNA, $player->BackDNA, $player->HatDNA];
+        $holder->dna = new PlayerDnaHolder();
+        $holder->dna->head = $player->HeadDNA;
+        $holder->dna->body = $player->BodyDNA;
+        $holder->dna->hand = $player->HandDNA;
+        $holder->dna->leg = $player->LegDNA;
+        $holder->dna->back = $player->BackDNA;
+        $holder->dna->hat = $player->HatDNA;
         
         $adaptability = new EnvironmentAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $holder->dune = $adaptability->dune;
         $holder->craterLake = $adaptability->craterLake;
         $holder->volcano = $adaptability->volcano;
         
         $adaptability = new WindAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $holder->tailwind = $adaptability->tailwind;
         $holder->crosswind = $adaptability->crosswind;
         $holder->headwind = $adaptability->headwind;
         
         $adaptability = new WeatherAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $holder->sunny = $adaptability->sunny;
         $holder->aurora = $adaptability->aurora;
         $holder->sandDust = $adaptability->sandDust;
         
         $adaptability = new TerrainAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
         $holder->flat = $adaptability->flat;
         $holder->upslope = $adaptability->upslope;
         $holder->downslope = $adaptability->downslope;
@@ -86,7 +93,7 @@ class PlayerPool extends BasePool {
         $holder->habit = PlayerAbility::Habit($player->Constitution, $player->Strength, $player->Dexterity, $player->Agility);
         
         $adaptability = new DurableAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
         $holder->mid = $adaptability->mid;
         $holder->long = $adaptability->long;
         $holder->short = $adaptability->short;
