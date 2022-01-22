@@ -3,6 +3,7 @@
 namespace Games\Skills\Formula;
 
 use Games\Consts\SkillFormula;
+use Games\Players\PlayerUtility;
 /**
  * Description of OperandEnv
  *
@@ -15,9 +16,9 @@ class OperandEnv extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SkillFormula::MaxEffectEnvDune => $this->factory->player->dune,
-            SkillFormula::MaxEffectEnvCraterLake => $this->factory->player->craterLake,
-            SkillFormula::MaxEffectEnvVolcano => $this->factory->player->volcano,
+            SkillFormula::MaxEffectEnvDune => PlayerUtility::AdaptValueByPoint($this->factory->player->dune),
+            SkillFormula::MaxEffectEnvCraterLake => PlayerUtility::AdaptValueByPoint($this->factory->player->craterLake),
+            SkillFormula::MaxEffectEnvVolcano => PlayerUtility::AdaptValueByPoint($this->factory->player->volcano),
             default => 0
         };
     }

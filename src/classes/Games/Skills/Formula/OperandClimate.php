@@ -3,6 +3,7 @@
 namespace Games\Skills\Formula;
 
 use Games\Consts\SkillFormula;
+use Games\Players\PlayerUtility;
 /**
  * Description of OperandClimate
  *
@@ -15,9 +16,9 @@ class OperandClimate extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SkillFormula::MaxEffectClimateSunny => $this->factory->player->sunny,
-            SkillFormula::MaxEffectClimateAurora => $this->factory->player->aurora,
-            SkillFormula::MaxEffectClimateSandDust => $this->factory->player->sandDust,
+            SkillFormula::MaxEffectClimateSunny => PlayerUtility::AdaptValueByPoint($this->factory->player->sunny),
+            SkillFormula::MaxEffectClimateAurora => PlayerUtility::AdaptValueByPoint($this->factory->player->aurora),
+            SkillFormula::MaxEffectClimateSandDust => PlayerUtility::AdaptValueByPoint($this->factory->player->sandDust),
             default => 0
         };
     }

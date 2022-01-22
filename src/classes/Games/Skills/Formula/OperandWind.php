@@ -3,6 +3,7 @@
 namespace Games\Skills\Formula;
 
 use Games\Consts\SkillFormula;
+use Games\Players\PlayerUtility;
 /**
  * Description of OperandWind
  *
@@ -15,9 +16,9 @@ class OperandWind extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SkillFormula::MaxEffectTailwind => $this->factory->player->tailwind,
-            SkillFormula::MaxEffectHeadwind => $this->factory->player->headwind,
-            SkillFormula::MaxEffectCrosswind => $this->factory->player->crosswind,
+            SkillFormula::MaxEffectTailwind => PlayerUtility::AdaptValueByPoint($this->factory->player->tailwind),
+            SkillFormula::MaxEffectHeadwind => PlayerUtility::AdaptValueByPoint($this->factory->player->headwind),
+            SkillFormula::MaxEffectCrosswind => PlayerUtility::AdaptValueByPoint($this->factory->player->crosswind),
             default => 0
         };
     }
