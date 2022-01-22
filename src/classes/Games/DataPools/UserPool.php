@@ -30,6 +30,7 @@ class UserPool extends BasePool{
         if(empty($row)) return false;
         
         $holder = new UserInfoHolder();
+        $holder->nickname = $row->Nickname;
         $holder->level = $row->Level;
         $holder->exp = $row->Exp;
         $holder->vitality = $row->Vitality;

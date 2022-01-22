@@ -32,7 +32,7 @@ class ScenePool extends BasePool{
         $infoHolder = new SceneInfoHolder();
         $infoHolder->name = $sceneInfo->SceneName;
         $infoHolder->readySec = $sceneInfo->ReadyToStart;
-        $infoHolder->env = SceneEnv;
+        $infoHolder->env = $sceneInfo->SceneEnv;
         
         $sceneTracks = $sceneAccessor->rowsTrackBySceneID($id);
         $infoHolder->tracks = [];
