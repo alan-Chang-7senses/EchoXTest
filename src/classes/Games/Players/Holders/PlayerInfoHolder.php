@@ -41,6 +41,7 @@ class PlayerInfoHolder {
     public int $mid;
     public int $long;
     public int $short;
+    public int $slotNumber;
     /** @var array PlayerSkillHolder */
     public array $skills;
     public array $skillHole;

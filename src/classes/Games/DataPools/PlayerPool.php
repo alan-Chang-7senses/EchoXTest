@@ -8,6 +8,7 @@ use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
 use Games\Players\Adaptability\DurableAdaptability;
 use Games\Players\Adaptability\EnvironmentAdaptability;
+use Games\Players\Adaptability\SlotNumber;
 use Games\Players\Adaptability\TerrainAdaptability;
 use Games\Players\Adaptability\WeatherAdaptability;
 use Games\Players\Adaptability\WindAdaptability;
@@ -98,6 +99,10 @@ class PlayerPool extends BasePool {
         $holder->long = $adaptability->long;
         $holder->short = $adaptability->short;
         
+        $slotNumber = new SlotNumber();
+        PlayerAbility::Adaptability($holder->dna, $slotNumber, [NFTDNA::DominantOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        $holder->slotNumber = $slotNumber->Value();
+        
         $rows = $playerAccessor->rowsSkillByPlayerID($playerID);
         $holder->skills = [];
         $slot = [];
@@ -107,7 +112,7 @@ class PlayerPool extends BasePool {
         }
         
         $holder->skillHole = [];
-        for($i = 1; $i <= $player->SlotNumber; ++$i){
+        for($i = 1; $i <= $holder->slotNumber; ++$i){
             $holder->skillHole[] = $slot[$i] ?? 0;
         }
         
