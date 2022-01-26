@@ -5,8 +5,8 @@ namespace Games\Skills\Formula;
 use Consts\Sessions;
 use Games\Consts\DNASun;
 use Games\Consts\SkillFormula;
-use Games\DataPools\ScenePool;
-use Games\DataPools\UserPool;
+use Games\Pools\ScenePool;
+use Games\Pools\UserPool;
 use Games\Scenes\SceneUtility;
 /**
  * Description of OperandSun

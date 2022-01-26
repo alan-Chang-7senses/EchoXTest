@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\SceneAccessor;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Games\Scenes\Holders\SceneInfoHolder;
@@ -13,7 +14,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class ScenePool extends BasePool{
+class ScenePool extends PoolAccessor{
     
     private static ScenePool $instance;
     

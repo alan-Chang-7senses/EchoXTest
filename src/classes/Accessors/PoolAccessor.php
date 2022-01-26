@@ -1,17 +1,16 @@
 <?php
 
-namespace Games\DataPools;
+namespace Accessors;
 
-use Accessors\MemcacheAccessor;
 use Consts\ErrorCode;
 use Exception;
 use stdClass;
 /**
- * Description of BasePool
+ * Description of PoolAccessor
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-abstract class BasePool {
+abstract class PoolAccessor {
     
     protected string $keyPrefix = '';
 

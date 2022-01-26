@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Users\Holders\UserInfoHolder;
@@ -12,7 +13,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class UserPool extends BasePool{
+class UserPool extends PoolAccessor{
     
     private static UserPool $instance;
     

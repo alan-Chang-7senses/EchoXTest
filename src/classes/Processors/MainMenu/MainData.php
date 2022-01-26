@@ -4,11 +4,11 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\DataPools\PlayerPool;
-use Games\DataPools\ScenePool;
-use Games\DataPools\UserPool;
 use Games\Exceptions\PlayerException;
 use Games\Players\PlayerUtility;
+use Games\Pools\PlayerPool;
+use Games\Pools\ScenePool;
+use Games\Pools\UserPool;
 use Games\Scenes\SceneUtility;
 use Generators\ConfigGenerator;
 use Holders\ResultData;
