@@ -12,6 +12,10 @@ class SkillFormula {
     const SkillH = 0.66;
     const SkillS = 6.6;
     
+    const SunNoneValue = 100;
+    const SunSameValue = 120;
+    const SunDiffValue = 80;
+    
     const ClimateAccelerationSunny = 1;
     const ClimateAccelerationAurora = 1.2;
     const ClimateAccelerationSandDust = 1;

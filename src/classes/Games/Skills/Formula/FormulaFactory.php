@@ -11,8 +11,8 @@ use stdClass;
 class FormulaFactory {
     
     const OperandAll = [
-        'FIG','HP','INT','POW','SPD','STA','H','S','N',//'Gv','Cv',
-        'Climate','Wind','Env',//'Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
+        'Climate','Wind','Env','FIG','HP','INT','POW','SPD','STA','Sun','H','S','N',//'Gv','Cv',
+        //'Terrain','Distance','Origin','Fire','Wood','Water'  
     ];
     
     const OperandPercent = '%';
