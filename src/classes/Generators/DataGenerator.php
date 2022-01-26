@@ -13,11 +13,11 @@ class DataGenerator {
     
     public static function RandomString(int $length) : string{
         
-        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMONPQRSTUVWXYZ';
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMONPQRSTUVWXYZ';
         
         $string = '';
         for($i = 0 ; $i < $length ; ++$i){
-            $string .= $characters[rand(0, strlen($characters) - 1)];
+            $string .= $chars[rand(0, strlen($chars) - 1)];
         }
         
         return $string;
@@ -29,5 +29,11 @@ class DataGenerator {
 
     private static function DateTimeZone(int $timezone) : DateTimeZone{
         return new DateTimeZone('GMT'.($timezone >= 0 ? '+'.$timezone : $timezone));
+    }
+    
+    public static function ConventType(mixed $obj, string $classFull) : mixed {
+        $result = new $classFull();
+        foreach(get_object_vars($obj) as $key => $value) $result->$key = $value;
+        return $result;
     }
 }

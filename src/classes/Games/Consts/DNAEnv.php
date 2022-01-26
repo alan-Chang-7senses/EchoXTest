@@ -9,6 +9,6 @@ namespace Games\Consts;
  */
 class DNAEnv {
     const Dune = '01';
-    const Volcano = '02';
-    const CraterLake = '03';
+    const CraterLake = '02';
+    const Volcano = '03';
 }

@@ -2,12 +2,15 @@
 
 namespace Processors\MainMenu;
 
-use Accessors\PDOAccessor;
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Characters\Avatar;
+use Games\DataPools\PlayerPool;
+use Games\DataPools\ScenePool;
+use Games\DataPools\UserPool;
+use Games\Exceptions\PlayerException;
+use Games\Players\PlayerUtility;
+use Games\Scenes\SceneUtility;
 use Generators\ConfigGenerator;
-use Generators\DataGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -20,35 +23,39 @@ class MainData extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $userID = $_SESSION[Sessions::UserID];
         $configs = ConfigGenerator::Instance();
         
-        $accessorMain = new PDOAccessor('KoaMain');
-        $user = $accessorMain->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
+        $playerID = filter_input(INPUT_POST, 'characterID');
         
-        $accessorStatic = new PDOAccessor('KoaStatic');
-        $sceneInfo = $accessorStatic->FromTable('SceneInfo')->Fetch();
+        $userPool = UserPool::Instance();
+        $user = $userPool->{$_SESSION[Sessions::UserID]};
         
-        $todaySecond = DataGenerator::TodaySecondByTimezone($configs->TimezoneDefault);
-        $sceneClimate = $accessorStatic->ClearCondition()->FromTable('SceneClimate')
-                ->WhereEqual('SceneID', $sceneInfo->SceneID)
-                ->WhereLess('StartTime', $todaySecond)
-                ->OrderBy('StartTime', 'DESC')->Limit(1)->Fetch();
+        $playerPool = PlayerPool::Instance();
+        $playerInfo = false;
+        if($playerID !== null) $playerInfo = $playerPool->$playerID;
+        if($playerInfo === false && !empty($user->players[0])) $playerInfo = $playerPool->{$user->players[0]};
+        if($playerInfo === false) throw new PlayerException(PlayerException::NotFound);
         
-        $map = new stdClass();
-        $map->windDirection = $sceneClimate->WindDirection;
-        $map->windSpeed = $sceneClimate->WindSpeed;
-        $map->sceneEnv = $sceneInfo->SceneEnv;
-        $map->weather = $sceneClimate->Weather;
-        $map->lighting = $sceneClimate->Lighting;
+        $player = new stdClass();
+        $player->id = $playerInfo->id;
+        $player->head = PlayerUtility::PartCodeByDNA($playerInfo->dna->head);
+        $player->body = PlayerUtility::PartCodeByDNA($playerInfo->dna->body);
+        $player->hand = PlayerUtility::PartCodeByDNA($playerInfo->dna->hand);
+        $player->leg = PlayerUtility::PartCodeByDNA($playerInfo->dna->leg);
+        $player->back = PlayerUtility::PartCodeByDNA($playerInfo->dna->back);
+        $player->hat = PlayerUtility::PartCodeByDNA($playerInfo->dna->hat);
         
-        $characterID = filter_input(INPUT_POST, 'characterID');
-        $player = Avatar::CharacterPartByID($userID, $characterID);
+        $scenePool = ScenePool::Instance();
+        $scene = $scenePool->{$user->scene};
+        $map = SceneUtility::CurrentClimate($scene->climates);
+        unset($map->id);
+        unset($map->startTime);
+        $map->sceneEnv = $scene->env;
         
         $result = new ResultData(ErrorCode::Success);
-        $result->name = $user->Nickname;
-        $result->money = $user->Money;
-        $result->energy = $user->Vitality;
+        $result->name = $user->nickname;
+        $result->money = $user->money;
+        $result->energy = $user->vitality;
         $result->roomMax = (int)$configs->AmountRoomPeopleMax;
         $result->map = $map;
         $result->player = $player;

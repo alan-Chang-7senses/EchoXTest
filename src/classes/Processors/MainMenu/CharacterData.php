@@ -3,17 +3,12 @@
 namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
-use Games\Accessors\PlayerAccessor;
-use Games\Accessors\SkillAccessor;
-use Games\Characters\PlayerAbility;
-use Games\Consts\NFTDNA;
-use Games\Consts\SyncRate;
-use Games\Generators\SkillGenerator;
-use Games\Holders\DurableAdaptability;
-use Games\Holders\EnvironmentAdaptability;
-use Games\Holders\SunAdaptability;
-use Games\Holders\TerrainAdaptability;
-use Games\Holders\WeatherAdaptability;
+use Games\DataPools\PlayerPool;
+use Games\DataPools\SkillEffectPool;
+use Games\DataPools\SkillMaxEffectPool;
+use Games\DataPools\SkillPool;
+use Games\Players\PlayerUtility;
+use Games\Skills\Formula\FormulaFactory;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -27,124 +22,67 @@ class CharacterData extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $characterID = InputHelper::post('characterID');
+        $playerID = InputHelper::post('characterID');
         
-        $playerAccessor = new PlayerAccessor();
+        $player = PlayerPool::Instance()->$playerID;
+        $skillPool = SkillPool::Instance();
+        $skillEffectPool = SkillEffectPool::Instance();
+        $skillMaxEffectPool = SkillMaxEffectPool::Instance();
         
-        $playerFull = $playerAccessor->rowPlayerJoinHolderByCharacterID($characterID);
-        
-        $creature = new stdClass();
-        $creature->id = $playerFull->CharacterID;
-        $creature->name = $playerFull->Nickname ?? (string)$playerFull->CharacterID;
-        $creature->ele = $playerFull->Attribute;
-        $creature->sync = $playerFull->SyncRate / SyncRate::Divisor;
-        $creature->level = $playerFull->Level;
-        $creature->exp = $playerFull->Exp;
-        $creature->maxExp = null;
-        $creature->rank = $playerFull->Rank;
-        $creature->velocity = PlayerAbility::Velocity($playerFull->Agility, $playerFull->Strength, $playerFull->Level);
-        $creature->stamina = PlayerAbility::Stamina($playerFull->Constitution, $playerFull->Dexterity, $playerFull->Level);
-        $creature->intelligent = PlayerAbility::Intelligent($playerFull->Dexterity, $playerFull->Agility, $playerFull->Level);
-        $creature->breakOut = PlayerAbility::BreakOut($playerFull->Strength, $playerFull->Dexterity, $playerFull->Level);
-        $creature->will = PlayerAbility::Will($playerFull->Constitution, $playerFull->Strength, $playerFull->Level);
-        
-        $DNAs = [$playerFull->HeadDNA, $playerFull->BodyDNA, $playerFull->HandDNA, $playerFull->LegDNA, $playerFull->BackDNA, $playerFull->HatDNA];
-        
-        $adaptability = new EnvironmentAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
-        $creature->dune = $adaptability->dune;
-        $creature->volcano = $adaptability->volcano;
-        $creature->craterLake = $adaptability->craterLake;
-        
-        $adaptability = new WeatherAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
-        $creature->sunny = $adaptability->sunny;
-        $creature->aurora = $adaptability->aurora;
-        $creature->sandDust = $adaptability->sandDust;
-        
-        $adaptability = new TerrainAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
-        $creature->flat = $adaptability->flat;
-        $creature->upslope = $adaptability->upslope;
-        $creature->downslope = $adaptability->downslope;
-        
-        $adaptability = new SunAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
-        $creature->sun = $adaptability->Value();
-        
-        $creature->habit = PlayerAbility::Habit($playerFull->Constitution, $playerFull->Strength, $playerFull->Dexterity, $playerFull->Agility);
-        
-        $adaptability = new DurableAdaptability();
-        PlayerAbility::Adaptability($DNAs, $adaptability, [NFTDNA::RecessiveOneOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
-        $creature->mid = $adaptability->mid;
-        $creature->long = $adaptability->long;
-        $creature->short = $adaptability->short;
-        
-        $skillAccessor = new SkillAccessor();
-        $aliasCodes = SkillGenerator::aliasCodesByNFT($playerFull);
-        
-        $skillInfo = $skillAccessor->rowsInfoByAliasCodes($aliasCodes);
-        $skillIDs = [];
-        $effectIDs = [];
-        $maxEffectIDs = [];
-        foreach ($skillInfo as $info){
-            $skillIDs[] = $info->SkillID;
-            $effectIDs = array_merge($effectIDs, explode(',', $info->Effect));
-            $maxEffectIDs = array_merge($maxEffectIDs, explode(',', $info->MaxEffect));
-        }
-        
-        $rows = $playerAccessor->rowsSkillByCharacterIDAndSkillIDs($characterID, $skillIDs);
-        $playerSkills = [];
-        foreach($rows as $row) $playerSkills[$row->SkillID] = $row;
-        
-        $rows = $skillAccessor->rowsEffectByEffectIDs($effectIDs);
-        $skillEffects = [];
-        foreach($rows as $row) $skillEffects[$row->SkillEffectID] = $row;
-        
-        $rows = $skillAccessor->rowsMaxEffectByEffectIDs($maxEffectIDs);
-        $maxSkillEffects = [];
-        foreach ($rows as $row) $maxSkillEffects[$row->MaxEffectID] = $row;
-        
-        $creature->skills = [];
-        $skillSlot = [];
-        foreach($skillInfo as $info){
+        $skills = [];
+        foreach($player->skills as $skillInfo){
             
-            $skill = new stdClass();
-            $skill->id = $info->SkillID;
-            $skill->name = $info->SkillName;
-            $skill->type = $info->TriggerType;
-            $skill->level = $playerSkills[$info->SkillID]->Level;
-            $skill->ranks = [$info->Level1, $info->Level2, $info->Level3, $info->Level4, $info->Level5];
+            $skill = $skillPool->{$skillInfo->skillID};
+            $skill->level = $skillInfo->level;
             
-            foreach(explode(',', $info->Effect) as $effectID){
-                $skill->effects[] = [
-                    'type' => $skillEffects[$effectID]->EffectType,
-//                    'value' => SkillGenerator::valueByFormuleAndLevelN($skillEffects[$effectID]->Formula, $skill->ranks[$skill->level])
-                    'value' => $skillEffects[$effectID]->Formula
-                ];
+            $effects = [];
+            $effect = new stdClass();
+            foreach($skill->effects as $effectID){
+                $row = $skillEffectPool->{$effectID};
+                $effect->type = $row->EffectType;
+                $effect->value = FormulaFactory::ProcessByPlayerAndSkill($row->Formula, $player, $skill);
+                $effects[] = $effect;
             }
             
-            foreach (explode(',', $info->MaxEffect) as $maxEffectID) {
-                $skill->maxEffects[] = [
-                    'type' => $maxSkillEffects[$maxEffectID]->EffectType,
-                    'typeValue' => $maxSkillEffects[$maxEffectID]->TypeValue,
-//                    'value' => SkillGenerator::valueByFormuleAndLevelN($maxSkillEffects[$maxEffectID]->Formula, $skill->ranks[$skill->level])
-                    'value' => $maxSkillEffects[$maxEffectID]->Formula
-                ];
+            $maxEffects = [];
+            foreach ($skill->maxEffects as $maxEffectID) {
+                $row = $skillMaxEffectPool->{$maxEffectID};
+                $maxEffect = new stdClass();
+                $maxEffect->type = $row->EffectType;
+                $maxEffect->typeValue = $row->TypeValue;
+                $maxEffect->value = FormulaFactory::ProcessByPlayerSkillMaxEffect($row->Formula, $player, $skill, $row);
+                $maxEffects[] = $maxEffect;
             }
             
-            $creature->skills[] = $skill;
+            $skill->effects = $effects;
+            $skill->maxEffects = $maxEffects;
             
-            $skillSlot[$playerSkills[$info->SkillID]->Slot] = $info->SkillID;
+            $skills[] = $skill;
         }
         
-        $creature->skillHole = [];
-        for($i = 1; $i <= $playerFull->SlotNumber; ++$i){
-            $creature->skillHole[] = $skillSlot[$i] ?? 0;
-        }
+        $player->dune = PlayerUtility::AdaptValueByPoint($player->dune);
+        $player->craterLake = PlayerUtility::AdaptValueByPoint($player->craterLake);
+        $player->volcano = PlayerUtility::AdaptValueByPoint($player->volcano);
+        $player->tailwind = PlayerUtility::AdaptValueByPoint($player->tailwind);
+        $player->crosswind = PlayerUtility::AdaptValueByPoint($player->crosswind);
+        $player->headwind = PlayerUtility::AdaptValueByPoint($player->headwind);
+        $player->sunny = PlayerUtility::AdaptValueByPoint($player->sunny);
+        $player->aurora = PlayerUtility::AdaptValueByPoint($player->aurora);
+        $player->sandDust = PlayerUtility::AdaptValueByPoint($player->sandDust);
+        $player->flat = PlayerUtility::AdaptValueByPoint($player->flat);
+        $player->upslope = PlayerUtility::AdaptValueByPoint($player->upslope);
+        $player->downslope = PlayerUtility::AdaptValueByPoint($player->downslope);
+        
+        $player->mid = PlayerUtility::AdaptValueByPoint($player->mid);
+        $player->long = PlayerUtility::AdaptValueByPoint($player->long);
+        $player->short = PlayerUtility::AdaptValueByPoint($player->short);
+        
+        $player->skills = $skills;
+        unset($player->hp);
+        unset($player->dna);
         
         $result = new ResultData(ErrorCode::Success);
-        $result->creature = $creature;
+        $result->creature = $player;
         
         return $result;
     }

@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.117
+-- 主機:                           192.168.1.103
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -17,57 +17,76 @@
 CREATE DATABASE IF NOT EXISTS `koa_main` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_main`;
 
--- 傾印  資料表 koa_main.CharacterCounts 結構
-CREATE TABLE IF NOT EXISTS `CharacterCounts` (
-  `CharacterID` bigint(20) unsigned NOT NULL,
-  `PVPPlay` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 比賽次數',
-  `PVPFirst` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 第一名次數',
-  `PVPTopThree` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 前三名次數',
-  `PVPMiddle` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 中間名次次數',
-  `PVPLastThree` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 後三名次數',
-  `TeamPlay` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰次數',
-  `TeamWin` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰優勝次數',
-  PRIMARY KEY (`CharacterID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
+-- 傾印  資料表 koa_main.Configs 結構
+CREATE TABLE IF NOT EXISTS `Configs` (
+  `Name` varchar(255) NOT NULL,
+  `Value` varchar(255) NOT NULL,
+  `Comment` varchar(255) NOT NULL,
+  PRIMARY KEY (`Name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 傾印  資料表 koa_main.CharacterHolder 結構
-CREATE TABLE IF NOT EXISTS `CharacterHolder` (
-  `CharacterID` bigint(20) unsigned NOT NULL,
+-- 正在傾印表格  koa_main.Configs 的資料：~1 rows (近似值)
+/*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
+INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
+	('AmountRoomPeopleMax', '8', '開房最大人數'),
+	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
+/*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.DatabaseInfo 結構
+CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
+  `Label` varchar(255) NOT NULL COMMENT '標記代號',
+  `Host` varchar(255) NOT NULL COMMENT '主機名稱或IP',
+  `Username` varchar(255) NOT NULL COMMENT '帳號',
+  `Password` varchar(255) NOT NULL COMMENT '密碼',
+  `Name` varchar(255) NOT NULL COMMENT '資料庫名稱',
+  `Port` smallint(5) unsigned DEFAULT 3306,
+  PRIMARY KEY (`Label`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='資料庫連線資訊';
+
+-- 正在傾印表格  koa_main.DatabaseInfo 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
+INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
+	('KoaMain', 'db', 'root', '1111', 'koa_main', 3306),
+	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
+/*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.PlayerHolder 結構
+CREATE TABLE IF NOT EXISTS `PlayerHolder` (
+  `PlayerID` bigint(20) unsigned NOT NULL,
   `UserID` int(10) unsigned NOT NULL DEFAULT 0,
   `Nickname` varchar(50) DEFAULT NULL COMMENT '角色暱稱',
   `SyncRate` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '同步率',
-  PRIMARY KEY (`CharacterID`),
-  UNIQUE KEY `CharacterID_UserID` (`CharacterID`,`UserID`),
+  PRIMARY KEY (`PlayerID`) USING BTREE,
+  UNIQUE KEY `CharacterID_UserID` (`PlayerID`,`UserID`) USING BTREE,
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.CharacterHolder 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `CharacterHolder` DISABLE KEYS */;
-INSERT INTO `CharacterHolder` (`CharacterID`, `UserID`, `Nickname`, `SyncRate`) VALUES
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
+INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(1010000000000005, 1, NULL, 456),
 	(1010000000000015, 1, NULL, 5347);
-/*!40000 ALTER TABLE `CharacterHolder` ENABLE KEYS */;
+/*!40000 ALTER TABLE `PlayerHolder` ENABLE KEYS */;
 
--- 傾印  資料表 koa_main.CharacterLevel 結構
-CREATE TABLE IF NOT EXISTS `CharacterLevel` (
-  `CharacterID` bigint(20) unsigned NOT NULL,
+-- 傾印  資料表 koa_main.PlayerLevel 結構
+CREATE TABLE IF NOT EXISTS `PlayerLevel` (
+  `PlayerID` bigint(20) unsigned NOT NULL,
   `Level` tinyint(3) unsigned NOT NULL DEFAULT 1 COMMENT '等級',
   `Rank` tinyint(3) unsigned NOT NULL DEFAULT 1 COMMENT '階級',
   `Exp` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '經驗值',
-  `SlotNumber` bigint(20) unsigned NOT NULL DEFAULT 4 COMMENT '技能插槽數量',
-  PRIMARY KEY (`CharacterID`)
+  PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
--- 正在傾印表格  koa_main.CharacterLevel 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `CharacterLevel` DISABLE KEYS */;
-INSERT INTO `CharacterLevel` (`CharacterID`, `Level`, `Rank`, `Exp`, `SlotNumber`) VALUES
-	(1010000000000005, 1, 1, 0, 4),
-	(1010000000000015, 1, 1, 0, 8);
-/*!40000 ALTER TABLE `CharacterLevel` ENABLE KEYS */;
+-- 正在傾印表格  koa_main.PlayerLevel 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
+INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
+	(1010000000000005, 1, 1, 0),
+	(1010000000000015, 1, 1, 0);
+/*!40000 ALTER TABLE `PlayerLevel` ENABLE KEYS */;
 
--- 傾印  資料表 koa_main.CharacterNFT 結構
-CREATE TABLE IF NOT EXISTS `CharacterNFT` (
-  `CharacterID` bigint(20) unsigned NOT NULL,
+-- 傾印  資料表 koa_main.PlayerNFT 結構
+CREATE TABLE IF NOT EXISTS `PlayerNFT` (
+  `PlayerID` bigint(20) unsigned NOT NULL,
   `Constitution` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '體力',
   `Strength` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '力量',
   `Dexterity` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '技巧',
@@ -81,12 +100,12 @@ CREATE TABLE IF NOT EXISTS `CharacterNFT` (
   `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
   `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
   `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
-  PRIMARY KEY (`CharacterID`)
+  PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
--- 正在傾印表格  koa_main.CharacterNFT 的資料：~38 rows (近似值)
-/*!40000 ALTER TABLE `CharacterNFT` DISABLE KEYS */;
-INSERT INTO `CharacterNFT` (`CharacterID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`) VALUES
+-- 正在傾印表格  koa_main.PlayerNFT 的資料：~38 rows (近似值)
+/*!40000 ALTER TABLE `PlayerNFT` DISABLE KEYS */;
+INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`) VALUES
 	(1010000000000001, 3990, 3713, 4358, 3639, 1, '110101701101027012030170', '110101701101047011020530', '110101701101027011010470', '110101701101037021030170', '110101701203017011010270', '110101703102017011010370', '0000000000000000', 00),
 	(1010000000000002, 3392, 3457, 4383, 3243, 1, '110101701101037021030170', '110102701203017031020170', '110101701101027012030170', '110101701101047011020530', '110101702103017012030170', '110101701101027011010470', '0000000000000000', 00),
 	(1010000000000003, 4416, 3629, 4425, 3104, 1, '110101701101047031020170', '110205301101037021030170', '110101701101037021030170', '110101701203017011010270', '110101703102017011010270', '110101701101027012030170', '0000000000000000', 00),
@@ -125,57 +144,41 @@ INSERT INTO `CharacterNFT` (`CharacterID`, `Constitution`, `Strength`, `Dexterit
 	(1010000000000036, 3634, 3841, 4165, 4071, 1, '110101701101027012030170', '110104701101017012030170', '110101701203017011010470', '110101701101047011010370', '110101701203017011020530', '110205303102017011010370', '0000000000000000', 00),
 	(1010000000000037, 4492, 4308, 4178, 4153, 1, '110102701101037021030170', '110101701203017011010470', '110101703102017012030170', '110101701101027011010470', '110104702103017011010170', '110103701101017011010470', '0000000000000000', 00),
 	(1010000000000038, 3494, 3669, 3086, 3655, 1, '110102701101047031020170', '110102702103017011010370', '110101701102053021030170', '110101701203017011010270', '110101703102017011010370', '110103701101027012030170', '0000000000000000', 00);
-/*!40000 ALTER TABLE `CharacterNFT` ENABLE KEYS */;
+/*!40000 ALTER TABLE `PlayerNFT` ENABLE KEYS */;
 
--- 傾印  資料表 koa_main.CharacterSkill 結構
-CREATE TABLE IF NOT EXISTS `CharacterSkill` (
-  `CharacterID` bigint(20) unsigned NOT NULL,
+-- 傾印  資料表 koa_main.PlayerrCounts 結構
+CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
+  `PlayerID` bigint(20) unsigned NOT NULL,
+  `PVPPlay` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 比賽次數',
+  `PVPFirst` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 第一名次數',
+  `PVPTopThree` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 前三名次數',
+  `PVPMiddle` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 中間名次次數',
+  `PVPLastThree` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'PvP 後三名次數',
+  `TeamPlay` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰次數',
+  `TeamWin` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰優勝次數',
+  PRIMARY KEY (`PlayerID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
+
+-- 正在傾印表格  koa_main.PlayerrCounts 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `PlayerrCounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PlayerrCounts` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.PlayerSkill 結構
+CREATE TABLE IF NOT EXISTS `PlayerSkill` (
+  `PlayerID` bigint(20) unsigned NOT NULL,
   `SkillID` bigint(20) unsigned NOT NULL,
   `Level` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '星級',
   `Slot` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '裝備插槽',
-  PRIMARY KEY (`CharacterID`,`SkillID`),
-  KEY `CharacterID` (`CharacterID`)
+  PRIMARY KEY (`PlayerID`,`SkillID`) USING BTREE,
+  KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.CharacterSkill 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `CharacterSkill` DISABLE KEYS */;
-INSERT INTO `CharacterSkill` (`CharacterID`, `SkillID`, `Level`, `Slot`) VALUES
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
+INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000015, 1, 1, 2),
-	(1010000000000015, 2, 2, 6);
-/*!40000 ALTER TABLE `CharacterSkill` ENABLE KEYS */;
-
--- 傾印  資料表 koa_main.Configs 結構
-CREATE TABLE IF NOT EXISTS `Configs` (
-  `Name` varchar(255) NOT NULL,
-  `Value` varchar(255) NOT NULL,
-  `Comment` varchar(255) NOT NULL,
-  PRIMARY KEY (`Name`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
-
--- 正在傾印表格  koa_main.Configs 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
-INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
-	('AmountRoomPeopleMax', '8', '開房最大人數'),
-	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
-/*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
-
--- 傾印  資料表 koa_main.DatabaseInfo 結構
-CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
-  `Label` varchar(255) NOT NULL COMMENT '標記代號',
-  `Host` varchar(255) NOT NULL COMMENT '主機名稱或IP',
-  `Username` varchar(255) NOT NULL COMMENT '帳號',
-  `Password` varchar(255) NOT NULL COMMENT '密碼',
-  `Name` varchar(255) NOT NULL COMMENT '資料庫名稱',
-  `Port` smallint(5) unsigned DEFAULT 3306,
-  PRIMARY KEY (`Label`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='資料庫連線資訊';
-
--- 正在傾印表格  koa_main.DatabaseInfo 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
-INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
-	('KoaMain', '192.168.2.117', 'root', '1111', 'koa_main', 37002),
-	('KoaStatic', '192.168.2.117', 'root', '1111', 'koa_static', 37002);
-/*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
+	(1010000000000015, 2, 2, 4);
+/*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Sessions 結構
 CREATE TABLE IF NOT EXISTS `Sessions` (
