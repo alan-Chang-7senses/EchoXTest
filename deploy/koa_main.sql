@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.117
+-- 主機:                           192.168.1.103
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -46,8 +46,8 @@ CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
 -- 正在傾印表格  koa_main.DatabaseInfo 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
 INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
-	('KoaMain', '192.168.2.117', 'root', '1111', 'koa_main', 37002),
-	('KoaStatic', '192.168.2.117', 'root', '1111', 'koa_static', 37002);
+	('KoaMain', 'db', 'root', '1111', 'koa_main', 3306),
+	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
 /*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerHolder 結構
@@ -74,15 +74,14 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
   `Level` tinyint(3) unsigned NOT NULL DEFAULT 1 COMMENT '等級',
   `Rank` tinyint(3) unsigned NOT NULL DEFAULT 1 COMMENT '階級',
   `Exp` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '經驗值',
-  `SlotNumber` bigint(20) unsigned NOT NULL DEFAULT 4 COMMENT '技能插槽數量',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
 -- 正在傾印表格  koa_main.PlayerLevel 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
-INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`, `SlotNumber`) VALUES
-	(1010000000000005, 1, 1, 0, 4),
-	(1010000000000015, 1, 1, 0, 8);
+INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
+	(1010000000000005, 1, 1, 0),
+	(1010000000000015, 1, 1, 0);
 /*!40000 ALTER TABLE `PlayerLevel` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerNFT 結構
@@ -178,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000015, 1, 1, 2),
-	(1010000000000015, 2, 2, 6);
+	(1010000000000015, 2, 2, 4);
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Sessions 結構

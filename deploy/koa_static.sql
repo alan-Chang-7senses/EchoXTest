@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.117
+-- 主機:                           192.168.1.103
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -113,8 +113,8 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
 /*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
 INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Target`, `Duration`, `Formula`) VALUES
 	(1, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(2, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(3, 'effect1', 101, 0, 1, 'H-H*N%'),
+	(2, 'effect1', 101, 0, 1, 'INT+H-H*N%'),
+	(3, 'effect1', 101, 0, 1, 'HP+STA+FIG+POW+SPD-H*N%'),
 	(4, 'effect1', 101, 0, 1, 'H-H*N%'),
 	(5, 'effect1', 101, 0, 1, 'H-H*N%'),
 	(6, 'effect1', 101, 0, 1, 'H-H*N%'),
@@ -175,8 +175,8 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
 -- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~11 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
-	(1, 'max001', 1, 1, NULL),
-	(2, 'max001', 1, 1, 'H-H*N%'),
+	(1, 'max001', 1, 1, 'Sun+6'),
+	(2, 'max001', 10, 3, 'Env+5'),
 	(3, 'max001', 1, 1, NULL),
 	(4, 'max001', 1, 1, NULL),
 	(5, 'max001', 1, 1, NULL),
