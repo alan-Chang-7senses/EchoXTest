@@ -9,8 +9,8 @@ use Games\DataPools\ScenePool;
 use Games\DataPools\UserPool;
 use Games\Exceptions\PlayerException;
 use Games\Players\PlayerUtility;
+use Games\Scenes\SceneUtility;
 use Generators\ConfigGenerator;
-use Generators\DataGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -47,14 +47,7 @@ class MainData extends BaseProcessor{
         
         $scenePool = ScenePool::Instance();
         $scene = $scenePool->{$user->scene};
-        $currentSceond = DataGenerator::TodaySecondByTimezone($configs->TimezoneDefault);
-        $map = end($scene->climates);
-        foreach($scene->climates as $climate){
-            if($currentSceond >= $climate->startTime){
-                $map = clone $climate;
-                break;
-            }
-        }
+        $map = SceneUtility::CurrentClimate($scene->climates);
         unset($map->id);
         unset($map->startTime);
         $map->sceneEnv = $scene->env;
