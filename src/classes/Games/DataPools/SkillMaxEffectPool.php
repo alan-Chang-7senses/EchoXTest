@@ -11,7 +11,7 @@ use stdClass;
  */
 class SkillMaxEffectPool extends BasePool{
     
-    public static SkillMaxEffectPool $instance;
+    private static SkillMaxEffectPool $instance;
     
     public static function Instance() : SkillMaxEffectPool {
         if(empty(self::$instance)) self::$instance = new SkillMaxEffectPool ();

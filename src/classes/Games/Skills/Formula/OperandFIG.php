@@ -3,13 +3,13 @@
 namespace Games\Skills\Formula;
 
 /**
- * 速度
+ * 鬥志
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class OperandSPD extends BaseOperand{
+class OperandFIG extends BaseOperand{
     
     public function Process(): float {
-        return $this->factory->player->velocity;
+        return $this->factory->player->will;
     }
 }

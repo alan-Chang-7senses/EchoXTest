@@ -13,7 +13,7 @@ use stdClass;
  */
 class SkillPool extends BasePool{
     
-    public static SkillPool $instance;
+    private static SkillPool $instance;
     
     public static function Instance() : SkillPool {
         if(empty(self::$instance)) self::$instance = new SkillPool();

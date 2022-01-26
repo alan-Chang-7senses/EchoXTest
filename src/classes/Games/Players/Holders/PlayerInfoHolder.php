@@ -19,12 +19,17 @@ class PlayerInfoHolder {
     public int $rank;
     public float $velocity;
     public float $stamina;
+    public float $hp;
     public float $intelligent;
     public float $breakOut;
     public float $will;
+    public PlayerDnaHolder $dna;
     public int $dune;
-    public int $volcano;
     public int $craterLake;
+    public int $volcano;
+    public int $tailwind;
+    public int $crosswind;
+    public int $headwind;
     public int $sunny;
     public int $aurora;
     public int $sandDust;
@@ -36,6 +41,7 @@ class PlayerInfoHolder {
     public int $mid;
     public int $long;
     public int $short;
+    public int $slotNumber;
     /** @var array PlayerSkillHolder */
     public array $skills;
     public array $skillHole;

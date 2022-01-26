@@ -11,7 +11,7 @@ use stdClass;
  */
 class SkillEffectPool extends BasePool{
     
-    public static SkillEffectPool $instance;
+    private static SkillEffectPool $instance;
     
     public static function Instance(): SkillEffectPool {
         if(empty(self::$instance)) self::$instance = new SkillEffectPool ();

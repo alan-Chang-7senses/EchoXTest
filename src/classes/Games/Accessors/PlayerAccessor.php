@@ -2,6 +2,7 @@
 
 namespace Games\Accessors;
 
+use PDO;
 /**
  * Description of PlayerAccessor
  *
@@ -56,5 +57,10 @@ class PlayerAccessor extends BaseAccessor{
     public function rowsPlayerJoinHolderByUserIDLimit(int $userID, int $offset = 0, int $count = 1) : array{
         return $this->MainAccessor()->FromTableJoinUsing('PlayerNFT', 'PlayerHolder', 'INNER', 'PlayerID')
                 ->WhereEqual('UserID', $userID)->OrderBy('PlayerID')->Limit($count, $offset)->FetchAll();
+    }
+    
+    public function rowsHolderByUserIDFetchAssoc(int $userID) : array{
+        return $this->MainAccessor()->FromTable('PlayerHolder')
+                ->WhereEqual('UserID', $userID)->FetchStyle(PDO::FETCH_ASSOC)->FetchAll();
     }
 }

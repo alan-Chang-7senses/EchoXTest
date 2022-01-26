@@ -11,16 +11,17 @@ use stdClass;
 class FormulaFactory {
     
     const OperandAll = [
-        'H','S','N',//'SPD','POW','FIG','INT','STA','HP','Gv','Cv',
-//        'Env','Wind','Climate','Terrain','Sun','Distance','Origin','Fire','Wood','Water'  
+        'Climate','Wind','Env','FIG','HP','INT','POW','SPD','STA','Sun','H','S','N',//'Gv','Cv',
+        //'Terrain','Distance','Origin','Fire','Wood','Water'  
     ];
     
     const OperandPercent = '%';
     const OperandPercentValue = '/100';
-    const PrefixFormulaClass = 'Games\Skills\Formula\Formula';
+    const PrefixOperandClass = 'Games\Skills\Formula\Operand';
     
     public stdClass $player;
     public stdClass $skill;
+    public stdClass $maxEffect;
     public string|null $formula = null;
     
     public function __construct(string|null $formula) {
@@ -38,7 +39,7 @@ class FormulaFactory {
         
         $values = [self::OperandPercent => self::OperandPercentValue];
         foreach ($operands as $operand){
-            $className = self::PrefixFormulaClass.$operand;
+            $className = self::PrefixOperandClass.$operand;
             $values[$operand] = (new $className($this))->Process();
         }
         
@@ -48,10 +49,17 @@ class FormulaFactory {
     }
     
     public static function ProcessByPlayerAndSkill(string|null $formula, stdClass $player, stdClass $skill) : float|null{
-        
         $factory = new FormulaFactory($formula);
         $factory->player = $player;
         $factory->skill = $skill;
+        return $factory->Process();
+    }
+    
+    public static function ProcessByPlayerSkillMaxEffect(string|null $formula, stdClass $player, stdClass $skill, stdClass $maxEffect) : float|null{
+        $factory = new FormulaFactory($formula);
+        $factory->player = $player;
+        $factory->skill = $skill;
+        $factory->maxEffect = $maxEffect;
         return $factory->Process();
     }
 }

@@ -54,6 +54,9 @@ Content Type: `application/json`
 | dune | int | 環境適性 - 沙丘 |
 | volcano | int | 環境適性 - 火山 |
 | craterLake | int | 環境適性 - 亞湖 |
+| tailwind | int | 風勢適性 - 順風 |
+| crosswind | int | 風勢適性 - 側風 |
+| headwind | int | 風勢適性 - 逆風 |
 | sunny | int | 天氣適性 - 晴天 |
 | aurora | int | 天氣適性 - 極光 |
 | sandDust | int | 天氣適性 - 沙塵 |

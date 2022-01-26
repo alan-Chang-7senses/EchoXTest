@@ -6,6 +6,7 @@ use Games\Consts\AbilityFactor;
 use Games\Consts\Habit;
 use Games\Consts\NFTDNA;
 use Games\Players\Adaptability\BaseAdaptability;
+use Games\Players\Holders\PlayerDnaHolder;
 /**
  * NFT 到遊戲中角色能力值換算
  *
@@ -80,14 +81,14 @@ class PlayerAbility {
     
     /**
      * 適應性
-     * @param array $DNA 各部位的 DNA 陣列
+     * @param PlayerDnaHolder $DNA 各部位的 DNA
      * @param BaseAdaptability $adaptability 適性資料持有物件
      * @param array $mainOffsets 主要偏移量陣列，顯性偏移或隱性偏移位數
      * @param int $adaptOffset 適性偏移位數，屬性或物種
      * @param int $adaptLength 適性偏移長度
      * @return void
      */
-    public static function Adaptability(array $DNA, BaseAdaptability $adaptability, array $mainOffsets, int $adaptOffset, int $adaptLength) : void {
+    public static function Adaptability(PlayerDnaHolder $DNA, BaseAdaptability $adaptability, array $mainOffsets, int $adaptOffset, int $adaptLength) : void {
         
         $code = '';
         foreach ($DNA as $dna) {
