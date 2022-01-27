@@ -11,4 +11,5 @@ class Globals {
     
     const REDIRECT_URL = 'redirectURL';
     const ROOT = 'root';
+    const TIME_BEGIN = 'beginTime';
 }

@@ -25,10 +25,11 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRoomPeopleMax', '8', '開房最大人數'),
+	('EnabledProcessTime', '0', '啟用回傳紀錄處理時間(1=啟用)'),
 	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
