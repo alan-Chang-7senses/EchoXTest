@@ -4,7 +4,6 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Exceptions\PlayerException;
 use Games\Players\PlayerUtility;
 use Games\Pools\PlayerPool;
 use Games\Pools\ScenePool;

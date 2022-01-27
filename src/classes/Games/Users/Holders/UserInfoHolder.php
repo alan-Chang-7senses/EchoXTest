@@ -12,5 +12,6 @@ class UserInfoHolder {
     public int $vitality;
     public int $money;
     public int $scene;
+    public int $player;
     public array $players;
 }
