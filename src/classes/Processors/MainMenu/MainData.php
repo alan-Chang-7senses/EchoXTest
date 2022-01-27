@@ -23,18 +23,9 @@ class MainData extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $configs = ConfigGenerator::Instance();
+        $user = UserPool::Instance()->{$_SESSION[Sessions::UserID]};
         
-        $playerID = filter_input(INPUT_POST, 'characterID');
-        
-        $userPool = UserPool::Instance();
-        $user = $userPool->{$_SESSION[Sessions::UserID]};
-        
-        $playerPool = PlayerPool::Instance();
-        $playerInfo = false;
-        if($playerID !== null) $playerInfo = $playerPool->$playerID;
-        if($playerInfo === false && !empty($user->players[0])) $playerInfo = $playerPool->{$user->players[0]};
-        if($playerInfo === false) throw new PlayerException(PlayerException::NotFound);
+        $playerInfo = PlayerPool::Instance()->{$user->player};
         
         $player = new stdClass();
         $player->id = $playerInfo->id;
@@ -45,8 +36,7 @@ class MainData extends BaseProcessor{
         $player->back = PlayerUtility::PartCodeByDNA($playerInfo->dna->back);
         $player->hat = PlayerUtility::PartCodeByDNA($playerInfo->dna->hat);
         
-        $scenePool = ScenePool::Instance();
-        $scene = $scenePool->{$user->scene};
+        $scene = ScenePool::Instance()->{$user->scene};
         $map = SceneUtility::CurrentClimate($scene->climates);
         unset($map->id);
         unset($map->startTime);
@@ -56,7 +46,7 @@ class MainData extends BaseProcessor{
         $result->name = $user->nickname;
         $result->money = $user->money;
         $result->energy = $user->vitality;
-        $result->roomMax = (int)$configs->AmountRoomPeopleMax;
+        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRoomPeopleMax;
         $result->map = $map;
         $result->player = $player;
         

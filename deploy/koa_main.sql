@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.1.103
+-- 主機:                           192.168.1.102
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -201,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `Exp` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '經驗值',
   `Vitality` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '體力',
   `Money` bigint(20) NOT NULL DEFAULT 0 COMMENT '金錢',
+  `Player` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '當前角色',
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
@@ -209,8 +210,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
 
 -- 正在傾印表格  koa_main.Users 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `CreateTime`, `UpdateTime`) VALUES
-	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$YmrheBdMXp2mUcLCuHOu7e6u6tkik7C7qzTp1R1CcGLqU5eyqtAQ2', 1, 0, 0, 0, 0, 0);
+INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$YmrheBdMXp2mUcLCuHOu7e6u6tkik7C7qzTp1R1CcGLqU5eyqtAQ2', 1, 0, 0, 0, 1010000000000015, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
