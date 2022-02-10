@@ -109,14 +109,14 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
   PRIMARY KEY (`SkillEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能效果表';
 
--- 正在傾印表格  koa_static.SkillEffect 的資料：~9 rows (近似值)
+-- 正在傾印表格  koa_static.SkillEffect 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
 INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Target`, `Duration`, `Formula`) VALUES
-	(1, 'effect1', 101, 0, 2, 'H-H*N%'),
-	(2, 'effect2', 102, 0, 2, 'S+S*N%'),
-	(3, 'effect3', 103, 0, 2, 'HP+HP*N%'),
-	(4, 'effect4', 201, 0, 2, 'SPD+SPD*N%'),
-	(5, 'effect5', 102, 0, 2, 'SPD+N');
+	(1, 'effect1', 101, 0, -1, 'H-H*N%'),
+	(2, 'effect2', 102, 0, -1, 'S+S*N%'),
+	(3, 'effect3', 103, 0, 0, 'HP+HP*N%'),
+	(4, 'effect4', 201, 0, -1, 'SPD+SPD*N%'),
+	(5, 'effect5', 102, 0, -1, 'SPD+N');
 /*!40000 ALTER TABLE `SkillEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillInfo 結構
@@ -142,15 +142,15 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   UNIQUE KEY `AliasCode` (`AliasCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
 
--- 正在傾印表格  koa_static.SkillInfo 的資料：~8 rows (近似值)
+-- 正在傾印表格  koa_static.SkillInfo 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
 INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `EnergyCondition`, `Effect`, `Cooldown`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
-	(1, 'Test001', 'LionQuicken', 'LionQuicken', 1, '111', '2', 100, 5, 10, 15, 20, 25, 'LionQuickenMax', 11, 0, NULL),
-	(2, 'Test002', 'LionBreathe', 'LionBreathe', 1, '1234', '1', 100, 10, 20, 30, 40, 50, 'LionBreatheMax', 22, 0, NULL),
-	(3, 'Test003', 'KingRun', 'KingRun', 1, '111', '2', 100, 5, 10, 15, 20, 25, 'KingRunMax', 31, 0, NULL),
-	(4, 'Test004', 'Predatory', 'Predatory', 1, '23', '3', 100, 2, 5, 7, 10, 12, 'PredatoryMax', 41, 0, NULL),
-	(5, 'Test005', 'leadLight', 'leadLight', 1, '4', '4', 100, 1, 2, 3, 4, 5, 'leadLightMax', 2, 3, NULL),
-	(6, 'Test006', 'KingStyle', 'KingStyle', 1, '112234', '5', 100, 10, 15, 20, 25, 30, 'KingStyleMax', 4, 1, NULL);
+	(1, 'Test001', '21001', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
+	(2, 'Test002', '21002', '22001', 1, '1234', '1', 800, 10, 20, 30, 40, 50, '23002', 22, 0, '2'),
+	(3, 'Test003', '21003', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23003', 31, 0, '3'),
+	(4, 'Test004', '21004', '22003', 1, '23', '3', 400, 2, 5, 7, 10, 12, '23004', 41, 0, '4'),
+	(5, 'Test005', '21005', '22004', 1, '4', '4', 200, 1, 2, 3, 4, 5, '23005', 11, 0, '5'),
+	(6, 'Test006', '21006', '22005', 1, '112234', '5', 1200, 10, 15, 20, 25, 30, '23006', 51, 0, '5');
 /*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
@@ -163,14 +163,15 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
   PRIMARY KEY (`MaxEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
 
--- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~11 rows (近似值)
+-- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
 	(1, 'Max001', 1, 1, NULL),
 	(2, 'Max002', 12, 1, 'Climate+20'),
 	(3, 'Max003', 10, 1, 'Env+20'),
 	(4, 'Max004', 103, 0, 'HP+HP*10%'),
-	(5, 'Max005', 402, 0, 'S+S*10%');
+	(5, 'Max005', 402, 0, 'S+S*10%'),
+	(6, 'Max006', 402, 0, 'S+S*20%');
 /*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillPart 結構
