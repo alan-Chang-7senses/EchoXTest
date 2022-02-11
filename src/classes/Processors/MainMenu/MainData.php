@@ -45,7 +45,7 @@ class MainData extends BaseProcessor{
         $result->name = $user->nickname;
         $result->money = $user->money;
         $result->energy = $user->vitality;
-        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRoomPeopleMax;
+        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRacePlayerMax;
         $result->map = $map;
         $result->player = $player;
         
