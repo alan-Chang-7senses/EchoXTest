@@ -31,6 +31,7 @@ class ScenePool extends PoolAccessor{
         $sceneInfo = $sceneAccessor->rowInfoByID($id);
         
         $infoHolder = new SceneInfoHolder();
+        $infoHolder->id = $id;
         $infoHolder->name = $sceneInfo->SceneName;
         $infoHolder->readySec = $sceneInfo->ReadyToStart;
         $infoHolder->env = $sceneInfo->SceneEnv;

@@ -31,6 +31,7 @@ class UserPool extends PoolAccessor{
         if(empty($row)) return false;
         
         $holder = new UserInfoHolder();
+        $holder->id = $id;
         $holder->nickname = $row->Nickname;
         $holder->level = $row->Level;
         $holder->exp = $row->Exp;
@@ -38,6 +39,7 @@ class UserPool extends PoolAccessor{
         $holder->money = $row->Money;
         $holder->scene = 1;
         $holder->player = $row->Player;
+        $holder->race = $row->Race;
         
         $playerAccessor = new PlayerAccessor();
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);

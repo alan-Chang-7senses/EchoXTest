@@ -6,6 +6,7 @@ namespace Games\Users\Holders;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class UserInfoHolder {
+    public int $id;
     public string $nickname;
     public int $level;
     public int $exp;
@@ -13,5 +14,6 @@ class UserInfoHolder {
     public int $money;
     public int $scene;
     public int $player;
+    public int $race;
     public array $players;
 }
