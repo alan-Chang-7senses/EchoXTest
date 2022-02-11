@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 -- 正在傾印表格  koa_main.Configs 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
-	('AmountRoomPeopleMax', '8', '開房最大人數'),
+	('AmountRacePlayerMax', '8', '開房最大人數'),
 	('EnabledProcessTime', '0', '啟用回傳紀錄處理時間(1=啟用)'),
 	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
@@ -66,7 +66,9 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(1010000000000005, 1, NULL, 456),
-	(1010000000000015, 1, NULL, 5347);
+	(1010000000000015, 1, NULL, 5347),
+	(1010000000000016, 2, NULL, 5347),
+	(1010000000000017, 3, NULL, 5347);
 /*!40000 ALTER TABLE `PlayerHolder` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerLevel 結構
@@ -82,7 +84,9 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
 /*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(1010000000000005, 1, 1, 0),
-	(1010000000000015, 1, 1, 0);
+	(1010000000000015, 1, 1, 0),
+	(1010000000000016, 1, 1, 0),
+	(1010000000000017, 1, 1, 0);
 /*!40000 ALTER TABLE `PlayerLevel` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerNFT 結構
@@ -197,6 +201,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
   `HP` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
+  `CreateTime` int(11) NOT NULL COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
   PRIMARY KEY (`RacePlayerID`),
   UNIQUE KEY `RaceID_UserID` (`RaceID`,`UserID`),
   KEY `RaceID` (`RaceID`)
@@ -258,16 +264,19 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `Vitality` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '體力',
   `Money` bigint(20) NOT NULL DEFAULT 0 COMMENT '金錢',
   `Player` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '當前角色',
+  `Race` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '當前競賽',
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_main.Users 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.Users 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `CreateTime`, `UpdateTime`) VALUES
-	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$YmrheBdMXp2mUcLCuHOu7e6u6tkik7C7qzTp1R1CcGLqU5eyqtAQ2', 1, 0, 0, 0, 1010000000000015, 0, 0);
+INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `Race`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000015, 0, 0, 0),
+	(2, 1, 'zhiwei2', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000016, 0, 0, 0),
+	(3, 1, 'zhiwei3', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000017, 0, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
