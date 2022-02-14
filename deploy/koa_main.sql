@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~4 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(1010000000000005, 1, NULL, 456),
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
--- 正在傾印表格  koa_main.PlayerLevel 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerLevel 的資料：~4 rows (近似值)
 /*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(1010000000000005, 1, 1, 0),
@@ -192,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `PlayerID` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '角色編號',
   `RaceNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '參與比賽號碼',
+  `Direction` tinyint(3) NOT NULL DEFAULT 0 COMMENT '角色方向',
   `Energy1` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '能量一（紅）',
   `Energy2` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '能量二（黃）',
   `Energy3` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '能量三（藍）',
@@ -201,16 +202,12 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
   `HP` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
-  `CreateTime` int(11) NOT NULL COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`RacePlayerID`),
   UNIQUE KEY `RaceID_UserID` (`RaceID`,`UserID`),
   KEY `RaceID` (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
-
--- 正在傾印表格  koa_main.RacePlayer 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `RacePlayer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `RacePlayer` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.RacePlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
@@ -237,10 +234,6 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
   PRIMARY KEY (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
-
--- 正在傾印表格  koa_main.Races 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `Races` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Races` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Sessions 結構
 CREATE TABLE IF NOT EXISTS `Sessions` (
