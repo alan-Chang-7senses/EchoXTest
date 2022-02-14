@@ -10,4 +10,6 @@ namespace Games\Consts;
 class RaceValue {
     
     const NotInRace = 0;
+    const BaseEnergyCount = 12;
+    const EnergyTypeCount = 4;
 }

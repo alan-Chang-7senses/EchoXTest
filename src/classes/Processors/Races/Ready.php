@@ -6,10 +6,12 @@ use Consts\Sessions;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\PlayerPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\ScenePool;
 use Games\Pools\UserPool;
+use Games\Races\RaceUtility;
 use Games\Scenes\SceneUtility;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -60,18 +62,21 @@ class Ready extends BaseProcessor{
         $currentTime = time();
         $raceID = $raceAccessor->AddRace($scenseInfo->id, $currentTime, $currentClimate->windDirection);
 
-        $racePlayers = [];
+        $playerPool = PlayerPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
+        $racePlayers = [];
         foreach($userInfos as $userInfo){
+            $playerInfo = $playerPool->{$userInfo->player};
+            $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
             $racePlayerID = $raceAccessor->AddRacePlayer([
                 'RaceID' => $raceID,
                 'UserID' => $userInfo->id,
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $userInfo->raceNumber,
-                'Energy1' => 0,
-                'Energy2' => 0,
-                'Energy3' => 0,
-                'Energy4' => 0,
+                'Energy1' => $energy[0],
+                'Energy2' => $energy[1],
+                'Energy3' => $energy[2],
+                'Energy4' => $energy[3],
                 'TrackType' => $trackType,
                 'TrackShape' => $trackShape,
                 'Ranking' => $userInfo->ranking,
@@ -81,6 +86,7 @@ class Ready extends BaseProcessor{
                 'UpdateTime' => $currentTime,
             ]);
             $racePlayers[] = $racePlayerPool->$racePlayerID;
+            $userPool->Save($userInfo->id, 'race', $raceID);
         }
         
         $raceInfo = RacePool::Instance()->$raceID;

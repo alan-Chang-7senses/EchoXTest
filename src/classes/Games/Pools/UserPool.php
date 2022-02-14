@@ -47,4 +47,11 @@ class UserPool extends PoolAccessor{
         
         return DataGenerator::ConventType($holder, 'stdClass');
     }
+    
+    protected function SaveRace(stdClass $data, mixed $value) : stdClass{
+        
+        (new UserAccessor())->ModifyRaceByID($data->id, $value);
+        $data->race = $value;
+        return $data;
+    }
 }
