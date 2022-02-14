@@ -3,10 +3,9 @@
 namespace Games\Skills\Formula;
 
 use Consts\Sessions;
-use Games\Consts\DNASun;
-use Games\Consts\SkillFormula;
 use Games\Pools\ScenePool;
 use Games\Pools\UserPool;
+use Games\Races\RaceUtility;
 use Games\Scenes\SceneUtility;
 /**
  * Description of OperandSun
@@ -21,10 +20,6 @@ class OperandSun extends BaseOperand{
         $sceneInfo = ScenePool::Instance()->{$userInfo->scene};
         $climate = SceneUtility::CurrentClimate($sceneInfo->climates);
         
-        return match ($climate->lighting) {
-            DNASun::Normal => SkillFormula::SunNoneValue,
-            $this->factory->player->sun => SkillFormula::SunSameValue,
-            default => SkillFormula::SunDiffValue,
-        };
+        return RaceUtility::SunValueByPlayer($climate->lighting, $this->factory->player->sun);
     }
 }

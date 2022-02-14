@@ -36,6 +36,7 @@ class Ready extends BaseProcessor{
         $users = json_decode(InputHelper::post('users'));
         $trackType = InputHelper::post('trackType');
         $trackShape = InputHelper::post('trackShape');
+        $direction = InputHelper::post('direction');
         
         if(count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::OverPlayerMax);
         
@@ -62,17 +63,29 @@ class Ready extends BaseProcessor{
         $currentTime = time();
         $raceID = $raceAccessor->AddRace($scenseInfo->id, $currentTime, $currentClimate->windDirection);
 
+        $slope = RaceUtility::SlopeValue($trackType);
+        $climateAcceleration = RaceUtility::ClimateAccelerationValue($currentClimate->weather);
+        $climateLose = RaceUtility::ClimateLose($currentClimate->weather);
+        $windEffect = RaceUtility::WindEffectValue($currentClimate->weather, $direction, $currentClimate->windSpeed);
+        
         $playerPool = PlayerPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
+        $suns = [];
         foreach($userInfos as $userInfo){
+            
             $playerInfo = $playerPool->{$userInfo->player};
             $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
+            
+            $sun = RaceUtility::SunValueByPlayer($currentClimate->lighting, $playerInfo->sun);
+            $suns[] = $sun;
+            
             $racePlayerID = $raceAccessor->AddRacePlayer([
                 'RaceID' => $raceID,
                 'UserID' => $userInfo->id,
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $userInfo->raceNumber,
+                'Direction' => $direction,
                 'Energy1' => $energy[0],
                 'Energy2' => $energy[1],
                 'Energy3' => $energy[2],
@@ -94,6 +107,13 @@ class Ready extends BaseProcessor{
         $result = new ResultData(ErrorCode::Success);
         $result->racePlayers = $racePlayers;
         $result->race = $raceInfo;
+        $result->chk = [
+            'slope' => $slope,
+            'climateAcceleration' => $climateAcceleration,
+            'climateLose' => $climateLose,
+            'windEffect' => $windEffect,
+            'sun' => $suns
+        ];
         return $result;
     }
 }

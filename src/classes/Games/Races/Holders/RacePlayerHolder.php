@@ -13,6 +13,7 @@ class RacePlayerHolder {
     public int $user;
     public int $player;
     public int $number;
+    public int $direction;
     public int $energy1;
     public int $energy2;
     public int $energy3;
