@@ -9,7 +9,7 @@ use Exceptions\NormalException;
  */
 class RaceException extends NormalException{
     
-    const UserInRace = 3001;
-    const OverPlayerMax = 3002;
-    const OtherUserInRace = 3003;
+    const UserInRace = 4001;
+    const OverPlayerMax = 4002;
+    const OtherUserInRace = 4003;
 }

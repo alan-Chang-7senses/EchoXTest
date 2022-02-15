@@ -6,7 +6,7 @@ use Consts\Sessions;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
-use Games\Pools\PlayerPool;
+use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\ScenePool;
@@ -71,7 +71,6 @@ class Ready extends BaseProcessor{
         $climateLose = RaceUtility::ClimateLoseValue($currentClimate->weather);
         $windEffect = RaceUtility::WindEffectValue($currentClimate->weather, $direction, $currentClimate->windSpeed);
         
-        $playerPool = PlayerPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
         $suns = [];
@@ -80,7 +79,8 @@ class Ready extends BaseProcessor{
             $userInfo = $userHandler->GetInfo();
             $readyRaceInfo = $readyRaceInfos[$userInfo->id];
             
-            $playerInfo = $playerPool->{$userInfo->player};
+            $playerHandler = new PlayerHandler($userInfo->player);
+            $playerInfo = $playerHandler->GetInfo();
             $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
             
             $sun = RaceUtility::SunValueByPlayer($currentClimate->lighting, $playerInfo->sun);
@@ -100,7 +100,7 @@ class Ready extends BaseProcessor{
                 'TrackShape' => $trackShape,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
-                'HP' => 0,
+                'HP' => $playerInfo->stamina,
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
