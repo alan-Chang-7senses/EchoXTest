@@ -23,7 +23,7 @@ class RacePlayerPool extends PoolAccessor{
     
     protected string $keyPrefix = 'racePlayer_';
     
-    private array $dataByUser = [];
+//    private array $dataByUser = [];
 
     public function FromDB(int|string $id): stdClass|false {
         
@@ -47,7 +47,7 @@ class RacePlayerPool extends PoolAccessor{
         $holder->trackNumber = $row->TrackNumber;
         $holder->hp = $row->HP;
         
-        $this->dataByUser[$id][$holder->user] = $holder;
+//        $this->dataByUser[$id][$holder->user] = $holder;
         
         return DataGenerator::ConventType($holder, 'stdClass');
     }

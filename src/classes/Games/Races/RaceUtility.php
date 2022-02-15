@@ -3,6 +3,9 @@ namespace Games\Races;
 
 use Games\Consts\DNASun;
 use Games\Consts\RaceValue;
+use stdClass;
+use Games\Players\PlayerUtility;
+use Games\Consts\SceneValue;
 /**
  * Description of RaceUtility
  *
@@ -20,20 +23,6 @@ class RaceUtility {
         }
         
         return $energy;
-    }
-    
-    /**
-     * 日照參數的太陽屬性值
-     * @param int $climateLighting 當前場景氣候日照參數值
-     * @param int $playerSun 角色太陽屬性
-     * @return float 場景日照參數值
-     */
-    public static function SunValueByPlayer(int $climateLighting, int $playerSun) : float{
-        return match ($climateLighting) {
-            DNASun::Normal => RaceValue::SunNone,
-            $playerSun => RaceValue::SunSame,
-            default => RaceValue::SunDiff
-        };
     }
     
     /**
@@ -59,7 +48,7 @@ class RaceUtility {
      * @param int $weather 氣候
      * @return float
      */
-    public static function ClimateLose(int $weather) : float {
+    public static function ClimateLoseValue(int $weather) : float {
         return RaceValue::ClimateLoses[$weather];
     }
 
@@ -70,14 +59,14 @@ class RaceUtility {
      * @param float $windSpeed 風速
      * @return float
      */
-    public static function WindEffectValue(int $windDirection, int $playerDirection, float $windSpeed) : float {
-        $factor = match (abs($windDirection - $playerDirection)) {
-            RaceValue::WindCheckPositive => RaceValue::WindEffectFactor,
-            RaceValue::WindChectReverse => -RaceValue::WindEffectFactor,
-            default => RaceValue::CrosswindFactor,
-        };
-        return $factor * $windSpeed;
+    public static function WindEffectValue(int $playerWindDirectin, float $windSpeed) : float {
+        return RaceValue::WindEffectFactor[$playerWindDirectin] * $windSpeed;
     }
+
+    public static function ValueS(int $trackType, int $weather, stdClass $player, float $slope, float $windEffect) : float{
+        if($player->hp <= 0) return self::StraightDepletedValueS ($windEffect);
+    }
+
 
     public static function StraightValueH(float $sun) {
         
@@ -87,8 +76,10 @@ class RaceUtility {
         
     }
     
-    public static function StraightDepletedValueS(float $sun) {
-        
+    public static function StraightDepletedValueS(stdClass $player, float $climateAccelation, float $slope, float $windEffect, int $env, int $weather, int $trackType) : float{
+//        $velocity = PlayerUtility::AdaptValueByPoint($player->velocity);
+//        $will = PlayerUtility::AdaptValueByPoint($player->will);
+//        return $climateAccelation * (( + ));
     }
 
     public static function CurvidValueH(float $sun) {

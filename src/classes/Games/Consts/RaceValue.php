@@ -17,31 +17,28 @@ class RaceValue {
     const SunSame = 120;
     const SunDiff = 80;
     
-    const TrackFlat = 1;
-    const TrackUpslope = 2;
-    const TrackDownslope = 3;
     const TrackType = [
-        self::TrackFlat => 10,
-        self::TrackUpslope => 12,
-        self::TrackDownslope => 9,
+        SceneValue::Flat => 10,
+        SceneValue::Upslope => 12,
+        SceneValue::Downslope => 9,
     ];
     
-    const ClimateSunny = 1;
-    const ClimateAurora = 2;
-    const ClimateSandDust = 3;
     const ClimateAccelerations = [
-        self::ClimateSunny => 1,
-        self::ClimateAurora => 1.2,
-        self::ClimateSandDust => 1,
+        SceneValue::Sunny => 1,
+        SceneValue::Aurora => 1.2,
+        SceneValue::SandDust => 1,
     ];
     const ClimateLoses = [
-        self::ClimateSunny => 0,
-        self::ClimateAurora => 0,
-        self::ClimateSandDust => 0.5,
+        SceneValue::Sunny => 0,
+        SceneValue::Aurora => 0,
+        SceneValue::SandDust => 0.5,
     ];
     
     const WindCheckPositive = 2;
-    const WindChectReverse = 0;
-    const WindEffectFactor = 0.01;
-    const CrosswindFactor = 0;
+    const WindCheckReverse = 0;
+    const WindEffectFactor = [
+        SceneValue::Tailwind => 0.01,
+        SceneValue::Crosswind => 0,
+        SceneValue::Headwind => -0.01,
+    ];
 }

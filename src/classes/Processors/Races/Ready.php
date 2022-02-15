@@ -7,6 +7,7 @@ use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Players\PlayerUtility;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\ScenePool;
@@ -69,7 +70,9 @@ class Ready extends BaseProcessor{
         $slope = RaceUtility::SlopeValue($trackType);
         $climateAcceleration = RaceUtility::ClimateAccelerationValue($currentClimate->weather);
         $climateLose = RaceUtility::ClimateLoseValue($currentClimate->weather);
-        $windEffect = RaceUtility::WindEffectValue($currentClimate->weather, $direction, $currentClimate->windSpeed);
+        
+        $playerWindDirection = PlayerUtility::PlayerWindDirection($currentClimate->windDirection, $direction);
+        $windEffect = RaceUtility::WindEffectValue($playerWindDirection, $currentClimate->windSpeed);
         
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
@@ -83,7 +86,7 @@ class Ready extends BaseProcessor{
             $playerInfo = $playerHandler->GetInfo();
             $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
             
-            $sun = RaceUtility::SunValueByPlayer($currentClimate->lighting, $playerInfo->sun);
+            $sun = $playerHandler->GetSunValue($currentClimate->lighting);
             $suns[] = $sun;
             
             $racePlayerID = $raceAccessor->AddRacePlayer([
