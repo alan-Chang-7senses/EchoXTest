@@ -10,9 +10,10 @@ use Games\Pools\PlayerPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\ScenePool;
-use Games\Pools\UserPool;
+use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneUtility;
+use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -26,9 +27,7 @@ class Ready extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $userPool = UserPool::Instance();
-        
-        $userSelf = $userPool->{$_SESSION[Sessions::UserID]};
+        $userSelf = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
         if($userSelf->race != RaceValue::NotInRace) throw new RaceException (RaceException::UserInRace);
         
         $config = ConfigGenerator::Instance();
@@ -40,18 +39,22 @@ class Ready extends BaseProcessor{
         
         if(count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::OverPlayerMax);
         
-        $userInfos = [];
         $n = 1;
+        $userHandlers = [];
+        $readyRaceInfos = [];
         foreach($users as $user){
             
-            $userInfo = $userPool->{$user->id};
-            if($userInfo === false) throw new RaceException (RaceException::UserNotExist, ['[user]' => $user->id]);
-            else if($userInfo->race != RaceValue::NotInRace) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
+            $handler = new UserHandler($user->id);
+            $userInfo = $handler->GetInfo();
+            if($userInfo->race != RaceValue::NotInRace) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
             
-            $userInfo->raceNumber = $n;
-            $userInfo->ranking = $user->ranking;
-            $userInfo->trackNumber = $user->trackNumber;
-            $userInfos[] = $userInfo;
+            $readyRaceInfo = new ReadyRaceInfoHolder();
+            $readyRaceInfo->raceNumber = $n;
+            $readyRaceInfo->ranking = $user->ranking;
+            $readyRaceInfo->trackNumber = $user->trackNumber;
+            
+            $userHandlers[] = $handler;
+            $readyRaceInfos[$userInfo->id] = $readyRaceInfo;
             
             ++$n;
         }
@@ -65,14 +68,17 @@ class Ready extends BaseProcessor{
 
         $slope = RaceUtility::SlopeValue($trackType);
         $climateAcceleration = RaceUtility::ClimateAccelerationValue($currentClimate->weather);
-        $climateLose = RaceUtility::ClimateLose($currentClimate->weather);
+        $climateLose = RaceUtility::ClimateLoseValue($currentClimate->weather);
         $windEffect = RaceUtility::WindEffectValue($currentClimate->weather, $direction, $currentClimate->windSpeed);
         
         $playerPool = PlayerPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
         $suns = [];
-        foreach($userInfos as $userInfo){
+        foreach($userHandlers as $userHandler){
+            
+            $userInfo = $userHandler->GetInfo();
+            $readyRaceInfo = $readyRaceInfos[$userInfo->id];
             
             $playerInfo = $playerPool->{$userInfo->player};
             $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
@@ -84,7 +90,7 @@ class Ready extends BaseProcessor{
                 'RaceID' => $raceID,
                 'UserID' => $userInfo->id,
                 'PlayerID' => $userInfo->player,
-                'RaceNumber' => $userInfo->raceNumber,
+                'RaceNumber' => $readyRaceInfo->raceNumber,
                 'Direction' => $direction,
                 'Energy1' => $energy[0],
                 'Energy2' => $energy[1],
@@ -92,14 +98,14 @@ class Ready extends BaseProcessor{
                 'Energy4' => $energy[3],
                 'TrackType' => $trackType,
                 'TrackShape' => $trackShape,
-                'Ranking' => $userInfo->ranking,
-                'TrackNumber' => $userInfo->trackNumber,
+                'Ranking' => $readyRaceInfo->ranking,
+                'TrackNumber' => $readyRaceInfo->trackNumber,
                 'HP' => 0,
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
             $racePlayers[] = $racePlayerPool->$racePlayerID;
-            $userPool->Save($userInfo->id, 'race', $raceID);
+            $userHandler->SaveRace($raceID);
         }
         
         $raceInfo = RacePool::Instance()->$raceID;
