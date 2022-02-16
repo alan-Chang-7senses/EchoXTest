@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
@@ -199,6 +199,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Energy4` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '能量四（綠）',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
   `TrackShape` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道形狀',
+  `Rhythm` tinyint(3) NOT NULL DEFAULT 0 COMMENT '比賽節奏',
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
   `HP` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
@@ -206,6 +207,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`RacePlayerID`),
   UNIQUE KEY `RaceID_UserID` (`RaceID`,`UserID`),
+  UNIQUE KEY `RaceID_PlayerID` (`RaceID`,`PlayerID`),
   KEY `RaceID` (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
 
@@ -232,6 +234,7 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
+  `RacePlayerIDs` text DEFAULT NULL COMMENT '競賽角色編號',
   PRIMARY KEY (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
 
@@ -267,8 +270,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
 -- 正在傾印表格  koa_main.Users 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `Race`, `CreateTime`, `UpdateTime`) VALUES
-	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000015, 0, 0, 0),
-	(2, 1, 'zhiwei2', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000016, 0, 0, 0),
+	(1, 1, 'zhiwei', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000015, 0, 0, 1645012244),
+	(2, 1, 'zhiwei2', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000016, 0, 0, 1645012244),
 	(3, 1, 'zhiwei3', 'Zhiwei', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000017, 0, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 

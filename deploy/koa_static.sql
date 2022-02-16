@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
   PRIMARY KEY (`MaxEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
 
--- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
 	(1, 'Max001', 1, 1, NULL),
