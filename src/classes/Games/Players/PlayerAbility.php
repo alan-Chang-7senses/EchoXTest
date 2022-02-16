@@ -3,8 +3,8 @@
 namespace Games\Players;
 
 use Games\Consts\AbilityFactor;
-use Games\Consts\Habit;
 use Games\Consts\NFTDNA;
+use Games\Consts\PlayerValue;
 use Games\Players\Adaptability\BaseAdaptability;
 use Games\Players\Holders\PlayerDnaHolder;
 /**
@@ -109,7 +109,7 @@ class PlayerAbility {
      */
     public static function Habit(int $constitution, int $strength, int $dexterity, int $agility) : int {
         
-        $habits = [Habit::Rush => $strength, Habit::Stability => $constitution, Habit::Priority => $agility, Habit::Accumulate => $dexterity];
+        $habits = [PlayerValue::Rush => $strength, PlayerValue::Stability => $constitution, PlayerValue::Priority => $agility, PlayerValue::Accumulate => $dexterity];
         arsort($habits);
         reset($habits);
         return key($habits);
