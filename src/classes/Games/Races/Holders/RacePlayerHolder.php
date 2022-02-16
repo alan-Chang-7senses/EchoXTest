@@ -20,6 +20,7 @@ class RacePlayerHolder {
     public int $energy4;
     public int $trackType;
     public int $trackShape;
+    public int $rhythm;
     public int $ranking;
     public int $trackNumber;
     public int $hp;

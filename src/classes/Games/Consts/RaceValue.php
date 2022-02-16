@@ -41,4 +41,11 @@ class RaceValue {
         SceneValue::Crosswind => 0,
         SceneValue::Headwind => -0.01,
     ];
+    
+    /* 比賽節奏 全力衝刺 */
+    const Sprint = 1;
+    /* 比賽節奏 平常速度 */
+    const NormalSpeed = 2;
+    /* 比賽節奏 保留體力 */
+    const RetainStrength = 3;
 }

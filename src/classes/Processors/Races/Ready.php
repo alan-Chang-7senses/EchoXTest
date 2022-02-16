@@ -53,6 +53,7 @@ class Ready extends BaseProcessor{
             $readyRaceInfo->raceNumber = $n;
             $readyRaceInfo->ranking = $user->ranking;
             $readyRaceInfo->trackNumber = $user->trackNumber;
+            $readyRaceInfo->rhythm = $user->rhythm;
             
             $userHandlers[] = $handler;
             $readyRaceInfos[$userInfo->id] = $readyRaceInfo;
@@ -102,6 +103,7 @@ class Ready extends BaseProcessor{
                 'Energy4' => $energy[3],
                 'TrackType' => $trackType,
                 'TrackShape' => $trackShape,
+                'Rhythm' => $readyRaceInfo->rhythm,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
                 'HP' => $playerInfo->stamina,

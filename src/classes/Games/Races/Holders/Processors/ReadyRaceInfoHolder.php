@@ -10,4 +10,5 @@ class ReadyRaceInfoHolder {
     public int $raceNumber;
     public int $ranking;
     public int $trackNumber;
+    public int $rhythm;
 }
