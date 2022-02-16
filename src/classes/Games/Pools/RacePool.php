@@ -32,10 +32,16 @@ class RacePool extends PoolAccessor{
         $holder->id = $id;
         $holder->scene = $row->SceneID;
         $holder->windDirection = $row->WindDirection;
-        
-        $rows = $raceAccessor->rowsPlayerByRaceIDFetchAssoc($id);
-        $holder->racePlayers = array_column($rows, 'RacePlayerID');
+        $holder->racePlayers = json_decode($row->RacePlayerIDs ?? '') ?? new stdClass();
         
         return DataGenerator::ConventType($holder, 'stdClass');
+    }
+    
+    protected function SaveRacePlayerIDs(stdClass $data, mixed $value) : stdClass{
+        
+        $value = json_encode($value);
+        (new RaceAccessor())->ModifyRacePlayerIDsByID($data->id, $value);
+        $data->racePlayers = json_decode($value);
+        return $data;
     }
 }

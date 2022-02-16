@@ -13,7 +13,7 @@ use Generators\DataGenerator;
 class UserHandler {
     
     private UserPool $pool;
-    private UserInfoHolder|false $info;
+    private UserInfoHolder $info;
     
     public function __construct(int|string $id) {
         $this->pool = UserPool::Instance();

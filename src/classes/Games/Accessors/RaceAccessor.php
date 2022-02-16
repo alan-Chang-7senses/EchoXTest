@@ -40,4 +40,8 @@ class RaceAccessor extends BaseAccessor{
         $this->MainAccessor()->FromTable('RacePlayer')->Add($player);
         return $this->MainAccessor()->LastInsertID();
     }
+    
+    public function ModifyRacePlayerIDsByID(int $id, string $idData) : bool{
+        return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => time()]);
+    }
 }

@@ -9,9 +9,9 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
 use Games\Pools\RacePlayerPool;
-use Games\Pools\RacePool;
 use Games\Pools\ScenePool;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
+use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneUtility;
 use Games\Users\UserHandler;
@@ -77,6 +77,7 @@ class Ready extends BaseProcessor{
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
         $suns = [];
+        $racePlayerIDs = [];
         foreach($userHandlers as $userHandler){
             
             $userInfo = $userHandler->GetInfo();
@@ -109,13 +110,16 @@ class Ready extends BaseProcessor{
             ]);
             $racePlayers[] = $racePlayerPool->$racePlayerID;
             $userHandler->SaveRace($raceID);
+            
+            $racePlayerIDs[$userInfo->player] = $racePlayerID;
         }
         
-        $raceInfo = RacePool::Instance()->$raceID;
+        $raceHandler = new RaceHandler($raceID);
+        $raceHandler->RacePlayerIDs = $racePlayerIDs;
         
         $result = new ResultData(ErrorCode::Success);
         $result->racePlayers = $racePlayers;
-        $result->race = $raceInfo;
+        $result->race = $raceHandler->GetInfo();
         $result->chk = [
             'slope' => $slope,
             'climateAcceleration' => $climateAcceleration,

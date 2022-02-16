@@ -44,7 +44,7 @@ class RaceUtility {
     }
     
     /**
-     * 氣候衰減值
+     * 氣候損耗值
      * @param int $weather 氣候
      * @return float
      */
