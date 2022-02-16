@@ -7,7 +7,6 @@ use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
-use Games\Players\PlayerUtility;
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
@@ -66,13 +65,6 @@ class Ready extends BaseProcessor{
         $raceAccessor = new RaceAccessor();
         $currentTime = time();
         $raceID = $raceAccessor->AddRace($sceneHandler->GetInfo()->id, $currentTime, $climate->windDirection);
-
-        $slope = RaceUtility::SlopeValue($trackType);
-        $climateAcceleration = RaceUtility::ClimateAccelerationValue($climate->weather);
-        $climateLose = RaceUtility::ClimateLoseValue($climate->weather);
-        
-        $playerWindDirection = PlayerUtility::PlayerWindDirection($climate->windDirection, $direction);
-        $windEffect = RaceUtility::WindEffectValue($playerWindDirection, $climate->windSpeed);
         
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
@@ -118,16 +110,14 @@ class Ready extends BaseProcessor{
         $raceHandler = new RaceHandler($raceID);
         $raceHandler->RacePlayerIDs = $racePlayerIDs;
         
+        $raceHandler->SetPlayer($playerHandler);
+        $raceHandler->SetSecne($sceneHandler);
+        
         $result = new ResultData(ErrorCode::Success);
         $result->racePlayers = $racePlayers;
         $result->race = $raceHandler->GetInfo();
-        $result->chk = [
-            'slope' => $slope,
-            'climateAcceleration' => $climateAcceleration,
-            'climateLose' => $climateLose,
-            'windEffect' => $windEffect,
-            'sun' => $suns
-        ];
+        $result->S = $raceHandler->ValueS();
+        $result->H = $raceHandler->ValueH();
         return $result;
     }
 }

@@ -4,8 +4,6 @@ namespace Games\Players;
 
 use Games\Consts\AdaptablilityLevel;
 use Games\Consts\NFTDNA;
-use Games\Consts\RaceValue;
-use Games\Consts\SceneValue;
 /**
  * Description of PlayerUtility
  *
@@ -30,20 +28,6 @@ class PlayerUtility {
                 $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::ValueS,
                 default => 0,
             },
-        };
-    }
-    
-    /**
-     * 角色風向
-     * @param int $windDirection 場景風向
-     * @param int $playerDirection 角色方向
-     * @return int
-     */
-    public static function PlayerWindDirection(int $windDirection, int $playerDirection) : int{
-        return match (abs($windDirection - $playerDirection)) {
-            RaceValue::WindCheckPositive => SceneValue::Tailwind,
-            RaceValue::WindCheckReverse => SceneValue::Headwind,
-            default => SceneValue::Crosswind,
         };
     }
 }
