@@ -54,50 +54,6 @@ INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VAL
 	(1, 'CloseBeta', 7, 1);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
--- 傾印  資料表 koa_static.ScenePitStop 結構
-CREATE TABLE IF NOT EXISTS `ScenePitStop` (
-  `ScenePitStopID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `SceneID` int(10) unsigned NOT NULL DEFAULT 0,
-  `SortOrder` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排列順序',
-  `Length` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '長度（秒）',
-  PRIMARY KEY (`ScenePitStopID`),
-  UNIQUE KEY `SceneID_SortOrder` (`SceneID`,`SortOrder`),
-  KEY `SceneID` (`SceneID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景休息站';
-
--- 正在傾印表格  koa_static.ScenePitStop 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `ScenePitStop` DISABLE KEYS */;
-INSERT INTO `ScenePitStop` (`ScenePitStopID`, `SceneID`, `SortOrder`, `Length`) VALUES
-	(1, 1, 0, 7),
-	(2, 1, 1, 7);
-/*!40000 ALTER TABLE `ScenePitStop` ENABLE KEYS */;
-
--- 傾印  資料表 koa_static.SceneTracks 結構
-CREATE TABLE IF NOT EXISTS `SceneTracks` (
-  `SceneTrackID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `SceneID` int(10) unsigned NOT NULL DEFAULT 0,
-  `SortOrder` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排列順序',
-  `TrackType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道類別',
-  `Step` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '段位',
-  `Length` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '長度',
-  `Shape` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道形狀',
-  `Direction` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '方向',
-  PRIMARY KEY (`SceneTrackID`),
-  UNIQUE KEY `SceneID_SortOrder` (`SceneID`,`SortOrder`),
-  KEY `SceneID` (`SceneID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景賽道';
-
--- 正在傾印表格  koa_static.SceneTracks 的資料：~6 rows (近似值)
-/*!40000 ALTER TABLE `SceneTracks` DISABLE KEYS */;
-INSERT INTO `SceneTracks` (`SceneTrackID`, `SceneID`, `SortOrder`, `TrackType`, `Step`, `Length`, `Shape`, `Direction`) VALUES
-	(1, 1, 0, 3, 1, 300, 1, 3),
-	(2, 1, 1, 1, 1, 400, 2, 2),
-	(3, 1, 2, 2, 2, 300, 1, 1),
-	(4, 1, 3, 3, 2, 300, 1, 1),
-	(5, 1, 4, 1, 3, 400, 2, 4),
-	(6, 1, 5, 2, 3, 300, 1, 3);
-/*!40000 ALTER TABLE `SceneTracks` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_static.SkillEffect 結構
 CREATE TABLE IF NOT EXISTS `SkillEffect` (
   `SkillEffectID` int(10) unsigned NOT NULL AUTO_INCREMENT,

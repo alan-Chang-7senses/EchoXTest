@@ -36,19 +36,6 @@ class ScenePool extends PoolAccessor{
         $infoHolder->readySec = $sceneInfo->ReadyToStart;
         $infoHolder->env = $sceneInfo->SceneEnv;
         
-        $sceneTracks = $sceneAccessor->rowsTrackBySceneID($id);
-        $infoHolder->tracks = [];
-        foreach($sceneTracks as $track){
-            $holder = new SceneTrackHolder();
-            $holder->id = $track->SceneTrackID;
-            $holder->type = $track->TrackType;
-            $holder->step = $track->Step;
-            $holder->length = $track->Length;
-            $holder->shape = $track->Shape;
-            $holder->direction = $track->Direction;
-            $infoHolder->tracks[] = $holder;
-        }
-        
         $sceneClimates = $sceneAccessor->rowsClimateBySceneID($id);
         $infoHolder->climates = [];
         foreach ($sceneClimates as $climate) {
