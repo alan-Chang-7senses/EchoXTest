@@ -2,6 +2,7 @@
 
 namespace Games\Players\Holders;
 
+use stdClass;
 /**
  * Description of PlayerInfoHolder
  *
@@ -38,7 +39,7 @@ class PlayerInfoHolder {
     /** @var float 鬥志 CP FIG */
     public float $will;
     /** @var PlayerDnaHolder 角色 DNA */
-    public PlayerDnaHolder $dna;
+    public PlayerDnaHolder|stdClass $dna;
     /** @var int 環境適性 沙丘 */
     public int $dune;
     /** @var int 環境適性 亞湖 */

@@ -9,11 +9,10 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
 use Games\Pools\RacePlayerPool;
-use Games\Pools\ScenePool;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
-use Games\Scenes\SceneUtility;
+use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -61,19 +60,19 @@ class Ready extends BaseProcessor{
             ++$n;
         }
         
-        $scenseInfo = ScenePool::Instance()->{$userSelf->scene};
-        $currentClimate = SceneUtility::CurrentClimate($scenseInfo->climates);
+        $sceneHandler = new SceneHandler($userSelf->scene);
+        $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
         $currentTime = time();
-        $raceID = $raceAccessor->AddRace($scenseInfo->id, $currentTime, $currentClimate->windDirection);
+        $raceID = $raceAccessor->AddRace($sceneHandler->GetInfo()->id, $currentTime, $climate->windDirection);
 
         $slope = RaceUtility::SlopeValue($trackType);
-        $climateAcceleration = RaceUtility::ClimateAccelerationValue($currentClimate->weather);
-        $climateLose = RaceUtility::ClimateLoseValue($currentClimate->weather);
+        $climateAcceleration = RaceUtility::ClimateAccelerationValue($climate->weather);
+        $climateLose = RaceUtility::ClimateLoseValue($climate->weather);
         
-        $playerWindDirection = PlayerUtility::PlayerWindDirection($currentClimate->windDirection, $direction);
-        $windEffect = RaceUtility::WindEffectValue($playerWindDirection, $currentClimate->windSpeed);
+        $playerWindDirection = PlayerUtility::PlayerWindDirection($climate->windDirection, $direction);
+        $windEffect = RaceUtility::WindEffectValue($playerWindDirection, $climate->windSpeed);
         
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayers = [];
@@ -88,7 +87,7 @@ class Ready extends BaseProcessor{
             $playerInfo = $playerHandler->GetInfo();
             $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
             
-            $sun = $playerHandler->GetSunValue($currentClimate->lighting);
+            $sun = $playerHandler->GetSunValue($climate->lighting);
             $suns[] = $sun;
             
             $racePlayerID = $raceAccessor->AddRacePlayer([
