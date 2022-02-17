@@ -18,7 +18,7 @@
 
 ### docs - API 說明文件資料夾
 
-- [文件首頁](docs/index.md)。
+- [文件首頁](docs/api/index.md)。
 
 ### src - 程式原始碼檔案與資料夾
 

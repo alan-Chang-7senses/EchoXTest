@@ -7,10 +7,12 @@
 ## APIs
 
 - [登入驗證](Login/Verify.md)。
-- 主介面
+- 主介面：
 	- [主要資料](MainMenu/MainData.md)。
 	- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 	- [角色資料](MainMenu/CharacterData.md)。
+- 競賽：
+	- [開局](Races/Ready.md)。
 
 ## Response
 
