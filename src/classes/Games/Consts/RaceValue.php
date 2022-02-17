@@ -13,6 +13,8 @@ class RaceValue {
     const BaseEnergyCount = 12;
     const EnergyTypeCount = 4;
     
+    const HPDecimals = 2;
+    
     const SunNone = 100;
     const SunSame = 120;
     const SunDiff = 80;

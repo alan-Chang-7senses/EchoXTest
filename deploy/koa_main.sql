@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Rhythm` tinyint(3) NOT NULL DEFAULT 0 COMMENT '比賽節奏',
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
-  `HP` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
+  `HP` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`RacePlayerID`),
