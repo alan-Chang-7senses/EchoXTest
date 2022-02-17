@@ -29,6 +29,8 @@ class LogHelper {
         $log->redirectURL = $GLOBALS[Globals::REDIRECT_URL];
         $log->trace = $ex->getTrace();
         $log->extra = self::$extra;
+        $log->beginTime = $GLOBALS[Globals::TIME_BEGIN];
+        $log->processTime = microtime(true) - $GLOBALS[Globals::TIME_BEGIN];
         self::$extra = null;
         
         error_log(json_encode($log, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT).PHP_EOL.PHP_EOL, 3, self::$root.date('Ymd').'.log');

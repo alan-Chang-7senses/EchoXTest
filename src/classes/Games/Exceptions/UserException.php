@@ -4,11 +4,12 @@ namespace Games\Exceptions;
 
 use Exceptions\NormalException;
 /**
- * Description of PlayerException
+ * Description of UserException
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerException extends NormalException{
+class UserException extends NormalException{
     
-    const PlayerNotExist = 3001;
+    const UserNotExist = 2001;
+    
 }

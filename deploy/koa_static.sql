@@ -54,50 +54,6 @@ INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VAL
 	(1, 'CloseBeta', 7, 1);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
--- 傾印  資料表 koa_static.ScenePitStop 結構
-CREATE TABLE IF NOT EXISTS `ScenePitStop` (
-  `ScenePitStopID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `SceneID` int(10) unsigned NOT NULL DEFAULT 0,
-  `SortOrder` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排列順序',
-  `Length` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '長度（秒）',
-  PRIMARY KEY (`ScenePitStopID`),
-  UNIQUE KEY `SceneID_SortOrder` (`SceneID`,`SortOrder`),
-  KEY `SceneID` (`SceneID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景休息站';
-
--- 正在傾印表格  koa_static.ScenePitStop 的資料：~2 rows (近似值)
-/*!40000 ALTER TABLE `ScenePitStop` DISABLE KEYS */;
-INSERT INTO `ScenePitStop` (`ScenePitStopID`, `SceneID`, `SortOrder`, `Length`) VALUES
-	(1, 1, 0, 7),
-	(2, 1, 1, 7);
-/*!40000 ALTER TABLE `ScenePitStop` ENABLE KEYS */;
-
--- 傾印  資料表 koa_static.SceneTracks 結構
-CREATE TABLE IF NOT EXISTS `SceneTracks` (
-  `SceneTrackID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `SceneID` int(10) unsigned NOT NULL DEFAULT 0,
-  `SortOrder` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排列順序',
-  `TrackType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道類別',
-  `Step` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '段位',
-  `Length` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '長度',
-  `Shape` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道形狀',
-  `Direction` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '方向',
-  PRIMARY KEY (`SceneTrackID`),
-  UNIQUE KEY `SceneID_SortOrder` (`SceneID`,`SortOrder`),
-  KEY `SceneID` (`SceneID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景賽道';
-
--- 正在傾印表格  koa_static.SceneTracks 的資料：~6 rows (近似值)
-/*!40000 ALTER TABLE `SceneTracks` DISABLE KEYS */;
-INSERT INTO `SceneTracks` (`SceneTrackID`, `SceneID`, `SortOrder`, `TrackType`, `Step`, `Length`, `Shape`, `Direction`) VALUES
-	(1, 1, 0, 3, 1, 300, 1, 3),
-	(2, 1, 1, 1, 1, 400, 2, 2),
-	(3, 1, 2, 2, 2, 300, 1, 1),
-	(4, 1, 3, 3, 2, 300, 1, 1),
-	(5, 1, 4, 1, 3, 400, 2, 4),
-	(6, 1, 5, 2, 3, 300, 1, 3);
-/*!40000 ALTER TABLE `SceneTracks` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_static.SkillEffect 結構
 CREATE TABLE IF NOT EXISTS `SkillEffect` (
   `SkillEffectID` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -109,18 +65,14 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
   PRIMARY KEY (`SkillEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能效果表';
 
--- 正在傾印表格  koa_static.SkillEffect 的資料：~9 rows (近似值)
+-- 正在傾印表格  koa_static.SkillEffect 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
 INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Target`, `Duration`, `Formula`) VALUES
-	(1, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(2, 'effect1', 101, 0, 1, 'INT+H-H*N%'),
-	(3, 'effect1', 101, 0, 1, 'HP+STA+FIG+POW+SPD-H*N%'),
-	(4, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(5, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(6, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(7, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(8, 'effect1', 101, 0, 1, 'H-H*N%'),
-	(9, 'effect1', 101, 0, 1, 'H-H*N%');
+	(1, 'effect1', 101, 0, -1, 'H-H*N%'),
+	(2, 'effect2', 102, 0, -1, 'S+S*N%'),
+	(3, 'effect3', 103, 0, 0, 'HP+HP*N%'),
+	(4, 'effect4', 201, 0, -1, 'SPD+SPD*N%'),
+	(5, 'effect5', 102, 0, -1, 'SPD+N');
 /*!40000 ALTER TABLE `SkillEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillInfo 結構
@@ -130,17 +82,14 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   `SkillName` varchar(50) DEFAULT NULL COMMENT '技能名稱標籤',
   `Description` varchar(50) DEFAULT NULL COMMENT '技能描述標籤',
   `TriggerType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '觸發類型',
-  `MainCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '主要條件',
-  `SubCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '次要條件',
   `EnergyCondition` varchar(50) DEFAULT NULL COMMENT '能量條件',
-  `CardCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '牌型條件',
   `Effect` varchar(50) DEFAULT NULL COMMENT '效果',
+  `Cooldown` smallint(6) NOT NULL DEFAULT 100 COMMENT '冷卻時間',
   `Level1` int(11) NOT NULL DEFAULT 0 COMMENT '1級N值',
   `Level2` int(11) NOT NULL DEFAULT 0 COMMENT '2級N值',
   `Level3` int(11) NOT NULL DEFAULT 0 COMMENT '3級N值',
   `Level4` int(11) NOT NULL DEFAULT 0 COMMENT '4級N值',
   `Level5` int(11) NOT NULL DEFAULT 0 COMMENT '5級N值',
-  `MaxName` varchar(50) DEFAULT NULL COMMENT '滿等級名稱標籤',
   `MaxDescription` varchar(50) DEFAULT NULL COMMENT '滿等級敘述標籤',
   `MaxCondition` tinyint(4) NOT NULL DEFAULT 0 COMMENT '滿等級技能條件',
   `MaxConditionValue` tinyint(4) NOT NULL DEFAULT 0 COMMENT '滿等級技能條件值',
@@ -149,43 +98,36 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   UNIQUE KEY `AliasCode` (`AliasCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
 
--- 正在傾印表格  koa_static.SkillInfo 的資料：~8 rows (近似值)
+-- 正在傾印表格  koa_static.SkillInfo 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
-INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `MainCondition`, `SubCondition`, `EnergyCondition`, `CardCondition`, `Effect`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxName`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
-	(1, 'Origin00001', 'name1', 'description1', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1,2'),
-	(2, 'Origin00002', 'name2', 'description2', 1, 4, 0, '111', 0, '3', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(3, 'Origin00003', 'name3', 'description3', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(4, 'Origin00004', 'name4', 'description4', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(5, 'Origin00005', 'name5', 'description5', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(6, 'Origin00006', 'name6', 'description6', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(7, 'Origin00007', 'name7', 'description7', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1'),
-	(8, 'Origin00008', 'name8', 'description8', 1, 4, 0, '111', 0, '1,2', 5, 10, 20, 30, 40, 'max1', 'maxDesc1', 0, 0, '1');
+INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `EnergyCondition`, `Effect`, `Cooldown`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
+	(1, 'Test001', '21001', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
+	(2, 'Test002', '21002', '22001', 1, '1234', '1', 800, 10, 20, 30, 40, 50, '23002', 22, 0, '2'),
+	(3, 'Test003', '21003', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23003', 31, 0, '3'),
+	(4, 'Test004', '21004', '22003', 1, '23', '3', 400, 2, 5, 7, 10, 12, '23004', 41, 0, '4'),
+	(5, 'Test005', '21005', '22004', 1, '4', '4', 200, 1, 2, 3, 4, 5, '23005', 11, 0, '5'),
+	(6, 'Test006', '21006', '22005', 1, '112234', '5', 1200, 10, 15, 20, 25, 30, '23006', 51, 0, '5');
 /*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
 CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
   `MaxEffectID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `EffectName` varchar(50) DEFAULT NULL COMMENT '效果名稱或標籤',
-  `EffectType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `EffectType` smallint(6) NOT NULL DEFAULT 0 COMMENT '效果類型',
   `TypeValue` tinyint(4) NOT NULL DEFAULT 0 COMMENT '效果類型值',
   `Formula` text DEFAULT NULL COMMENT '公式(或值)',
   PRIMARY KEY (`MaxEffectID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
 
--- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~11 rows (近似值)
+-- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `TypeValue`, `Formula`) VALUES
-	(1, 'max001', 1, 1, 'Sun+6'),
-	(2, 'max001', 10, 3, 'Env+5'),
-	(3, 'max001', 1, 1, NULL),
-	(4, 'max001', 1, 1, NULL),
-	(5, 'max001', 1, 1, NULL),
-	(6, 'max001', 1, 1, NULL),
-	(7, 'max001', 1, 1, NULL),
-	(8, 'max001', 1, 1, NULL),
-	(9, 'max001', 1, 1, NULL),
-	(10, 'max001', 1, 1, NULL),
-	(11, 'max001', 1, 1, NULL);
+	(1, 'Max001', 1, 1, NULL),
+	(2, 'Max002', 12, 1, 'Climate+20'),
+	(3, 'Max003', 10, 1, 'Env+20'),
+	(4, 'Max004', 103, 0, 'HP+HP*10%'),
+	(5, 'Max005', 402, 0, 'S+S*10%'),
+	(6, 'Max006', 402, 0, 'S+S*20%');
 /*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillPart 結構

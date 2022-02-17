@@ -1,5 +1,5 @@
 <?php
-
+$t = microtime(true);
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT_PROCESSOR', 'Processors');
 
@@ -12,6 +12,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Exceptions\NormalException;
+use Generators\ConfigGenerator;
 use Handlers\SessionToDBHandler;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -24,6 +25,7 @@ $class = ROOT_PROCESSOR.str_replace('/', '\\', $path);
 
 $GLOBALS[Globals::REDIRECT_URL] = $redirectURL;
 $GLOBALS[Globals::ROOT] = __DIR__.DS;
+$GLOBALS[Globals::TIME_BEGIN] = $t;
 
 session_start();
 //session_destroy();
@@ -67,4 +69,5 @@ try{
 
 header('Content-Type: application/json');
 
+if(ConfigGenerator::Instance()->EnabledProcessTime == 1) $result->processTime = microtime(true) - $t;
 echo json_encode ($result, JSON_UNESCAPED_UNICODE);

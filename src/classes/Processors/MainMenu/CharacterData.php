@@ -3,11 +3,11 @@
 namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
-use Games\DataPools\PlayerPool;
-use Games\DataPools\SkillEffectPool;
-use Games\DataPools\SkillMaxEffectPool;
-use Games\DataPools\SkillPool;
 use Games\Players\PlayerUtility;
+use Games\Pools\PlayerPool;
+use Games\Pools\SkillEffectPool;
+use Games\Pools\SkillMaxEffectPool;
+use Games\Pools\SkillPool;
 use Games\Skills\Formula\FormulaFactory;
 use Helpers\InputHelper;
 use Holders\ResultData;

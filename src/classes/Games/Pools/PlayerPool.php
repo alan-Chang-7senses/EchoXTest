@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
@@ -24,7 +25,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerPool extends BasePool {
+class PlayerPool extends PoolAccessor {
     
     private static PlayerPool $instance;
     

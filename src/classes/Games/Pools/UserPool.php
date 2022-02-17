@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Users\Holders\UserInfoHolder;
@@ -12,7 +13,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class UserPool extends BasePool{
+class UserPool extends PoolAccessor{
     
     private static UserPool $instance;
     
@@ -30,17 +31,27 @@ class UserPool extends BasePool{
         if(empty($row)) return false;
         
         $holder = new UserInfoHolder();
+        $holder->id = $id;
         $holder->nickname = $row->Nickname;
         $holder->level = $row->Level;
         $holder->exp = $row->Exp;
         $holder->vitality = $row->Vitality;
         $holder->money = $row->Money;
         $holder->scene = 1;
+        $holder->player = $row->Player;
+        $holder->race = $row->Race;
         
         $playerAccessor = new PlayerAccessor();
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
         $holder->players = array_column($rows, 'PlayerID');
         
         return DataGenerator::ConventType($holder, 'stdClass');
+    }
+    
+    protected function SaveRace(stdClass $data, mixed $value) : stdClass{
+        
+        (new UserAccessor())->ModifyRaceByID($data->id, $value);
+        $data->race = $value;
+        return $data;
     }
 }

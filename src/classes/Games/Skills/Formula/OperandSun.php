@@ -3,11 +3,10 @@
 namespace Games\Skills\Formula;
 
 use Consts\Sessions;
-use Games\Consts\DNASun;
-use Games\Consts\SkillFormula;
-use Games\DataPools\ScenePool;
-use Games\DataPools\UserPool;
-use Games\Scenes\SceneUtility;
+use Games\Consts\PlayerValue;
+use Games\Consts\SceneValue;
+use Games\Scenes\SceneHandler;
+use Games\Users\UserHandler;
 /**
  * Description of OperandSun
  *
@@ -17,14 +16,14 @@ class OperandSun extends BaseOperand{
     
     public function Process(): float {
         
-        $userInfo = UserPool::Instance()->{$_SESSION[Sessions::UserID]};
-        $sceneInfo = ScenePool::Instance()->{$userInfo->scene};
-        $climate = SceneUtility::CurrentClimate($sceneInfo->climates);
+        $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        $sceneHandler = new SceneHandler($userHandler->GetInfo()->scene);
+        $climate = $sceneHandler->GetClimate();
         
-        return match ($climate->lighting) {
-            DNASun::Normal => SkillFormula::SunNoneValue,
-            $this->factory->player->sun => SkillFormula::SunSameValue,
-            default => SkillFormula::SunDiffValue,
+        return match ($this->factory->player->sun) {
+            SceneValue::SunNone => PlayerValue::SunNone,
+            $climate->lighting => PlayerValue::SunSame,
+            default => PlayerValue::SunDiff,
         };
     }
 }

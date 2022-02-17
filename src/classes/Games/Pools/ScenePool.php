@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\SceneAccessor;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Games\Scenes\Holders\SceneInfoHolder;
@@ -13,7 +14,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class ScenePool extends BasePool{
+class ScenePool extends PoolAccessor{
     
     private static ScenePool $instance;
     
@@ -30,22 +31,10 @@ class ScenePool extends BasePool{
         $sceneInfo = $sceneAccessor->rowInfoByID($id);
         
         $infoHolder = new SceneInfoHolder();
+        $infoHolder->id = $id;
         $infoHolder->name = $sceneInfo->SceneName;
         $infoHolder->readySec = $sceneInfo->ReadyToStart;
         $infoHolder->env = $sceneInfo->SceneEnv;
-        
-        $sceneTracks = $sceneAccessor->rowsTrackBySceneID($id);
-        $infoHolder->tracks = [];
-        foreach($sceneTracks as $track){
-            $holder = new SceneTrackHolder();
-            $holder->id = $track->SceneTrackID;
-            $holder->type = $track->TrackType;
-            $holder->step = $track->Step;
-            $holder->length = $track->Length;
-            $holder->shape = $track->Shape;
-            $holder->direction = $track->Direction;
-            $infoHolder->tracks[] = $holder;
-        }
         
         $sceneClimates = $sceneAccessor->rowsClimateBySceneID($id);
         $infoHolder->climates = [];

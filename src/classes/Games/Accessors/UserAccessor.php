@@ -16,4 +16,8 @@ class UserAccessor extends BaseAccessor {
     public function rowUserByID(int $id) : mixed{
         return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Fetch();
     }
+    
+    public function ModifyRaceByID(int $id, int $race) : bool{
+        return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Modify(['Race' => $race, 'UpdateTime' => time()]);
+    }
 }

@@ -46,6 +46,7 @@ Content Type: `application/json`
 | exp | int | 經驗值 |
 | vitality | int | 體力 |
 | money | int | 金錢 |
+| player | int | 當前角色 ID |
 
 ### Example
 
@@ -63,5 +64,6 @@ Content Type: `application/json`
 	        "exp": 0,
 	        "vitality": 0,
 	        "money": 0
+	        "player": 1010000000000015
 	    }
 	}
