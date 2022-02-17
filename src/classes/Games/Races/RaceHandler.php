@@ -2,13 +2,12 @@
 
 namespace Games\Races;
 
-use Consts\ErrorCode;
-use Exception;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePool;
 use Games\Races\Holders\RaceInfoHolder;
+use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
 /**
@@ -31,22 +30,8 @@ class RaceHandler {
         $this->ResetInfo();
     }
     
-    public function __set(string $property, mixed $value) {
-        
-        $method = 'Save'.ucfirst($property);
-        
-        if(method_exists($this, $method )) $this->$method($value);
-        else throw new Exception (get_called_class ().' no method '.$method, ErrorCode::SystemError);
-        
-        $this->ResetInfo();
-    }
-    
-    private function ResetInfo(){
+    private function ResetInfo() : void{
         $this->info = DataGenerator::ConventType($this->pool->{$this->id}, 'Games\Races\Holders\RaceInfoHolder');
-    }
-    
-    public function GetInfo() : RaceInfoHolder{
-        return $this->info;
     }
     
     public function SetPlayer(PlayerHandler $handler) : void{
@@ -60,8 +45,17 @@ class RaceHandler {
 
     public function SaveRacePlayerIDs(array $ids) : void{
         $this->pool->Save($this->info->id, 'RacePlayerIDs', $ids);
+        $this->ResetInfo();
     }
     
+    public function GetInfo() : RaceInfoHolder{
+        return $this->info;
+    }
+    
+    public function GetRacePlayerInfo() : RacePlayerHolder {
+        return $this->racePlayerHandler->GetInfo();
+    }
+
     public function ValueS() : float{
         
         $trackShape = $this->racePlayerHandler->GetInfo()->trackShape;
@@ -73,6 +67,34 @@ class RaceHandler {
         };
         
         return $result * $this->RhythmValueS();
+    }
+    
+    public function ValueH() : float{
+        
+        $scene = $this->sceneHandler->GetInfo();
+        $climate = $this->sceneHandler->GetClimate();
+        $player = $this->playerHandler->GetInfo();
+        $racePlayer = $this->racePlayerHandler->GetInfo();
+        $slope = RaceValue::TrackType[$racePlayer->trackType];
+        
+        $result = RaceValue::ClimateLoses[$climate->weather] + 
+                $slope * $this->ValueS() / $player->velocity * 
+                ( 100 / (
+                    $this->playerHandler->GetEnvValue($scene->env) + 
+                    $this->playerHandler->GetClimateValue($climate->weather) + 
+                    $this->playerHandler->GetSunValue($climate->lighting) + 
+                    $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
+                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                ));
+        
+        return $result * $this->RhythmValueH();
+    }
+    
+    public function StartSecond() : float{
+        $scene = $this->sceneHandler->GetInfo();
+        $climate = $this->sceneHandler->GetClimate();
+        $player = $this->playerHandler->GetInfo();
+        return 0.01 * ( 100 / $player->intelligent + 100 / $this->playerHandler->GetEnvValue($scene->env) + 100 / $this->playerHandler->GetClimateValue($climate->weather) + 100 / $this->playerHandler->GetSunValue($climate->lighting));
     }
     
     private function StraightValueS() : float{
@@ -130,27 +152,6 @@ class RaceHandler {
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
                     $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
                 ) / 100) + $this->WindEffectValue();
-    }
-    
-    public function ValueH() : float{
-        
-        $scene = $this->sceneHandler->GetInfo();
-        $climate = $this->sceneHandler->GetClimate();
-        $player = $this->playerHandler->GetInfo();
-        $racePlayer = $this->racePlayerHandler->GetInfo();
-        $slope = RaceValue::TrackType[$racePlayer->trackType];
-        
-        $result = RaceValue::ClimateLoses[$climate->weather] + 
-                $slope * $this->ValueS() / $player->velocity * 
-                ( 100 / (
-                    $this->playerHandler->GetEnvValue($scene->env) + 
-                    $this->playerHandler->GetClimateValue($climate->weather) + 
-                    $this->playerHandler->GetSunValue($climate->lighting) + 
-                    $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
-                ));
-        
-        return $result * $this->RhythmValueH();
     }
     
     /**

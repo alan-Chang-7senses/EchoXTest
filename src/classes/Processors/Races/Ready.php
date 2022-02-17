@@ -7,11 +7,11 @@ use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
-use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
+use Games\Users\Holders\Processors\ReadyUserInfoHolder;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -32,11 +32,11 @@ class Ready extends BaseProcessor{
         $config = ConfigGenerator::Instance();
         
         $users = json_decode(InputHelper::post('users'));
+        if(count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::OverPlayerMax);
+        
         $trackType = InputHelper::post('trackType');
         $trackShape = InputHelper::post('trackShape');
         $direction = InputHelper::post('direction');
-        
-        if(count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::OverPlayerMax);
         
         $n = 1;
         $userHandlers = [];
@@ -66,9 +66,6 @@ class Ready extends BaseProcessor{
         $currentTime = time();
         $raceID = $raceAccessor->AddRace($sceneHandler->GetInfo()->id, $currentTime, $climate->windDirection);
         
-        $racePlayerPool = RacePlayerPool::Instance();
-        $racePlayers = [];
-        $suns = [];
         $racePlayerIDs = [];
         foreach($userHandlers as $userHandler){
             
@@ -77,10 +74,6 @@ class Ready extends BaseProcessor{
             
             $playerHandler = new PlayerHandler($userInfo->player);
             $playerInfo = $playerHandler->GetInfo();
-            $energy = RaceUtility::RandomEnergy($playerInfo->slotNumber);
-            
-            $sun = $playerHandler->GetSunValue($climate->lighting);
-            $suns[] = $sun;
             
             $racePlayerID = $raceAccessor->AddRacePlayer([
                 'RaceID' => $raceID,
@@ -88,10 +81,7 @@ class Ready extends BaseProcessor{
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $readyRaceInfo->raceNumber,
                 'Direction' => $direction,
-                'Energy1' => $energy[0],
-                'Energy2' => $energy[1],
-                'Energy3' => $energy[2],
-                'Energy4' => $energy[3],
+                'Energy' => implode(',', RaceUtility::RandomEnergy($playerInfo->slotNumber)),
                 'TrackType' => $trackType,
                 'TrackShape' => $trackShape,
                 'Rhythm' => $readyRaceInfo->rhythm,
@@ -101,23 +91,35 @@ class Ready extends BaseProcessor{
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
-            $racePlayers[] = $racePlayerPool->$racePlayerID;
-            $userHandler->SaveRace($raceID);
             
             $racePlayerIDs[$userInfo->player] = $racePlayerID;
         }
         
         $raceHandler = new RaceHandler($raceID);
-        $raceHandler->RacePlayerIDs = $racePlayerIDs;
+        $raceHandler->SaveRacePlayerIDs($racePlayerIDs);
         
-        $raceHandler->SetPlayer($playerHandler);
         $raceHandler->SetSecne($sceneHandler);
+        $readyUserInfos = [];
+        foreach ($userHandlers as $userHandler) {
+            
+            $raceHandler->SetPlayer(new PlayerHandler($userHandler->GetInfo()->player));
+            $racePlayerInfo = $raceHandler->GetRacePlayerInfo();
+            
+            $readyUserInfo = new ReadyUserInfoHolder();
+            $readyUserInfo->id = $racePlayerInfo->user;
+            $readyUserInfo->player = $racePlayerInfo->player;
+            $readyUserInfo->energy = $racePlayerInfo->energy;
+            $readyUserInfo->hp = $racePlayerInfo->hp;
+            $readyUserInfo->s = $raceHandler->ValueS();
+            $readyUserInfo->h = $raceHandler->ValueH();
+            $readyUserInfo->startSecond = $raceHandler->StartSecond();
+            $readyUserInfos[] = $readyUserInfo;
+            
+            $userHandler->SaveRace($raceID);
+        }
         
         $result = new ResultData(ErrorCode::Success);
-        $result->racePlayers = $racePlayers;
-        $result->race = $raceHandler->GetInfo();
-        $result->S = $raceHandler->ValueS();
-        $result->H = $raceHandler->ValueH();
+        $result->users = $readyUserInfos;
         return $result;
     }
 }

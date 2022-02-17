@@ -20,14 +20,8 @@ class RacePlayerHolder {
     public int $number;
     /** @var int 角色方向 */
     public int $direction;
-    /** @var int 能量一（紅） */
-    public int $energy1;
-    /** @var int 能量二（黃） */
-    public int $energy2;
-    /** @var int 能量三（藍） */
-    public int $energy3;
-    /** @var int 能量四（綠） */
-    public int $energy4;
+    /** @var int 能量 [紅,黃,藍,綠] */
+    public array $energy;
     /** @var int 賽道類別 平地、上坡、下坡 */
     public int $trackType;
     /** @var int 賽道形狀 直到、彎道 */
