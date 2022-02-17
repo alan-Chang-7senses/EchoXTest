@@ -36,16 +36,16 @@
 	- docker-php-ext-opcache.ini。
 	- php.ini-development。
 	- php.ini-production。
-- 修改 **Dockerfile** 檔案中的 APP_VERSION 環境變數定義版號。
-- 修改 docker-compose.yml 檔案內容：
+2. 修改 **Dockerfile** 檔案中的 APP_VERSION 環境變數定義版號。
+3. 修改 docker-compose.yml 檔案內容：
 	- 修改 ports。
 	- 修改環境變數。
 	- 改變 target 的註解來指定環境（development 或 production）。
-- 輸入指令構建 docker image：
+4. 輸入指令構建 docker image：
 
 		docker-compose build
 		
--  輸入指令開起 Container：
+5. 輸入指令開起 Container：
 
 		docker-compose up -d
 
@@ -70,25 +70,25 @@
 ### 執行環境
 
 1. docker-compose.yml 的 target 切換到 development。
-- 輸入指令構建 docker image：
+2. 輸入指令構建 docker image：
 
 		docker-compose build
 
-- docker-compose.yml 添加環境變數：
+3. docker-compose.yml 添加環境變數：
 	- XDEBUG\_CLIENT\_HOST：監聽 XDebug 的 IDE 所在 IP。
 	- XDEBUG\_CLIENT\_PORT：監聽 XDebug 的 IDE 指定 Port。
-- 輸入指令釋放並重新開起 Container：
+4. 輸入指令釋放並重新開起 Container：
 
 		docker-compose down; docker-compose up -d
 
 ### Visual Studio Code
 
 1. 安裝插件 PHP Debug。
-- 使用 Visual Studio Code 開啟專案資料夾。
-- 複製 deploy/launch.json 到 .vscode/launch.json：
+2. 使用 Visual Studio Code 開啟專案資料夾。
+3. 複製 deploy/launch.json 到 .vscode/launch.json：
 	-  .vscode 資料夾為隱藏資料夾。
 	-  可先透過執行 Debug 來產生檔案再行覆蓋。
--  修改 .vscode/launch.json 內容：
+4. 修改 .vscode/launch.json 內容：
 	-  hostname：編輯器所在 IP。  
 （需與 XDEBUG\_CLIENT\_HOST 相同）
 	-  port：監聽的 port。  
@@ -97,5 +97,5 @@
 ### Postman
 
 1. 點擊右上方 Send 按鈕下方的「Cookies」來開啟 MANAGE COOLIES 視窗。
-- 在 Type a domain name 欄位輸入「XDEBUG_SESSION=VSCODE」，並點擊 Add 按鈕後關閉視窗。
-- 在 Headers 添加 KEY 為「Cookie」，VALUE 為「XDEBUG_SESSION=VSCODE」。
+2. 在 Type a domain name 欄位輸入「XDEBUG_SESSION=VSCODE」，並點擊 Add 按鈕後關閉視窗。
+3. 在 Headers 添加 KEY 為「Cookie」，VALUE 為「XDEBUG_SESSION=VSCODE」。
