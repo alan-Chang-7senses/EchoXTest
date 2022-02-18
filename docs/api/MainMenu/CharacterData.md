@@ -1,4 +1,5 @@
 # 主介面 - 角色資料
+
 ## 介紹
 
 - 使用於取得主介面的角色資料。
@@ -31,7 +32,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
+| error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [creature](#creature) | object | 角色（生物）資訊 |
 
 #### <span id="creature">creature 內容</span>
@@ -40,7 +41,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | id | int | 角色編號 |
 | name | string | 角色暱稱，由使用者命名，若未編輯則與角色編號相同 |
-| [ele](#ele) | int | 屬性 |
+| ele | int | [屬性](../codes/player.md#attr) |
 | sync | float | 同步率 |
 | level | int | 等級 |
 | exp | int | 經驗值 |
@@ -63,54 +64,30 @@ Content Type: `application/json`
 | flat | int | 地形適性 - 平地 |
 | upslope | int | 地形適性 - 上坡 |
 | downslope | int | 地形適性 - 下坡 |
-| [sun](#sun) | int | 太陽適性 |
-| [habit](#habit) | int | 比賽習慣 |
+| sun | int | [太陽適性](../codes/player.md#sun) |
+| habit | int | [比賽習慣](../codes/player.md#habit) |
 | mid | int | 耐久適性 - 中距離 |
 | long | int | 耐久適性 - 長距離 |
 | short | int | 耐久適性 - 短距離 |
 | [skills](#skills) | array | 角色持有的技能清單陣列 |
 | skillHole | array | 技能插槽陣列，陣列長度為插槽數量，陣列元素值為技能編號 |
 
-- <span id="ele">**ele 屬性**</span>
-	- 0：虛無，特殊的存在。
-	- 1：火。
-	- 2：水。
-	- 3：木。
-	- 4：風。
-	- 5：雷。
-	- 6：土。
-	- 7：光明。
-	- 8：黑暗。
-	- 9：渾沌。
-
-- <span id="sun">**sun 太陽適性**</span>
-	- 0：無（一般）。
-	- 1：日行性。
-	- 2：夜行性。
-
-- <span id="habit">**habit 比賽習慣**</span>
-	- 1：狂衝。
-	- 2：穩定。
-	- 3：優先。
-	- 4：蓄力。
-
 #### <span id="skills">skills 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | id | int | 技能編號 |
 | name | string | 技能名稱代號 |
-| [type](#triggerType) | int | 觸發類型 |
+| type | int | [觸發類型](../codes/skill.md#triggerType) |
 | ranks | array | 技能星級 1 ~ 5 的 N 值陣列 |
 | [effects](#effects) | array | 技能效果陣列 |
 | [maxEffects](#maxEffects) | array | 滿星技能效果陣列 |
 
-- <span id="triggerType">**type 觸發類型**</span>
-	- 1：裝備的「第一類技能」（主動技能）。
-	- 2：牌型觸發的「第二類技能」（牌型技能）。
-	- 3：持有就有效與核心操作無關的「第三類技能」（王牌技能）。
-
 ##### <span id="effects">effects 技能效果內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
@@ -118,6 +95,8 @@ Content Type: `application/json`
 | value | int | 效果值**（未實作，目前提供 DB 紀錄之公式或欄位值）** |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|

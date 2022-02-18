@@ -87,7 +87,7 @@ class Ready extends BaseProcessor{
                 'Rhythm' => $readyRaceInfo->rhythm,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
-                'HP' => $playerInfo->stamina,
+                'HP' => $playerInfo->stamina * pow(10, RaceValue::HPDecimals),
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
@@ -109,7 +109,7 @@ class Ready extends BaseProcessor{
             $readyUserInfo->id = $racePlayerInfo->user;
             $readyUserInfo->player = $racePlayerInfo->player;
             $readyUserInfo->energy = $racePlayerInfo->energy;
-            $readyUserInfo->hp = $racePlayerInfo->hp;
+            $readyUserInfo->hp = $racePlayerInfo->hp / pow(10, RaceValue::HPDecimals);
             $readyUserInfo->s = $raceHandler->ValueS();
             $readyUserInfo->h = $raceHandler->ValueH();
             $readyUserInfo->startSecond = $raceHandler->StartSecond();

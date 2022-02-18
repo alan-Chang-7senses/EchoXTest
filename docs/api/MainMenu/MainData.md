@@ -1,4 +1,5 @@
 # 主介面 - 主要資料
+
 ## 介紹
 
 - 使用於取得主介面的主要資料。
@@ -30,7 +31,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
+| error | object | 錯誤碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | name | string | 使用者暱稱 |
 | money | int | 金錢 |
 | energy | int | 能量 |
@@ -42,28 +43,11 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| windDirection | int | 風向 |
+| windDirection | int | [風向](../codes/scene.md#windDirection) |
 | windSpeed | int | 風速 |
-| weather | int | 天氣|
-| lighting | int | 明暗 |
-| sceneEnv | int | 環境類型 |
-
-- 風向：
-	- 1 : 東。
-	- 2 : 南。
-	- 3 : 西。
-	- 4 : 北。
-- 環境類型：
-	- 1：沙丘。
-	- 2：亞湖。
-	- 3：火山。
-- 天氣：
-	- 1：晴天。
-	- 2：極光。
-	- 3：沙塵。
-- 明暗：
-	- 1：日照。
-	- 2：背光。
+| weather | int | [天氣](../codes/scene.md#weather)|
+| lighting | int | [明暗](../codes/scene.md#lighting) |
+| sceneEnv | int | [環境](../codes/scene.md#env) |
 
 #### <span id="player">player 內容</span>
 
