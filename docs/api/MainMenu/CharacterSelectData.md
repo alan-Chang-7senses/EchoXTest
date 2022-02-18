@@ -1,4 +1,5 @@
 # 主介面 - 角色選擇介面資料
+
 ## 介紹
 
 - 使用於取得主介面的角色選擇介面資料。
@@ -33,7 +34,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
+| error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | total | int | 持有角色總數 |
 | [players](#players) | array | 角色資料的物件陣列 |
 

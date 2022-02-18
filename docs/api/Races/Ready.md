@@ -29,12 +29,14 @@ Content Type: `application/x-www-form-urlencoded`
 
 #### <span id="users1">users 內容</span>
 
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | id | int | 使用者編號 |
 | ranking | int | 排名 |
 | trackNumber | int | 賽道號碼 |
-| rhythm | int | 比賽節奏|
+| rhythm | int | [比賽節奏](../codes/race.md#rhythm)|
 
 #### users 範例
 
@@ -61,10 +63,12 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
+| error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [users](#users2) | array | 各玩家的角色競賽資料陣列 |
 
 #### <span id="users2">users 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
