@@ -4,12 +4,10 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\DataPools\PlayerPool;
-use Games\DataPools\ScenePool;
-use Games\DataPools\UserPool;
-use Games\Exceptions\PlayerException;
+use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
-use Games\Scenes\SceneUtility;
+use Games\Scenes\SceneHandler;
+use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -23,18 +21,9 @@ class MainData extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $configs = ConfigGenerator::Instance();
+        $userInfo = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
         
-        $playerID = filter_input(INPUT_POST, 'characterID');
-        
-        $userPool = UserPool::Instance();
-        $user = $userPool->{$_SESSION[Sessions::UserID]};
-        
-        $playerPool = PlayerPool::Instance();
-        $playerInfo = false;
-        if($playerID !== null) $playerInfo = $playerPool->$playerID;
-        if($playerInfo === false && !empty($user->players[0])) $playerInfo = $playerPool->{$user->players[0]};
-        if($playerInfo === false) throw new PlayerException(PlayerException::NotFound);
+        $playerInfo = (new PlayerHandler($userInfo->player))->GetInfo();
         
         $player = new stdClass();
         $player->id = $playerInfo->id;
@@ -45,18 +34,17 @@ class MainData extends BaseProcessor{
         $player->back = PlayerUtility::PartCodeByDNA($playerInfo->dna->back);
         $player->hat = PlayerUtility::PartCodeByDNA($playerInfo->dna->hat);
         
-        $scenePool = ScenePool::Instance();
-        $scene = $scenePool->{$user->scene};
-        $map = SceneUtility::CurrentClimate($scene->climates);
+        $sceneHandler = new SceneHandler($userInfo->scene);
+        $map = $sceneHandler->GetClimate();
         unset($map->id);
         unset($map->startTime);
-        $map->sceneEnv = $scene->env;
+        $map->sceneEnv = $sceneHandler->GetInfo()->env;
         
         $result = new ResultData(ErrorCode::Success);
-        $result->name = $user->nickname;
-        $result->money = $user->money;
-        $result->energy = $user->vitality;
-        $result->roomMax = (int)$configs->AmountRoomPeopleMax;
+        $result->name = $userInfo->nickname;
+        $result->money = $userInfo->money;
+        $result->energy = $userInfo->vitality;
+        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRacePlayerMax;
         $result->map = $map;
         $result->player = $player;
         

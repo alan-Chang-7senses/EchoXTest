@@ -33,7 +33,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
+| error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [userInfo](#userInfo) | object | 使用者資訊 |
 
 #### <span id="userInfo">userInfo 內容</span>
@@ -46,6 +46,7 @@ Content Type: `application/json`
 | exp | int | 經驗值 |
 | vitality | int | 體力 |
 | money | int | 金錢 |
+| player | int | 當前角色 ID |
 
 ### Example
 
@@ -63,5 +64,6 @@ Content Type: `application/json`
 	        "exp": 0,
 	        "vitality": 0,
 	        "money": 0
+	        "player": 1010000000000015
 	    }
 	}

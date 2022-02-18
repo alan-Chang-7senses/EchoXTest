@@ -221,6 +221,10 @@ class PDOAccessor {
         return $this;
     }
     
+    public function LastInsertID() : string{
+        return $this->ph->getLastInsertId();
+    }
+
     private function executeBind(string $statement, array $bind) : bool{
         $this->ph->prepare($statement, $this->prepareName);
         return $this->ph->execute($bind);

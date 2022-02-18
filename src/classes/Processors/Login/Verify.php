@@ -48,6 +48,7 @@ class Verify extends BaseProcessor{
         $userInfo->exp = $row->Exp;
         $userInfo->vitality = $row->Vitality;
         $userInfo->money = $row->Money;
+        $userInfo->player = $row->Player;
         
         $result = new ResultData(ErrorCode::Success);
         $result->userInfo = $userInfo;

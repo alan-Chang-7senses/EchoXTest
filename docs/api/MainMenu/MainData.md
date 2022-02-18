@@ -1,4 +1,5 @@
 # 主介面 - 主要資料
+
 ## 介紹
 
 - 使用於取得主介面的主要資料。
@@ -20,9 +21,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-| 參數名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| characterID | int | 角色編號（可不提供） |
+無
 
 ## Response
 
@@ -32,8 +31,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [error](../index.md#error) | object | 錯誤代碼與訊息 |
-| time | int | 回應時間的 Unix Time |
+| error | object | 錯誤碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | name | string | 使用者暱稱 |
 | money | int | 金錢 |
 | energy | int | 能量 |
@@ -45,28 +43,11 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| windDirection | int | 風向 |
+| windDirection | int | [風向](../codes/scene.md#windDirection) |
 | windSpeed | int | 風速 |
-| sceneEnv | int | 環境類型 |
-| weather | int | 天氣|
-| lighting | int | 明暗 |
-
-- 風向：
-	- 1 : 東。
-	- 2 : 南。
-	- 3 : 西。
-	- 4 : 北。
-- 環境類型：
-	- 1：沙丘。
-	- 2：亞湖。
-	- 3：火山。
-- 天氣：
-	- 1：晴天。
-	- 2：極光。
-	- 3：沙塵。
-- 明暗：
-	- 1：日照。
-	- 2：背光。
+| weather | int | [天氣](../codes/scene.md#weather)|
+| lighting | int | [明暗](../codes/scene.md#lighting) |
+| sceneEnv | int | [環境](../codes/scene.md#env) |
 
 #### <span id="player">player 內容</span>
 
@@ -94,9 +75,9 @@ Content Type: `application/json`
 	    "map": {
 	        "windDirection": 1,
 	        "windSpeed": 100,
-	        "sceneEnv": 0,
 	        "weather": 0,
-	        "lighting": 0
+	        "lighting": 0,
+	        "sceneEnv": 0
 	    },
 	    "player": {
 	        "id": 1010000000000005,

@@ -1,7 +1,8 @@
 <?php
 
-namespace Games\DataPools;
+namespace Games\Pools;
 
+use Accessors\PoolAccessor;
 use Games\Accessors\SkillAccessor;
 use Games\Skills\Holders\SkillInfoHolder;
 use Generators\DataGenerator;
@@ -11,7 +12,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class SkillPool extends BasePool{
+class SkillPool extends PoolAccessor{
     
     private static SkillPool $instance;
     

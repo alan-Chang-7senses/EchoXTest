@@ -3,7 +3,6 @@
 namespace Games\Exceptions;
 
 use Exceptions\NormalException;
-
 /**
  * Description of PlayerException
  *
@@ -11,5 +10,5 @@ use Exceptions\NormalException;
  */
 class PlayerException extends NormalException{
     
-    const NotFound = 2001;
+    const PlayerNotExist = 3001;
 }

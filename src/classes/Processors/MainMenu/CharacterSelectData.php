@@ -4,9 +4,9 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\DataPools\PlayerPool;
-use Games\DataPools\UserPool;
 use Games\Players\PlayerUtility;
+use Games\Pools\PlayerPool;
+use Games\Pools\UserPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;

@@ -4,6 +4,7 @@ namespace Games\Scenes;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of ScenesUtility
  *
@@ -11,7 +12,7 @@ use Generators\DataGenerator;
  */
 class SceneUtility {
     
-    public static function CurrentClimate(array $climates) : SceneClimateHolder{
+    public static function CurrentClimate(array $climates) : SceneClimateHolder|stdClass{
         
         $currentSceond = DataGenerator::TodaySecondByTimezone(ConfigGenerator::Instance()->TimezoneDefault);
         $currentClimate = end($climates);
