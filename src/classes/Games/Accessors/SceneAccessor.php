@@ -10,11 +10,11 @@ namespace Games\Accessors;
 class SceneAccessor extends BaseAccessor{
     
     public function rowInfoByID(int $id) : mixed{
-        return $this->StaticAcceessor()->FromTable('SceneInfo')->WhereEqual('SceneID', $id)->Fetch();
+        return $this->StaticAccessor()->FromTable('SceneInfo')->WhereEqual('SceneID', $id)->Fetch();
     }
     
     public function rowsClimateBySceneID(int $id) : array{
-        return $this->StaticAcceessor()->FromTable('SceneClimate')
+        return $this->StaticAccessor()->FromTable('SceneClimate')
                 ->WhereEqual('SceneID', $id)->OrderBy('StartTime', 'DESC')->FetchAll();
     }
 }

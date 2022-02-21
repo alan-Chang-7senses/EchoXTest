@@ -4,6 +4,7 @@ namespace Processors;
 
 use Consts\Sessions;
 use Exceptions\NormalException;
+use Games\Accessors\GameLogAccessor;
 use Holders\ResultData;
 /**
  * Description of BaseProcessor
@@ -20,5 +21,12 @@ abstract class BaseProcessor {
         
         if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
             throw new NormalException(NormalException::SignOut);
+    }
+    
+    protected function RecordLog() : void{}
+    
+    public function __destruct() {
+        $this->RecordLog();
+        (new GameLogAccessor())->AddBaseProcess();
     }
 }

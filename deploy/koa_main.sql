@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.1.102
+-- 主機:                           192.168.2.196
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -44,9 +44,10 @@ CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
   PRIMARY KEY (`Label`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='資料庫連線資訊';
 
--- 正在傾印表格  koa_main.DatabaseInfo 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.DatabaseInfo 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
 INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
+	('KoaLog', 'db', 'root', '1111', 'koa_log', 3306),
 	('KoaMain', 'db', 'root', '1111', 'koa_main', 3306),
 	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
 /*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;

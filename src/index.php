@@ -26,6 +26,8 @@ $class = ROOT_PROCESSOR.str_replace('/', '\\', $path);
 $GLOBALS[Globals::REDIRECT_URL] = $redirectURL;
 $GLOBALS[Globals::ROOT] = __DIR__.DS;
 $GLOBALS[Globals::TIME_BEGIN] = $t;
+$GLOBALS[Globals::RESULT_PROCESS] = false;
+$GLOBALS[Globals::RESULT_PROCESS_MESSAGE] = null;
 
 session_start();
 //session_destroy();
@@ -35,7 +37,9 @@ try{
     $reflectionClass = new ReflectionClass($class);
     if(!$reflectionClass->isInstantiable()) throw new ReflectionException ('Class '.$class.' does not instantiable.');
 
-    $result = (new $class)->Process();
+    $obj = new $class;
+    $result = $obj->Process();
+    $GLOBALS[Globals::RESULT_PROCESS] = true;
     
 } catch (ReflectionException $ex){
     
