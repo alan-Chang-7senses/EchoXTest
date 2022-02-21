@@ -10,6 +10,7 @@ use Exceptions\NormalException;
 class RaceException extends NormalException{
     
     const UserInRace = 4001;
-    const OverPlayerMax = 4002;
-    const OtherUserInRace = 4003;
+    const UserNotInRace = 4002;
+    const OverPlayerMax = 4003;
+    const OtherUserInRace = 4004;
 }

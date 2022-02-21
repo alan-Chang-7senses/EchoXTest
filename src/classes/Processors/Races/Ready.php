@@ -2,7 +2,6 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
-use Consts\Sessions;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
@@ -16,18 +15,17 @@ use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
-use Processors\BaseProcessor;
 /**
  * Description of Ready
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class Ready extends BaseProcessor{
+//class Ready extends BaseProcessor{
+class Ready extends BaseRace{
     
+    protected bool|null $mustInRace = false;
+
     public function Process(): ResultData {
-        
-        $userSelf = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
-        if($userSelf->race != RaceValue::NotInRace) throw new RaceException (RaceException::UserInRace);
         
         $config = ConfigGenerator::Instance();
         
@@ -59,7 +57,7 @@ class Ready extends BaseProcessor{
             ++$n;
         }
         
-        $sceneHandler = new SceneHandler($userSelf->scene);
+        $sceneHandler = new SceneHandler($this->userInfo->scene);
         $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
