@@ -51,9 +51,13 @@ class RaceHandler {
     public function GetInfo() : RaceInfoHolder{
         return $this->info;
     }
-    
+
     public function GetRacePlayerInfo() : RacePlayerHolder {
         return $this->racePlayerHandler->GetInfo();
+    }
+    
+    public function SaveRacePlayer(array $bind) : void{
+        $this->racePlayerHandler->SaveData($bind);
     }
 
     public function ValueS() : float{

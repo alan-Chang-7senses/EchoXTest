@@ -44,4 +44,9 @@ class RaceAccessor extends BaseAccessor{
     public function ModifyRacePlayerIDsByID(int $id, string $idData) : bool{
         return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => time()]);
     }
+    
+    public function ModifyRacePlayerValuesByID(int $id, array $bind) : bool {
+        $bind['UpdateTime'] = time();
+        return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Modify($bind);
+    }
 }
