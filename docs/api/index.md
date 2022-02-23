@@ -15,6 +15,7 @@
 		- [角色資料](MainMenu/CharacterData.md)。
 	- 競賽：
 		- [開局](Races/Ready.md)。
+		- [角色數值](Races/PlayerValues.md)。
 - [HTTP 狀態碼](codes/httpCode.md)。
 - [API 錯誤碼](codes/errorCode.md)。
 - 常數定義：
