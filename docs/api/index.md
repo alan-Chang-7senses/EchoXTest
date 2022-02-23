@@ -11,6 +11,7 @@
 	- 使用者（玩家）：
 		- [登入](User/Login.md)。
 		- [登出](User/Logout.md)。
+		- [當前場景](User/CurrentScene.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
