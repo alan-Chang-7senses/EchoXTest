@@ -113,7 +113,7 @@ class Ready extends BaseRace{
             $readyUserInfo->startSecond = $raceHandler->StartSecond();
             $readyUserInfos[] = $readyUserInfo;
             
-            $userHandler->SaveRace($raceID);
+            $userHandler->SaveData(['race' => $raceID]);
         }
         
         $result = new ResultData(ErrorCode::Success);

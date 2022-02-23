@@ -32,8 +32,8 @@ class UserHandler {
         return $this->info;
     }
     
-    public function SaveRace(int $raceID) : void{
-        $this->pool->Save($this->info->id, 'race', $raceID);
+    public function SaveData(array $bind) : void{
+        $this->pool->Save($this->id, 'Data', $bind);
         $this->ResetInfo();
     }
 }

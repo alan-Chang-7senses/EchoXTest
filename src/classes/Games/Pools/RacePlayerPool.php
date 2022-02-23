@@ -46,7 +46,7 @@ class RacePlayerPool extends PoolAccessor{
         return DataGenerator::ConventType($holder, 'stdClass');
     }
     
-    protected function SaveData(stdClass $data, mixed $values) : stdClass{
+    protected function SaveData(stdClass $data, array $values) : stdClass{
         
         $bind = [];
         foreach($values as $key => $value){

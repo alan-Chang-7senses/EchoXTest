@@ -37,8 +37,8 @@ class UserPool extends PoolAccessor{
         $holder->exp = $row->Exp;
         $holder->vitality = $row->Vitality;
         $holder->money = $row->Money;
-        $holder->scene = 1;
         $holder->player = $row->Player;
+        $holder->scene = $row->Scene;
         $holder->race = $row->Race;
         
         $playerAccessor = new PlayerAccessor();
@@ -48,10 +48,16 @@ class UserPool extends PoolAccessor{
         return DataGenerator::ConventType($holder, 'stdClass');
     }
     
-    protected function SaveRace(stdClass $data, mixed $value) : stdClass{
+    protected function SaveData(stdClass $data, array $values) : stdClass{
         
-        (new UserAccessor())->ModifyRaceByID($data->id, $value);
-        $data->race = $value;
+        $bind = [];
+        foreach($values as $key => $value){
+            $bind[ucfirst($key)] = $value;
+            $data->$key = $value;
+        }
+        
+        (new UserAccessor())->ModifyUserValuesByID($data->id, $bind);
+        
         return $data;
     }
 }
