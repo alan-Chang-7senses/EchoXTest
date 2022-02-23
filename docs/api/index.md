@@ -8,7 +8,8 @@
 
 - [API 回應規格](response.md)。
 - API 功能：
-	- [登入驗證](Login/Verify.md)。
+	- 使用者（玩家）：
+		- [登入](User/Login.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
