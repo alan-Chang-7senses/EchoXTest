@@ -24,7 +24,7 @@ class CurrentScene extends BaseProcessor{
         $userHandler->SaveData(['scene' => $scene]);
         
         $result = new ResultData(ErrorCode::Success);
-        $result->info = (new SceneHandler($scene))->GetInfo();
+        $result->scene = (new SceneHandler($scene))->GetInfo();
         
         return $result;
     }
