@@ -4,6 +4,7 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -22,6 +23,9 @@ class CurrentScene extends BaseProcessor{
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userHandler->SaveData(['scene' => $scene]);
         
-        return new ResultData(ErrorCode::Success);
+        $result = new ResultData(ErrorCode::Success);
+        $result->info = (new SceneHandler($scene))->GetInfo();
+        
+        return $result;
     }
 }
