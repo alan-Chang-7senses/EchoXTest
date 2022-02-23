@@ -20,7 +20,7 @@ class GameLogAccessor extends BaseAccessor{
             'Result' => (int)$GLOBALS[Globals::RESULT_PROCESS],
             'Message' => $GLOBALS[Globals::RESULT_PROCESS_MESSAGE],
             'BeginTime' => $GLOBALS[Globals::TIME_BEGIN],
-            'RecordTime' => time()
+            'RecordTime' => microtime(true)
         ]);
     }
 }
