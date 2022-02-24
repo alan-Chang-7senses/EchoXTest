@@ -12,13 +12,15 @@
 		- [登入](User/Login.md)。
 		- [登出](User/Logout.md)。
 		- [當前場景](User/CurrentScene.md)。
+	- 角色：
+		- [Avatar 部位](Player/AvatarParts.md)。
+	- 競賽：
+		- [開局](Races/Ready.md)。
+		- [角色數值](Races/PlayerValues.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
-	- 競賽：
-		- [開局](Races/Ready.md)。
-		- [角色數值](Races/PlayerValues.md)。
 - [HTTP 狀態碼](codes/httpCode.md)。
 - [API 錯誤碼](codes/errorCode.md)。
 - 常數定義：
