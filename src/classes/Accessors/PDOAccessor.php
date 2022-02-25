@@ -27,6 +27,7 @@ class PDOAccessor {
     private string|null $limit = null;
     private int $fetchStyle = PDO::FETCH_OBJ;
     private string $prepareName = PDOHelper::PREPARE_DEFAULT;
+    private bool $ignore = false;
     
     public function __construct(string $label) {
         $this->ph = PDOHGenerator::Instance()->$label;
@@ -89,7 +90,7 @@ class PDOAccessor {
             
             $values[] = '('. implode(',', $names).')';
         }
-        $statement = ($insert ? 'INSERT' : 'REPLACE').' INTO '.$this->table.' ('.implode(',', array_keys($rows[0])).') VALUES '. implode(',', $values);
+        $statement = ($insert ? 'INSERT'.($this->ignore ? ' IGNORE' : '') : 'REPLACE').' INTO '.$this->table.' ('.implode(',', array_keys($rows[0])).') VALUES '. implode(',', $values);
         $this->LogExtra($statement, $bind);
         return $this->executeBind($statement, $bind);
     }
@@ -115,6 +116,13 @@ class PDOAccessor {
         return $this->executeBind($statement, $where->bind);
     }
     
+    public function Truncate() : bool{
+        
+        $statement = 'TRUNCATE '. $this->table;
+        $this->LogExtra($statement, null);
+        return $this->executeBind($statement, []);
+    }
+
     public function SelectExpr(string $expr): PDOAccessor{
         $this->selectExpr = $expr;
         return $this;
@@ -223,6 +231,11 @@ class PDOAccessor {
     
     public function LastInsertID() : string{
         return $this->ph->getLastInsertId();
+    }
+    
+    public function Ignore(bool $ignore) : PDOAccessor{
+        $this->ignore = $ignore;
+        return $this;
     }
 
     private function executeBind(string $statement, array $bind) : bool{
