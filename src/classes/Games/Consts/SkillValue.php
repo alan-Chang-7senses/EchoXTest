@@ -14,4 +14,6 @@ class SkillValue {
     
     const SkillH = 0.66;
     const SkillS = 6.6;
+    
+    const DivisorCooldown = 100;
 }

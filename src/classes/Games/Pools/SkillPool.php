@@ -4,6 +4,7 @@ namespace Games\Pools;
 
 use Accessors\PoolAccessor;
 use Games\Accessors\SkillAccessor;
+use Games\Consts\SkillValue;
 use Games\Skills\Holders\SkillInfoHolder;
 use Generators\DataGenerator;
 use stdClass;
@@ -32,17 +33,16 @@ class SkillPool extends PoolAccessor{
         $skill = new SkillInfoHolder();
         $skill->id = $skillInfo->SkillID;
         $skill->type = $skillInfo->TriggerType;
-        $skill->level = 1;
         $skill->name = $skillInfo->SkillName;
+        $skill->description = $skillInfo->Description;
+        $skill->cooldown = $skillInfo->Cooldown / SkillValue::DivisorCooldown;
+        $skill->energy = explode(',', $skillInfo->Energy);
         $skill->ranks = [$skillInfo->Level1, $skillInfo->Level2, $skillInfo->Level3, $skillInfo->Level4, $skillInfo->Level5];
-        
-        $rows = $skillAccessor->rowsEffectByEffectIDs(explode(',', $skillInfo->Effect));
-        $skill->effects = [];
-        foreach ($rows as $row) $skill->effects[] = $row->SkillEffectID;
-        
-        $rows = $skillAccessor->rowsMaxEffectByEffectIDs(explode(',', $skillInfo->MaxEffect));
-        $skill->maxEffects = [];
-        foreach ($rows as $row) $skill->maxEffects[] = $row->MaxEffectID;
+        $skill->effects = explode(',', $skillInfo->Effect);
+        $skill->maxDescription = $skillInfo->MaxDescription;
+        $skill->maxCondition = $skillInfo->MaxCondition;
+        $skill->maxConditionValue = $skillInfo->MaxConditionValue;
+        $skill->maxEffects = explode(',', $skillInfo->MaxEffect);
         
         return DataGenerator::ConventType($skill, 'stdClass');
     }

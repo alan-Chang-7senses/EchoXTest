@@ -9,11 +9,9 @@ namespace Games\Skills\Holders;
  */
 class SkillEffectHolder {
     
+    public int $id;
     public int $type;
-    public string|float|null $value; //暫時型別
-    
-    public function __construct(int $type, string|float|null $value) {
-        $this->type = $type;
-        $this->value = $value;
-    }
+    public int $target;
+    public int $duration;
+    public string $formula;
 }
