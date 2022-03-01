@@ -67,7 +67,7 @@ class PlayerPool extends PoolAccessor {
         $holder->dna->hat = $player->HatDNA;
         
         $adaptability = new EnvironmentAdaptability();
-        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
         $holder->dune = $adaptability->dune;
         $holder->craterLake = $adaptability->craterLake;
         $holder->volcano = $adaptability->volcano;
@@ -85,7 +85,7 @@ class PlayerPool extends PoolAccessor {
         $holder->sandDust = $adaptability->sandDust;
         
         $adaptability = new TerrainAdaptability();
-        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveOneOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
         $holder->flat = $adaptability->flat;
         $holder->upslope = $adaptability->upslope;
         $holder->downslope = $adaptability->downslope;
