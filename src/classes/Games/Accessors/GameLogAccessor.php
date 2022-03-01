@@ -14,7 +14,7 @@ class GameLogAccessor extends BaseAccessor{
     public function AddBaseProcess() : void{
         
         $this->LogAccessor()->FromTable('BaseProcess')->Add([
-            'UserID' => $_SESSION[Sessions::UserID],
+            'UserID' => $_SESSION[Sessions::UserID] ?? 0,
             'RedirectURL' => $GLOBALS[Globals::REDIRECT_URL],
             'Content' => json_encode($_POST, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'Result' => (int)$GLOBALS[Globals::RESULT_PROCESS],
