@@ -35,6 +35,8 @@ class Skills extends BaseProcessor{
             $skill->name = $skillInfo->name;
             $skill->description = $skillInfo->description;
             $skill->type = $skillInfo->type;
+            $skill->level = $playerSkill->level;
+            $skill->slot = $playerSkill->slot;
             $skill->energy = $skillInfo->energy;
             $skill->cooldown = $skillInfo->cooldown;
             $skill->maxDescription = $skillInfo->maxDescription;
