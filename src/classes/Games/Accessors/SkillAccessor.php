@@ -26,8 +26,10 @@ class SkillAccessor extends BaseAccessor{
         return $this->StaticAccessor()->FromTable('SkillMaxEffect')->WhereEqual('MaxEffectID', $id)->Fetch();
     }
 
-    public function rowsInfoByAliasCodes(array $codes) : array{
-        return $this->StaticAccessor()->FromTable('SkillInfo')->WhereIn('AliasCode', $codes)->FetchAll();
+    public function rowsInfoByAliasCodes(array $codes, bool $fetchAssoc = false) : array{
+        $accessor = $this->StaticAccessor()->FromTable('SkillInfo')->WhereIn('AliasCode', $codes);
+        if($fetchAssoc) $accessor->FetchStyleAssoc();
+        return $accessor->FetchAll();
     }
     
     public function rowsEffectByEffectIDs(array $ids) : array{

@@ -221,6 +221,7 @@ class PDOAccessor {
         $this->orderBy = null;
         $this->limit = null;
         $this->prepareName = PDOHelper::PREPARE_DEFAULT;
+        $this->selectExpr = '*';
         return $this;
     }
 
@@ -229,6 +230,11 @@ class PDOAccessor {
         return $this;
     }
     
+    public function FetchStyleAssoc() : PDOAccessor{
+        $this->fetchStyle = PDO::FETCH_ASSOC;
+        return $this;
+    }
+
     public function LastInsertID() : string{
         return $this->ph->getLastInsertId();
     }
