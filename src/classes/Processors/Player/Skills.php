@@ -28,7 +28,7 @@ class Skills extends BaseProcessor{
         $skills = [];
         foreach ($playerInfo->skills as $playerSkill){
             
-            $skillInfo = (new SkillHandler($playerSkill->skillID))->GetInfo();
+            $skillInfo = (new SkillHandler($playerSkill->id))->GetInfo();
             
             $skill = new stdClass();
             $skill->id = $skillInfo->id;

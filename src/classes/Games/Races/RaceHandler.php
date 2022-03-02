@@ -71,7 +71,7 @@ class RaceHandler {
         $result = 0;
         if($racePlayer->trackShape == SceneValue::Straight){
             
-            if($player->hp > 0){
+            if($racePlayer->hp > 0){
                 $result = RaceValue::ClimateAccelerations[$climate->weather] * 
                 ($player->breakOut / ($slope * 2) + $player->velocity / ($slope * 6)) * 
                 ((
@@ -95,7 +95,7 @@ class RaceHandler {
             
         }else{
             
-            if($player->hp > 0){
+            if($racePlayer->hp > 0){
                 $result = RaceValue::ClimateAccelerations[$climate->weather] * 
                 ($player->velocity / ($slope * 2) + $player->breakOut / ($slope * 6)) * 
                 ((
