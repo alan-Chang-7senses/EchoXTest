@@ -43,12 +43,12 @@ class Skills extends BaseProcessor{
             $skill->maxCondition = $skillInfo->maxCondition;
             $skill->maxConditionValue = $skillInfo->maxConditionValue;
             
-            $skill->effect = [];
+            $skill->effects = [];
             foreach($skillInfo->effects as $skillEffectID){
                 
                 $skillEffectInfo = (new SkillEffectHandler($skillEffectID))->GetInfo();
                 
-                $skill->effect[] = [
+                $skill->effects[] = [
                     'type' => $skillEffectInfo->type,
                     'target' => $skillEffectInfo->target,
                     'duration' => $skillEffectInfo->duration,
@@ -56,12 +56,12 @@ class Skills extends BaseProcessor{
                 ];
             }
             
-            $skill->maxEffect = [];
+            $skill->maxEffects = [];
             foreach($skillInfo->maxEffects as $maxEffectID){
                 
                 $maxEffectInfo = (new SkillMaxEffectHandler($maxEffectID))->GetInfo();
                 
-                $skill->maxEffect[] = [
+                $skill->maxEffects[] = [
                     'type' => $maxEffectInfo->type,
                     'typeValue' => $maxEffectInfo->typeValue,
                     'formulaValue' => 0, //未計算

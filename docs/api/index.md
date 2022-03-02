@@ -14,6 +14,7 @@
 		- [當前場景](User/CurrentScene.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
+		- [技能](Player/Skills.md)。
 	- 競賽：
 		- [開局](Races/Ready.md)。
 		- [角色數值](Races/PlayerValues.md)。

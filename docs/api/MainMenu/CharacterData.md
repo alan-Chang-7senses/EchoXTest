@@ -91,7 +91,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| type | int | 效果類型 |
+| type | int | [效果類型](../codes/skill.md#effectType) |
 | value | int | 效果值**（未實作，目前提供 DB 紀錄之公式或欄位值）** |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
