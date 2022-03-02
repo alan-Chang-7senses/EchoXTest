@@ -12,6 +12,7 @@
 		- [登入](User/Login.md)。
 		- [登出](User/Logout.md)。
 		- [當前場景](User/CurrentScene.md)。
+		- [當前角色](User/CurrentPlayer.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
