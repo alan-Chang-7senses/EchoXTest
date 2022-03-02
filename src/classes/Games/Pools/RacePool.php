@@ -31,6 +31,7 @@ class RacePool extends PoolAccessor{
         $holder = new RaceInfoHolder();
         $holder->id = $id;
         $holder->scene = $row->SceneID;
+        $holder->status = $row->Status;
         $holder->windDirection = $row->WindDirection;
         $holder->racePlayers = json_decode($row->RacePlayerIDs ?? '') ?? new stdClass();
         

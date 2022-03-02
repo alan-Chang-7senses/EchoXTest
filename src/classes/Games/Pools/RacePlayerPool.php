@@ -34,6 +34,7 @@ class RacePlayerPool extends PoolAccessor{
         $holder->user = $row->UserID;
         $holder->player = $row->PlayerID;
         $holder->number = $row->RaceNumber;
+        $holder->status = $row->Status;
         $holder->direction = $row->Direction;
         $holder->energy = explode(',', $row->Energy);
         $holder->trackType = $row->TrackType;

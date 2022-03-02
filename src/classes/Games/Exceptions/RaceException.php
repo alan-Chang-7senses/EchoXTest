@@ -13,4 +13,6 @@ class RaceException extends NormalException{
     const UserNotInRace = 4002;
     const OverPlayerMax = 4003;
     const OtherUserInRace = 4004;
+    const PlayerReached = 4005;
+    const Finished = 4006;
 }

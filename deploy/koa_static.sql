@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
 -- 正在傾印表格  koa_static.SkillInfo 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
 INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `Energy`, `Effect`, `Cooldown`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
-	(1, 'Test001', '21001', '22002', 1, '0,0,2,1', '2', 600, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
+	(1, 'Test001', '21001', '22002', 1, '0,0,2,1', '2', 650, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
 	(2, 'Test002', '21002', '22001', 1, '1,1,1,1', '1', 800, 10, 20, 30, 40, 50, '23002', 22, 0, '2'),
 	(3, 'Test003', '21003', '22002', 1, '3,0,0,0', '2', 600, 5, 10, 15, 20, 25, '23003', 31, 0, '3'),
 	(4, 'Test004', '21004', '22003', 1, '0,1,1,0', '3', 400, 2, 5, 7, 10, 12, '23004', 41, 0, '4'),

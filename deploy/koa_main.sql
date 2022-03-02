@@ -440,6 +440,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `PlayerID` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '角色編號',
   `RaceNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '參與比賽號碼',
+  `Status` tinyint(3) NOT NULL DEFAULT 0 COMMENT '狀態',
   `Direction` tinyint(3) NOT NULL DEFAULT 0 COMMENT '角色方向',
   `Energy` varchar(50) DEFAULT NULL COMMENT '能量 紅,黃,藍,綠',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
@@ -472,6 +473,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
 CREATE TABLE IF NOT EXISTS `Races` (
   `RaceID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `SceneID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '場景編號',
+  `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態',
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
