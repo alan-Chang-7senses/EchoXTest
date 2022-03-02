@@ -64,7 +64,19 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| [scene](#scene) | object | 場景資訊 |
 | [users](#users2) | array | 各玩家的角色競賽資料陣列 |
+
+#### <span id="scene">scene 內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| readySec | int | 起跑準備時間（秒） |
+| env | int | [環境](../codes/scene.md#env) |
+| weather | int | [天氣](../codes/scene.md#weather) |
+| windDirection | int | [風向](../codes/scene.md#windDirection) |
+| windSpeed | int | 風速 |
+| lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
 
 #### <span id="users2">users 內容</span>
 
@@ -86,6 +98,14 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	    "error": {
 	        "code": 0,
 	        "message": ""
+	    },
+	    "scene": {
+	        "readySec": 7,
+	        "env": 1,
+	        "weather": 1,
+	        "windDirection": 2,
+	        "windSpeed": 100,
+	        "ligthing": 1
 	    },
 	    "users": [
 	        {

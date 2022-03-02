@@ -58,11 +58,12 @@ class Ready extends BaseRace{
         }
         
         $sceneHandler = new SceneHandler($this->userInfo->scene);
+        $sceneInfo = $sceneHandler->GetInfo();
         $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
         $currentTime = time();
-        $raceID = $raceAccessor->AddRace($sceneHandler->GetInfo()->id, $currentTime, $climate->windDirection);
+        $raceID = $raceAccessor->AddRace($sceneInfo->id, $currentTime, $climate->windDirection);
         
         $racePlayerIDs = [];
         foreach($userHandlers as $userHandler){
@@ -116,7 +117,17 @@ class Ready extends BaseRace{
             $userHandler->SaveData(['race' => $raceID]);
         }
         
+        $scene = [
+            'readySec' => $sceneInfo->readySec,
+            'env' => $sceneInfo->env,
+            'weather' => $climate->weather,
+            'windDirection' => $climate->windDirection,
+            'windSpeed' => $climate->windSpeed,
+            'ligthing' => $climate->lighting,
+        ];
+        
         $result = new ResultData(ErrorCode::Success);
+        $result->scene = $scene;
         $result->users = $readyUserInfos;
         return $result;
     }
