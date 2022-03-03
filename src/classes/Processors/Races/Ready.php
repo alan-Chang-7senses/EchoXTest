@@ -10,7 +10,7 @@ use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
-use Games\Users\Holders\Processors\ReadyUserInfoHolder;
+use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -66,6 +66,7 @@ class Ready extends BaseRace{
         $raceID = $raceAccessor->AddRace($sceneInfo->id, $currentTime, $climate->windDirection);
         
         $racePlayerIDs = [];
+        $playerSkills = [];
         foreach($userHandlers as $userHandler){
             
             $userInfo = $userHandler->GetInfo();
@@ -73,6 +74,25 @@ class Ready extends BaseRace{
             
             $playerHandler = new PlayerHandler($userInfo->player);
             $playerInfo = $playerHandler->GetInfo();
+            
+            $skills = [];
+            foreach($playerInfo->skills as $playerSkill){
+                
+                $handler = new SkillHandler($playerSkill->id);
+                $skillInfo = $handler->GetInfo();
+                $skills[] = [
+                    'id' => $skillInfo->id,
+                    'name' => $skillInfo->name,
+                    'type' => $skillInfo->type,
+                    'level' => $playerSkill->level,
+                    'energy' => $skillInfo->energy,
+                    'cooldown' => $skillInfo->cooldown,
+                    'maxCondition' => $skillInfo->maxCondition,
+                    'maxConditionValue' => $skillInfo->maxConditionValue,
+                    'effects' => $handler->GetEffects(),
+                    'maxEffects' => $handler->GetMaxEffects(),
+                ];
+            }
             
             $racePlayerID = $raceAccessor->AddRacePlayer([
                 'RaceID' => $raceID,
@@ -92,6 +112,7 @@ class Ready extends BaseRace{
             ]);
             
             $racePlayerIDs[$userInfo->player] = $racePlayerID;
+            $playerSkills[$userInfo->player] = $skills;
         }
         
         $raceHandler = new RaceHandler($raceID);
@@ -104,15 +125,16 @@ class Ready extends BaseRace{
             $raceHandler->SetPlayer(new PlayerHandler($userHandler->GetInfo()->player));
             $racePlayerInfo = $raceHandler->GetRacePlayerInfo();
             
-            $readyUserInfo = new ReadyUserInfoHolder();
-            $readyUserInfo->id = $racePlayerInfo->user;
-            $readyUserInfo->player = $racePlayerInfo->player;
-            $readyUserInfo->energy = $racePlayerInfo->energy;
-            $readyUserInfo->hp = $racePlayerInfo->hp / pow(10, RaceValue::HPDecimals);
-            $readyUserInfo->s = $raceHandler->ValueS();
-            $readyUserInfo->h = $raceHandler->ValueH();
-            $readyUserInfo->startSecond = $raceHandler->StartSecond();
-            $readyUserInfos[] = $readyUserInfo;
+            $readyUserInfos[] = [
+                'id' => $racePlayerInfo->user,
+                'player' => $racePlayerInfo->player,
+                'energy' => $racePlayerInfo->energy,
+                'hp' => $racePlayerInfo->hp / pow(10, RaceValue::HPDecimals),
+                's' => $raceHandler->ValueS(),
+                'h' => $raceHandler->ValueH(),
+                'startSec' => $raceHandler->StartSecond(),
+                'skills' => $playerSkills[$racePlayerInfo->player],
+            ];
             
             $userHandler->SaveData(['race' => $raceID]);
         }

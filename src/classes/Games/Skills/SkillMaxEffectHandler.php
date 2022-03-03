@@ -31,4 +31,8 @@ class SkillMaxEffectHandler {
     public function SetPlayer(PlayerHandler $hanlder) : void{
         $this->playerHandler = $hanlder;
     }
+    
+    public function GetFormulaResult() : float{
+        return 0; //未計算
+    }
 }

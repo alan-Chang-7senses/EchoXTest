@@ -31,4 +31,8 @@ class SkillEffectHandler {
     public function SetPlayer(PlayerHandler $handler) : void{
         $this->playerHandler = $handler;
     }
+    
+    public function GetFormulaResult() : float{
+        return 0; //未計算
+    }
 }
