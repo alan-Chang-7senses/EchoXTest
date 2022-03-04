@@ -40,8 +40,8 @@ class Skills extends BaseProcessor{
                 'maxDescription' => $skillInfo->maxDescription,
                 'maxCondition' => $skillInfo->maxCondition,
                 'maxConditionValue' => $skillInfo->maxConditionValue,
-                'effects' => $handler->GetEffects(),
-                'maxEffects' => $handler->GetMaxEffects(),
+                'effects' => $handler->GetEffects(true),
+                'maxEffects' => $handler->GetMaxEffects(true),
             ];
         }
         

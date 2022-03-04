@@ -85,6 +85,7 @@ class Ready extends BaseRace{
                     'name' => $skillInfo->name,
                     'type' => $skillInfo->type,
                     'level' => $playerSkill->level,
+                    'slot' => $playerSkill->slot,
                     'energy' => $skillInfo->energy,
                     'cooldown' => $skillInfo->cooldown,
                     'maxCondition' => $skillInfo->maxCondition,

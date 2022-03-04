@@ -30,33 +30,35 @@ class SkillHandler {
         return $this->info;
     }
     
-    public function GetEffects() : array{
+    public function GetEffects(bool $formulaValue = false) : array{
         if(is_array($this->effects)) return $this->effects;
         $this->effects = [];
         foreach($this->info->effects as $id){
             $handler = new SkillEffectHandler($id);
             $info = $handler->GetInfo();
-            $this->effects[] = [
+            $effect = [
                 'type' => $info->type,
                 'target' => $info->target,
                 'duration' => $info->duration,
-                'formulaValue' => $handler->GetFormulaResult(),
             ];
+            if($formulaValue) $effect['formulaValue'] = $handler->GetFormulaResult();
+            $this->effects[] = $effect;
         }
         return $this->effects;
     }
     
-    public function GetMaxEffects() : array{
+    public function GetMaxEffects(bool $formulaValue = false) : array{
         if(is_array($this->maxEffects)) return $this->maxEffects;
         $this->maxEffects = [];
         foreach ($this->info->maxEffects as $id) {
             $handler = new SkillMaxEffectHandler($id);
             $info = $handler->GetInfo();
-            $this->maxEffects[] = [
+            $maxEffect = [
                 'type' => $info->type,
                 'typeValue' => $info->typeValue,
-                'formulaValue' => $handler->GetFormulaResult(),
             ];
+            if($formulaValue) $maxEffect['formulaValue'] = $handler->GetFormulaResult();
+            $this->maxEffects[] = $maxEffect;
         }
         return $this->maxEffects;
     }
