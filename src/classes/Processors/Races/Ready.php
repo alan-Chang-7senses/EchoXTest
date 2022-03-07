@@ -13,6 +13,7 @@ use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 /**
@@ -30,7 +31,8 @@ class Ready extends BaseRace{
         $config = ConfigGenerator::Instance();
         
         $users = json_decode(InputHelper::post('users'));
-        if(count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::OverPlayerMax);
+        if(!is_array($users) || count($users) > $config->AmountRacePlayerMax) throw new RaceException(RaceException::IncorrectPlayerNumber);
+        DataGenerator::ExistProperties($users[0], ['id', 'ranking', 'trackNumber', 'rhythm']);
         
         $trackType = InputHelper::post('trackType');
         $trackShape = InputHelper::post('trackShape');
