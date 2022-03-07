@@ -55,4 +55,11 @@ abstract class PoolAccessor {
         MemcacheAccessor::Instance()->set($key, json_encode($data));
         $this->$key = $data;
     }
+    
+    public function Delete(string $id) : bool{
+        $key = $this->keyPrefix.$id;
+        $res = MemcacheAccessor::Instance()->delete($key);
+        if($res) unset ($this->$key);
+        return $res;
+    }
 }
