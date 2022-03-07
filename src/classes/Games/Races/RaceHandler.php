@@ -2,14 +2,17 @@
 
 namespace Games\Races;
 
+use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
+use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePool;
 use Games\Races\Holders\RaceInfoHolder;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
+use Helpers\LogHelper;
 /**
  * Description of RaceHandler
  *
@@ -60,6 +63,14 @@ class RaceHandler {
         $this->racePlayerHandler->SaveData($bind);
     }
     
+    public function Finish() : void{
+        $result = (new RaceAccessor())->FinishRaceByRaceID($this->id, RaceValue::StatusFinish);
+        if($result[0]->step != RaceValue::StepFinishSuccess){
+            LogHelper::Extra('RaceFinishFailure', [$result[0]]);
+            throw new RaceException (RaceException::FinishFailure);
+        }
+    }
+
     public function ValueS() : float {
         
         $scene = $this->sceneHandler->GetInfo();
