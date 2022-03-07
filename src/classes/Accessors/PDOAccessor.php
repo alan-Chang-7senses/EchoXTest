@@ -122,6 +122,18 @@ class PDOAccessor {
         $this->LogExtra($statement, null);
         return $this->executeBind($statement, []);
     }
+    
+    public function CallProcedure(string $name, array $bind) : array{
+        
+        $params = array_map(function($val){ return ':'.$val; }, array_keys($bind));
+        $statement = 'CALL '.$name.'('. implode(', ', $params).')';
+        
+        $this->LogExtra($statement, $bind);
+        $this->ph->prepare($statement, $name);
+        $res = $this->ph->fetchAll($bind , $this->fetchStyle);
+        $this->ph->closeCursor($name);
+        return $res;
+    }
 
     public function SelectExpr(string $expr): PDOAccessor{
         $this->selectExpr = $expr;
