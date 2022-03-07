@@ -20,6 +20,7 @@
 		- [開局](Races/Ready.md)。
 		- [角色數值](Races/PlayerValues.md)。
 		- [抵達終點](Races/ReachEnd.md)。
+		- [完成競賽](Races/FinishRace.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。

@@ -24,7 +24,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [users](#user1) | string | 餐賽玩家所組成的 JSON 陣列字串。 |
+| [users](#user1) | string | 參賽玩家所組成的 JSON 陣列字串。 |
 | trackType | int | 跑道型別 |
 | trackShape | int | 賽道形狀 |
 | direction | int | 角色方向 |
