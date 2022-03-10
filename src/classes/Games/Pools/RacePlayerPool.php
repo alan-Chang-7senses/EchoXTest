@@ -43,6 +43,9 @@ class RacePlayerPool extends PoolAccessor{
         $holder->ranking = $row->Ranking;
         $holder->trackNumber = $row->TrackNumber;
         $holder->hp = $row->HP;
+        $holder->createTime = $row->CreateTime;
+        $holder->updateTime = $row->UpdateTime;
+        $holder->finishTime = $row->FinishTime;
         
         return DataGenerator::ConventType($holder, 'stdClass');
     }

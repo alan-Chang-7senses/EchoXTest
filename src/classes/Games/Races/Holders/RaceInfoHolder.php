@@ -18,4 +18,7 @@ class RaceInfoHolder {
     public int $windDirection;
     /** @var int 競賽角色資料編號 PlayerID->RacePlayerID */
     public stdClass $racePlayers;
+    public float $createTime;
+    public float $updateTime;
+    public float $finishTime;
 }

@@ -4,6 +4,7 @@ namespace Processors\Races;
 
 use Consts\ErrorCode;
 use Games\Consts\RaceValue;
+use Games\Exceptions\RaceException;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
 use Holders\ResultData;
@@ -17,9 +18,15 @@ class ReachEnd extends BaseRace{
     public function Process(): ResultData {
         
         $raceHandler = new RaceHandler($this->userInfo->race);
-        $racePlayerID = $raceHandler->GetInfo()->racePlayers->{$this->userInfo->player};
+        $raceInfo = $raceHandler->GetInfo();
+        
+        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
-        $racePlayerHandler->SaveData(['status' => RaceValue::StatusReach]);
+        
+        if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
+        
+        $currentTime = microtime(true);
+        $racePlayerHandler->SaveData(['status' => RaceValue::StatusReach, 'updateTime' => $currentTime, 'finishTime' => $currentTime]);
         
         $result = new ResultData(ErrorCode::Success);
         return $result;

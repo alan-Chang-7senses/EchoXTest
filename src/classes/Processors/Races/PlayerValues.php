@@ -31,6 +31,7 @@ class PlayerValues extends BaseRace{
         $values = json_decode(InputHelper::post('values'));
         
         $values->status = RaceValue::StatusUpdate;
+        $values->updateTime = microtime(true);
         $raceHandler->SaveRacePlayer((array)$values);
         
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));

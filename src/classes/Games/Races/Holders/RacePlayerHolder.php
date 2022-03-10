@@ -36,4 +36,7 @@ class RacePlayerHolder {
     public int $trackNumber;
     /** @var int 剩餘體力 */
     public int $hp;
+    public float $createTime;
+    public float $updateTime;
+    public float $finishTime;
 }

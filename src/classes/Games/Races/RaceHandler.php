@@ -11,6 +11,7 @@ use Games\Pools\RacePool;
 use Games\Races\Holders\RaceInfoHolder;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
+use Games\Users\UserHandler;
 use Generators\DataGenerator;
 use Helpers\LogHelper;
 /**
@@ -64,11 +65,20 @@ class RaceHandler {
     }
     
     public function Finish() : void{
+        
         $result = (new RaceAccessor())->FinishRaceByRaceID($this->id, RaceValue::StatusFinish);
         if($result[0]->step != RaceValue::StepFinishSuccess){
             LogHelper::Extra('RaceFinishFailure', [$result[0]]);
             throw new RaceException (RaceException::FinishFailure);
         }
+        
+        foreach ($this->info->racePlayers as $racePlayerID) {
+            $racePlayerHandler = new RacePlayerHandler($racePlayerID);
+            (new UserHandler($racePlayerHandler->GetInfo()->user))->LeaveRace();
+            $racePlayerHandler->Delete();
+        }
+        $this->pool->Delete($this->id);
+        unset($this->info);
     }
 
     public function ValueS() : float {

@@ -64,7 +64,7 @@ class Ready extends BaseRace{
         $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
-        $currentTime = time();
+        $currentTime = microtime(true);
         $raceID = $raceAccessor->AddRace($sceneInfo->id, $currentTime, $climate->windDirection);
         
         $racePlayerIDs = [];

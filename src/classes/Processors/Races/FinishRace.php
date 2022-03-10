@@ -31,12 +31,12 @@ class FinishRace extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
+        if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
         $users = [];
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
-            $racePlayerHandler = new RacePlayerHandler($racePlayerID);
-            $racePlayerInfo = $racePlayerHandler->GetInfo();
+            $racePlayerInfo = (new RacePlayerHandler($racePlayerID))->GetInfo();
             if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
             
             if(!isset($rankings[$racePlayerInfo->player]) || $rankings[$racePlayerInfo->player] != $racePlayerInfo->ranking){
@@ -51,6 +51,7 @@ class FinishRace extends BaseRace{
                 'id' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
+                'raceDuration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
             ];
         }
         

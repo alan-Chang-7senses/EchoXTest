@@ -34,4 +34,9 @@ class RacePlayerHandler {
         $this->pool->Save($this->id, 'Data', $bind);
         $this->ResetInfo();
     }
+    
+    public function Delete() : void{
+        $this->pool->Delete($this->id);
+        unset($this->info);
+    }
 }
