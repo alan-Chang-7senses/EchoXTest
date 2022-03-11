@@ -4,6 +4,7 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -21,6 +22,8 @@ class CurrentPlayer extends BaseProcessor{
         $playerID = InputHelper::post('player');
         
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        if(!in_array($playerID, $userHandler->GetInfo()->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
+        
         $userHandler->SaveData(['player' => $playerID]);
         
         $playerInfo = (new PlayerHandler($playerID))->GetInfo();
