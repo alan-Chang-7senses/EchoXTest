@@ -23,7 +23,7 @@ class RaceAccessor extends BaseAccessor{
                 ->WhereEqual('RaceID', $id)->FetchStyle(PDO::FETCH_ASSOC)->FetchAll();
     }
 
-    public function AddRace(int $sceneID, int $createTime, int $windDirection) : string{
+    public function AddRace(int $sceneID, float $createTime, int $windDirection) : string{
         
         $this->MainAccessor()->FromTable('Races')->Add([
             'SceneID' => $sceneID,
@@ -41,7 +41,15 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->LastInsertID();
     }
     
-    public function ModifyRacePlayerIDsByID(int $id, string $idData) : bool{
-        return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => time()]);
+    public function ModifyRacePlayerIDsByID(int $id, string $idData, float $updateTime) : bool{
+        return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => $updateTime]);
+    }
+    
+    public function ModifyRacePlayerValuesByID(int $id, array $bind) : bool {
+        return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Modify($bind);
+    }
+    
+    public function FinishRaceByRaceID(int $id, int $status) : array{
+        return $this->MainAccessor()->CallProcedure('RaceFinish', ['raceID' => $id, 'status' => $status, 'time' => microtime(true)]);
     }
 }

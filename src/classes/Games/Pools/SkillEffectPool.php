@@ -4,6 +4,8 @@ namespace Games\Pools;
 
 use Accessors\PoolAccessor;
 use Games\Accessors\SkillAccessor;
+use Games\Skills\Holders\SkillEffectHolder;
+use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of SkillEffectPool
@@ -23,6 +25,14 @@ class SkillEffectPool extends PoolAccessor{
 
     public function FromDB(int|string $id): stdClass|false {
         
-        return (new SkillAccessor())->rowEffectByEffectID($id);
+        $row = (new SkillAccessor())->rowEffectByEffectID($id);
+        $holder = new SkillEffectHolder();
+        $holder->id = $id;
+        $holder->type = $row->EffectType;
+        $holder->target = $row->Target;
+        $holder->duration = $row->Duration;
+        $holder->formula = $row->Formula;
+        
+        return DataGenerator::ConventType($holder, 'stdClass');
     }
 }

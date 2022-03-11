@@ -17,7 +17,16 @@ class UserAccessor extends BaseAccessor {
         return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Fetch();
     }
     
-    public function ModifyRaceByID(int $id, int $race) : bool{
-        return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Modify(['Race' => $race, 'UpdateTime' => time()]);
+    public function rowSessionByID(string $id) : mixed{
+        return $this->MainAccessor()->FromTable('Sessions')->WhereEqual('SessionID', $id)->Fetch();
+    }
+    
+    public function ModifyUserValuesByID(int $id, array $bind) : bool{
+        $bind['UpdateTime'] = time();
+        return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Modify($bind);
+    }
+    
+    public function DeleteUserSessionByUserId(int $userID) : bool{
+        return $this->MainAccessor()->FromTable('Sessions')->WhereEqual('UserID', $userID)->Delete();
     }
 }

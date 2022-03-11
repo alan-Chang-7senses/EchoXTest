@@ -12,4 +12,6 @@ class Globals {
     const REDIRECT_URL = 'redirectURL';
     const ROOT = 'root';
     const TIME_BEGIN = 'beginTime';
+    const RESULT_PROCESS = 'processResult';
+    const RESULT_PROCESS_MESSAGE = 'processResultMessage';
 }

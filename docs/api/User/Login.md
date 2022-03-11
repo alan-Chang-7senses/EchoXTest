@@ -1,14 +1,15 @@
-# 登入驗證
+# 使用者 - 登入
 
 ## 介紹
 
 - 使用於一般登入。
 - 透過提供帳號密碼完成登入驗證。
 - 需要玩家身份才能存取資料的 API 功能，須先完成此登入驗證。
+- 每個使用者僅限一個登入身份，重複登入則後踢前。
 
 ## URL
 
-http(s)://`域名`/Login/Verify/
+http(s)://`域名`/User/Login/
 
 ## Method
 
@@ -47,6 +48,7 @@ Content Type: `application/json`
 | vitality | int | 體力 |
 | money | int | 金錢 |
 | player | int | 當前角色 ID |
+| race | int | 當前競賽 ID |
 
 ### Example
 
@@ -64,6 +66,7 @@ Content Type: `application/json`
 	        "exp": 0,
 	        "vitality": 0,
 	        "money": 0
-	        "player": 1010000000000015
+	        "player": 1010000000000015,
+	        "race": 2
 	    }
 	}

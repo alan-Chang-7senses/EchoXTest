@@ -24,6 +24,9 @@ class LogHelper {
         $log = new LogError();
         $log->datetime = date(Predefined::FormatDatetime);
         $log->timezone = date_default_timezone_get();
+        $log->code = $ex->getCode();
+        $log->file = $ex->getFile();
+        $log->line = $ex->getLine();
         $log->message = $ex->getMessage();
         $log->httpQuery = ['_GET' => $GLOBALS['_GET'], '_POST' => $GLOBALS['_POST']];
         $log->redirectURL = $GLOBALS[Globals::REDIRECT_URL];
@@ -37,6 +40,8 @@ class LogHelper {
         
         unset($log->datetime);
         error_log(json_encode($log, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 0);
+        
+        $GLOBALS[Globals::RESULT_PROCESS_MESSAGE] = $log->message;
     }
     
     public static function Extra(string $tag, array $extra) : void{

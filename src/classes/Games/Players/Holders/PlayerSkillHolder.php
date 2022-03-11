@@ -9,12 +9,12 @@ namespace Games\Players\Holders;
  */
 class PlayerSkillHolder {
     
-    public int $skillID;
+    public int $id;
     public int $level;
     public int $slot;
     
     public function __construct(int $skillID, int $level, int $slot) {
-        $this->skillID = $skillID;
+        $this->id = $skillID;
         $this->level = $level;
         $this->slot = $slot;
     }

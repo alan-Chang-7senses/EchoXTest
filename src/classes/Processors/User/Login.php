@@ -1,6 +1,5 @@
 <?php
-
-namespace Processors\Login;
+namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Predefined;
@@ -16,13 +15,9 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class Verify extends BaseProcessor{
+class Login extends BaseProcessor{
     
-    
-    public function __construct() {
-        $this->mustSigned = false;
-        parent::__construct();
-    }
+    protected bool $mustSigned = false;
     
     public function Process(): ResultData {
         
@@ -31,13 +26,16 @@ class Verify extends BaseProcessor{
         
         if(!preg_match(Predefined::FormatAccount, $account) || !preg_match(Predefined::FormatPassword, $password))
             throw new LoginException (LoginException::FormatError);
-       
-        $row = (new UserAccessor())->rowUserByUsername($account);
+        
+        $userAccessor = new UserAccessor();
+        $row = $userAccessor->rowUserByUsername($account);
         
         if($row === false) throw new LoginException(LoginException::NoAccount);
         if($row->Status != Predefined::UserEnabled) throw new LoginException(LoginException::DisabledAccount);
         if(!password_verify($password, $row->Password)) throw new LoginException(LoginException::PasswordError);
-
+        
+        $userAccessor->DeleteUserSessionByUserId($row->UserID);
+        
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $row->UserID;
         
@@ -49,10 +47,12 @@ class Verify extends BaseProcessor{
         $userInfo->vitality = $row->Vitality;
         $userInfo->money = $row->Money;
         $userInfo->player = $row->Player;
+        $userInfo->race = $row->Race;
         
         $result = new ResultData(ErrorCode::Success);
         $result->userInfo = $userInfo;
         
         return $result;
     }
+
 }

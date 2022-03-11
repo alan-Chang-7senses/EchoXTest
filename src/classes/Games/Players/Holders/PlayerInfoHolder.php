@@ -30,8 +30,6 @@ class PlayerInfoHolder {
     public float $velocity;
     /** @var float 耐力 VIT STA*/
     public float $stamina;
-    /** @var float 剩餘體力（耐力） HP */
-    public float $hp;
     /** @var float 聰慧 INT */
     public float $intelligent;
     /** @var float 爆發 AGL POW */
