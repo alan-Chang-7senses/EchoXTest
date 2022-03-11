@@ -6,7 +6,6 @@ use Accessors\PoolAccessor;
 use Games\Accessors\SceneAccessor;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Games\Scenes\Holders\SceneInfoHolder;
-use Games\Scenes\Holders\SceneTrackHolder;
 use Generators\DataGenerator;
 use stdClass;
 /**

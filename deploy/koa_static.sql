@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   `SkillName` varchar(50) DEFAULT NULL COMMENT '技能名稱標籤',
   `Description` varchar(50) DEFAULT NULL COMMENT '技能描述標籤',
   `TriggerType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '觸發類型',
-  `EnergyCondition` varchar(50) DEFAULT NULL COMMENT '能量條件',
+  `Energy` varchar(50) DEFAULT NULL COMMENT '能量條件 紅,黃,藍,綠',
   `Effect` varchar(50) DEFAULT NULL COMMENT '效果',
   `Cooldown` smallint(6) NOT NULL DEFAULT 100 COMMENT '冷卻時間',
   `Level1` int(11) NOT NULL DEFAULT 0 COMMENT '1級N值',
@@ -100,13 +100,13 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
 
 -- 正在傾印表格  koa_static.SkillInfo 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
-INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `EnergyCondition`, `Effect`, `Cooldown`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
-	(1, 'Test001', '21001', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
-	(2, 'Test002', '21002', '22001', 1, '1234', '1', 800, 10, 20, 30, 40, 50, '23002', 22, 0, '2'),
-	(3, 'Test003', '21003', '22002', 1, '111', '2', 600, 5, 10, 15, 20, 25, '23003', 31, 0, '3'),
-	(4, 'Test004', '21004', '22003', 1, '23', '3', 400, 2, 5, 7, 10, 12, '23004', 41, 0, '4'),
-	(5, 'Test005', '21005', '22004', 1, '4', '4', 200, 1, 2, 3, 4, 5, '23005', 11, 0, '5'),
-	(6, 'Test006', '21006', '22005', 1, '112234', '5', 1200, 10, 15, 20, 25, 30, '23006', 51, 0, '5');
+INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `TriggerType`, `Energy`, `Effect`, `Cooldown`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
+	(1, 'Test001', '21001', '22002', 1, '0,0,2,1', '2', 650, 5, 10, 15, 20, 25, '23001', 11, 0, '1'),
+	(2, 'Test002', '21002', '22001', 1, '1,1,1,1', '1', 800, 10, 20, 30, 40, 50, '23002', 22, 0, '2'),
+	(3, 'Test003', '21003', '22002', 1, '3,0,0,0', '2', 600, 5, 10, 15, 20, 25, '23003', 31, 0, '3'),
+	(4, 'Test004', '21004', '22003', 1, '0,1,1,0', '3', 400, 2, 5, 7, 10, 12, '23004', 41, 0, '4'),
+	(5, 'Test005', '21005', '22004', 1, '0,0,0,1', '4', 200, 1, 2, 3, 4, 5, '23005', 11, 0, '5'),
+	(6, 'Test006', '21006', '22005', 1, '2,2,1,1', '5', 1200, 10, 15, 20, 25, 30, '23006', 51, 0, '5');
 /*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
@@ -142,15 +142,37 @@ CREATE TABLE IF NOT EXISTS `SkillPart` (
   UNIQUE KEY `PartCode_PartType` (`PartCode`,`PartType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部位技能對照表';
 
--- 正在傾印表格  koa_static.SkillPart 的資料：~6 rows (近似值)
+-- 正在傾印表格  koa_static.SkillPart 的資料：~28 rows (近似值)
 /*!40000 ALTER TABLE `SkillPart` DISABLE KEYS */;
 INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `AliasCode2`, `AliasCode3`) VALUES
-	(1, '110104', 1, 'Origin00001', 'Origin00002', NULL),
-	(2, '110101', 2, 'Origin00001', 'Origin00001', NULL),
-	(3, '110101', 3, 'Origin00001', 'Origin00001', 'Origin00001'),
-	(4, '110101', 4, 'Origin00001', 'Origin00001', 'Origin00001'),
-	(5, '110101', 5, 'Origin00001', 'Origin00001', 'Origin00001'),
-	(6, '110101', 6, 'Origin00001', 'Origin00001', NULL);
+	(1, '110101', 1, NULL, NULL, NULL),
+	(2, '110101', 2, 'Test001', 'Test002', NULL),
+	(3, '110101', 3, 'Test001', 'Test002', 'Test003'),
+	(4, '110101', 4, 'Test001', 'Test002', 'Test004'),
+	(5, '110101', 5, 'Test001', 'Test002', 'Test005'),
+	(6, '110101', 6, 'Test001', 'Test002', NULL),
+	(7, '110102', 2, NULL, NULL, NULL),
+	(8, '110205', 2, NULL, NULL, NULL),
+	(9, '110205', 1, NULL, NULL, NULL),
+	(10, '110104', 2, NULL, NULL, NULL),
+	(11, '110103', 5, NULL, NULL, NULL),
+	(12, '110102', 1, NULL, NULL, NULL),
+	(13, '110103', 2, NULL, NULL, NULL),
+	(14, '110205', 3, NULL, NULL, NULL),
+	(15, '310201', 6, NULL, NULL, NULL),
+	(16, '110103', 1, NULL, NULL, NULL),
+	(17, '110104', 1, 'Test001', 'Test002', NULL),
+	(18, '210301', 5, NULL, NULL, NULL),
+	(19, '310201', 3, NULL, NULL, NULL),
+	(20, '110103', 6, NULL, NULL, NULL),
+	(21, '110104', 6, NULL, NULL, NULL),
+	(22, '110102', 6, NULL, NULL, NULL),
+	(23, '110205', 5, NULL, NULL, NULL),
+	(24, '210301', 3, NULL, NULL, NULL),
+	(25, '210301', 6, NULL, NULL, NULL),
+	(26, '120301', 3, NULL, NULL, NULL),
+	(27, '110205', 6, NULL, NULL, NULL),
+	(28, '110104', 5, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

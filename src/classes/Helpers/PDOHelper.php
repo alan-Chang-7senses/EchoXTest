@@ -84,6 +84,10 @@ class PDOHelper {
             'Prepare Name' => $name,
         ]);
     }
+    
+    public function closeCursor(string $name) : bool{
+        return $this->holder->$name->closeCursor();
+    }
 
     public function execute(array|null $bind = null) : bool{
         
@@ -127,6 +131,42 @@ class PDOHelper {
         return $this->pdo->lastInsertId();
     }
     
+    public function beginTransaction() : void{
+        
+        $result = $this->pdo->beginTransaction();
+        if($result === false){
+            LogHelper::Extra('PDO_BEGIN_TRANSACION', [
+                'code' => $this->pdo->errorCode(),
+                'Info' => $this->pdo->errorInfo(),
+            ]);
+            throw new Exception('Initiates a transaction failure', ErrorCode::SystemError);
+        }
+    }
+    
+    public function commitTransaction() : void{
+        
+        $result = $this->pdo->commit();
+        if($result === false){
+            LogHelper::Extra('PDO_COMMIT_TRANSACION', [
+                'code' => $this->pdo->errorCode(),
+                'Info' => $this->pdo->errorInfo(),
+            ]);
+            throw new Exception('Commits a transaction failure', ErrorCode::SystemError);
+        }
+    }
+    
+    public function rollbackTransaction() : void{
+        
+        $result = $this->pdo->rollBack();
+        if($result === false){
+            LogHelper::Extra('PDO_ROLLBACK_TRANSACION', [
+                'code' => $this->pdo->errorCode(),
+                'Info' => $this->pdo->errorInfo(),
+            ]);
+            throw new Exception('Rolls back a transaction failure', ErrorCode::SystemError);
+        }
+    }
+
     public function __destruct() {
         
         $this->sth = null;

@@ -31,8 +31,12 @@ class RacePool extends PoolAccessor{
         $holder = new RaceInfoHolder();
         $holder->id = $id;
         $holder->scene = $row->SceneID;
+        $holder->status = $row->Status;
         $holder->windDirection = $row->WindDirection;
         $holder->racePlayers = json_decode($row->RacePlayerIDs ?? '') ?? new stdClass();
+        $holder->createTime = $row->CreateTime;
+        $holder->updateTime = $row->UpdateTime;
+        $holder->finishTime = $row->FinishTime;
         
         return DataGenerator::ConventType($holder, 'stdClass');
     }
@@ -40,8 +44,10 @@ class RacePool extends PoolAccessor{
     protected function SaveRacePlayerIDs(stdClass $data, mixed $value) : stdClass{
         
         $value = json_encode($value);
-        (new RaceAccessor())->ModifyRacePlayerIDsByID($data->id, $value);
+        $updateTime = microtime(true);
+        (new RaceAccessor())->ModifyRacePlayerIDsByID($data->id, $value, $updateTime);
         $data->racePlayers = json_decode($value);
+        $data->updateTime = $updateTime;
         return $data;
     }
 }

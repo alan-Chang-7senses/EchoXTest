@@ -4,6 +4,8 @@ namespace Games\Pools;
 
 use Accessors\PoolAccessor;
 use Games\Accessors\SkillAccessor;
+use Games\Skills\Holders\SkillMaxEffectHolder;
+use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of SkillMaxEffectPool
@@ -23,6 +25,14 @@ class SkillMaxEffectPool extends PoolAccessor{
 
     public function FromDB(int|string $id): stdClass|false {
         
-        return (new SkillAccessor())->rowMaxEffectByMaxEffectID($id);
+        $row = (new SkillAccessor())->rowMaxEffectByMaxEffectID($id);
+        
+        $holder = new SkillMaxEffectHolder();
+        $holder->id = $id;
+        $holder->type = $row->EffectType;
+        $holder->typeValue = $row->TypeValue;
+        $holder->formula = $row->Formula;
+        
+        return DataGenerator::ConventType($holder, 'stdClass');
     }
 }

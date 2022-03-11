@@ -9,6 +9,13 @@ namespace Games\Consts;
  */
 class PlayerValue {
     
+    const Head = 1;
+    const Body = 2;
+    const Hand = 3;
+    const Leg = 4;
+    const Back = 5;
+    const Hat = 6;
+    
     /** 太陽屬性 無差異值 */
     const SunNone = 100;
     /** 太陽屬性 與賽道日照一致值 */

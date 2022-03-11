@@ -2,7 +2,7 @@
 
 namespace Games\Skills\Formula;
 
-use Games\Consts\SkillFormula;
+use Games\Consts\SkillValue;
 /**
  * Description of FormulaS
  *
@@ -11,6 +11,6 @@ use Games\Consts\SkillFormula;
 class OperandS extends BaseOperand{
     
     public function Process(): float {
-        return SkillFormula::SkillS;
+        return SkillValue::SkillS;
     }
 }

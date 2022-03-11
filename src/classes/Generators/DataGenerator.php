@@ -4,6 +4,9 @@ namespace Generators;
 
 use DateTime;
 use DateTimeZone;
+use stdClass;
+use Consts\ErrorCode;
+use Exception;
 /**
  * Description of DataGenerator
  *
@@ -35,5 +38,15 @@ class DataGenerator {
         $result = new $classFull();
         foreach(get_object_vars($obj) as $key => $value) $result->$key = $value;
         return $result;
+    }
+    
+    public static function ExistProperty(stdClass $obj, string $property) : void {
+        if(!isset($obj->$property)) throw new Exception ('The property \''.$property.'\' not exist', ErrorCode::ParamError);
+    }
+    
+    public static function ExistProperties(stdClass $obj, array $properties) : void {
+        foreach ($properties as $property) {
+            if(!isset($obj->$property)) throw new Exception ('The property \''.$property.'\' not exist', ErrorCode::ParamError);
+        }
     }
 }

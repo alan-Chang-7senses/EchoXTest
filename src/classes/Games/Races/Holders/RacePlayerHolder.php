@@ -18,6 +18,8 @@ class RacePlayerHolder {
     public int $player;
     /** @var int 參與比賽號碼順序 */
     public int $number;
+    /** @var int 狀態 */
+    public int $status;
     /** @var int 角色方向 */
     public int $direction;
     /** @var int 能量 [紅,黃,藍,綠] */
@@ -34,4 +36,7 @@ class RacePlayerHolder {
     public int $trackNumber;
     /** @var int 剩餘體力 */
     public int $hp;
+    public float $createTime;
+    public float $updateTime;
+    public float $finishTime;
 }

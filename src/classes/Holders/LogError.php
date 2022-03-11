@@ -11,6 +11,9 @@ class LogError {
     
     public string $datetime;
     public string $timezone;
+    public int $code;
+    public string $file;
+    public int $line;
     public string $message;
     public array $httpQuery;
     public string $redirectURL;

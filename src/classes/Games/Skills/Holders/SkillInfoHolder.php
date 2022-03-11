@@ -8,11 +8,14 @@ namespace Games\Skills\Holders;
 class SkillInfoHolder {
     public int $id;
     public string $name;
+    public string $description;
     public int $type;
-    public int $level;
+    public float $cooldown;
+    public array $energy;
     public array $ranks;
-    /** @var array SkillEffectHolder */
     public array $effects;
-    /** @var array SkillMaxEffectHolder */
+    public string $maxDescription;
+    public int $maxCondition;
+    public int $maxConditionValue;
     public array $maxEffects;
 }

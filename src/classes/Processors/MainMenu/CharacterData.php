@@ -32,7 +32,7 @@ class CharacterData extends BaseProcessor{
         $skills = [];
         foreach($player->skills as $skillInfo){
             
-            $skill = $skillPool->{$skillInfo->skillID};
+            $skill = $skillPool->{$skillInfo->id};
             $skill->level = $skillInfo->level;
             
             $effects = [];
@@ -78,7 +78,6 @@ class CharacterData extends BaseProcessor{
         $player->short = PlayerUtility::AdaptValueByPoint($player->short);
         
         $player->skills = $skills;
-        unset($player->hp);
         unset($player->dna);
         
         $result = new ResultData(ErrorCode::Success);

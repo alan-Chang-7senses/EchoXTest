@@ -34,15 +34,32 @@ class RacePlayerPool extends PoolAccessor{
         $holder->user = $row->UserID;
         $holder->player = $row->PlayerID;
         $holder->number = $row->RaceNumber;
+        $holder->status = $row->Status;
         $holder->direction = $row->Direction;
-        $holder->energy = explode(',', $row->Energy);
+        $holder->energy = array_map('intval',explode(',', $row->Energy));
         $holder->trackType = $row->TrackType;
         $holder->trackShape = $row->TrackShape;
         $holder->rhythm = $row->Rhythm;
         $holder->ranking = $row->Ranking;
         $holder->trackNumber = $row->TrackNumber;
         $holder->hp = $row->HP;
+        $holder->createTime = $row->CreateTime;
+        $holder->updateTime = $row->UpdateTime;
+        $holder->finishTime = $row->FinishTime;
         
         return DataGenerator::ConventType($holder, 'stdClass');
+    }
+    
+    protected function SaveData(stdClass $data, array $values) : stdClass{
+        
+        $bind = [];
+        foreach($values as $key => $value){
+            $bind[ucfirst($key)] = $value;
+            $data->$key = $value;
+        }
+        
+        (new RaceAccessor())->ModifyRacePlayerValuesByID($data->id, $bind);
+        
+        return $data;
     }
 }

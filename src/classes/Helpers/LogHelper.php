@@ -24,6 +24,9 @@ class LogHelper {
         $log = new LogError();
         $log->datetime = date(Predefined::FormatDatetime);
         $log->timezone = date_default_timezone_get();
+        $log->code = $ex->getCode();
+        $log->file = $ex->getFile();
+        $log->line = $ex->getLine();
         $log->message = $ex->getMessage();
         $log->httpQuery = ['_GET' => $GLOBALS['_GET'], '_POST' => $GLOBALS['_POST']];
         $log->redirectURL = $GLOBALS[Globals::REDIRECT_URL];
