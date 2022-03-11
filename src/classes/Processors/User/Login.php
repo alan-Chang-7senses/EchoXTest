@@ -34,8 +34,7 @@ class Login extends BaseProcessor{
         if($row->Status != Predefined::UserEnabled) throw new LoginException(LoginException::DisabledAccount);
         if(!password_verify($password, $row->Password)) throw new LoginException(LoginException::PasswordError);
         
-        $rowSession = $userAccessor->rowSessionByID(session_id());
-        if(!empty($rowSession)) $userAccessor->DeleteUserSessionByEarlierTime($row->UserID, $rowSession->SessionExpires);
+        $userAccessor->DeleteUserSessionByUserId($row->UserID);
         
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $row->UserID;
