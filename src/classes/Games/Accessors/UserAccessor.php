@@ -25,8 +25,8 @@ class UserAccessor extends BaseAccessor {
         $bind['UpdateTime'] = time();
         return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Modify($bind);
     }
-
-    public function DeleteUserSessionByEarlierTime(int $userID, int $time) : bool{
-        return $this->MainAccessor()->FromTable('Sessions')->WhereEqual('UserID', $userID)->WhereLess('SessionExpires', $time)->Delete();
+    
+    public function DeleteUserSessionByUserId(int $userID) : bool{
+        return $this->MainAccessor()->FromTable('Sessions')->WhereEqual('UserID', $userID)->Delete();
     }
 }
