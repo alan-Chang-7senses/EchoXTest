@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `Content` text NOT NULL COMMENT '內容',
   `Result` tinyint(4) NOT NULL DEFAULT 0 COMMENT '處理結果(1=成功)',
   `Message` text DEFAULT NULL COMMENT '處理結果訊息',
-  `BeginTime` decimal(20,4) NOT NULL DEFAULT 0.0000 COMMENT '起始時間',
-  `RecordTime` decimal(20,4) NOT NULL DEFAULT 0.0000 COMMENT '紀錄時間',
+  `BeginTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '起始時間',
+  `RecordTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '紀錄時間',
   PRIMARY KEY (`Serial`,`RecordTime`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
