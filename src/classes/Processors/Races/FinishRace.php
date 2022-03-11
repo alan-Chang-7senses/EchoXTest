@@ -51,7 +51,7 @@ class FinishRace extends BaseRace{
                 'id' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
-                'raceDuration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
+                'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
             ];
         }
         
