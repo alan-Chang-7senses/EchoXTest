@@ -44,9 +44,10 @@ CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
   PRIMARY KEY (`Label`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='資料庫連線資訊';
 
--- 正在傾印表格  koa_main.DatabaseInfo 的資料：~3 rows (近似值)
+-- 正在傾印表格  koa_main.DatabaseInfo 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
 INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
+	('EliteTest', 'db', 'root', '1111', 'koa_elitetest', 3306),
 	('KoaLog', 'db', 'root', '1111', 'koa_log', 3306),
 	('KoaMain', 'db', 'root', '1111', 'koa_main', 3306),
 	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
@@ -552,7 +553,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   UNIQUE KEY `Username` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_main.Users 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_main.Users 的資料：~10 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `Scene`, `Race`, `CreateTime`, `UpdateTime`) VALUES
 	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 1010000000000001, 1, 0, 0, 0),
