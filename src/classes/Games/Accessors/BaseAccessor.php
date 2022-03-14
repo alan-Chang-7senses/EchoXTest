@@ -23,6 +23,10 @@ abstract class BaseAccessor {
         return $this->GetAccessor(EnvVar::DBLabelLog);
     }
     
+    protected function EliteTestAccessor() : PDOAccessor{
+        return $this->GetAccessor(EnvVar::DBLabelEliteTest);
+    }
+
     private function GetAccessor(string $label) : PDOAccessor{
         if(empty($this->$label)) $this->$label = new PDOAccessor (getenv($label));
         else $this->$label->ClearAll ();
