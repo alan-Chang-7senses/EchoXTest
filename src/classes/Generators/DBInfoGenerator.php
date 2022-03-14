@@ -24,7 +24,7 @@ class DBInfoGenerator {
 
     public function __construct() {
         
-        $mainLabel = getenv(EnvVar::DBLabel);
+        $mainLabel = getenv(EnvVar::DBLabelMain);
         
         $holder = new DBInfo();
         $holder->Host = getenv(EnvVar::DBHost);
@@ -42,7 +42,7 @@ class DBInfoGenerator {
         $memcache = MemcacheAccessor::Instance();
         $memData = $memcache->get($key);
         
-        if($memData === false) $row = (new PDOAccessor(getenv(EnvVar::DBLabel)))->FromTable('DatabaseInfo')->WhereEqual('Label', $name)->Fetch();
+        if($memData === false) $row = (new PDOAccessor(getenv(EnvVar::DBLabelMain)))->FromTable('DatabaseInfo')->WhereEqual('Label', $name)->Fetch();
         else $row = json_decode($memData);
         
         if(empty($row)) throw new Exception ('Database Info ['.$name.'] undefined', ErrorCode::ConfigError);
