@@ -49,4 +49,10 @@ class DataGenerator {
             if(!isset($obj->$property)) throw new Exception ('The property \''.$property.'\' not exist', ErrorCode::ParamError);
         }
     }
+    
+    public static function UserIP() : string{
+        if (!empty($_SERVER["HTTP_CLIENT_IP"]))  return $_SERVER["HTTP_CLIENT_IP"];
+        elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) return $_SERVER["HTTP_X_FORWARDED_FOR"];
+        else return $_SERVER["REMOTE_ADDR"];
+    }
 }
