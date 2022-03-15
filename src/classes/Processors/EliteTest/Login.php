@@ -43,7 +43,7 @@ class Login extends BaseProcessor{
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $userID;
         
-        $eliteTestAccessor->IncreaseTotalLoginHours(DataGenerator::TodayHourByTimezone(ConfigGenerator::Instance()->TimezoneDefault));
+        $eliteTestAccessor->IncreaseTotalLoginHours();
         $eliteTestAccessor->AddUserLogin($row->UserID);
         
         $result = new ResultData(ErrorCode::Success);

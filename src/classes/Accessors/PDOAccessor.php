@@ -257,7 +257,7 @@ class PDOAccessor {
         return $this->ph->execute($bind);
     }
     
-    private function valuesForWhereIn(array $items , string $label = 'Value_') : SQLWhereInValues{
+    public function valuesForWhereIn(array $items , string $label = 'Value_') : SQLWhereInValues{
         
         $values = [];
         $bind = [];
