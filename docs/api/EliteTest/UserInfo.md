@@ -1,15 +1,12 @@
-# 菁英測試 - 登入
+# 菁英測試 - 使用者資料
 
 ## 介紹
 
-- 使用於菁英測試登入。
-- 透過提供帳號密碼完成登入驗證。
-- 需要玩家身份才能存取資料的 API 功能，須先完成此登入驗證。
-- 每個使用者僅限一個登入身份，重複登入則後踢前。
+- 在菁英測試帳號登入後，用於取得使用者當前的狀態資料。
 
 ## URL
 
-http(s)://`域名`/EliteTest/Login/
+http(s)://`域名`/EliteTest/UserInfo/
 
 ## Method
 
@@ -21,10 +18,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-| 參數名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| account | string | 使用者帳號，限制為 4 ~ 16 碼的英數字。 |
-| password | string | 使用者密碼，限制為 4 ~ 16 碼字元。 |
+無
 
 ## Response
 

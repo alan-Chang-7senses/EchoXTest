@@ -28,8 +28,7 @@ class Login extends BaseProcessor{
         if(!preg_match(Predefined::FormatAccount, $account) || !preg_match(Predefined::FormatPassword, $password))
             throw new LoginException (LoginException::FormatError);
         
-        $accessor = new EliteTestAccessor();
-        $row = $accessor->rowUserByUsername($account);
+        $row = (new EliteTestAccessor())->rowUserByUsername($account);
         
         if($row === false) throw new LoginException(LoginException::NoAccount);
         if($row->Status != Predefined::UserEnabled) throw new LoginException(LoginException::DisabledAccount);
@@ -42,7 +41,7 @@ class Login extends BaseProcessor{
         $_SESSION[Sessions::UserID] = $userID;
         
         $result = new ResultData(ErrorCode::Success);
-        $result->userInfo = [
+        $result->info = [
             'id' => $row->UserID,
             'race' => $row->Race,
             'score' => $row->Score,
