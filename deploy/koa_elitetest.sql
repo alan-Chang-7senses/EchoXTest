@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
   `Duration` decimal(20,6) DEFAULT NULL COMMENT '完賽間隔時間',
-  PRIMARY KEY (`RaceID`) USING BTREE
+  PRIMARY KEY (`RaceID`) USING BTREE,
+  KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
 
 -- 傾印  資料表 koa_elitetest.RaceSkills 結構
@@ -149,6 +150,21 @@ CREATE TABLE IF NOT EXISTS `TotalUserRace` (
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者參賽總量';
 
+-- 正在傾印表格  koa_elitetest.TotalUserRace 的資料：~10 rows (近似值)
+/*!40000 ALTER TABLE `TotalUserRace` DISABLE KEYS */;
+INSERT INTO `TotalUserRace` (`UserID`, `BeginAmount`, `FinishAmount`, `UpdateTime`) VALUES
+	(1, 0, 0, 0),
+	(2, 0, 0, 0),
+	(3, 0, 0, 0),
+	(4, 0, 0, 0),
+	(5, 0, 0, 0),
+	(6, 0, 0, 0),
+	(7, 0, 0, 0),
+	(8, 0, 0, 0),
+	(9, 0, 0, 0),
+	(10, 0, 0, 0);
+/*!40000 ALTER TABLE `TotalUserRace` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_elitetest.UserLogin 結構
 CREATE TABLE IF NOT EXISTS `UserLogin` (
   `Serial` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
@@ -170,10 +186,11 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
-  UNIQUE KEY `Username` (`Username`)
+  UNIQUE KEY `Username` (`Username`),
+  KEY `Race` (`Race`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_elitetest.Users 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_elitetest.Users 的資料：~10 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Password`, `Race`, `Score`, `CreateTime`, `UpdateTime`) VALUES
 	(1, 1, 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
