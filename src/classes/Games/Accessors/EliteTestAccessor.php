@@ -2,6 +2,7 @@
 
 namespace Games\Accessors;
 
+use Games\EliteTest\EliteTestValues;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 /**
@@ -23,6 +24,13 @@ class EliteTestAccessor extends BaseAccessor{
         return $this->EliteTestAccessor()->FromTable('Users')->WhereIn('UserID', $ids)->FetchAll();
     }
     
+    public function idsRaceByExpired(float $expried) : array{
+        $rows = $this->EliteTestAccessor()->FromTable('Races')
+                ->WhereEqual('Status', EliteTestValues::RaceBegin)->WhereLess('CreateTime', $expried)
+                ->FetchStyleAssoc()->FetchAll();
+        return array_column($rows, 'RaceID');
+    }
+
     public function AddRace() : int{
         
         $accessor = $this->EliteTestAccessor();
@@ -31,7 +39,17 @@ class EliteTestAccessor extends BaseAccessor{
     }
     
     public function ModifyUserByUserIDs(array $ids, array $bind) : bool{
+        $bind['UpdateTime'] = microtime(true);
         return $this->EliteTestAccessor()->FromTable('Users')->WhereIn('UserID', $ids)->Modify($bind);
+    }
+    
+    public function ModifyUserByRaces(array $races, array $bind) : bool{
+        $bind['UpdateTime'] = microtime(true);
+        return $this->EliteTestAccessor()->FromTable('Users')->WhereIn('Race', $races)->Modify($bind);
+    }
+
+    public function ModifyRaceByRaceIDs(array $ids, array $bind) : bool{
+        return $this->EliteTestAccessor()->FromTable('Races')->WhereIn('RaceID', $ids)->Modify($bind);
     }
 
     public function AddUserLogin(int $userID) : bool{

@@ -5,6 +5,7 @@ namespace Processors\EliteTest;
 use Consts\ErrorCode;
 use Games\Accessors\EliteTestAccessor;
 use Games\Consts\RaceValue;
+use Games\EliteTest\EliteTestUtility;
 use Games\Exceptions\RaceException;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -45,5 +46,10 @@ class RaceBegin extends BaseProcessor{
         $result->unready = $unreadyUsers;
         
         return $result;
+    }
+    
+    public function __destruct() {
+        parent::__destruct();
+        EliteTestUtility::EndExpiredRace();
     }
 }

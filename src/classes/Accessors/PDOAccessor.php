@@ -168,11 +168,11 @@ class PDOAccessor {
         return $this->WhereCondition($column, '>', $value, $bindName);
     }
     
-    public function WhereLess(string $column, int $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereLess(string $column, int|float $value, string|null $bindName = null) : PDOAccessor{
         return $this->WhereCondition($column, '<', $value, $bindName);
     }
     
-    public function WhereCondition(string $column, string $operator , int|string $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereCondition(string $column, string $operator , int|string|float $value, string|null $bindName = null) : PDOAccessor{
         $bindName = $bindName ?? $column;
         return $this->bindCondition($column.' '.$operator.' :'.$bindName, [$bindName => $value]);
     }
