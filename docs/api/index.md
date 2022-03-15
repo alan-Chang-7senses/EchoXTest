@@ -27,6 +27,8 @@
 		- [角色資料](MainMenu/CharacterData.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
+		- [使用者資料](EliteTest/UserInfo.md)。
+		- [競賽開局](EliteTest/RaceBegin.md)。
 - [HTTP 狀態碼](codes/httpCode.md)。
 - [API 錯誤碼](codes/errorCode.md)。
 - 常數定義：
