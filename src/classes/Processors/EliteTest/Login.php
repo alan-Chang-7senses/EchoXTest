@@ -8,6 +8,8 @@ use Exceptions\LoginException;
 use Games\Accessors\EliteTestAccessor;
 use Games\Accessors\UserAccessor;
 use Games\EliteTest\EliteTestValues;
+use Generators\ConfigGenerator;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -28,7 +30,8 @@ class Login extends BaseProcessor{
         if(!preg_match(Predefined::FormatAccount, $account) || !preg_match(Predefined::FormatPassword, $password))
             throw new LoginException (LoginException::FormatError);
         
-        $row = (new EliteTestAccessor())->rowUserByUsername($account);
+        $eliteTestAccessor = new EliteTestAccessor();
+        $row = $eliteTestAccessor->rowUserByUsername($account);
         
         if($row === false) throw new LoginException(LoginException::NoAccount);
         if($row->Status != Predefined::UserEnabled) throw new LoginException(LoginException::DisabledAccount);
@@ -39,6 +42,9 @@ class Login extends BaseProcessor{
         
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $userID;
+        
+        $eliteTestAccessor->IncreaseTotalLoginHours(DataGenerator::TodayHourByTimezone(ConfigGenerator::Instance()->TimezoneDefault));
+        $eliteTestAccessor->AddUserLogin($row->UserID);
         
         $result = new ResultData(ErrorCode::Success);
         $result->info = [
