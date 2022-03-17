@@ -8,8 +8,6 @@ use Exceptions\LoginException;
 use Games\Accessors\EliteTestAccessor;
 use Games\Accessors\UserAccessor;
 use Games\EliteTest\EliteTestValues;
-use Generators\ConfigGenerator;
-use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
