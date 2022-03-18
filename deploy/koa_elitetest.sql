@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `Races` (
 
 -- 傾印  資料表 koa_elitetest.RaceSkills 結構
 CREATE TABLE IF NOT EXISTS `RaceSkills` (
-  `Serial` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `RaceID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `SkillID` varchar(50) NOT NULL DEFAULT '0' COMMENT '技能識別ID',
