@@ -55,6 +55,7 @@ class EliteTestAccessor extends BaseAccessor{
     public function AddUserLogin(int $userID) : bool{
         return $this->EliteTestAccessor()->FromTable('UserLogin')->Add([
             'UserID' => $userID,
+            'UserIP' => DataGenerator::UserIP(),
             'RecordTime' => time()
         ]);
     }
