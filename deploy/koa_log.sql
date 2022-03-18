@@ -21,6 +21,7 @@ USE `koa_log`;
 CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `UserID` int(10) unsigned NOT NULL COMMENT '使用者ID',
+  `UserIP` varchar(50) NOT NULL DEFAULT '' COMMENT '使用者IP',
   `RedirectURL` varchar(255) NOT NULL COMMENT '執行網址',
   `Content` text NOT NULL COMMENT '內容',
   `Result` tinyint(4) NOT NULL DEFAULT 0 COMMENT '處理結果(1=成功)',

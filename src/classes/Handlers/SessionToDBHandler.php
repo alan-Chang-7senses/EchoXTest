@@ -16,7 +16,7 @@ class SessionToDBHandler extends SessionHandler {
 
     public function open(string $path, string $name): bool {
         
-        $this->accessor = new PDOAccessor(getenv(EnvVar::DBLabel));
+        $this->accessor = new PDOAccessor(getenv(EnvVar::DBLabelMain));
         return parent::open($path, $name);
     }
     

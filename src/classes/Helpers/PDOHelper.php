@@ -108,14 +108,11 @@ class PDOHelper {
         return $result;
     }
     
-    public function fetch(array|null $bind = null , int $fetchStyle = PDO::FETCH_OBJ) : mixed{
-        
-        $this->execute($bind);
+    public function fetch(int $fetchStyle = PDO::FETCH_OBJ) : mixed{
         return $this->sth->fetch($fetchStyle);
     }
     
-    public function fetchAll(array|null $bind = null, int $fetchStyle = PDO::FETCH_OBJ) : array|false{
-        $this->execute($bind);
+    public function fetchAll(int $fetchStyle = PDO::FETCH_OBJ) : array|false{
         return $this->sth->fetchAll($fetchStyle);
     }
     

@@ -29,6 +29,10 @@ class DataGenerator {
     public static function TodaySecondByTimezone(int $timezone) : int {
         return time() - (new DateTime('today midnight', self::DateTimeZone($timezone)))->getTimestamp();
     }
+    
+    public static function TodayHourByTimezone(int $timezone) : int{
+        return (new DateTime('now', self::DateTimeZone($timezone)))->format('H');
+    }
 
     private static function DateTimeZone(int $timezone) : DateTimeZone{
         return new DateTimeZone('GMT'.($timezone >= 0 ? '+'.$timezone : $timezone));
@@ -48,5 +52,11 @@ class DataGenerator {
         foreach ($properties as $property) {
             if(!isset($obj->$property)) throw new Exception ('The property \''.$property.'\' not exist', ErrorCode::ParamError);
         }
+    }
+    
+    public static function UserIP() : string{
+        if (!empty($_SERVER["HTTP_CLIENT_IP"]))  return $_SERVER["HTTP_CLIENT_IP"];
+        elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) return $_SERVER["HTTP_X_FORWARDED_FOR"];
+        else return $_SERVER["REMOTE_ADDR"];
     }
 }

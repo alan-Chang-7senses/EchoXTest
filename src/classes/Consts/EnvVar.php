@@ -11,7 +11,11 @@ class EnvVar {
     
     const SysEnv = 'SYSENV';
     
-    const DBLabel = 'DB_LABEL';
+    const DBLabelMain = 'DBLABEL_MAIN';
+    const DBLabelStatic = 'DBLABEL_STATIC';
+    const DBLabelLog = 'DBLABEL_LOG';
+    const DBLabelEliteTest = 'DBLABEL_ELITE_TEST';
+    
     const DBHost = 'DB_HOST';
     const DBPort = 'DB_PORT';
     const DBUsername = 'DB_USERNAME';

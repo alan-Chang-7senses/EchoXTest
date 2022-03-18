@@ -1,15 +1,15 @@
-# 使用者 - 登入
+# 菁英測試 - 登入
 
 ## 介紹
 
-- 使用於一般登入。
+- 使用於菁英測試登入。
 - 透過提供帳號密碼完成登入驗證。
 - 需要玩家身份才能存取資料的 API 功能，須先完成此登入驗證。
 - 每個使用者僅限一個登入身份，重複登入則後踢前。
 
 ## URL
 
-http(s)://`域名`/User/Login/
+http(s)://`域名`/EliteTest/Login/
 
 ## Method
 
@@ -35,20 +35,15 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| [userInfo](#userInfo) | object | 使用者資訊 |
+| [info](#info) | object | 使用者資訊 |
 
-#### <span id="userInfo">userInfo 內容</span>
+#### <span id="info"> Info 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| userID | int | 使用者編號 |
-| nickname | string | 暱稱 |
-| level | int | 等級 |
-| exp | int | 經驗值 |
-| vitality | int | 體力 |
-| money | int | 金錢 |
-| player | int | 當前角色 ID |
+| id | int | 使用者編號 |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
+| score | int | 積分 |
 
 ### Example
 
@@ -59,14 +54,9 @@ Content Type: `application/json`
 	        "code": 0,
 	        "message": ""
 	    },
-	    "userInfo": {
-	        "userID": 1,
-	        "nickname": "Zhiwei",
-	        "level": 1,
-	        "exp": 0,
-	        "vitality": 0,
-	        "money": 0
-	        "player": 1010000000000015,
-	        "race": 2
+	    "info": {
+	        "id": 1,
+	        "race": 0,
+	        "score": 0
 	    }
 	}
