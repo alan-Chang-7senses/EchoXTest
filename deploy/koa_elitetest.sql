@@ -167,7 +167,7 @@ INSERT INTO `TotalUserRace` (`UserID`, `BeginAmount`, `FinishAmount`, `UpdateTim
 
 -- 傾印  資料表 koa_elitetest.UserLogin 結構
 CREATE TABLE IF NOT EXISTS `UserLogin` (
-  `Serial` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
+  `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `UserID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '使用者ID',
   `UserIP` varchar(50) NOT NULL DEFAULT '' COMMENT '使用者IP',
   `RecordTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',

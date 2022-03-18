@@ -16,7 +16,7 @@ services:
         volumes: 
             - ./src:/var/www/html
         environment:
-            SYSENV: developement
+            SYSENV: local
             DBLABEL_MAIN: KoaMain
             DBLABEL_STATIC: KoaStatic
             DBLABEL_LOG: KoaLog
