@@ -25,9 +25,9 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | [users](#user1) | string | 參賽玩家所組成的 JSON 陣列字串。 |
-| trackType | int | 跑道型別 |
-| trackShape | int | 賽道形狀 |
-| direction | int | 角色方向 |
+| trackType | int | [賽道類別](../codes/race.md#trackType) |
+| trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
+| direction | int | [角色方向](../codes/player.md#direction) |
 
 #### <span id="users1">users 內容</span>
 
