@@ -3,6 +3,7 @@
 namespace Games\Accessors;
 
 use Accessors\PDOAccessor;
+use Consts\EnvVar;
 /**
  * Description of BaseAccessor
  *
@@ -10,25 +11,25 @@ use Accessors\PDOAccessor;
  */
 abstract class BaseAccessor {
     
-    private PDOAccessor|null $mainAccessor = null;
-    private PDOAccessor|null $staticAccessor = null;
-    private PDOAccessor|null $logAccessor = null;
-
     protected function MainAccessor() : PDOAccessor {
-        if($this->mainAccessor === null) $this->mainAccessor = new PDOAccessor ('KoaMain');
-        else $this->mainAccessor->ClearAll();
-        return $this->mainAccessor;
+        return $this->GetAccessor(EnvVar::DBLabelMain);
     }
     
     protected function StaticAccessor() : PDOAccessor{
-        if($this->staticAccessor === null) $this->staticAccessor = new PDOAccessor ('KoaStatic');
-        else $this->staticAccessor->ClearAll();
-        return $this->staticAccessor;
+        return $this->GetAccessor(EnvVar::DBLabelStatic);
     }
     
     protected function LogAccessor() : PDOAccessor{
-        if($this->logAccessor == null) $this->logAccessor = new PDOAccessor ('KoaLog');
-        else $this->logAccessor->ClearAll ();
-        return $this->logAccessor;
+        return $this->GetAccessor(EnvVar::DBLabelLog);
+    }
+    
+    protected function EliteTestAccessor() : PDOAccessor{
+        return $this->GetAccessor(EnvVar::DBLabelEliteTest);
+    }
+
+    private function GetAccessor(string $label) : PDOAccessor{
+        if(empty($this->$label)) $this->$label = new PDOAccessor (getenv($label));
+        else $this->$label->ClearAll ();
+        return $this->$label;
     }
 }

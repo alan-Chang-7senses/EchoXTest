@@ -17,7 +17,10 @@ services:
             - ./src:/var/www/html
         environment:
             SYSENV: developement
-            DB_LABEL: KoaMain
+            DBLABEL_MAIN: KoaMain
+            DBLABEL_STATIC: KoaStatic
+            DBLABEL_LOG: KoaLog
+            DBLABEL_ELITE_TEST: EliteTest
             DB_HOST: db
             DB_PORT: 3306
             DB_USERNAME: root

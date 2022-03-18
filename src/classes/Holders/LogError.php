@@ -11,7 +11,7 @@ class LogError {
     
     public string $datetime;
     public string $timezone;
-    public int $code;
+    public int|string $code;
     public string $file;
     public int $line;
     public string $message;

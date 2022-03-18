@@ -58,16 +58,14 @@ class PDOAccessor {
         if($this->orderBy !== null) $statement .= $this->orderBy;
         if($this->limit !== null) $statement .= $this->limit;
         
-        $this->LogExtra($statement, $where->bind);
-        $this->ph->prepare($statement, $this->prepareName);
-        return $this->ph->$func($where->bind , $this->fetchStyle);
+        $this->executeBind($statement, $where->bind);
+        return $this->ph->$func($this->fetchStyle);
     }
     
     public function Add(array $bind, bool $replace = true) : bool{
         $columns = array_keys($bind);
         $values = array_map(function($val){ return ':'.$val; }, $columns);
         $statement = (!$replace ? 'INSERT' : 'REPLACE').' INTO '.$this->table.' ('. implode(',', $columns).') VALUES ('. implode(',', $values).')';
-        $this->LogExtra($statement, $bind);
         return $this->executeBind($statement, $bind);
     }
     
@@ -91,7 +89,6 @@ class PDOAccessor {
             $values[] = '('. implode(',', $names).')';
         }
         $statement = ($insert ? 'INSERT'.($this->ignore ? ' IGNORE' : '') : 'REPLACE').' INTO '.$this->table.' ('.implode(',', array_keys($rows[0])).') VALUES '. implode(',', $values);
-        $this->LogExtra($statement, $bind);
         return $this->executeBind($statement, $bind);
     }
     
@@ -101,7 +98,6 @@ class PDOAccessor {
         $where = new SQLWhereStatement($this->conditions);
         $statement = 'UPDATE '.$this->table.' SET '.implode(',', $set).' '.$where->statement;
         $bind = array_merge($bind, $where->bind);
-        $this->LogExtra($statement, $bind);
         return $this->executeBind($statement, $bind);
     }
     
@@ -112,14 +108,12 @@ class PDOAccessor {
         $statement = 'DELETE FROM '. $this->table.$where->statement;
         if($this->limit !== null) $statement .= $this->limit;
         
-        $this->LogExtra($statement, $where->bind);
         return $this->executeBind($statement, $where->bind);
     }
     
     public function Truncate() : bool{
         
         $statement = 'TRUNCATE '. $this->table;
-        $this->LogExtra($statement, null);
         return $this->executeBind($statement, []);
     }
     
@@ -130,7 +124,8 @@ class PDOAccessor {
         
         $this->LogExtra($statement, $bind);
         $this->ph->prepare($statement, $name);
-        $res = $this->ph->fetchAll($bind , $this->fetchStyle);
+        $this->ph->execute($bind);
+        $res = $this->ph->fetchAll($this->fetchStyle);
         $this->ph->closeCursor($name);
         return $res;
     }
@@ -173,11 +168,11 @@ class PDOAccessor {
         return $this->WhereCondition($column, '>', $value, $bindName);
     }
     
-    public function WhereLess(string $column, int $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereLess(string $column, int|float $value, string|null $bindName = null) : PDOAccessor{
         return $this->WhereCondition($column, '<', $value, $bindName);
     }
     
-    public function WhereCondition(string $column, string $operator , int|string $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereCondition(string $column, string $operator , int|string|float $value, string|null $bindName = null) : PDOAccessor{
         $bindName = $bindName ?? $column;
         return $this->bindCondition($column.' '.$operator.' :'.$bindName, [$bindName => $value]);
     }
@@ -256,12 +251,13 @@ class PDOAccessor {
         return $this;
     }
 
-    private function executeBind(string $statement, array $bind) : bool{
+    public function executeBind(string $statement, array $bind) : bool{
+        $this->LogExtra($statement, $bind);
         $this->ph->prepare($statement, $this->prepareName);
         return $this->ph->execute($bind);
     }
     
-    private function valuesForWhereIn(array $items , string $label = 'Value_') : SQLWhereInValues{
+    public function valuesForWhereIn(array $items , string $label = 'Value_') : SQLWhereInValues{
         
         $values = [];
         $bind = [];
