@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `RedirectURL` varchar(255) NOT NULL COMMENT '執行網址',
   `Content` text NOT NULL COMMENT '內容',
   `Result` tinyint(4) NOT NULL DEFAULT 0 COMMENT '處理結果(1=成功)',
+  `HttpCode` varchar(5) DEFAULT NULL COMMENT 'HTTP回應狀態碼',
   `Message` text DEFAULT NULL COMMENT '處理結果訊息',
   `BeginTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '起始時間',
   `RecordTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '紀錄時間',
