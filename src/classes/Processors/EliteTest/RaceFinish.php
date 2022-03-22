@@ -5,6 +5,7 @@ namespace Processors\EliteTest;
 use Consts\ErrorCode;
 use Games\Accessors\EliteTestAccessor;
 use Games\Consts\RaceValue;
+use Games\EliteTest\EliteTestValues;
 use Games\Exceptions\RaceException;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
@@ -71,9 +72,8 @@ class RaceFinish extends BaseProcessor{
         
         $res['racePlayers'] = $accessor->AddRacePlayers($racePlayers);
         $res['raceSkills'] = $accessor->AddRaceSkills($raceSkills);
-        $res['rinishRace'] = $accessor->FinishRaceByRaceID($raceID, RaceValue::StatusFinish);
+        $res['rinishRace'] = $accessor->FinishRaceByRaceID($raceID, EliteTestValues::RaceFinsh);
         $res['finishUserRace'] = $accessor->FinishUserByUserRaceScore(RaceValue::NotInRace, $scores);
-        $res['totalSkills'] = $accessor->IncreaseTotalSkills($totalSkills);
         $res['totalUserRace'] = $accessor->IncreaseTotalUserRaceFinishByUserIDs(array_keys($scores));
         
         $result = new ResultData(ErrorCode::Success);

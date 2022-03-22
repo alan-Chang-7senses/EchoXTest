@@ -89,17 +89,15 @@ class EliteTestAccessor extends BaseAccessor{
     public function IncreaseTotalUserRaceBeginByUserIDs(array $ids) : array{
         $accessor = $this->EliteTestAccessor()->PrepareName('IncreaseTotalUserRaceBegin');
         $current = time();
-        $result = ['success' => 0, 'fail' => 0];
+        $return = [];
         foreach($ids as $id){
-            $res = $accessor->executeBind('INSERT INTO `TotalUserRace` VALUES (:id, 1, 0, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
+            $return[$id] = $accessor->executeBind('INSERT INTO `TotalUserRace` VALUES (:id, 1, 0, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
                 'id' => $id,
                 'updateTime1' => $current,
                 'updateTime2' => $current,
             ]);
-            if($res) ++$result['success'];
-            else ++$result['fail'];
         }
-        return $result;
+        return $return;
     }
     
     public function IncreaseTotalUserRaceFinishByUserIDs(array $ids) : bool{
@@ -109,23 +107,6 @@ class EliteTestAccessor extends BaseAccessor{
         return $accessor->executeBind('UPDATE `TotalUserRace` SET `FinishAmount` = `FinishAmount` + 1, `UpdateTime` = :updateTime WHERE UserID IN '.$values->values, $values->bind);
     }
     
-    public function IncreaseTotalSkills(array $skillAmounts) : array{
-        $accessor = $this->EliteTestAccessor()->PrepareName('IncreaseTotalSkill');
-        $current = time();
-        $return = [];
-        foreach ($skillAmounts as $id => $amount) {
-            $res = $accessor->executeBind('INSERT INTO `TotalSkills` VALUES (:id, :amount1, :updateTime1) ON DUPLICATE KEY UPDATE `Amount` = `Amount` + :amount2, `UpdateTime` = :updateTime2', [
-                'id' => $id,
-                'amount1' => $amount,
-                'amount2' => $amount,
-                'updateTime1' => $current,
-                'updateTime2' => $current,
-            ]);
-            $return[$id] = $res === false ? -$amount : $amount;
-        }
-        return $return;
-    }
-
     public function FinishRaceByRaceID(int $id, int $status) : bool{
         $current = microtime(true);
         return $this->EliteTestAccessor()->executeBind('UPDATE `Races` SET `Status` = :status, `FinishTime` = :finishTime1, `Duration` = :finishTime2 - `CreateTime` WHERE `RaceID` = :id', [
