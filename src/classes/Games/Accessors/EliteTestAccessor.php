@@ -31,6 +31,10 @@ class EliteTestAccessor extends BaseAccessor{
         return array_column($rows, 'RaceID');
     }
 
+    public function AddUsers(array $users) : bool{
+        return $this->EliteTestAccessor()->FromTable('Users')->AddAll($users);
+    }
+
     public function AddRace() : int{
         
         $accessor = $this->EliteTestAccessor();
@@ -82,11 +86,20 @@ class EliteTestAccessor extends BaseAccessor{
         ]);
     }
     
-    public function IncreaseTotalUserRaceBeginByUserIDs(array $ids) : bool{
-        $accessor = $this->EliteTestAccessor();
-        $values = $accessor->valuesForWhereIn($ids);
-        $values->bind['updateTime'] = time();
-        return $accessor->executeBind('UPDATE `TotalUserRace` SET `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime WHERE UserID IN '.$values->values, $values->bind);
+    public function IncreaseTotalUserRaceBeginByUserIDs(array $ids) : array{
+        $accessor = $this->EliteTestAccessor()->PrepareName('IncreaseTotalUserRaceBegin');
+        $current = time();
+        $result = ['success' => 0, 'fail' => 0];
+        foreach($ids as $id){
+            $res = $accessor->executeBind('INSERT INTO `TotalUserRace` VALUES (:id, 1, 0, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
+                'id' => $id,
+                'updateTime1' => $current,
+                'updateTime2' => $current,
+            ]);
+            if($res) ++$result['success'];
+            else ++$result['fail'];
+        }
+        return $result;
     }
     
     public function IncreaseTotalUserRaceFinishByUserIDs(array $ids) : bool{
