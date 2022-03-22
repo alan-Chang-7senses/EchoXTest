@@ -20,6 +20,7 @@ class GameLogAccessor extends BaseAccessor{
             'RedirectURL' => $GLOBALS[Globals::REDIRECT_URL],
             'Content' => json_encode($_POST, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'Result' => (int)$GLOBALS[Globals::RESULT_PROCESS],
+            'HttpCode' => http_response_code(),
             'Message' => $GLOBALS[Globals::RESULT_PROCESS_MESSAGE],
             'BeginTime' => $GLOBALS[Globals::TIME_BEGIN],
             'RecordTime' => microtime(true)

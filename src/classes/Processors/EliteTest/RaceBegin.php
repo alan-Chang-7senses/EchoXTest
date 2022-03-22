@@ -8,6 +8,7 @@ use Games\Consts\RaceValue;
 use Games\EliteTest\EliteTestUtility;
 use Games\Exceptions\RaceException;
 use Generators\ConfigGenerator;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -26,19 +27,31 @@ class RaceBegin extends BaseProcessor{
         $accessor = new EliteTestAccessor();
         $rows = $accessor->rowsUserByUserIDs($users);
         $unreadyUsers = [];
+        $existUserIDs = [];
         foreach($rows as $row) {
             if($row->Race != RaceValue::NotInRace) $unreadyUsers[] = $row->UserID;
+            $existUserIDs[] = $row->UserID;
         }
         
-        $readyUsers = [];
-        $raceID = 0;
-        if(count($unreadyUsers) != count($users)) {
-            $readyUsers = array_values(array_diff($users, $unreadyUsers));
-            $raceID = $accessor->AddRace();
-            $accessor->ModifyUserByUserIDs($readyUsers, ['Race' => $raceID]);
-            $accessor->IncreaseTotalRaceBeginHours();
-            $accessor->IncreaseTotalUserRaceBeginByUserIDs($readyUsers);
+        if(count($unreadyUsers) == count($users)) throw new RaceException(RaceException::UserInRace);
+        
+        $npcUserIDs = array_values(array_diff($users, $existUserIDs));
+        $newUsers = [];
+        $createTime = time();
+        foreach($npcUserIDs as $userID){
+            $newUsers[] = [
+                'UserID' => $userID,
+                'Username' => DataGenerator::GuidV4(),
+                'CreateTime' => $createTime
+            ];
         }
+        if(count($newUsers) > 0) $accessor->AddUsers($newUsers);
+        
+        $readyUsers = array_values(array_diff($users, $unreadyUsers));
+        $raceID = $accessor->AddRace();
+        $accessor->ModifyUserByUserIDs($readyUsers, ['Race' => $raceID]);
+        $accessor->IncreaseTotalRaceBeginHours();
+        $accessor->IncreaseTotalUserRaceBeginByUserIDs($readyUsers);
         
         $result = new ResultData(ErrorCode::Success);
         $result->raceID = $raceID;
