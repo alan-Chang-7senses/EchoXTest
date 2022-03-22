@@ -20,7 +20,7 @@ USE `koa_elitetest`;
 -- 傾印  資料表 koa_elitetest.RacePlayer 結構
 CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `RaceID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽編號',
-  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `TrackOrder` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道順序',
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `Duration` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '完賽區間時間',
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `Races` (
 CREATE TABLE IF NOT EXISTS `RaceSkills` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `RaceID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽編號',
-  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `SkillID` varchar(50) NOT NULL DEFAULT '0' COMMENT '技能識別ID',
   `Position` varchar(50) NOT NULL DEFAULT '0' COMMENT '發動絕對位置',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
@@ -133,42 +133,19 @@ INSERT INTO `TotalRaceBeginHours` (`Hours`, `Amount`, `UpdateTime`) VALUES
 	(23, 0, 0);
 /*!40000 ALTER TABLE `TotalRaceBeginHours` ENABLE KEYS */;
 
--- 傾印  資料表 koa_elitetest.TotalSkills 結構
-CREATE TABLE IF NOT EXISTS `TotalSkills` (
-  `SkillID` varchar(50) NOT NULL COMMENT '技能辨識ID',
-  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '總量',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`SkillID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能使用計量';
-
 -- 傾印  資料表 koa_elitetest.TotalUserRace 結構
 CREATE TABLE IF NOT EXISTS `TotalUserRace` (
-  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `BeginAmount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '起始次數',
   `FinishAmount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '完賽次數',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者參賽總量';
 
--- 正在傾印表格  koa_elitetest.TotalUserRace 的資料：~10 rows (近似值)
-/*!40000 ALTER TABLE `TotalUserRace` DISABLE KEYS */;
-INSERT INTO `TotalUserRace` (`UserID`, `BeginAmount`, `FinishAmount`, `UpdateTime`) VALUES
-	(1, 0, 0, 0),
-	(2, 0, 0, 0),
-	(3, 0, 0, 0),
-	(4, 0, 0, 0),
-	(5, 0, 0, 0),
-	(6, 0, 0, 0),
-	(7, 0, 0, 0),
-	(8, 0, 0, 0),
-	(9, 0, 0, 0),
-	(10, 0, 0, 0);
-/*!40000 ALTER TABLE `TotalUserRace` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_elitetest.UserLogin 結構
 CREATE TABLE IF NOT EXISTS `UserLogin` (
   `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
-  `UserID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '使用者ID',
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者ID',
   `UserIP` varchar(50) NOT NULL DEFAULT '' COMMENT '使用者IP',
   `RecordTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
   PRIMARY KEY (`Serial`),
@@ -177,10 +154,10 @@ CREATE TABLE IF NOT EXISTS `UserLogin` (
 
 -- 傾印  資料表 koa_elitetest.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
-  `UserID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UserID` int(10) NOT NULL AUTO_INCREMENT,
   `Status` tinyint(4) DEFAULT 1 COMMENT '狀態(1=啟用)',
   `Username` varchar(255) NOT NULL COMMENT '帳號',
-  `Password` varchar(255) NOT NULL COMMENT '密碼',
+  `Password` varchar(255) DEFAULT NULL COMMENT '密碼',
   `Race` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '當前競賽',
   `Score` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '累積分數',
   `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
@@ -193,16 +170,16 @@ CREATE TABLE IF NOT EXISTS `Users` (
 -- 正在傾印表格  koa_elitetest.Users 的資料：~10 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Password`, `Race`, `Score`, `CreateTime`, `UpdateTime`) VALUES
-	(1, 1, 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(2, 1, 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(3, 1, 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(4, 1, 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(5, 1, 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(6, 1, 'test006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(7, 1, 'test007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(8, 1, 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(9, 1, 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
-	(10, 1, 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0);
+	(1, 1, 'test0001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(2, 1, 'test0002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(3, 1, 'test0003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(4, 1, 'test0004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(5, 1, 'test0005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(6, 1, 'test0006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(7, 1, 'test0007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(8, 1, 'test0008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(9, 1, 'test0009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0),
+	(10, 1, 'test0010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 0, 0, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
