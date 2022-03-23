@@ -91,7 +91,7 @@ class EliteTestAccessor extends BaseAccessor{
         $current = time();
         $return = [];
         foreach($ids as $id){
-            $return[$id] = $accessor->executeBind('INSERT INTO `TotalUserRace` VALUES (:id, 1, 0, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
+            $return[$id] = $accessor->executeBind('INSERT INTO `TotalUserRace` VALUES (:id, 1, 0, 0, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
                 'id' => $id,
                 'updateTime1' => $current,
                 'updateTime2' => $current,
@@ -107,6 +107,13 @@ class EliteTestAccessor extends BaseAccessor{
         return $accessor->executeBind('UPDATE `TotalUserRace` SET `FinishAmount` = `FinishAmount` + 1, `UpdateTime` = :updateTime WHERE UserID IN '.$values->values, $values->bind);
     }
     
+    public function IncreaseTotalUserRaceWinByUserIDs(array $ids) : bool{
+        $accessor = $this->EliteTestAccessor();
+        $values = $accessor->valuesForWhereIn($ids);
+        $values->bind['updateTime'] = time();
+        return $accessor->executeBind('UPDATE `TotalUserRace` SET `Win` = `Win` + 1, `UpdateTime` = :updateTime WHERE UserID IN '.$values->values, $values->bind);
+    }
+
     public function FinishRaceByRaceID(int $id, int $status) : bool{
         $current = microtime(true);
         return $this->EliteTestAccessor()->executeBind('UPDATE `Races` SET `Status` = :status, `FinishTime` = :finishTime1, `Duration` = :finishTime2 - `CreateTime` WHERE `RaceID` = :id', [

@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `FinishS` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束S值',
   `FinishH` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束H值',
   PRIMARY KEY (`RaceID`,`UserID`),
-  KEY `RaceID` (`RaceID`)
+  KEY `RaceID` (`RaceID`),
+  KEY `Duration` (`Duration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
 
 -- 傾印  資料表 koa_elitetest.Races 結構
@@ -58,7 +59,8 @@ CREATE TABLE IF NOT EXISTS `RaceSkills` (
   `AfterEnergy` varchar(50) NOT NULL DEFAULT '0' COMMENT '發動後能量',
   PRIMARY KEY (`Serial`),
   KEY `RaceID` (`RaceID`),
-  KEY `UserID` (`UserID`)
+  KEY `UserID` (`UserID`),
+  KEY `SkillID` (`SkillID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽技能紀錄';
 
 -- 傾印  資料表 koa_elitetest.TotalLoginHours 結構
@@ -138,8 +140,12 @@ CREATE TABLE IF NOT EXISTS `TotalUserRace` (
   `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `BeginAmount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '起始次數',
   `FinishAmount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '完賽次數',
+  `Win` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '獲勝次數',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`UserID`)
+  PRIMARY KEY (`UserID`),
+  KEY `BeginAmount` (`BeginAmount`),
+  KEY `FinishAmount` (`FinishAmount`),
+  KEY `Win` (`Win`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者參賽總量';
 
 -- 傾印  資料表 koa_elitetest.UserLogin 結構
