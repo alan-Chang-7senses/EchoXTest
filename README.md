@@ -10,6 +10,8 @@
  - __docker-compose.yml：__ 用於 build image 以及開發期部署環境用的 YAML 檔案，通常用於開發期，正式環境部署需要視需求更動。
  - __docker-php-ext-opcache.ini：__ PHP 啟用 OPcache 所使用的設定檔案。
  - __docker-php-ext-xdebug.ini：__ 開發時期除錯，啟用 XDebug 的設定檔案。
+ - __koa\_elitetest.sql：__ 菁英測試資料庫的 SQL 語法。
+ - __koa\_log.sql：__ 遊戲 Log 資料庫的 SQL 語法。
  - __koa\_main.sql：__ 遊戲主資料庫的 SQL 語法。
  - __koa\_static.sql：__ 遊戲靜態資料庫的 SQL 語法。
  - __launch.json：__ Visual Studio Code 的 PHP Debug 所使用的設定檔案，主要於開發期啟用 XDebug 進行斷點時使用。
@@ -53,8 +55,13 @@
 
 - SYSENV：指定系統環境名稱，通常用於開發時期，可針對開發期需求判斷此變數值建立特定功能。
 	- 發行環境不需提供此環境變數。
-	- developement：代表系統於開發環境。
-- DB_LABEL：欲連接的預設資料庫標記名稱。
+	- local：本機環境，此環境才會紀錄 log 檔案。
+	- developement：系統處於開發環境。
+- MAINTAIN：是否維護中，無此環境變數或變數值不為「字串 true」，代表非維護中。
+- DBLABEL_MAIN：主資料庫標籤名稱。
+- DBLABEL_STATIC：靜態資料庫標籤名稱。
+- DBLABEL_LOG：日誌資料庫標籤名稱。
+- DBLABEL_ELITE_TEST：菁英測試資料庫標籤名稱。
 - DB_HOST：資料庫主機位址。
 - DB_PORT：資料庫主機 Port。
 - DB_USERNAME：資料庫使用者名稱。

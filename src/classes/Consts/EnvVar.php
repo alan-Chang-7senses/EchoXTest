@@ -10,6 +10,7 @@ namespace Consts;
 class EnvVar {
     
     const SysEnv = 'SYSENV';
+    const Maintain = 'MAINTAIN';
     
     const DBLabelMain = 'DBLABEL_MAIN';
     const DBLabelStatic = 'DBLABEL_STATIC';
