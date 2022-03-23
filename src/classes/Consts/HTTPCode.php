@@ -15,4 +15,5 @@ class HTTPCode {
     const NotFound = 404;
     const InternalServerError = 500;
     const NotImplemented = 501;
+    const ServiceUnavailable = 503;
 }

@@ -16,6 +16,7 @@ class ErrorCode {
     const ParamError = 26;
     const VerifyError = 27;
     const ProcessFailure = 28;
+    const Maintain = 503;
     const Unknown = 999;
     const PDODuplicate = 23000;
 }

@@ -55,6 +55,7 @@ try{
     
 }catch (NormalException $ex){
     
+    if($ex->getCode() == ErrorCode::Maintain) http_response_code (HTTPCode::ServiceUnavailable);
     $result = new ResultData($ex->getCode(), $ex->getMessage());
     LogHelper::Save ($ex);
     

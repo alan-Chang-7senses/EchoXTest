@@ -14,6 +14,7 @@ class Predefined {
     const FormatAccount = '/^[A-Za-z0-9_-]{4,16}$/';
     const FormatPassword = '/^.{4,16}$/';
     const UserEnabled = 1;
+    const Maintaining = 'true';
     
     const SysLocal = 'local';
 }
