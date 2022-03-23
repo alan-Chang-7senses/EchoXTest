@@ -32,7 +32,7 @@ class RaceFinish extends BaseProcessor{
         $racePlayers = [];
         $raceSkills = [];
         $scores = [];
-        $totalSkills = [];
+        $winUsers = [];
         
         foreach($users as $user){
             
@@ -62,19 +62,18 @@ class RaceFinish extends BaseProcessor{
                     'AfterH' => $skill->afterH,
                     'AfterEnergy' => $skill->afterEnergy,
                 ];
-                
-                if(!isset($totalSkills[$skill->id])) $totalSkills[$skill->id] = 0;
-                $totalSkills[$skill->id]++;
             }
             
             $scores[$user->id] = $user->score;
+            if($user->ranking == 1) $winUsers[] = $user->id;
         }
         
         $res['racePlayers'] = $accessor->AddRacePlayers($racePlayers);
         $res['raceSkills'] = $accessor->AddRaceSkills($raceSkills);
         $res['rinishRace'] = $accessor->FinishRaceByRaceID($raceID, EliteTestValues::RaceFinsh);
         $res['finishUserRace'] = $accessor->FinishUserByUserRaceScore(RaceValue::NotInRace, $scores);
-        $res['totalUserRace'] = $accessor->IncreaseTotalUserRaceFinishByUserIDs(array_keys($scores));
+        $res['totalUserRace']['Finish'] = $accessor->IncreaseTotalUserRaceFinishByUserIDs(array_keys($scores));
+        $res['totalUserRace']['Win'] = $accessor->IncreaseTotalUserRaceWinByUserIDs($winUsers);
         
         $result = new ResultData(ErrorCode::Success);
         if(ConfigGenerator::Instance()->EnabledProcessTime == 1) $result->res = $res;

@@ -9,7 +9,7 @@ services:
 #            target: development
 #            target: production
         image: koa_api
-#        image: asia.gcr.io/p2-stage/ali88_agent
+#        image: asia-east1-docker.pkg.dev/sevensenses-team2-koa/petarush/petarush_api
         container_name: KoaAPI
         ports: 
             - 37001:80
@@ -17,6 +17,7 @@ services:
             - ./src:/var/www/html
         environment:
             SYSENV: local
+#            MAINTAIN: 'true'
             DBLABEL_MAIN: KoaMain
             DBLABEL_STATIC: KoaStatic
             DBLABEL_LOG: KoaLog
@@ -33,6 +34,8 @@ services:
     memcached:
         image: memcached:1.6.9
         container_name: KoaMemcached
+        ports: 
+            - 39902:11211
     db:
         image: mariadb
         container_name: KoaDatabase

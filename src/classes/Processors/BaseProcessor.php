@@ -2,6 +2,9 @@
 
 namespace Processors;
 
+use Consts\EnvVar;
+use Consts\ErrorCode;
+use Consts\Predefined;
 use Consts\Sessions;
 use Exceptions\NormalException;
 use Games\Accessors\GameLogAccessor;
@@ -18,6 +21,8 @@ abstract class BaseProcessor {
     protected bool $mustSigned = true;
     
     public function __construct() {
+        
+        if(getenv(EnvVar::Maintain) === Predefined::Maintaining) throw new NormalException (ErrorCode::Maintain);
         
         if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
             throw new NormalException(NormalException::SignOut);
