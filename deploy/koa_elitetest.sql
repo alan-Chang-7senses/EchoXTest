@@ -71,9 +71,10 @@ CREATE TABLE IF NOT EXISTS `TotalLoginHours` (
   PRIMARY KEY (`Hours`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登入時間總計量';
 
--- 正在傾印表格  koa_elitetest.TotalLoginHours 的資料：~23 rows (近似值)
+-- 正在傾印表格  koa_elitetest.TotalLoginHours 的資料：~24 rows (近似值)
 /*!40000 ALTER TABLE `TotalLoginHours` DISABLE KEYS */;
 INSERT INTO `TotalLoginHours` (`Hours`, `Amount`, `UpdateTime`) VALUES
+	(0, 0, 0),
 	(1, 0, 0),
 	(2, 0, 0),
 	(3, 0, 0),
@@ -107,9 +108,10 @@ CREATE TABLE IF NOT EXISTS `TotalRaceBeginHours` (
   PRIMARY KEY (`Hours`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='登入時間總計量';
 
--- 正在傾印表格  koa_elitetest.TotalRaceBeginHours 的資料：~23 rows (近似值)
+-- 正在傾印表格  koa_elitetest.TotalRaceBeginHours 的資料：~24 rows (近似值)
 /*!40000 ALTER TABLE `TotalRaceBeginHours` DISABLE KEYS */;
 INSERT INTO `TotalRaceBeginHours` (`Hours`, `Amount`, `UpdateTime`) VALUES
+	(0, 0, 0),
 	(1, 0, 0),
 	(2, 0, 0),
 	(3, 0, 0),
