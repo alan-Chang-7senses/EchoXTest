@@ -69,7 +69,7 @@ class RaceFinish extends BaseProcessor{
         }
         
         $res['racePlayers'] = $accessor->AddRacePlayers($racePlayers);
-        $res['raceSkills'] = $accessor->AddRaceSkills($raceSkills);
+        if(!empty($raceSkills)) $res['raceSkills'] = $accessor->AddRaceSkills($raceSkills);
         $res['rinishRace'] = $accessor->FinishRaceByRaceID($raceID, EliteTestValues::RaceFinsh);
         $res['finishUserRace'] = $accessor->FinishUserByUserRaceScore(RaceValue::NotInRace, $scores);
         $res['totalUserRace']['Finish'] = $accessor->IncreaseTotalUserRaceFinishByUserIDs(array_keys($scores));
