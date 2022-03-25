@@ -19,10 +19,11 @@ abstract class BaseProcessor {
     abstract function Process() : ResultData;
     
     protected bool $mustSigned = true;
-    
+    protected bool $maintainMode = true;
+
     public function __construct() {
         
-        if(getenv(EnvVar::Maintain) === Predefined::Maintaining) throw new NormalException (ErrorCode::Maintain);
+        if(getenv(EnvVar::Maintain) === Predefined::Maintaining && $this->maintainMode) throw new NormalException (ErrorCode::Maintain);
         
         if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
             throw new NormalException(NormalException::SignOut);
