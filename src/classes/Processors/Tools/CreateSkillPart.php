@@ -9,10 +9,11 @@ use Games\Players\PlayerUtility;
 use Holders\ResultData;
 /**
  * Description of CreateSkillPart
+ * 此功能建立的資料，已改其它做法，不再開放使用，故轉為抽象類，使其不能能實例化。
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class CreateSkillPart extends BaseTools{
+abstract class CreateSkillPart extends BaseTools{
     
     public function Process(): ResultData {
         
