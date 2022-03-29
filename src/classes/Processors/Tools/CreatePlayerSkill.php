@@ -9,10 +9,11 @@ use Games\Players\PlayerUtility;
 use Holders\ResultData;
 /**
  * Description of CreatePlayerSkill
- *
+ * 此功能已改至 CLI 處理，不再開放使用，故轉為抽象類，使其不能能實例化。
+ * 
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class CreatePlayerSkill extends BaseTools {
+abstract class CreatePlayerSkill extends BaseTools {
     
     public function Process(): ResultData {
         
