@@ -2,8 +2,7 @@
 
 namespace Games\CommandWorkers;
 
-use Games\Accessors\SkillAccessor;
-use Games\Accessors\ToolAccessor;
+use Games\Accessors\CLIWorkerAccessor;
 use Games\Consts\PlayerValue;
 use Games\Players\PlayerUtility;
 /**
@@ -15,43 +14,66 @@ class CreatePlayerSkill extends BaseWorker{
     
     public function Process(): array {
         
-        $accessor = new ToolAccessor();
+        $accessor = new CLIWorkerAccessor();
+        
+        $rows = $accessor->rowsSkillInfoAccoc();
+        $aliasCodeSkillIDs = array_combine(array_column($rows, 'AliasCode'), array_column($rows, 'SkillID'));
+        
+        $rows = $accessor->rowsSkillPart();
+        $skillParts = [];
+        foreach($rows as $row) $skillParts[$row->PartCode][$row->PartType] = (object)['aliasCodes' => [$row->AliasCode1, $row->AliasCode2, $row->AliasCode3], 'SkillAffixID' => $row->SkillAffixID];
+        
+        $rows = $accessor->rowsSkillAffix();
+        $skillAffix = [];
+        foreach($rows as $row) $skillAffix[$row->SkillAffixID] = $row;
         
         $rowsOld = $accessor->rowsPlayerSkill();
-        
         $rowsNFT = $accessor->rowsPlayerNFT();
-        $accessorSkill = new SkillAccessor();
-        $playerSkillAlias = [];
-        $allAliasCodes = [];
+        
+        $insertRows = [];
         foreach($rowsNFT as $row){
             
             $aliasCodes = [];
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->HeadDNA), PlayerValue::Head));
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->BodyDNA), PlayerValue::Body));
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->HandDNA), PlayerValue::Hand));
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->LegDNA), PlayerValue::Leg));
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->BackDNA), PlayerValue::Back));
-            $aliasCodes = array_merge($aliasCodes, $accessorSkill->aliasCodesByPart(PlayerUtility::PartCodeByDNA($row->HatDNA), PlayerValue::Hat));
-            $aliasCodes = array_filter(array_unique($aliasCodes));
+            $countAffixID = [];
             
-            $playerSkillAlias[$row->PlayerID] = $aliasCodes;
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->HeadDNA), PlayerValue::Head, $aliasCodes, $countAffixID);
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->BodyDNA), PlayerValue::Body, $aliasCodes, $countAffixID);
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->HandDNA), PlayerValue::Hand, $aliasCodes, $countAffixID);
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->LegDNA), PlayerValue::Leg, $aliasCodes, $countAffixID);
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->BackDNA), PlayerValue::Back, $aliasCodes, $countAffixID);
+            $this->ProcessSkillPart($skillParts, PlayerUtility::PartCodeByDNA($row->HatDNA), PlayerValue::Hat, $aliasCodes, $countAffixID);
             
-            $allAliasCodes = array_merge($allAliasCodes, $aliasCodes);
-        }
-        
-        $allAliasCodes = array_values(array_unique($allAliasCodes));
-        $rowsSkillInfo = $accessorSkill->rowsInfoByAliasCodes($allAliasCodes, true);
-        $skillIDs = array_combine(array_column($rowsSkillInfo, 'AliasCode'), array_column($rowsSkillInfo, 'SkillID'));
-        
-        $addData = [];
-        foreach($playerSkillAlias as $playerID => $aliasCodes){
-            foreach($aliasCodes as $aliasCode) $addData[] = ['PlayerID' => $playerID, 'SkillId' => $skillIDs[$aliasCode]];
+            arsort($countAffixID);
+            reset($countAffixID);
+            $affixID = key($countAffixID);
+            $aliasCodes[] = $skillAffix[$affixID]->{'Level'.$countAffixID[$affixID]};
+            
+            if($countAffixID[$affixID] == 3){
+                
+                next($countAffixID);
+                $affixID = key($countAffixID);
+                if($countAffixID[$affixID] == 3) $aliasCodes[] = $skillAffix[$affixID]->{'Level'.$countAffixID[$affixID]};
+            }
+            
+            $aliasCodes = array_values(array_filter(array_unique($aliasCodes)));
+            
+            foreach($aliasCodes as $aliasCode) $insertRows[] = ['PlayerID' => $row->PlayerID, 'SkillID' => $aliasCodeSkillIDs[$aliasCode]];
         }
         
         $res['clear'] = $accessor->ClearPlayerSkill();
-        $res['add'] = $accessor->AddPlayerSkills($addData);
-        foreach($rowsOld as $row) $res['modify'][$row->PlayerID][$row->SkillID] = $accessor->ModifyPlayerSkillByPlayerAndSkill($row->PlayerID, $row->SkillID, ['Level' => $row->Level, 'Slot' => $row->Slot]);
+        $res['insert'] = $accessor->InsertPlayerSkillsWithIgnore($insertRows);
+        foreach($rowsOld as $row) $res['update'][$row->PlayerID][$row->SkillID] = $accessor->UpdatePlayerSkillByPlayerSkillID($row->PlayerID, $row->SkillID, ['Level' => $row->Level, 'Slot' => $row->Slot]);
         
         return $res;
+    }
+    
+    private function ProcessSkillPart(array $skillParts, string $partCode, int $partType, array &$aliasCodes, array &$count) : void{
+        
+        if(!isset($skillParts[$partCode][$partType])) return;
+        
+        $skillPart = $skillParts[$partCode][$partType];
+        $aliasCodes = array_merge($aliasCodes, $skillPart->aliasCodes);
+        if(!isset($count[$skillPart->SkillAffixID])) $count[$skillPart->SkillAffixID] = 0;
+        ++$count[$skillPart->SkillAffixID];
     }
 }

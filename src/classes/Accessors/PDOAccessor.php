@@ -230,6 +230,7 @@ class PDOAccessor {
         $this->limit = null;
         $this->prepareName = PDOHelper::PREPARE_DEFAULT;
         $this->selectExpr = '*';
+        $this->fetchStyle = PDO::FETCH_OBJ;
         return $this;
     }
 

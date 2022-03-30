@@ -1,5 +1,5 @@
 <?php
-
+$t = microtime(true);
 if($argc <= 1) exit('No argv, must use command format: php Games.php commandName key1=value1 key2=value2 ....'.PHP_EOL.PHP_EOL);
 
 require str_replace('/', DIRECTORY_SEPARATOR, __DIR__. '/../autoload.php');
@@ -25,5 +25,7 @@ try{
         'trace' => $ex->getTrace(),
     ];
 }
+
+$result['ProcessTime'] = ['Result' => $result, 'ProcessTime' => microtime(true) - $t];
 
 echo json_encode ($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT).PHP_EOL.PHP_EOL;
