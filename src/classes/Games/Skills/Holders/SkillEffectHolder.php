@@ -11,7 +11,6 @@ class SkillEffectHolder {
     
     public int $id;
     public int $type;
-    public int $target;
     public int $duration;
     public string $formula;
 }

@@ -42,7 +42,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | id | int | 技能編號 |
 | name | string | 技能名稱代號 |
 | description | string | 技能敘述代號 |
-| type | int | [技能觸發類型](../codes/skill.md#triggerType) |
 | level | int | 技能等級 |
 | slot | int | 技能所在插槽 |
 | energy | array | 使用條件能量值，陣列元素依序為 紅、黃、藍、綠 |
@@ -60,7 +59,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [效果類型](../codes/skill.md#effectType) |
-| target | int | [作用對象](../codes/skill.md#target) |
 | duration | int | 0 為單次效果，大於 0 為時效秒數，-1 為持續到比賽結束。 |
 | formulaValue | float | 效果值**（未實作計算，固定傳回 0）** |
 
@@ -71,6 +69,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
+| target | int | [作用對象](../codes/skill.md#target) |
 | typeValue | int | [滿星效果類型值](../codes/skill.md#maxEffectType) |
 | formulaValue | float | 效果值**（未實作計算，固定傳回 0）** |
 
@@ -86,7 +85,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "id": 1,
 	            "name": "21001",
 	            "description": "22002",
-	            "type": 1,
 	            "level": 1,
 	            "slot": 2,
 	            "energy": [
@@ -102,7 +100,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 102,
-	                    "target": 0,
 	                    "duration": -1,
 	                    "formulaValue": 0
 	                }
@@ -110,6 +107,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "maxEffects": [
 	                {
 	                    "type": 1,
+	                    "target": 0,
 	                    "typeValue": 1,
 	                    "formulaValue": 0
 	                }
@@ -119,7 +117,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "id": 2,
 	            "name": "21002",
 	            "description": "22001",
-	            "type": 1,
 	            "level": 2,
 	            "slot": 4,
 	            "energy": [
@@ -135,7 +132,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 101,
-	                    "target": 0,
 	                    "duration": -1,
 	                    "formulaValue": 0
 	                }
@@ -143,6 +139,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "maxEffects": [
 	                {
 	                    "type": 12,
+	                    "target": 0,
 	                    "typeValue": 1,
 	                    "formulaValue": 0
 	                }

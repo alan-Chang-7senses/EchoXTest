@@ -38,7 +38,6 @@ class SkillHandler {
             $info = $handler->GetInfo();
             $effect = [
                 'type' => $info->type,
-                'target' => $info->target,
                 'duration' => $info->duration,
             ];
             if($formulaValue) $effect['formulaValue'] = $handler->GetFormulaResult();
@@ -55,6 +54,7 @@ class SkillHandler {
             $info = $handler->GetInfo();
             $maxEffect = [
                 'type' => $info->type,
+                'target' => $info->target,
                 'typeValue' => $info->typeValue,
             ];
             if($formulaValue) $maxEffect['formulaValue'] = $handler->GetFormulaResult();

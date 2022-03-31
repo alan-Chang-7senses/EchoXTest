@@ -9,7 +9,6 @@ class SkillInfoHolder {
     public int $id;
     public string $name;
     public string $description;
-    public int $type;
     public float $cooldown;
     public array $energy;
     public array $ranks;

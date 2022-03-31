@@ -10,6 +10,7 @@ namespace Games\Skills\Holders;
 class SkillMaxEffectHolder {
     public int $id;
     public int $type;
+    public int $target;
     public int $typeValue;
     public string|null $formula;
 }
