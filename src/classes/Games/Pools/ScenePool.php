@@ -6,7 +6,6 @@ use Accessors\PoolAccessor;
 use Games\Accessors\SceneAccessor;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Games\Scenes\Holders\SceneInfoHolder;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of ScenePool
@@ -48,6 +47,6 @@ class ScenePool extends PoolAccessor{
             $infoHolder->climates[] = $holder;
         }
         
-        return DataGenerator::ConventType($infoHolder, 'stdClass');
+        return $infoHolder;
     }
 }

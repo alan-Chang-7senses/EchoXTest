@@ -6,7 +6,6 @@ use Accessors\PoolAccessor;
 use Games\Accessors\SkillAccessor;
 use Games\Consts\SkillValue;
 use Games\Skills\Holders\SkillInfoHolder;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of SkillInfo
@@ -42,8 +41,7 @@ class SkillPool extends PoolAccessor{
         $skill->maxCondition = $skillInfo->MaxCondition;
         $skill->maxConditionValue = $skillInfo->MaxConditionValue;
         $skill->maxEffects = explode(',', $skillInfo->MaxEffect);
-        
-        return DataGenerator::ConventType($skill, 'stdClass');
+        return $skill;
     }
 
 }

@@ -2,12 +2,13 @@
 
 namespace Games\Races\Holders;
 
+use stdClass;
 /**
  * Description of RacePlayerHolder
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class RacePlayerHolder {
+class RacePlayerHolder extends stdClass{
     /** @var int 競賽角色編號 RacePlayerID */
     public int $id;
     /** @var int 應愛編號 RaceID */

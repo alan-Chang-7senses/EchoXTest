@@ -5,7 +5,7 @@ use Games\Consts\RaceValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
 use Games\Users\Holders\UserInfoHolder;
-use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of UserHandler
  *
@@ -15,21 +15,21 @@ class UserHandler {
     
     private UserPool $pool;
     private int|string $id;
-    private UserInfoHolder $info;
+    private UserInfoHolder|stdClass $info;
     
     public function __construct(int|string $id) {
         $this->pool = UserPool::Instance();
         $this->id = $id;
         $info = $this->pool->$id;
         if($info === false) throw new UserException(UserException::UserNotExist, ['[user]' => $id]);
-        $this->info = DataGenerator::ConventType($info, 'Games\Users\Holders\UserInfoHolder');
+        $this->info = $info;
     }
     
     private function ResetInfo() : void{
-        $this->info = DataGenerator::ConventType($this->pool->{$this->id}, 'Games\Users\Holders\UserInfoHolder');
+        $this->info = $this->pool->{$this->id};
     }
 
-    public function GetInfo() : UserInfoHolder{
+    public function GetInfo() : UserInfoHolder|stdClass{
         return $this->info;
     }
     

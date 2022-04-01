@@ -12,8 +12,8 @@ use Games\Races\Holders\RaceInfoHolder;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
-use Generators\DataGenerator;
 use Helpers\LogHelper;
+use stdClass;
 /**
  * Description of RaceHandler
  *
@@ -24,7 +24,7 @@ class RaceHandler {
     private RacePool $pool;
     private int|string $id;
     private PlayerHandler $playerHandler;
-    private RaceInfoHolder $info;
+    private RaceInfoHolder|stdClass $info;
     private RacePlayerHandler $racePlayerHandler;
     private SceneHandler $sceneHandler;
     
@@ -35,7 +35,7 @@ class RaceHandler {
     }
     
     private function ResetInfo() : void{
-        $this->info = DataGenerator::ConventType($this->pool->{$this->id}, 'Games\Races\Holders\RaceInfoHolder');
+        $this->info = $this->pool->{$this->id};
     }
     
     public function SetPlayer(PlayerHandler $handler) : void{
@@ -52,11 +52,11 @@ class RaceHandler {
         $this->ResetInfo();
     }
     
-    public function GetInfo() : RaceInfoHolder{
+    public function GetInfo() : RaceInfoHolder|stdClass{
         return $this->info;
     }
 
-    public function GetRacePlayerInfo() : RacePlayerHolder {
+    public function GetRacePlayerInfo() : RacePlayerHolder|stdClass {
         return $this->racePlayerHandler->GetInfo();
     }
     

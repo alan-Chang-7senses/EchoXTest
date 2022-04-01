@@ -6,7 +6,7 @@ use Games\Pools\SkillPool;
 use Games\Skills\Holders\SkillInfoHolder;
 use Games\Skills\SkillEffectHandler;
 use Games\Skills\SkillMaxEffectHandler;
-use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of SkillHandler
  *
@@ -16,17 +16,17 @@ class SkillHandler {
     
     private SkillPool $pool;
     private int|string $id;
-    private SkillInfoHolder $info;
+    private SkillInfoHolder|stdClass $info;
     private array|null $effects = null;
     private array|null $maxEffects = null;
     
     public function __construct(int|string $id) {
         $this->pool = SkillPool::Instance();
         $this->id = $id;
-        $this->info = DataGenerator::ConventType($this->pool->$id, 'Games\Skills\Holders\SkillInfoHolder');
+        $this->info = $this->pool->$id;
     }
     
-    public function GetInfo() : SkillInfoHolder{
+    public function GetInfo() : SkillInfoHolder|stdClass{
         return $this->info;
     }
     

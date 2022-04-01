@@ -5,7 +5,6 @@ namespace Games\Scenes;
 use Games\Pools\ScenePool;
 use Games\Scenes\Holders\SceneClimateHolder;
 use Games\Scenes\Holders\SceneInfoHolder;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of SceneHandler
@@ -14,13 +13,13 @@ use stdClass;
  */
 class SceneHandler {
     
-    private SceneInfoHolder $info;
+    private SceneInfoHolder|stdClass $info;
     
     public function __construct(int|string $id) {
-        $this->info = DataGenerator::ConventType(ScenePool::Instance()->$id, 'Games\Scenes\Holders\SceneInfoHolder');
+        $this->info = ScenePool::Instance()->$id;
     }
     
-    public function GetInfo() : SceneInfoHolder{
+    public function GetInfo() : SceneInfoHolder|stdClass{
         return $this->info;
     }
     
