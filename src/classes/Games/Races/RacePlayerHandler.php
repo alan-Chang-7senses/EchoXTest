@@ -4,7 +4,7 @@ namespace Games\Races;
 
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
-use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of RacePlayerHandler
  *
@@ -14,7 +14,7 @@ class RacePlayerHandler {
     
     private RacePlayerPool $pool;
     private int|string $id;
-    private RacePlayerHolder $info;
+    private RacePlayerHolder|stdClass $info;
     
     public function __construct(int|string $id) {
         $this->pool = RacePlayerPool::Instance();
@@ -23,10 +23,10 @@ class RacePlayerHandler {
     }
     
     public function ResetInfo() : void{
-        $this->info = DataGenerator::ConventType($this->pool->{$this->id}, 'Games\Races\Holders\RacePlayerHolder');
+        $this->info = $this->pool->{$this->id};
     }
 
-    public function GetInfo() : RacePlayerHolder{
+    public function GetInfo() : RacePlayerHolder|stdClass{
         return $this->info;
     }
     

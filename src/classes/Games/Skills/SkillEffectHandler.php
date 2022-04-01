@@ -5,7 +5,7 @@ namespace Games\Skills;
 use Games\Players\PlayerHandler;
 use Games\Pools\SkillEffectPool;
 use Games\Skills\Holders\SkillEffectHolder;
-use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of SkillEffectHandler
  *
@@ -15,16 +15,16 @@ class SkillEffectHandler {
     
     private SkillEffectPool $pool;
     private int|string $id;
-    private SkillEffectHolder $info;
+    private SkillEffectHolder|stdClass $info;
     private PlayerHandler $playerHandler;
     
     public function __construct(int|string $id) {
         $this->pool = SkillEffectPool::Instance();
         $this->id = $id;
-        $this->info = DataGenerator::ConventType($this->pool->$id, 'Games\Skills\Holders\SkillEffectHolder');
+        $this->info = $this->pool->$id;
     }
     
-    public function GetInfo() : SkillEffectHolder{
+    public function GetInfo() : SkillEffectHolder|stdClass{
         return $this->info;
     }
     

@@ -6,7 +6,6 @@ use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Users\Holders\UserInfoHolder;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of UserPool
@@ -45,7 +44,7 @@ class UserPool extends PoolAccessor{
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
         $holder->players = array_column($rows, 'PlayerID');
         
-        return DataGenerator::ConventType($holder, 'stdClass');
+        return $holder;
     }
     
     protected function SaveData(stdClass $data, array $values) : stdClass{

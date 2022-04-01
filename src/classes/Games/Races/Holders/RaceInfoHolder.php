@@ -7,7 +7,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class RaceInfoHolder {
+class RaceInfoHolder extends stdClass{
     /** @var int 競賽編號 RaceID */
     public int $id;
     /** @var int 狀態 */

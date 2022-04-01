@@ -8,7 +8,7 @@ use stdClass;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class PlayerInfoHolder {
+class PlayerInfoHolder extends stdClass {
     
     /** @var int PlayerID */
     public int $id = 0;

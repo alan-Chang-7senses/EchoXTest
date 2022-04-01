@@ -17,7 +17,6 @@ use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
@@ -93,11 +92,11 @@ class PlayerPool extends PoolAccessor {
         
         $holder->habit = PlayerAbility::Habit($player->Constitution, $player->Strength, $player->Dexterity, $player->Agility);
         
-        $adaptability = new DurableAdaptability();
-        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
-        $holder->mid = $adaptability->mid;
-        $holder->long = $adaptability->long;
-        $holder->short = $adaptability->short;
+//        $adaptability = new DurableAdaptability();
+//        PlayerAbility::Adaptability($holder->dna, $adaptability, [NFTDNA::DominantOffset, NFTDNA::RecessiveTwoOffset], NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesAdaptLength);
+//        $holder->mid = $adaptability->mid;
+//        $holder->long = $adaptability->long;
+//        $holder->short = $adaptability->short;
         
         $slotNumber = new SlotNumber();
         PlayerAbility::Adaptability($holder->dna, $slotNumber, [NFTDNA::DominantOffset], NFTDNA::AttrAdaptOffset, NFTDNA::AttrAdaptLength);
@@ -116,6 +115,6 @@ class PlayerPool extends PoolAccessor {
             $holder->skillHole[] = $slot[$i] ?? 0;
         }
         
-        return DataGenerator::ConventType($holder, 'stdClass');
+        return $holder;
     }
 }

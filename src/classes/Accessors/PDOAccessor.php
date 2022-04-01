@@ -203,7 +203,8 @@ class PDOAccessor {
     }
     
     public function OrderBy(array|string $columns, string $sort = 'ASC') : PDOAccessor{
-        $this->orderBy = ' ORDER BY '.(is_array($columns) ? implode(',', $columns) : $columns).' '.$sort.' ';
+        $orderBy = (is_array($columns) ? implode(',', $columns) : $columns).' '.$sort;
+        $this->orderBy .= $this->orderBy === null ? ' ORDER BY '.$orderBy.' ' : ', '.$orderBy.' ';
         return $this;
     }
     
@@ -229,6 +230,7 @@ class PDOAccessor {
         $this->limit = null;
         $this->prepareName = PDOHelper::PREPARE_DEFAULT;
         $this->selectExpr = '*';
+        $this->fetchStyle = PDO::FETCH_OBJ;
         return $this;
     }
 
@@ -251,10 +253,20 @@ class PDOAccessor {
         return $this;
     }
 
-    public function executeBind(string $statement, array $bind) : bool{
+    public function executeBind(string $statement, array|null $bind) : bool{
         $this->LogExtra($statement, $bind);
         $this->ph->prepare($statement, $this->prepareName);
         return $this->ph->execute($bind);
+    }
+    
+    public function executeBindFetch(string $statement, array $bind) : mixed{
+        $this->executeBind($statement, $bind);
+        return $this->ph->fetch($this->fetchStyle);
+    }
+    
+    public function executeBindFetchAll(string $statement, array $bind) : array|false{
+        $this->executeBind($statement, $bind);
+        return $this->ph->fetchAll($this->fetchStyle);
     }
     
     public function valuesForWhereIn(array $items , string $label = 'Value_') : SQLWhereInValues{
