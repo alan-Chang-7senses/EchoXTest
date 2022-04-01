@@ -8,6 +8,7 @@ use Games\Exceptions\RaceException;
 use Games\Users\Holders\UserInfoHolder;
 use Games\Users\UserHandler;
 use Processors\BaseProcessor;
+use stdClass;
 /**
  * Description of BaseRace
  *
@@ -17,7 +18,7 @@ abstract class BaseRace extends BaseProcessor{
     
     protected bool|null $mustInRace = true;
     protected UserHandler $userHandler;
-    protected UserInfoHolder $userInfo;
+    protected UserInfoHolder|stdClass $userInfo;
     
     public function __construct() {
         parent::__construct();

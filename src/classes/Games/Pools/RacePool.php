@@ -5,7 +5,6 @@ namespace Games\Pools;
 use Accessors\PoolAccessor;
 use Games\Accessors\RaceAccessor;
 use Games\Races\Holders\RaceInfoHolder;
-use Generators\DataGenerator;
 use stdClass;
 /**
  * Description of RacePool
@@ -38,7 +37,7 @@ class RacePool extends PoolAccessor{
         $holder->updateTime = $row->UpdateTime;
         $holder->finishTime = $row->FinishTime;
         
-        return DataGenerator::ConventType($holder, 'stdClass');
+        return $holder;
     }
     
     protected function SaveRacePlayerIDs(stdClass $data, mixed $value) : stdClass{

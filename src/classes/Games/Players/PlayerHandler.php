@@ -7,7 +7,7 @@ use Games\Consts\SceneValue;
 use Games\Exceptions\PlayerException;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
-use Generators\DataGenerator;
+use stdClass;
 /**
  * Description of PlayerHandler
  *
@@ -16,16 +16,16 @@ use Generators\DataGenerator;
 class PlayerHandler {
     
     private PlayerPool $pool;
-    private PlayerInfoHolder $info;
+    private PlayerInfoHolder|stdClass $info;
 
     public function __construct(int|string $id) {
         $this->pool = PlayerPool::Instance();
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
-        $this->info = DataGenerator::ConventType($info, 'Games\Players\Holders\PlayerInfoHolder');
+        $this->info = $info;
     }
     
-    public function GetInfo() : PlayerInfoHolder{
+    public function GetInfo() : PlayerInfoHolder|stdClass{
         return $this->info;
     }
     

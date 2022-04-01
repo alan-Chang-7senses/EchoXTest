@@ -15,7 +15,8 @@ use Processors\BaseProcessor;
 abstract class BaseTools extends BaseProcessor{
     
     protected bool $mustSigned = false;
-    
+    protected bool $maintainMode = false;
+
     public function __construct() {
         parent::__construct();
         

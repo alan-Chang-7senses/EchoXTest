@@ -138,4 +138,49 @@ class EliteTestAccessor extends BaseAccessor{
         }
         return $return;
     }
+    
+    public function rowsUserRanking() : array{
+        return $this->EliteTestAccessor()->SelectExpr('@a:=@a+1 Ranking, `UserID`, `Username`, `Score`')->FromTable('`Users` , (SELECT @a:= 0) AS a')
+                ->WhereGreater('UserID', 0)->OrderBy('Score', 'DESC')->OrderBy('UserID')->FetchAll();
+    }
+    
+    public function rowsSkillTotal() : array{
+        return $this->EliteTestAccessor()->SelectExpr('`SkillID`, COUNT(*) AS cnt')->FromTable('RaceSkills')->WhereGreater('UserID', 0)->GroupBy('SkillID')->OrderBy('SkillID')->FetchAll();
+    }
+    
+    public function rowsTotalRaceBeginHours() : array{
+        return $this->EliteTestAccessor()->SelectExpr('`Hours`, `Amount`')->FromTable('TotalRaceBeginHours')->OrderBy('Hours')->FetchAll();
+    }
+    
+    public function rowsFastestFinishTime(bool $fastest) : array{
+        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `UserID`, `Username`, `Score`, FORMAT(`Duration`, 2) AS duration 
+FROM `Users` LEFT JOIN `RacePlayer` USING(UserID) 
+WHERE `UserID` > 0 AND `Duration` = (
+    SELECT `Duration` 
+    FROM `RacePlayer` 
+    WHERE `UserID` > 0 
+    ORDER BY `Duration` '.($fastest ? 'ASC' : 'DESC').' 
+    LIMIT 1
+)GROUP BY `UserID` ORDER BY UserID', []);
+    }
+    
+    public function rowsTotalLoginHours() : array {
+        return $this->EliteTestAccessor()->SelectExpr('`Hours`, `Amount`')->FromTable('TotalLoginHours')->OrderBy('Hours')->FetchAll();
+    }
+    
+    public function rowsMostUserRace(string $column) : array{
+        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `UserID`, `Username`, `BeginAmount`, `FinishAmount`,`Win`,`Score` 
+FROM `Users` LEFT JOIN `TotalUserRace` USING(`UserID`) 
+WHERE `UserID` > 0 AND `'.$column.'` = (
+    SELECT `'.$column.'` 
+    FROM `TotalUserRace` 
+    WHERE `UserID` > 0 
+    ORDER BY `'.$column.'` DESC 
+    LIMIT 1
+)', []);
+    }
+    
+    public function rowAvgUserRace() : mixed{
+        return $this->EliteTestAccessor()->SelectExpr('COUNT(*) AS count, SUM(BeginAmount) AS total, AVG(BeginAmount) AS avg')->FromTable('TotalUserRace')->WhereGreater('UserID', 0)->FetchStyleAssoc()->Fetch();
+    }
 }

@@ -104,7 +104,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | id | int | 技能編號 |
 | name | string | 技能名稱代號 |
-| type | int | [技能觸發類型](../codes/skill.md#triggerType) |
 | level | int | 技能等級 |
 | slot | int | 技能所在插槽 |
 | energy | array | 使用條件能量值（int），陣列元素依序為 紅、黃、藍、綠 |
@@ -122,7 +121,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [效果類型](../codes/skill.md#effectType) |
-| target | int | [作用對象](../codes/skill.md#target) |
 | duration | int | 0 = 單次效果<br>大於 0 = 時效秒數<br>-1 = 持續到比賽結束。 |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
@@ -132,6 +130,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
+| target | int | [作用對象](../codes/skill.md#target) |
 | typeValue | int | [滿星效果類型值](../codes/skill.md#maxEffectType) |
 
 ### Example
@@ -167,7 +166,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 1,
 	                    "name": "21001",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 2,
 	                    "energy": [
@@ -182,13 +180,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 102,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 1,
+	                            "target": 0,
 	                            "typeValue": 1
 	                        }
 	                    ]
@@ -196,7 +194,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 2,
 	                    "name": "21002",
-	                    "type": 1,
 	                    "level": 2,
 	                    "slot": 4,
 	                    "energy": [
@@ -211,13 +208,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 101,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 12,
+	                            "target": 0,
 	                            "typeValue": 1
 	                        }
 	                    ]
@@ -225,7 +222,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 4,
 	                    "name": "21004",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -240,13 +236,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 103,
-	                            "target": 0,
 	                            "duration": 0
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 103,
+	                            "target": 0,
 	                            "typeValue": 0
 	                        }
 	                    ]
@@ -254,7 +250,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 5,
 	                    "name": "21005",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -269,13 +264,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 201,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
+	                            "target": 0,
 	                            "typeValue": 0
 	                        }
 	                    ]
@@ -299,7 +294,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 1,
 	                    "name": "21001",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -314,13 +308,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 102,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 1,
+	                            "target": 0,
 	                            "typeValue": 1
 	                        }
 	                    ]
@@ -328,7 +322,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 2,
 	                    "name": "21002",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -343,13 +336,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 101,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 12,
+	                            "target": 0,
 	                            "typeValue": 1
 	                        }
 	                    ]
@@ -357,7 +350,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 3,
 	                    "name": "21003",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -372,13 +364,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 102,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 10,
+	                            "target": 0,
 	                            "typeValue": 1
 	                        }
 	                    ]
@@ -386,7 +378,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 4,
 	                    "name": "21004",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -401,13 +392,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 103,
-	                            "target": 0,
 	                            "duration": 0
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 103,
+	                            "target": 0,
 	                            "typeValue": 0
 	                        }
 	                    ]
@@ -415,7 +406,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                {
 	                    "id": 5,
 	                    "name": "21005",
-	                    "type": 1,
 	                    "level": 1,
 	                    "slot": 0,
 	                    "energy": [
@@ -430,13 +420,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "effects": [
 	                        {
 	                            "type": 201,
-	                            "target": 0,
 	                            "duration": -1
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
+	                            "target": 0,
 	                            "typeValue": 0
 	                        }
 	                    ]
