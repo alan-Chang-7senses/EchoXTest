@@ -7,7 +7,7 @@
 
 ## URL
 
-http(s)://`域名`/User/Login/
+http(s)://`域名`/User/Logout/
 
 ## Method
 

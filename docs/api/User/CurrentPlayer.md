@@ -64,9 +64,7 @@ Content Type: `application/json`
 | downslope | int | 地形適性 - 下坡 |
 | sun | int | [太陽適性](../codes/player.md#sun) |
 | habit | int | [比賽習慣](../codes/player.md#habit) |
-| mid | int | 耐久適性 - 中距離 |
-| long | int | 耐久適性 - 長距離 |
-| short | int | 耐久適性 - 短距離 |
+| slotNumber | int | 插槽數量 |
 | [skills](#skills) | array | 角色持有的技能清單陣列 |
 | skillHole | array | 技能插槽陣列<br>陣列長度為插槽數量，陣列元素值為技能編號 |
 
@@ -115,9 +113,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "downslope": 1,
 	        "sun": 2,
 	        "habit": 1,
-	        "mid": 10,
-	        "long": 0,
-	        "short": 2,
 	        "slotNumber": 5,
 	        "skills": [
 	            {
