@@ -85,7 +85,6 @@ class Ready extends BaseRace{
                 $skills[] = [
                     'id' => $skillInfo->id,
                     'name' => $skillInfo->name,
-                    'type' => $skillInfo->type,
                     'level' => $playerSkill->level,
                     'slot' => $playerSkill->slot,
                     'energy' => $skillInfo->energy,
