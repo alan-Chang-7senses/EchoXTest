@@ -26,6 +26,6 @@ try{
     ];
 }
 
-$result['ProcessTime'] = ['Result' => $result, 'ProcessTime' => microtime(true) - $t];
+$result = ['Result' => $result, 'ProcessTime' => microtime(true) - $t];
 
 echo json_encode ($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT).PHP_EOL.PHP_EOL;
