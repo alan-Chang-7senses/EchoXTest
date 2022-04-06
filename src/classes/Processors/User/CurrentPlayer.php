@@ -4,6 +4,8 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
+use Games\Exceptions\RaceException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
 use Games\Users\UserHandler;
@@ -19,10 +21,12 @@ class CurrentPlayer extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $playerID = InputHelper::post('player');
-        
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
-        if(!in_array($playerID, $userHandler->GetInfo()->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
+        $userInfo = $userHandler->GetInfo();
+        if($userInfo->race != RaceValue::NotInRace) throw new RaceException(RaceException::UserInRace);
+
+        $playerID = InputHelper::post('player');
+        if(!in_array($playerID, $userInfo->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
         
         $userHandler->SaveData(['player' => $playerID]);
         
