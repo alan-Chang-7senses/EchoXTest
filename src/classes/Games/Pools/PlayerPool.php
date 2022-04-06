@@ -7,7 +7,7 @@ use Games\Accessors\PlayerAccessor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
-use Games\Players\Adaptability\DurableAdaptability;
+//use Games\Players\Adaptability\DurableAdaptability;
 use Games\Players\Adaptability\EnvironmentAdaptability;
 use Games\Players\Adaptability\SlotNumber;
 use Games\Players\Adaptability\TerrainAdaptability;
@@ -115,6 +115,18 @@ class PlayerPool extends PoolAccessor {
             $holder->skillHole[] = $slot[$i] ?? 0;
         }
         
+        $this->AutoPutSlot($holder);
+        
         return $holder;
+    }
+    
+    private function AutoPutSlot(PlayerInfoHolder $holder) : void{
+        
+        if(array_unique($holder->skillHole) != [0]) return;
+        
+        for($i = 0; $i < $holder->slotNumber; ++$i){
+            $holder->skillHole[$i] = $holder->skills[$i]->id;
+            $holder->skills[$i]->slot = $i + 1;
+        }
     }
 }
