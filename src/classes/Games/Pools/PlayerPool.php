@@ -18,6 +18,7 @@ use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use stdClass;
+use Games\Consts\SkillValue;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -112,7 +113,7 @@ class PlayerPool extends PoolAccessor {
         
         $holder->skillHole = [];
         for($i = 1; $i <= $holder->slotNumber; ++$i){
-            $holder->skillHole[] = $slot[$i] ?? 0;
+            $holder->skillHole[] = $slot[$i] ?? SkillValue::NotInSlot;
         }
         
         $this->AutoPutSlot($holder);
