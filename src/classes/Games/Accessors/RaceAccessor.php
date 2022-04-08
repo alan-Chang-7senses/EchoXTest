@@ -22,6 +22,11 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('RacePlayer')
                 ->WhereEqual('RaceID', $id)->FetchStyle(PDO::FETCH_ASSOC)->FetchAll();
     }
+    
+    public function rowsPlayerSkillByRacePlayerID(int $id) : array{
+        return $this->MainAccessor()->FromTable('RacePlayerSkill')
+                ->WhereEqual('RacePlayerID', $id)->FetchAll();
+    }
 
     public function AddRace(int $sceneID, float $createTime, int $windDirection) : string{
         

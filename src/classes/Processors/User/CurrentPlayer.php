@@ -4,8 +4,11 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
+use Games\Exceptions\RaceException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -17,18 +20,47 @@ use Processors\BaseProcessor;
  */
 class CurrentPlayer extends BaseProcessor{
     
+    const ActionSearch = 1;
+    const ActionAssign = 2;
+    
     public function Process(): ResultData {
         
-        $playerID = InputHelper::post('player');
+        $action = InputHelper::post('action');
         
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
-        if(!in_array($playerID, $userHandler->GetInfo()->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
+        $userInfo = $userHandler->GetInfo();
+        if($action == self::ActionAssign && $userInfo->race != RaceValue::NotInRace) throw new RaceException(RaceException::UserInRace);
+
+        $playerID = InputHelper::post('player');
+        if(!in_array($playerID, $userInfo->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
         
-        $userHandler->SaveData(['player' => $playerID]);
+        if($action == self::ActionAssign) $userHandler->SaveData(['player' => $playerID]);
         
         $playerInfo = (new PlayerHandler($playerID))->GetInfo();
         $player = clone $playerInfo;
         unset($player->dna);
+        
+        $player->skills = [];
+        foreach($playerInfo->skills as $skill){
+            
+            $handler = new SkillHandler($skill->id);
+            $info = $handler->GetInfo();
+            $player->skills[] = [
+                'id' => $info->id,
+                'name' => $info->name,
+                'description' => $info->description,
+                'level' => $skill->level,
+                'slot' => $skill->slot,
+                'energy' => $info->energy,
+                'cooldown' => $info->cooldown,
+                'ranks' => $info->ranks,
+                'maxDescription' => $info->maxDescription,
+                'maxCondition' => $info->maxCondition,
+                'maxConditionValue' => $info->maxConditionValue,
+                'effects' => $handler->GetEffects(true),
+                'maxEffects' => $handler->GetMaxEffects(true)
+            ];
+        }
         
         $result = new ResultData(ErrorCode::Success);
         $result->player = $player;

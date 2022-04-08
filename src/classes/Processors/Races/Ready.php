@@ -4,6 +4,7 @@ namespace Processors\Races;
 use Consts\ErrorCode;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
@@ -79,6 +80,8 @@ class Ready extends BaseRace{
             
             $skills = [];
             foreach($playerInfo->skills as $playerSkill){
+                
+                if($playerSkill->slot == SkillValue::NotInSlot) continue;
                 
                 $handler = new SkillHandler($playerSkill->id);
                 $skillInfo = $handler->GetInfo();

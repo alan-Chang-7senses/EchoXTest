@@ -21,7 +21,6 @@ class Skills extends BaseProcessor{
         
         $playerInfo = (new PlayerHandler($id))->GetInfo();
         
-        
         $skills = [];
         foreach ($playerInfo->skills as $playerSkill){
             
@@ -36,6 +35,7 @@ class Skills extends BaseProcessor{
                 'slot' => $playerSkill->slot,
                 'energy' => $skillInfo->energy,
                 'cooldown' => $skillInfo->cooldown,
+                'ranks' => $skillInfo->ranks,
                 'maxDescription' => $skillInfo->maxDescription,
                 'maxCondition' => $skillInfo->maxCondition,
                 'maxConditionValue' => $skillInfo->maxConditionValue,
