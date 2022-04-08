@@ -10,6 +10,7 @@ use Games\Races\RaceHandler;
 use Games\Scenes\SceneHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
+use stdClass;
 /**
  * Description of PlayerValues
  *
@@ -18,6 +19,8 @@ use Holders\ResultData;
 class PlayerValues extends BaseRace{
     
     public function Process(): ResultData {
+        
+        $hp = InputHelper::post('hp');
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceHandler->SetPlayer(new PlayerHandler($this->userInfo->player));
@@ -30,6 +33,8 @@ class PlayerValues extends BaseRace{
         
         $values = json_decode(InputHelper::post('values'));
         
+        if($values === null) $values = new stdClass();
+        $values->hp = $hp * pow(10, RaceValue::HPDecimals);
         $values->status = RaceValue::StatusUpdate;
         $values->updateTime = microtime(true);
         $raceHandler->SaveRacePlayer((array)$values);
