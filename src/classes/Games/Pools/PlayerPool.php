@@ -7,7 +7,7 @@ use Games\Accessors\PlayerAccessor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
-use Games\Players\Adaptability\DurableAdaptability;
+//use Games\Players\Adaptability\DurableAdaptability;
 use Games\Players\Adaptability\EnvironmentAdaptability;
 use Games\Players\Adaptability\SlotNumber;
 use Games\Players\Adaptability\TerrainAdaptability;
@@ -18,6 +18,7 @@ use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use stdClass;
+use Games\Consts\SkillValue;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -112,9 +113,21 @@ class PlayerPool extends PoolAccessor {
         
         $holder->skillHole = [];
         for($i = 1; $i <= $holder->slotNumber; ++$i){
-            $holder->skillHole[] = $slot[$i] ?? 0;
+            $holder->skillHole[] = $slot[$i] ?? SkillValue::NotInSlot;
         }
         
+        $this->AutoPutSlot($holder);
+        
         return $holder;
+    }
+    
+    private function AutoPutSlot(PlayerInfoHolder $holder) : void{
+        
+        if(array_unique($holder->skillHole) != [0]) return;
+        
+        for($i = 0; $i < $holder->slotNumber; ++$i){
+            $holder->skillHole[$i] = $holder->skills[$i]->id;
+            $holder->skills[$i]->slot = $i + 1;
+        }
     }
 }

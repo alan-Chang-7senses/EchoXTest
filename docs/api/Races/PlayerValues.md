@@ -2,7 +2,7 @@
 
 ## 介紹
 
-- 禁賽過程中，用於指定角色的狀態數值更新。
+- 競賽過程中，用於指定角色的狀態數值更新。
 - 更新數值後，取回最新的相關競賽公式計算數值。
 - 若不進行狀態數值變更，也可藉此取回角色當前的競賽數值。
 
@@ -22,6 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| hp | float | 剩餘耐力 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
 #### <span id="values">values 內容</span>
@@ -36,7 +37,6 @@ _此欄位資料為物件，以下欄位可擇一提供：_
 | rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 | ranking | int | 排名 |
 | trackNumber | int | 賽道號碼 |
-| hp | int | 剩餘耐力 |
 
 #### users 範例
 
