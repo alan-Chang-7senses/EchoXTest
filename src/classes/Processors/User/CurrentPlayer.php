@@ -53,6 +53,7 @@ class CurrentPlayer extends BaseProcessor{
                 'slot' => $skill->slot,
                 'energy' => $info->energy,
                 'cooldown' => $info->cooldown,
+                'duration' => $info->duration,
                 'ranks' => $info->ranks,
                 'maxDescription' => $info->maxDescription,
                 'maxCondition' => $info->maxCondition,

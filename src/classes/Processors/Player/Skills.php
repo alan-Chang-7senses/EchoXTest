@@ -35,6 +35,7 @@ class Skills extends BaseProcessor{
                 'slot' => $playerSkill->slot,
                 'energy' => $skillInfo->energy,
                 'cooldown' => $skillInfo->cooldown,
+                'duration' => $skillInfo->duration,
                 'ranks' => $skillInfo->ranks,
                 'maxDescription' => $skillInfo->maxDescription,
                 'maxCondition' => $skillInfo->maxCondition,
