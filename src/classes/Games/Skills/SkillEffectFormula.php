@@ -2,10 +2,12 @@
 
 namespace Games\Skills;
 
+use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
-use Consts\Sessions;
+use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
-use Games\Users\UserHandler;
+use Games\Scenes\SceneHandler;
+use Games\Skills\SkillHandler;
 /**
  * Description of SkillEffectFormula
  *
@@ -52,34 +54,48 @@ class SkillEffectFormula {
     }
     
     private function ValueINT() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->intelligent;
     }
     
     private function ValuePOW() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->breakOut;
     }
     
     private function ValueSPD() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->breakOut;
     }
     
     private function ValueSTA() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->stamina;
     }
     
     private function ValueHP() : float{
-        return 0;
+        return $this->racePlayerHandler === null ? $this->playerHandler->GetInfo()->stamina : $this->racePlayerHandler->GetInfo()->hp;
     }
     
     private function ValueH() : float{
-        return 0;
+        
+        if($this->racePlayerHandler === null) return SkillValue::SkillH;
+        
+        return $this->CreateRaceHandler()->ValueH();
     }
     
     private function ValueN() : float{
-        return 0;
+        return $this->skillHoandler->GetInfo()->ranks[$this->playerHandler->GetInfo()->level];
     }
     
     private function ValueS() : float{
-        return 0;
+        
+        if($this->racePlayerHandler === null) return SkillValue::SkillS;
+        
+        return $this->CreateRaceHandler()->ValueS();
+    }
+    
+    private function CreateRaceHandler() : RaceHandler{
+        
+        $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
+        $raceHandler->SetSecne(new SceneHandler($raceHandler->GetInfo()->scene));
+        $raceHandler->SetPlayer($this->playerHandler);
+        return $raceHandler;
     }
 }
