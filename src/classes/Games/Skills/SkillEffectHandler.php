@@ -4,7 +4,10 @@ namespace Games\Skills;
 
 use Games\Players\PlayerHandler;
 use Games\Pools\SkillEffectPool;
+use Games\Races\RacePlayerHandler;
 use Games\Skills\Holders\SkillEffectHolder;
+use Games\Skills\SkillEffectFormula;
+use Games\Skills\SkillHandler;
 use stdClass;
 /**
  * Description of SkillEffectHandler
@@ -16,7 +19,6 @@ class SkillEffectHandler {
     private SkillEffectPool $pool;
     private int|string $id;
     private SkillEffectHolder|stdClass $info;
-    private PlayerHandler $playerHandler;
     
     public function __construct(int|string $id) {
         $this->pool = SkillEffectPool::Instance();
@@ -28,11 +30,9 @@ class SkillEffectHandler {
         return $this->info;
     }
     
-    public function SetPlayer(PlayerHandler $handler) : void{
-        $this->playerHandler = $handler;
-    }
-    
-    public function GetFormulaResult() : float{
-        return 0; //未計算
+    public function GetFormulaResult(SkillHandler $skill, PlayerHandler $player, RacePlayerHandler|null $racePlayer) : float{
+        
+        $formala = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
+        return $formala->Process();
     }
 }
