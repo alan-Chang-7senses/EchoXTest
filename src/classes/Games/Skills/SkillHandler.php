@@ -2,7 +2,9 @@
 
 namespace Games\Skills;
 
+use Games\Players\PlayerHandler;
 use Games\Pools\SkillPool;
+use Games\Races\RacePlayerHandler;
 use Games\Skills\Holders\SkillInfoHolder;
 use Games\Skills\SkillEffectHandler;
 use Games\Skills\SkillMaxEffectHandler;
@@ -20,6 +22,9 @@ class SkillHandler {
     private array|null $effects = null;
     private array|null $maxEffects = null;
     
+    public PlayerHandler|null $playerHandler = null;
+    public RacePlayerHandler|null $racePlayerHandler = null;
+
     public function __construct(int|string $id) {
         $this->pool = SkillPool::Instance();
         $this->id = $id;
@@ -30,7 +35,7 @@ class SkillHandler {
         return $this->info;
     }
     
-    public function GetEffects(bool $formulaValue = false) : array{
+    public function GetEffects() : array{
         if(is_array($this->effects)) return $this->effects;
         $this->effects = [];
         foreach($this->info->effects as $id){
@@ -40,13 +45,15 @@ class SkillHandler {
                 'type' => $info->type,
                 'duration' => $info->duration,
             ];
-            if($formulaValue) $effect['formulaValue'] = $handler->GetFormulaResult();
+            
+            if($this->playerHandler !== null) $effect['formulaValue'] = $handler->GetFormulaResult();
+            
             $this->effects[] = $effect;
         }
         return $this->effects;
     }
     
-    public function GetMaxEffects(bool $formulaValue = false) : array{
+    public function GetMaxEffects() : array{
         if(is_array($this->maxEffects)) return $this->maxEffects;
         $this->maxEffects = [];
         foreach ($this->info->maxEffects as $id) {
@@ -57,7 +64,9 @@ class SkillHandler {
                 'target' => $info->target,
                 'typeValue' => $info->typeValue,
             ];
-            if($formulaValue) $maxEffect['formulaValue'] = $handler->GetFormulaResult();
+            
+            if($this->playerHandler) $maxEffect['formulaValue'] = $handler->GetFormulaResult();
+            
             $this->maxEffects[] = $maxEffect;
         }
         return $this->maxEffects;

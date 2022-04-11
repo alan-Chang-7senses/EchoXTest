@@ -36,7 +36,8 @@ class CurrentPlayer extends BaseProcessor{
         
         if($action == self::ActionAssign) $userHandler->SaveData(['player' => $playerID]);
         
-        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $playerHandler = new PlayerHandler($playerID);
+        $playerInfo = $playerHandler->GetInfo();
         $player = clone $playerInfo;
         unset($player->dna);
         
@@ -44,6 +45,7 @@ class CurrentPlayer extends BaseProcessor{
         foreach($playerInfo->skills as $skill){
             
             $handler = new SkillHandler($skill->id);
+            $handler->playerHandler = $playerHandler;
             $info = $handler->GetInfo();
             $player->skills[] = [
                 'id' => $info->id,
@@ -58,8 +60,8 @@ class CurrentPlayer extends BaseProcessor{
                 'maxDescription' => $info->maxDescription,
                 'maxCondition' => $info->maxCondition,
                 'maxConditionValue' => $info->maxConditionValue,
-                'effects' => $handler->GetEffects(true),
-                'maxEffects' => $handler->GetMaxEffects(true)
+                'effects' => $handler->GetEffects(),
+                'maxEffects' => $handler->GetMaxEffects()
             ];
         }
         

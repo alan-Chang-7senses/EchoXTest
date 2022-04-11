@@ -3,8 +3,8 @@
 namespace Games\Pools;
 
 use Accessors\PoolAccessor;
-use stdClass;
 use Games\Accessors\RaceAccessor;
+use stdClass;
 /**
  * Description of RacePlayerSkillPool
  *
