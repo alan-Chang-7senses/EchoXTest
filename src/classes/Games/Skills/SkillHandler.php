@@ -43,7 +43,6 @@ class SkillHandler {
             $info = $handler->GetInfo();
             $effect = [
                 'type' => $info->type,
-                'duration' => $info->duration,
             ];
             
             if($this->playerHandler !== null) $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
