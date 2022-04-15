@@ -25,7 +25,46 @@ class RacePlayerSkillPool extends PoolAccessor{
         
         $raceAccessor = new RaceAccessor();
         $holder = new stdClass();
-        $holder->rows = $raceAccessor->rowsPlayerSkillByRacePlayerID($id);
+        
+        $rows = $raceAccessor->rowsPlayerSkillByRacePlayerID($id);
+        foreach($rows as $row) $holder->{$row->Serial} = $row;
+        
         return $holder;
+    }
+    
+    protected function SaveData(stdClass $data, array $values) : stdClass{
+        
+        if(!isset($values['Serial'])) return $data;
+        
+        $serial = $values['Serial'];
+        unset($values['Serial']);
+        $bind = [];
+        foreach($values as $key => $value){
+            $key = ucfirst($key);
+            $bind[$key] = $value;
+            $data->$serial->$key = $value;
+        }
+        
+        (new RaceAccessor())->ModifyRacePlayerSkillBySerial($serial, $bind);
+        
+        return $data;
+    }
+    
+    protected function SaveNewData(stdClass $data, array $bind) : stdClass{
+        
+        $serial = (new RaceAccessor())->AddRacePlayerSkill($bind);
+        $values = [
+            'Serial' => $serial,
+            'RacePlayerID' => $bind['RacePlayerID'],
+            'Status' => $bind['Status'] ?? 0,
+            'CreateTime' => $bind['CreateTime'],
+            'SkillID' => $bind['SkillID'],
+            'LaunchMax' => $bind['LanuchMax'] ?? 0,
+            'Result' => $bind['Result'] ?? 0,
+        ];
+        
+        $data->$serial = (object)$values;
+        
+        return $data;
     }
 }

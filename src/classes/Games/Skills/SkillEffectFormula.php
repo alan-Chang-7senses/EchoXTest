@@ -15,16 +15,16 @@ use Games\Skills\SkillHandler;
  */
 class SkillEffectFormula {
     
-    const OperandAll = [ 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'N', 'S'];
+    const OperandAll = [ 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'];
 
-    private SkillHandler $skillHoandler;
+    private SkillHandler $skillHandler;
     private string|null $formula;
     private PlayerHandler|null $playerHandler;
     private RacePlayerHandler| null $racePlayerHandler;
 
     public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null) {
         
-        $this->skillHoandler = $skill;
+        $this->skillHandler = $skill;
         $this->formula = $formula;
         $this->playerHandler = $player;
         $this->racePlayerHandler = $racePlayer;
@@ -38,7 +38,16 @@ class SkillEffectFormula {
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
-        $values = ['%' => '/100'];
+        $skillInfo = $this->skillHandler->GetInfo();
+        $valueN = $skillInfo->ranks[0];
+        foreach($this->playerHandler->GetInfo()->skills as $playerSkill){
+            if($playerSkill->id == $skillInfo->id){
+                $valueN = $skillInfo->ranks[$playerSkill->level - 1];
+                break;
+            }
+        }
+        
+        $values = ['%' => '/100', 'N' => $valueN];
         foreach ($operands as $operand){
             $method = 'Value'.$operand;
             $values[$operand] = $this->$method();
@@ -46,7 +55,7 @@ class SkillEffectFormula {
         
         $result = 0;
         eval('$result = '.strtr($this->formula, $values).';');
-        return (float) number_format($result, 3);
+        return $result;
     }
     
     private function ValueFIG() : float{
@@ -78,10 +87,6 @@ class SkillEffectFormula {
         if($this->racePlayerHandler === null) return SkillValue::SkillH;
         
         return $this->CreateRaceHandler()->ValueH();
-    }
-    
-    private function ValueN() : float{
-        return $this->skillHoandler->GetInfo()->ranks[$this->playerHandler->GetInfo()->level];
     }
     
     private function ValueS() : float{

@@ -11,5 +11,6 @@ $lang[RaceException::Finished] = 'The race has finished.';
 $lang[RaceException::PlayerNotReached] = 'The player not reach the end yet.(Player ID: [player])';
 $lang[RaceException::RankingNoMatch] = 'The player ranking no match. (Player ID: [player], Ranking: [front] => [back])';
 $lang[RaceException::FinishFailure] = 'The race execute finish process failure.';
+$lang[RaceException::EnergyNotEnough] = 'The player\'s current energy is not enough';
 
 return $lang;
