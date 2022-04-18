@@ -48,6 +48,7 @@ Content Type: `application/json`
 | vitality | int | 體力 |
 | money | int | 金錢 |
 | player | int | 當前角色 ID |
+| scene | int | 當前場景 ID |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
 
 ### Example
@@ -67,6 +68,7 @@ Content Type: `application/json`
 	        "vitality": 0,
 	        "money": 0
 	        "player": 1010000000000015,
+	        "scene": 1,
 	        "race": 2
 	    }
 	}
