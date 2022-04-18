@@ -2,7 +2,8 @@
 
 ## 介紹
 
-- 使用場景編號設定使用者的當前場景，並回傳此場景相關資訊。
+- 使用場景編號設定使用者的當前場景。
+- 回傳此場景當前時段天氣相關資訊。
 
 ## URL
 
@@ -41,19 +42,9 @@ Content Type: `application/json`
 | name | string | 場景名稱 |
 | readySec | int | 起跑準備時間（秒） |
 | env | int | [環境](../codes/scene.md#env) |
-| [climates](#climates) | array | 全部時間區段的氣候資料陣列 |
-
-#### <span id="climates"> climates 內容</span>
-
-_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| id | int | 氣候編號 |
 | weather | int | [天氣](../codes/scene.md#weather) |
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
 | windSpeed | int | 風速 |
-| startTime | int | 當日氣候起始時間（秒） |
 | lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
 
 ### Example
@@ -68,31 +59,9 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "name": "CloseBeta",
 	        "readySec": 7,
 	        "env": 1,
-	        "climates": [
-	            {
-	                "id": 3,
-	                "weather": 1,
-	                "windDirection": 3,
-	                "windSpeed": 100,
-	                "startTime": 64800,
-	                "lighting": 2
-	            },
-	            {
-	                "id": 2,
-	                "weather": 1,
-	                "windDirection": 2,
-	                "windSpeed": 100,
-	                "startTime": 28800,
-	                "lighting": 1
-	            },
-	            {
-	                "id": 1,
-	                "weather": 1,
-	                "windDirection": 1,
-	                "windSpeed": 100,
-	                "startTime": 0,
-	                "lighting": 2
-	            }
-	        ]
+	        "weather": 1,
+	        "windDirection": 2,
+	        "windSpeed": 100,
+	        "lighting": 1
 	    }
 	}
