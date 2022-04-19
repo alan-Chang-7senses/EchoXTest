@@ -20,6 +20,7 @@
 	- 競賽：
 		- [開局](Races/Ready.md)。
 		- [角色數值](Races/PlayerValues.md)。
+		- [排名](Races/Rankings)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
 	- 主介面：
