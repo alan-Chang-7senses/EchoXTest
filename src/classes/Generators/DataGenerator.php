@@ -48,6 +48,11 @@ class DataGenerator {
         }
     }
     
+    public static function ValidProperties(stdClass $obj, array $validNames) : void{
+        $diff = array_diff(array_keys(get_object_vars($obj)), $validNames);
+        if(!empty($diff)) throw new Exception ('The property \''.array_shift ($diff).'\' is invalid', ErrorCode::ParamError);
+    }
+
     public static function UserIP() : string{
         if (!empty($_SERVER["HTTP_CLIENT_IP"]))  return $_SERVER["HTTP_CLIENT_IP"];
         elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) return $_SERVER["HTTP_X_FORWARDED_FOR"];

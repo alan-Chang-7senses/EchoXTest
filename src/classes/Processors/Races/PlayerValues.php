@@ -8,6 +8,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\RaceHandler;
 use Games\Scenes\SceneHandler;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use stdClass;
@@ -17,6 +18,14 @@ use stdClass;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class PlayerValues extends BaseRace{
+    
+    private array $validValues = [
+        'direction',
+        'trackType',
+        'trackShape',
+        'rhythm',
+        'trackNumber',
+    ];
     
     public function Process(): ResultData {
         
@@ -32,8 +41,9 @@ class PlayerValues extends BaseRace{
         if($racePlayerInfo->status == RaceValue::StatusReach) throw new RaceException(RaceException::PlayerReached);
         
         $values = json_decode(InputHelper::post('values'));
-        
         if($values === null) $values = new stdClass();
+        DataGenerator::ValidProperties($values, $this->validValues);
+        
         $values->hp = $hp * RaceValue::DivisorHP;
         $values->status = RaceValue::StatusUpdate;
         $values->updateTime = microtime(true);
