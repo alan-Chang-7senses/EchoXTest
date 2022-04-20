@@ -28,7 +28,6 @@ class SkillEffectPool extends PoolAccessor{
         $holder = new SkillEffectHolder();
         $holder->id = $id;
         $holder->type = $row->EffectType;
-        $holder->duration = $row->Duration;
         $holder->formula = $row->Formula;
         
         return $holder;

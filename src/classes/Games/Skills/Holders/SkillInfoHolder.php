@@ -13,6 +13,7 @@ class SkillInfoHolder extends stdClass{
     public string $description;
     public float $cooldown;
     public array $energy;
+    public float $duration;
     public array $ranks;
     public array $effects;
     public string $maxDescription;

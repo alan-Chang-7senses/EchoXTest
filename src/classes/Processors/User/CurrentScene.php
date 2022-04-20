@@ -5,6 +5,7 @@ namespace Processors\User;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Scenes\SceneHandler;
+use Games\Scenes\SceneUtility;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -23,8 +24,21 @@ class CurrentScene extends BaseProcessor{
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userHandler->SaveData(['scene' => $scene]);
         
+        $sceneHandler = new SceneHandler($scene);
+        $sceneInfo = $sceneHandler->GetInfo();
+        $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
+        
         $result = new ResultData(ErrorCode::Success);
-        $result->scene = (new SceneHandler($scene))->GetInfo();
+        $result->scene = [
+            'id' => $sceneInfo->id,
+            'name' => $sceneInfo->name,
+            'readySec' => $sceneInfo->readySec,
+            'env' => $sceneInfo->env,
+            'weather' => $climates->weather,
+            'windDirection' => $climates->windDirection,
+            'windSpeed' => $climates->windSpeed,
+            'lighting' => $climates->lighting,
+        ];
         
         return $result;
     }

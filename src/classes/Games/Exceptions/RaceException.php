@@ -18,4 +18,6 @@ class RaceException extends NormalException{
     const PlayerNotReached = 4007;
     const RankingNoMatch = 4008;
     const FinishFailure = 4009;
+    const EnergyNotEnough = 4010;
+    const PlayerNotInThisRace = 4011;
 }

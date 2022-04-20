@@ -1,15 +1,13 @@
-# 使用者 - 登入
+# 使用者 - 當前使用者資訊
 
 ## 介紹
 
-- 使用於一般登入。
-- 透過提供帳號密碼完成登入驗證。
+- 取得使用者帳號的當前資訊。
 - 需要玩家身份才能存取資料的 API 功能，須先完成此登入驗證。
-- 每個使用者僅限一個登入身份，重複登入則後踢前。
 
 ## URL
 
-http(s)://`域名`/User/Login/
+http(s)://`域名`/User/CurrentInfo/
 
 ## Method
 
@@ -21,10 +19,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-| 參數名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| account | string | 使用者帳號，限制為 4 ~ 16 碼的英數字。 |
-| password | string | 使用者密碼，限制為 4 ~ 16 碼字元。 |
+無
 
 ## Response
 
@@ -35,9 +30,9 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| [userInfo](#userInfo) | object | 使用者資訊 |
+| [info](#info) | object | 使用者資訊 |
 
-#### <span id="userInfo">userInfo 內容</span>
+#### <span id="info">info 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
@@ -60,15 +55,15 @@ Content Type: `application/json`
 	        "code": 0,
 	        "message": ""
 	    },
-	    "userInfo": {
+	    "info": {
 	        "userID": 1,
-	        "nickname": "Zhiwei",
+	        "nickname": "test001",
 	        "level": 1,
 	        "exp": 0,
 	        "vitality": 0,
-	        "money": 0
-	        "player": 1010000000000015,
+	        "money": 0,
+	        "player": 1010000000000001,
 	        "scene": 1,
-	        "race": 2
+	        "race": 7
 	    }
 	}

@@ -17,12 +17,18 @@ class PlayerHandler {
     
     private PlayerPool $pool;
     private PlayerInfoHolder|stdClass $info;
+    
+    public float $offsetS = 0;
+    public float $offsetH = 0;
+    
+    private array $skillIDs = [];
 
     public function __construct(int|string $id) {
         $this->pool = PlayerPool::Instance();
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
         $this->info = $info;
+        foreach($this->info->skills as $skill) $this->skillIDs[] = $skill->id;
     }
     
     public function GetInfo() : PlayerInfoHolder|stdClass{
@@ -96,5 +102,9 @@ class PlayerHandler {
             SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind),
             default => 0,
         };
+    }
+    
+    public function HasSkill(int $id) : bool{
+        return in_array($id, $this->skillIDs);
     }
 }

@@ -111,7 +111,7 @@ class Ready extends BaseRace{
                 'Rhythm' => $readyRaceInfo->rhythm,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
-                'HP' => $playerInfo->stamina * pow(10, RaceValue::HPDecimals),
+                'HP' => $playerInfo->stamina * RaceValue::DivisorHP,
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
@@ -134,7 +134,7 @@ class Ready extends BaseRace{
                 'id' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
                 'energy' => $racePlayerInfo->energy,
-                'hp' => $racePlayerInfo->hp / pow(10, RaceValue::HPDecimals),
+                'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
                 's' => $raceHandler->ValueS(),
                 'h' => $raceHandler->ValueH(),
                 'startSec' => $raceHandler->StartSecond(),
