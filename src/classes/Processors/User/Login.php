@@ -9,7 +9,6 @@ use Games\Accessors\UserAccessor;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use stdClass;
 /**
  * Description of Login
  *
@@ -39,18 +38,18 @@ class Login extends BaseProcessor{
         $_SESSION[Sessions::Signed] = true;
         $_SESSION[Sessions::UserID] = $row->UserID;
         
-        $userInfo = new stdClass();
-        $userInfo->userID = $row->UserID;
-        $userInfo->nickname = $row->Nickname;
-        $userInfo->level = $row->Level;
-        $userInfo->exp = $row->Exp;
-        $userInfo->vitality = $row->Vitality;
-        $userInfo->money = $row->Money;
-        $userInfo->player = $row->Player;
-        $userInfo->race = $row->Race;
-        
         $result = new ResultData(ErrorCode::Success);
-        $result->userInfo = $userInfo;
+        $result->userInfo = [
+            'userID' => $row->UserID,
+            'nickname' => $row->Nickname,
+            'level' => $row->Level,
+            'exp' => $row->Exp,
+            'vitality' => $row->Vitality,
+            'money' => $row->Money,
+            'player' => $row->Player,
+            'scene' => $row->Scene,
+            'race' => $row->Race,
+        ];
         
         return $result;
     }
