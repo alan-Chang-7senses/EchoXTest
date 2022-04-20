@@ -46,12 +46,21 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->LastInsertID();
     }
     
+    public function AddRacePlayerSkill(array $bind) : string{
+        $this->MainAccessor()->FromTable('RacePlayerSkill')->Add($bind);
+        return $this->MainAccessor()->LastInsertID();
+    }
+    
     public function ModifyRacePlayerIDsByID(int $id, string $idData, float $updateTime) : bool{
         return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => $updateTime]);
     }
     
     public function ModifyRacePlayerValuesByID(int $id, array $bind) : bool {
         return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Modify($bind);
+    }
+    
+    public function ModifyRacePlayerSkillBySerial(int $serial, array $bind) : bool{
+        return $this->MainAccessor()->FromTable('RacePlayerSkill')->WhereEqual('Serial', $serial)->Modify($bind);
     }
     
     public function FinishRaceByRaceID(int $id, int $status) : array{

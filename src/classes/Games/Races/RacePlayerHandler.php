@@ -39,4 +39,11 @@ class RacePlayerHandler {
         $this->pool->Delete($this->id);
         unset($this->info);
     }
+    
+    public function EnoughEnergy(array $energy) : bool{
+        foreach ($this->info->energy as $key => $value) {
+            if($value < $energy[$key]) return false;
+        }
+        return true;
+    }
 }

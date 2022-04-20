@@ -46,6 +46,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | slot | int | 技能所在插槽 |
 | energy | array | 使用條件能量值，陣列元素依序為 紅、黃、藍、綠 |
 | cooldown | float | 冷卻時間（秒） |
+| duration | float | 時效性<br>0 = 單次效果<br>大於 0 = 時效秒數<br>-1 = 持續到比賽結束 |
 | ranks | array | 技能星級 1 ~ 5 的 N 值陣列 |
 | maxDescription | string | 滿星效果敘述代號 |
 | maxCondition | int | [滿星效果條件](../codes/skill.md#maxCondition) |
@@ -60,8 +61,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [效果類型](../codes/skill.md#effectType) |
-| duration | int | 0 為單次效果，大於 0 為時效秒數，-1 為持續到比賽結束。 |
-| formulaValue | float | 效果值**（未實作計算，固定傳回 0）** |
+| formulaValue | float | 效果值 |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
 
@@ -95,6 +95,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                2
 	            ],
 	            "cooldown": 4,
+	            "duration": 7.8,
 	            "ranks": [
 	                5,
 	                10,
@@ -108,8 +109,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 201,
-	                    "duration": 780,
-	                    "formulaValue": 0
+	                    "formulaValue": 38.852
 	                }
 	            ],
 	            "maxEffects": [
@@ -134,6 +134,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                1
 	            ],
 	            "cooldown": 3,
+	            "duration": 5.4,
 	            "ranks": [
 	                5,
 	                10,
@@ -147,8 +148,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 203,
-	                    "duration": 540,
-	                    "formulaValue": 0
+	                    "formulaValue": 33.495
 	                }
 	            ],
 	            "maxEffects": [
@@ -173,6 +173,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                0
 	            ],
 	            "cooldown": 4,
+	            "duration": 7.8,
 	            "ranks": [
 	                5,
 	                10,
@@ -186,8 +187,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 204,
-	                    "duration": 780,
-	                    "formulaValue": 0
+	                    "formulaValue": 33.572
 	                }
 	            ],
 	            "maxEffects": [
@@ -212,6 +212,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                1
 	            ],
 	            "cooldown": 4,
+	            "duration": 7.8,
 	            "ranks": [
 	                5,
 	                10,
@@ -225,8 +226,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 205,
-	                    "duration": 780,
-	                    "formulaValue": 0
+	                    "formulaValue": 31.614
 	                }
 	            ],
 	            "maxEffects": [
@@ -251,6 +251,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                2
 	            ],
 	            "cooldown": 6,
+	            "duration": 13.5,
 	            "ranks": [
 	                5,
 	                10,
@@ -264,8 +265,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 204,
-	                    "duration": 1350,
-	                    "formulaValue": 0
+	                    "formulaValue": 33.572
 	                }
 	            ],
 	            "maxEffects": [
@@ -290,6 +290,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                0
 	            ],
 	            "cooldown": 3,
+	            "duration": 5.4,
 	            "ranks": [
 	                5,
 	                10,
@@ -303,8 +304,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "effects": [
 	                {
 	                    "type": 201,
-	                    "duration": 540,
-	                    "formulaValue": 0
+	                    "formulaValue": 38.852
 	                }
 	            ],
 	            "maxEffects": [

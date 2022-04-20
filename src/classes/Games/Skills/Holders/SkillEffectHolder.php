@@ -12,6 +12,5 @@ class SkillEffectHolder extends stdClass{
     
     public int $id;
     public int $type;
-    public int $duration;
     public string $formula;
 }

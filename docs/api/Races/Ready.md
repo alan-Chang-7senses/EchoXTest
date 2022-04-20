@@ -121,7 +121,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | type | int | [效果類型](../codes/skill.md#effectType) |
-| duration | int | 0 = 單次效果<br>大於 0 = 時效秒數<br>-1 = 持續到比賽結束。 |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
 
@@ -154,9 +153,9 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "player": 1010000000000001,
 	            "energy": [
 	                4,
-	                7,
-	                4,
-	                3
+	                3,
+	                3,
+	                8
 	            ],
 	            "hp": 34.43,
 	            "s": 0.4616959999999999,
@@ -179,8 +178,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 3,
 	                    "effects": [
 	                        {
-	                            "type": 204,
-	                            "duration": 540
+	                            "type": 204
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -207,8 +205,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 205,
-	                            "duration": 780
+	                            "type": 205
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -235,8 +232,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 202,
-	                            "duration": 540
+	                            "type": 202
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -263,8 +259,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 201,
-	                            "duration": 780
+	                            "type": 201
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -291,8 +286,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 203,
-	                            "duration": 540
+	                            "type": 203
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -319,8 +313,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 204,
-	                            "duration": 780
+	                            "type": 204
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -339,8 +332,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "energy": [
 	                4,
 	                4,
-	                6,
-	                3
+	                3,
+	                6
 	            ],
 	            "hp": 36.76,
 	            "s": 0.34165333333333336,
@@ -363,8 +356,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 3,
 	                    "effects": [
 	                        {
-	                            "type": 204,
-	                            "duration": 540
+	                            "type": 204
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -391,8 +383,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 202,
-	                            "duration": 540
+	                            "type": 202
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -419,8 +410,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 201,
-	                            "duration": 780
+	                            "type": 201
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -447,8 +437,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 203,
-	                            "duration": 540
+	                            "type": 203
 	                        }
 	                    ],
 	                    "maxEffects": [
@@ -475,8 +464,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 204,
-	                            "duration": 780
+	                            "type": 204
 	                        }
 	                    ],
 	                    "maxEffects": [

@@ -23,8 +23,8 @@ class RaceHandler {
     
     private RacePool $pool;
     private int|string $id;
-    private PlayerHandler $playerHandler;
     private RaceInfoHolder|stdClass $info;
+    private PlayerHandler $playerHandler;
     private RacePlayerHandler $racePlayerHandler;
     private SceneHandler $sceneHandler;
     
@@ -38,9 +38,10 @@ class RaceHandler {
         $this->info = $this->pool->{$this->id};
     }
     
-    public function SetPlayer(PlayerHandler $handler) : void{
+    public function SetPlayer(PlayerHandler $handler) : RacePlayerHandler{
         $this->playerHandler = $handler;
         $this->racePlayerHandler = new RacePlayerHandler($this->info->racePlayers->{$handler->GetInfo()->id});
+        return $this->racePlayerHandler;
     }
     
     public function SetSecne(SceneHandler $handler) : void{
@@ -139,7 +140,7 @@ class RaceHandler {
             }
         }
         
-        return ($result + $this->WindEffectValue()) * $this->RhythmValueS();
+        return ($result + $this->WindEffectValue()) * $this->RhythmValueS() + $this->playerHandler->offsetS;
     }
     
     public function ValueH() : float{
@@ -180,7 +181,7 @@ class RaceHandler {
                     ))
         };
         
-        return $result * $this->RhythmValueH();
+        return $result * $this->RhythmValueH() + $this->playerHandler->offsetH;
     }
 
     public function StartSecond() : float{
@@ -213,7 +214,7 @@ class RaceHandler {
     }
     
     /**
-     * 比賽節奏 S 耕倍數
+     * 比賽節奏 S 值倍數
      * @return float
      */
     private function RhythmValueS() : float{
@@ -225,7 +226,7 @@ class RaceHandler {
     }
     
     /**
-     * 比賽節奏 H 耕倍數
+     * 比賽節奏 H 值倍數
      * @return float
      */
     private function RhythmValueH() : float{

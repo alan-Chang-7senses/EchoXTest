@@ -2,10 +2,12 @@
 
 namespace Games\Skills;
 
+use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
-use Consts\Sessions;
+use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
-use Games\Users\UserHandler;
+use Games\Scenes\SceneHandler;
+use Games\Skills\SkillHandler;
 /**
  * Description of SkillEffectFormula
  *
@@ -13,16 +15,16 @@ use Games\Users\UserHandler;
  */
 class SkillEffectFormula {
     
-    const OperandAll = [ 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'N', 'S'];
+    const OperandAll = [ 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'];
 
-    private SkillHandler $skillHoandler;
+    private SkillHandler $skillHandler;
     private string|null $formula;
     private PlayerHandler|null $playerHandler;
     private RacePlayerHandler| null $racePlayerHandler;
 
     public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null) {
         
-        $this->skillHoandler = $skill;
+        $this->skillHandler = $skill;
         $this->formula = $formula;
         $this->playerHandler = $player;
         $this->racePlayerHandler = $racePlayer;
@@ -36,7 +38,16 @@ class SkillEffectFormula {
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
-        $values = ['%' => '/100'];
+        $skillInfo = $this->skillHandler->GetInfo();
+        $valueN = $skillInfo->ranks[0];
+        foreach($this->playerHandler->GetInfo()->skills as $playerSkill){
+            if($playerSkill->id == $skillInfo->id){
+                $valueN = $skillInfo->ranks[$playerSkill->level - 1];
+                break;
+            }
+        }
+        
+        $values = ['%' => '/100', 'N' => $valueN];
         foreach ($operands as $operand){
             $method = 'Value'.$operand;
             $values[$operand] = $this->$method();
@@ -44,7 +55,7 @@ class SkillEffectFormula {
         
         $result = 0;
         eval('$result = '.strtr($this->formula, $values).';');
-        return (float) number_format($result, 3);
+        return $result;
     }
     
     private function ValueFIG() : float{
@@ -52,34 +63,44 @@ class SkillEffectFormula {
     }
     
     private function ValueINT() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->intelligent;
     }
     
     private function ValuePOW() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->breakOut;
     }
     
     private function ValueSPD() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->breakOut;
     }
     
     private function ValueSTA() : float{
-        return 0;
+        return $this->playerHandler->GetInfo()->stamina;
     }
     
     private function ValueHP() : float{
-        return 0;
+        return $this->racePlayerHandler === null ? $this->playerHandler->GetInfo()->stamina : $this->racePlayerHandler->GetInfo()->hp;
     }
     
     private function ValueH() : float{
-        return 0;
-    }
-    
-    private function ValueN() : float{
-        return 0;
+        
+        if($this->racePlayerHandler === null) return SkillValue::SkillH;
+        
+        return $this->CreateRaceHandler()->ValueH();
     }
     
     private function ValueS() : float{
-        return 0;
+        
+        if($this->racePlayerHandler === null) return SkillValue::SkillS;
+        
+        return $this->CreateRaceHandler()->ValueS();
+    }
+    
+    private function CreateRaceHandler() : RaceHandler{
+        
+        $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
+        $raceHandler->SetSecne(new SceneHandler($raceHandler->GetInfo()->scene));
+        $raceHandler->SetPlayer($this->playerHandler);
+        return $raceHandler;
     }
 }

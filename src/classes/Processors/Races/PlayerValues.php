@@ -34,7 +34,7 @@ class PlayerValues extends BaseRace{
         $values = json_decode(InputHelper::post('values'));
         
         if($values === null) $values = new stdClass();
-        $values->hp = $hp * pow(10, RaceValue::HPDecimals);
+        $values->hp = $hp * RaceValue::DivisorHP;
         $values->status = RaceValue::StatusUpdate;
         $values->updateTime = microtime(true);
         $raceHandler->SaveRacePlayer((array)$values);

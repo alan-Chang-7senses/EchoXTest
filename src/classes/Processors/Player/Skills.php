@@ -19,12 +19,14 @@ class Skills extends BaseProcessor{
         
         $id = InputHelper::post('id');
         
-        $playerInfo = (new PlayerHandler($id))->GetInfo();
+        $playerHandler = new PlayerHandler($id);
+        $playerInfo = $playerHandler->GetInfo();
         
         $skills = [];
         foreach ($playerInfo->skills as $playerSkill){
             
             $handler = new SkillHandler($playerSkill->id);
+            $handler->playerHandler = $playerHandler;
             $skillInfo = $handler->GetInfo();
             
             $skills[] = [
@@ -35,12 +37,13 @@ class Skills extends BaseProcessor{
                 'slot' => $playerSkill->slot,
                 'energy' => $skillInfo->energy,
                 'cooldown' => $skillInfo->cooldown,
+                'duration' => $skillInfo->duration,
                 'ranks' => $skillInfo->ranks,
                 'maxDescription' => $skillInfo->maxDescription,
                 'maxCondition' => $skillInfo->maxCondition,
                 'maxConditionValue' => $skillInfo->maxConditionValue,
-                'effects' => $handler->GetEffects(true),
-                'maxEffects' => $handler->GetMaxEffects(true),
+                'effects' => $handler->GetEffects(),
+                'maxEffects' => $handler->GetMaxEffects(),
             ];
         }
         

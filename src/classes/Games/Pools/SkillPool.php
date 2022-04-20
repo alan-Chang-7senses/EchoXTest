@@ -34,6 +34,10 @@ class SkillPool extends PoolAccessor{
         $skill->name = $skillInfo->SkillName;
         $skill->description = $skillInfo->Description;
         $skill->cooldown = $skillInfo->Cooldown / SkillValue::DivisorCooldown;
+        
+        if($skillInfo->Duration > 0) $skillInfo->Duration /= SkillValue::DivisorDuration;
+        $skill->duration = $skillInfo->Duration;
+        
         $skill->energy = array_map('intval',explode(',', $skillInfo->Energy));
         $skill->ranks = [$skillInfo->Level1, $skillInfo->Level2, $skillInfo->Level3, $skillInfo->Level4, $skillInfo->Level5];
         $skill->effects = explode(',', $skillInfo->Effect);
