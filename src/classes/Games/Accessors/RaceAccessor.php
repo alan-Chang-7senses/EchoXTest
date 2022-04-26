@@ -27,6 +27,10 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('RacePlayerSkill')
                 ->WhereEqual('RacePlayerID', $id)->FetchAll();
     }
+    
+    public function rowsPlayerEffectByRacePlayerID(int $id) : array{
+        return $this->MainAccessor()->FromTable('RacePlayerEffect')->WhereEqual('RacePlayerID', $id)->FetchAll();
+    }
 
     public function AddRace(int $sceneID, float $createTime, int $windDirection) : string{
         
@@ -49,6 +53,10 @@ class RaceAccessor extends BaseAccessor{
     public function AddRacePlayerSkill(array $bind) : string{
         $this->MainAccessor()->FromTable('RacePlayerSkill')->Add($bind);
         return $this->MainAccessor()->LastInsertID();
+    }
+    
+    public function AddRacePlayerEffect(array $bind) : bool{
+        return $this->MainAccessor()->FromTable('PlayerRaceEffect')->Add($bind);
     }
     
     public function ModifyRacePlayerIDsByID(int $id, string $idData, float $updateTime) : bool{

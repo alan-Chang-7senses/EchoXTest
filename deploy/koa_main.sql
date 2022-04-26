@@ -579,6 +579,18 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   KEY `RaceID` (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
 
+-- 傾印  資料表 koa_main.RacePlayerEffect 結構
+CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色資料編號',
+  `EffectType` smallint(6) NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `EffectValue` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '效果影響值',
+  `StartTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '起始時間',
+  `EndTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
+  PRIMARY KEY (`Serial`),
+  KEY `RacePlayerID` (`RacePlayerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色效果';
+
 -- 傾印  資料表 koa_main.RacePlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
