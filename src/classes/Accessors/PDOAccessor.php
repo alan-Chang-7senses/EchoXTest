@@ -62,7 +62,7 @@ class PDOAccessor {
         return $this->ph->$func($this->fetchStyle);
     }
     
-    public function Add(array $bind, bool $replace = true) : bool{
+    public function Add(array $bind, bool $replace = false) : bool{
         $columns = array_keys($bind);
         $values = array_map(function($val){ return ':'.$val; }, $columns);
         $statement = (!$replace ? 'INSERT' : 'REPLACE').' INTO '.$this->table.' ('. implode(',', $columns).') VALUES ('. implode(',', $values).')';
@@ -70,7 +70,7 @@ class PDOAccessor {
     }
     
 
-    public function AddAll(array $rows, bool $insert = true) : bool{
+    public function AddAll(array $rows, bool $replace = false) : bool{
         
         $values = [];
         $bind = [];
@@ -88,7 +88,7 @@ class PDOAccessor {
             
             $values[] = '('. implode(',', $names).')';
         }
-        $statement = ($insert ? 'INSERT'.($this->ignore ? ' IGNORE' : '') : 'REPLACE').' INTO '.$this->table.' ('.implode(',', array_keys($rows[0])).') VALUES '. implode(',', $values);
+        $statement = (!$replace ? 'INSERT'.($this->ignore ? ' IGNORE' : '') : 'REPLACE').' INTO '.$this->table.' ('.implode(',', array_keys($rows[0])).') VALUES '. implode(',', $values);
         return $this->executeBind($statement, $bind);
     }
     
