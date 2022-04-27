@@ -30,10 +30,12 @@ class RacePlayerEffectPool extends PoolAccessor{
         return $holder;
     }
     
-    protected function SaveNewData(stdClass $data, array $bind) : stdClass{
+    protected function SaveNewData(stdClass $data, array $binds) : stdClass{
         
-        $res = (new RaceAccessor())->AddRacePlayerEffect($bind);
-        if($res !== false) $data->list[] = (object)$bind;
+        $res = (new RaceAccessor())->AddRacePlayerEffects($binds);
+        if($res !== false){
+            foreach($binds as $bind) $data->list[] = (object)$bind;
+        }
         
         return $data;
     }

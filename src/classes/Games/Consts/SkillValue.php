@@ -9,9 +9,6 @@ namespace Games\Consts;
  */
 class SkillValue {
     
-    const TypeActive = 1;
-    const TypeAce = 2;
-    
     const SkillH = 0.66;
     const SkillS = 6.6;
     
@@ -22,4 +19,13 @@ class SkillValue {
     
     const DurationOnce = 0;
     const DurationForever = -1;
+    
+    const EffectH = 101;
+    const EffectS = 102;
+    const EffectHP = 103;
+    const EffectSPD = 201;
+    const EffectPOW = 202;
+    const EffectFIG = 203;
+    const EffectINT = 204;
+    const EffectSTA = 205;
 }

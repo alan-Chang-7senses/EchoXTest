@@ -55,8 +55,8 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->LastInsertID();
     }
     
-    public function AddRacePlayerEffect(array $bind) : bool{
-        return $this->MainAccessor()->FromTable('PlayerRaceEffect')->Add($bind);
+    public function AddRacePlayerEffects(array $binds) : bool{
+        return $this->MainAccessor()->FromTable('RacePlayerEffect')->AddAll($binds);
     }
     
     public function ModifyRacePlayerIDsByID(int $id, string $idData, float $updateTime) : bool{
