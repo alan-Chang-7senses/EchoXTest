@@ -32,6 +32,8 @@
 		- [使用者資料](EliteTest/UserInfo.md)。
 		- [競賽開局](EliteTest/RaceBegin.md)。
 		- [競賽完成](EliteTest/RaceFinish.md)。
+		- [積分排行](EliteTest/ScoreList.md)。
+		- [最快排行](EliteTest/FastestList.md)。
 - [HTTP 狀態碼](codes/httpCode.md)。
 - [API 錯誤碼](codes/errorCode.md)。
 - 常數定義：
