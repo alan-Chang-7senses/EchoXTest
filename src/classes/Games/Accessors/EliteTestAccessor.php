@@ -183,4 +183,11 @@ WHERE `UserID` > 0 AND `'.$column.'` = (
     public function rowAvgUserRace() : mixed{
         return $this->EliteTestAccessor()->SelectExpr('COUNT(*) AS count, SUM(BeginAmount) AS total, AVG(BeginAmount) AS avg')->FromTable('TotalUserRace')->WhereGreater('UserID', 0)->FetchStyleAssoc()->Fetch();
     }
+    
+    public function rowsFastest(int $offset, int $length) : array{
+        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `Username`, SUBSTRING( FROM_UNIXTIME(`Duration`, "%T.%f"), 1, 12) AS Duration
+FROM `Users` LEFT JOIN `RacePlayer` USING(UserID) 
+WHERE `UserID` > 0 AND `Duration` > 0 GROUP BY `UserID` ORDER BY `Duration` ASC, `Score` DESC
+LIMIT '.$offset.', '.$length, []);
+    }
 }
