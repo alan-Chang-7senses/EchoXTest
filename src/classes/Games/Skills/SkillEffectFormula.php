@@ -19,7 +19,7 @@ use stdClass;
 class SkillEffectFormula {
     
     const OperandAll = [
-        'CraterLake', 'Crosswind', 'Headwind', 'SandDust', 'Tailwind', 'Volcano', 'Aurora', 'Sunny', 'Dune',
+        'CraterLake', 'Crosswind', 'Downslope', 'Headwind', 'SandDust', 'Tailwind', 'Upslope', 'Volcano', 'Aurora', 'Sunny', 'Dune', 'Flat',
         'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'
     ];
 
@@ -96,9 +96,13 @@ class SkillEffectFormula {
     private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind); }
     private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind); }
     
-    private function ValueSunny() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny); }
-    private function ValueAurora() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora); }
-    private function ValueSandDust() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust); }
+    private function ValueSunny() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny); }
+    private function ValueAurora() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora); }
+    private function ValueSandDust() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust); }
+    
+    private function ValueFloat() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->flat); }
+    private function ValueUpslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->upslope); }
+    private function ValueDownslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->downslope); }
     
     private function CreateRaceHandler() : RaceHandler{
         

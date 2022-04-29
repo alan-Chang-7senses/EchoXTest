@@ -58,6 +58,9 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptSunny => $playerHandler->offsetSunny += $value,
                 SkillValue::EffectAdaptAurora => $playerHandler->offsetAurora += $value,
                 SkillValue::EffectAdaptSandDust => $playerHandler->offsetSandDust += $value,
+                SkillValue::EffectAdaptFlat => $playerHandler->offsetFlat += $value,
+                SkillValue::EffectAdaptUpslope => $playerHandler->offsetUpslope += $value,
+                SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
             };
         }
         

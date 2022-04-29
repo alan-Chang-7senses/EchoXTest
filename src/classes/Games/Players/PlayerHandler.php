@@ -32,6 +32,10 @@ class PlayerHandler {
     public float $offsetSunny = 0;
     public float $offsetAurora = 0;
     public float $offsetSandDust = 0;
+    
+    public float $offsetFlat = 0;
+    public float $offsetUpslope = 0;
+    public float $offsetDownslope = 0;
 
     private array $skillIDs = [];
 
@@ -95,9 +99,9 @@ class PlayerHandler {
      */
     public function GetTerrainValue(int $trackType) : float{
         return match ($trackType) {
-            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat),
-            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope),
-            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope),
+            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat) + $this->offsetFlat,
+            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope) + $this->offsetUpslope,
+            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope) + $this->offsetDownslope,
             default => 0,
         };
     }
