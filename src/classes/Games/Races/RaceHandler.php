@@ -101,7 +101,7 @@ class RaceHandler {
                     $this->playerHandler->GetClimateValue($climate->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }else{
                 $result = RaceValue::ClimateAccelerations[$climate->weather] * 
@@ -111,7 +111,7 @@ class RaceHandler {
                     $this->playerHandler->GetClimateValue($climate->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }
             
@@ -125,7 +125,7 @@ class RaceHandler {
                     $this->playerHandler->GetClimateValue($climate->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }else{
                 $result = RaceValue::ClimateAccelerations[$climate->weather] * 
@@ -135,7 +135,7 @@ class RaceHandler {
                     $this->playerHandler->GetClimateValue($climate->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }
         }
@@ -159,7 +159,7 @@ class RaceHandler {
                         $this->playerHandler->GetClimateValue($climate->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     )),
             SceneValue::Downslope => RaceValue::ClimateLoses[$climate->weather] + 
                     4 * $slope * $this->ValueS() / $player->intelligent * 
@@ -168,7 +168,7 @@ class RaceHandler {
                         $this->playerHandler->GetClimateValue($climate->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     )),
             default => RaceValue::ClimateLoses[$climate->weather] + 
                     4 * $slope * 2 * $this->ValueS() / ($player->intelligent + $player->will) * 
@@ -177,7 +177,7 @@ class RaceHandler {
                         $this->playerHandler->GetClimateValue($climate->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     ))
         };
         

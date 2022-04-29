@@ -18,7 +18,10 @@ use stdClass;
  */
 class SkillEffectFormula {
     
-    const OperandAll = ['CraterLake', 'Volcano', 'Dune', 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'];
+    const OperandAll = [
+        'CraterLake', 'Crosswind', 'Headwind', 'Tailwind', 'Volcano', 'Dune',
+        'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'
+    ];
 
     private SkillHandler $skillHandler;
     private string|null $formula;
@@ -63,29 +66,13 @@ class SkillEffectFormula {
         return $result;
     }
     
-    private function ValueFIG() : float{
-        return $this->playerInfo->will;
-    }
+    private function ValueFIG() : float{ return $this->playerInfo->will; }
+    private function ValueINT() : float{ return $this->playerInfo->intelligent; }
+    private function ValuePOW() : float{ return $this->playerInfo->breakOut; }
+    private function ValueSPD() : float{ return $this->playerInfo->breakOut; }
+    private function ValueSTA() : float{ return $this->playerInfo->stamina; }
     
-    private function ValueINT() : float{
-        return $this->playerInfo->intelligent;
-    }
-    
-    private function ValuePOW() : float{
-        return $this->playerInfo->breakOut;
-    }
-    
-    private function ValueSPD() : float{
-        return $this->playerInfo->breakOut;
-    }
-    
-    private function ValueSTA() : float{
-        return $this->playerInfo->stamina;
-    }
-    
-    private function ValueHP() : float{
-        return $this->racePlayerHandler === null ? $this->playerInfo->stamina : $this->racePlayerHandler->GetInfo()->hp;
-    }
+    private function ValueHP() : float{ return $this->racePlayerHandler === null ? $this->playerInfo->stamina : $this->racePlayerHandler->GetInfo()->hp; }
     
     private function ValueH() : float{
         
@@ -101,18 +88,14 @@ class SkillEffectFormula {
         return $this->CreateRaceHandler()->ValueS();
     }
     
-    private function ValueDune() : float{
-        return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune);
-    }
-    
-    private function ValueCraterLake() : float{
-        return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake);
-    }
-    
-    private function ValueVolcano() : float{
-        return PlayerUtility::AdaptValueByPoint($this->playerInfo->volcano);
-    }
+    private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }
+    private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake); }
+    private function ValueVolcano() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->volcano); }
 
+    private function ValueTailwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->tailwind); }
+    private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind); }
+    private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind); }
+    
     private function CreateRaceHandler() : RaceHandler{
         
         $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);

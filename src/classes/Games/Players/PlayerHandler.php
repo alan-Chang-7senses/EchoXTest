@@ -20,9 +20,14 @@ class PlayerHandler {
     
     public float $offsetS = 0;
     public float $offsetH = 0;
+    
     public float $offsetDune = 0;
     public float $offsetCraterLake = 0;
     public float $offsetVolcano = 0;
+    
+    public float $offsetTailwind = 0;
+    public float $offsetHeadwind = 0;
+    public float $offsetCrosswind = 0;
 
     private array $skillIDs = [];
 
@@ -98,11 +103,11 @@ class PlayerHandler {
      * @param int $playerWindDirection 角色對應場景風向
      * @return int
      */
-    public function GetWinValue(int $playerWindDirection) : int{
+    public function GetWindValue(int $playerWindDirection) : int{
         return match ($playerWindDirection) {
-            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind),
-            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind),
-            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind),
+            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind) + $this->offsetTailwind,
+            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind) + $this->offsetCrosswind,
+            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind) + $this->offsetHeadwind,
             default => 0,
         };
     }

@@ -52,6 +52,9 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptDune => $playerHandler->offsetDune += $value,
                 SkillValue::EffectAdaptCraterLake => $playerHandler->offsetCraterLake += $value,
                 SkillValue::EffectAdaptVolcano => $playerHandler->offsetVolcano += $value,
+                SkillValue::EffectAdaptTailwind => $playerHandler->offsetTailwind += $value,
+                SkillValue::EffectAdaptHeadwind => $playerHandler->offsetHeadwind += $value,
+                SkillValue::EffectAdaptCrosswind => $playerHandler->offsetCrosswind += $value,
             };
         }
         
