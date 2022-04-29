@@ -5,7 +5,6 @@ namespace Processors\Races;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
-use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
@@ -44,29 +43,18 @@ class LaunchSkill extends BaseRace{
         
         $skillHandler->playerHandler = $playerHandler;
         $skillHandler->racePlayerHandler = $racePlayerHandler;
-        var_dump($playerHandler->GetInfo()->intelligent);
+        
         $binds = [];
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $endTime = $currentTime + $skillInfo->duration;
         $effects = $skillHandler->GetEffects();
         foreach($effects as $effect){
 
-            $type = match ($effect['type']){
-                SkillValue::EffectH => RaceValue::PlayerEffectH,
-                SkillValue::EffectS => RaceValue::PlayerEffectS,
-                SkillValue::EffectSPD => RaceValue::PlayerEffectSPD,
-                SkillValue::EffectPOW => RaceValue::PlayerEffectPOW,
-                SkillValue::EffectFIG => RaceValue::PlayerEffectFIG,
-                SkillValue::EffectINT => RaceValue::PlayerEffectINT,
-                SkillValue::EffectSTA => RaceValue::PlayerEffectSTA,
-                default => RaceValue::PlayerEffectNone
-            };
-            
-            if($type === RaceValue::PlayerEffectNone) continue;
+            if(!in_array($effect['type'], RaceValue::PlayerEffectTypes)) continue;
             
             $binds[] = [
                 'RacePlayerID' => $racePlayerID,
-                'EffectType' => $type,
+                'EffectType' => $effect['type'],
                 'EffectValue' => $effect['formulaValue'],
                 'StartTime' => $currentTime,
                 'EndTime' => $endTime,

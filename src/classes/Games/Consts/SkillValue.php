@@ -17,15 +17,40 @@ class SkillValue {
     
     const NotInSlot = 0;
     
-    const DurationOnce = 0;
-    const DurationForever = -1;
-    
     const EffectH = 101;
     const EffectS = 102;
-    const EffectHP = 103;
-    const EffectSPD = 201;
-    const EffectPOW = 202;
-    const EffectFIG = 203;
-    const EffectINT = 204;
-    const EffectSTA = 205;
+    const EffectSPD = 111;
+    const EffectPOW = 112;
+    const EffectFIG = 113;
+    const EffectINT = 114;
+    const EffectSTA = 115;
+    
+    const EffectAdaptDune = 121;
+    const EffectAdaptCraterLake = 122;
+    const EffectAdaptVolcano = 123;
+    const EffectAdaptTailwind = 131;
+    const EffectAdaptHeadwind = 132;
+    const EffectAdaptCrosswind = 133;
+    const EffectAdaptSunny = 141;
+    const EffectAdaptAurora = 142;
+    const EffectAdaptSandDust = 143;
+    const EffectAdaptFlat = 151;
+    const EffectAdaptUpslope = 152;
+    const EffectAdaptDownslope = 153;
+    const EffectAdaptSunshine = 161;
+    const EffectAdaptBacklight = 162;
+    
+    const EffectHP = 201;
+    const EffectEnergyAll = 211;
+    const EffectEnergyRed = 212;
+    const EffectEnergyYellow = 213;
+    const EffectEnergyBlue = 214;
+    const EffectEnergyGreen = 215;
+    
+    const EffectWindTailwind = 501;
+    const EffectWindHeadwind = 502;
+    const EffectWindCrosswind = 503;
+    const EffectClimateSunny = 504;
+    const EffectClimateAurora = 505;
+    const EffectClimateSandDust = 506;
 }

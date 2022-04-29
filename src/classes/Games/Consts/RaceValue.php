@@ -58,12 +58,27 @@ class RaceValue {
     /* 比賽節奏 保留體力 */
     const RetainStrength = 3;
     
-    const PlayerEffectNone = 0;
-    const PlayerEffectH = 1;
-    const PlayerEffectS = 2;
-    const PlayerEffectSPD = 3;
-    const PlayerEffectPOW = 4;
-    const PlayerEffectFIG = 5;
-    const PlayerEffectINT = 6;
-    const PlayerEffectSTA = 7;
+    const PlayerEffectTypes = [
+        SkillValue::EffectH,
+        SkillValue::EffectS,
+        SkillValue::EffectSPD,
+        SkillValue::EffectPOW,
+        SkillValue::EffectFIG,
+        SkillValue::EffectINT,
+        SkillValue::EffectSTA,
+        SkillValue::EffectAdaptDune,
+        SkillValue::EffectAdaptCraterLake,
+        SkillValue::EffectAdaptVolcano,
+        SkillValue::EffectAdaptTailwind,
+        SkillValue::EffectAdaptHeadwind,
+        SkillValue::EffectAdaptCrosswind,
+        SkillValue::EffectAdaptSunny,
+        SkillValue::EffectAdaptAurora,
+        SkillValue::EffectAdaptSandDust,
+        SkillValue::EffectAdaptFlat,
+        SkillValue::EffectAdaptUpslope,
+        SkillValue::EffectAdaptDownslope,
+        SkillValue::EffectAdaptSunshine,
+        SkillValue::EffectAdaptBacklight,
+    ];
 }

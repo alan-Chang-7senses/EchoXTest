@@ -20,7 +20,10 @@ class PlayerHandler {
     
     public float $offsetS = 0;
     public float $offsetH = 0;
-    
+    public float $offsetDune = 0;
+    public float $offsetCraterLake = 0;
+    public float $offsetVolcano = 0;
+
     private array $skillIDs = [];
 
     public function __construct(int|string $id) {
@@ -42,9 +45,9 @@ class PlayerHandler {
      */
     public function GetEnvValue(int $env) : float{
         return match ($env) {
-            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune),
-            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake),
-            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano),
+            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune) + $this->offsetDune,
+            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake) + $this->offsetCraterLake,
+            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano) + $this->offsetVolcano,
             default => 0,
         };
     }

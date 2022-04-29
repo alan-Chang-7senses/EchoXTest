@@ -7,6 +7,7 @@ use Games\Consts\RaceValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
 use stdClass;
+use Games\Consts\SkillValue;
 /**
  * Description of RacePlayerEffectHandler
  *
@@ -41,13 +42,16 @@ class RacePlayerEffectHandler {
             
             $value = $playerEffect->EffectValue;
             match ($playerEffect->EffectType){
-                RaceValue::PlayerEffectH => $playerHandler->offsetH += $value,
-                RaceValue::PlayerEffectS => $playerHandler->offsetS += $value,
-                RaceValue::PlayerEffectSPD => $playerInfo->velocity += $value,
-                RaceValue::PlayerEffectPOW => $playerInfo->breakOut += $value,
-                RaceValue::PlayerEffectFIG => $playerInfo->will += $value,
-                RaceValue::PlayerEffectINT => $playerInfo->intelligent += $value,
-                RaceValue::PlayerEffectSTA => $playerInfo->stamina += $value,
+                SkillValue::EffectH => $playerHandler->offsetH += $value,
+                SkillValue::EffectS => $playerHandler->offsetS += $value,
+                SkillValue::EffectSPD => $playerInfo->velocity += $value,
+                SkillValue::EffectPOW => $playerInfo->breakOut += $value,
+                SkillValue::EffectFIG => $playerInfo->will += $value,
+                SkillValue::EffectINT => $playerInfo->intelligent += $value,
+                SkillValue::EffectSTA => $playerInfo->stamina += $value,
+                SkillValue::EffectAdaptDune => $playerHandler->offsetDune += $value,
+                SkillValue::EffectAdaptCraterLake => $playerHandler->offsetCraterLake += $value,
+                SkillValue::EffectAdaptVolcano => $playerHandler->offsetVolcano += $value,
             };
         }
         
