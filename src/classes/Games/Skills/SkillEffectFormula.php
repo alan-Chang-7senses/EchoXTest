@@ -19,7 +19,7 @@ use stdClass;
 class SkillEffectFormula {
     
     const OperandAll = [
-        'CraterLake', 'Crosswind', 'Headwind', 'Tailwind', 'Volcano', 'Dune',
+        'CraterLake', 'Crosswind', 'Headwind', 'SandDust', 'Tailwind', 'Volcano', 'Aurora', 'Sunny', 'Dune',
         'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'
     ];
 
@@ -95,6 +95,10 @@ class SkillEffectFormula {
     private function ValueTailwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->tailwind); }
     private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind); }
     private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind); }
+    
+    private function ValueSunny() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny); }
+    private function ValueAurora() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora); }
+    private function ValueSandDust() : float { return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust); }
     
     private function CreateRaceHandler() : RaceHandler{
         

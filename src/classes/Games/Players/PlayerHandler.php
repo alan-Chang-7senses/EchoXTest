@@ -28,6 +28,10 @@ class PlayerHandler {
     public float $offsetTailwind = 0;
     public float $offsetHeadwind = 0;
     public float $offsetCrosswind = 0;
+    
+    public float $offsetSunny = 0;
+    public float $offsetAurora = 0;
+    public float $offsetSandDust = 0;
 
     private array $skillIDs = [];
 
@@ -64,9 +68,9 @@ class PlayerHandler {
      */
     public function GetClimateValue(int $weather) : float{
         return match ($weather) {
-            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny),
-            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora),
-            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust),
+            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny) + $this->offsetSunny,
+            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora) + $this->offsetAurora,
+            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust) + $this->offsetSandDust,
             default => 0,
         };
     }
