@@ -3,11 +3,10 @@
 namespace Games\Races;
 
 use Consts\Globals;
-use Games\Consts\RaceValue;
+use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
 use stdClass;
-use Games\Consts\SkillValue;
 /**
  * Description of RacePlayerEffectHandler
  *
@@ -61,6 +60,7 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptFlat => $playerHandler->offsetFlat += $value,
                 SkillValue::EffectAdaptUpslope => $playerHandler->offsetUpslope += $value,
                 SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
+                SkillValue::EffectAdaptSun => $playerHandler->offsetSun += $value,
             };
         }
         

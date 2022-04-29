@@ -2,7 +2,6 @@
 
 namespace Games\Players;
 
-use Games\Consts\PlayerValue;
 use Games\Consts\SceneValue;
 use Games\Exceptions\PlayerException;
 use Games\Players\Holders\PlayerInfoHolder;
@@ -36,6 +35,8 @@ class PlayerHandler {
     public float $offsetFlat = 0;
     public float $offsetUpslope = 0;
     public float $offsetDownslope = 0;
+    
+    public float $offsetSun = 0;
 
     private array $skillIDs = [];
 
@@ -85,11 +86,7 @@ class PlayerHandler {
      * @return float
      */
     public function GetSunValue(int $lighting) : float{
-        return match ($this->info->sun) {
-            SceneValue::SunNone => PlayerValue::SunNone,
-            $lighting => PlayerValue::SunSame,
-            default => PlayerValue::SunDiff,
-        };
+        return PlayerUtility::SunValueByLighting($this->info->sun, $lighting) + $this->offsetSun;
     }
 
     /**

@@ -78,7 +78,6 @@ class RaceValue {
         SkillValue::EffectAdaptFlat,
         SkillValue::EffectAdaptUpslope,
         SkillValue::EffectAdaptDownslope,
-        SkillValue::EffectAdaptSunshine,
-        SkillValue::EffectAdaptBacklight,
+        SkillValue::EffectAdaptSun,
     ];
 }

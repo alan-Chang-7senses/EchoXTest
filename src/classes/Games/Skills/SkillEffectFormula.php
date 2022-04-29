@@ -2,6 +2,7 @@
 
 namespace Games\Skills;
 
+use Consts\Sessions;
 use Games\Consts\SkillValue;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\PlayerHandler;
@@ -10,6 +11,7 @@ use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
+use Games\Users\UserHandler;
 use stdClass;
 /**
  * Description of SkillEffectFormula
@@ -20,7 +22,7 @@ class SkillEffectFormula {
     
     const OperandAll = [
         'CraterLake', 'Crosswind', 'Downslope', 'Headwind', 'SandDust', 'Tailwind', 'Upslope', 'Volcano', 'Aurora', 'Sunny', 'Dune', 'Flat',
-        'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'
+        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S'
     ];
 
     private SkillHandler $skillHandler;
@@ -103,6 +105,15 @@ class SkillEffectFormula {
     private function ValueFloat() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->flat); }
     private function ValueUpslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->upslope); }
     private function ValueDownslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->downslope); }
+    
+    private function ValueSun() : float{
+        
+        $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        $sceneHandler = new SceneHandler($userHandler->GetInfo()->scene);
+        $climate = $sceneHandler->GetClimate();
+        
+        return PlayerUtility::SunValueByLighting($this->playerInfo->sun, $climate->lighting);
+    }
     
     private function CreateRaceHandler() : RaceHandler{
         

@@ -37,8 +37,7 @@ class SkillValue {
     const EffectAdaptFlat = 151;
     const EffectAdaptUpslope = 152;
     const EffectAdaptDownslope = 153;
-    const EffectAdaptSunshine = 161;
-    const EffectAdaptBacklight = 162;
+    const EffectAdaptSun = 161;
     
     const EffectHP = 201;
     const EffectEnergyAll = 211;
