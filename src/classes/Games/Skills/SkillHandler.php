@@ -64,7 +64,7 @@ class SkillHandler {
                 'typeValue' => $info->typeValue,
             ];
             
-            if($this->playerHandler) $maxEffect['formulaValue'] = $handler->GetFormulaResult();
+            if($this->playerHandler) $maxEffect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
             
             $this->maxEffects[] = $maxEffect;
         }

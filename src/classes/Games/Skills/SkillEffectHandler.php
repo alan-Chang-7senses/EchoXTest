@@ -32,7 +32,7 @@ class SkillEffectHandler {
     
     public function GetFormulaResult(SkillHandler $skill, PlayerHandler $player, RacePlayerHandler|null $racePlayer) : float{
         
-        $formala = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
-        return $formala->Process();
+        $formula = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
+        return $formula->Process();
     }
 }
