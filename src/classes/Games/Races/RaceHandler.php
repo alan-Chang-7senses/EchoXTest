@@ -5,13 +5,16 @@ namespace Games\Races;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePool;
 use Games\Races\Holders\RaceInfoHolder;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
+use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
+use Generators\ConfigGenerator;
 use Helpers\LogHelper;
 use stdClass;
 /**
@@ -189,6 +192,42 @@ class RaceHandler {
         $climate = $this->sceneHandler->GetClimate();
         $player = $this->playerHandler->GetInfo();
         return 0.01 * ( 100 / $player->intelligent + 100 / $this->playerHandler->GetEnvValue($scene->env) + 100 / $this->playerHandler->GetClimateValue($climate->weather) + 100 / $this->playerHandler->GetSunValue($climate->lighting));
+    }
+    
+    /**
+     * 是否發動滿星效果
+     * @param SkillHandler $skill
+     * @return bool
+     */
+    public function LaunchMaxEffect(SkillHandler $skill) : bool{
+        
+        $config = ConfigGenerator::Instance();
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        $skillInfo = $skill->GetInfo();
+        
+        return match ($skillInfo->maxCondition){
+            SkillValue::MaxConditionNone => true,
+            SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionTop => $racePlayerInfo->ranking <= $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
+//            SkillValue::MaxConditionOffside => true, //無相關欄位可判斷
+//            SkillValue::MaxConditionHit => true, //無相關欄位可判斷
+            SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
+            SkillValue::MaxConditionCurved => $racePlayerInfo->trackShape == SceneValue::Curved,
+            SkillValue::MaxConditionFlat => $racePlayerInfo->trackType == SceneValue::Flat,
+            SkillValue::MaxConditionUpslope => $racePlayerInfo->trackType == SceneValue::Upslope,
+            SkillValue::MaxConditionDownslope => $racePlayerInfo->trackType == SceneValue::Downslope,
+            SkillValue::MaxConditionTailwind => $this->PlayerWindDirection() == SceneValue::Tailwind,
+            SkillValue::MaxConditionHeadwind => $this->PlayerWindDirection() == SceneValue::Headwind,
+            SkillValue::MaxConditionCrosswind => $this->PlayerWindDirection() == SceneValue::Crosswind,
+            SkillValue::MaxConditionSunny => $this->sceneHandler->GetClimate()->weather == SceneValue::Sunny,
+            SkillValue::MaxConditionAurora => $this->sceneHandler->GetClimate()->weather == SceneValue::Aurora,
+            SkillValue::MaxConditionSandDust => $this->sceneHandler->GetClimate()->weather == SceneValue::SandDust,
+            SkillValue::MaxConditionDune => $this->sceneHandler->GetInfo()->env == SceneValue::Dune,
+            SkillValue::MaxConditionCraterLake => $this->sceneHandler->GetInfo()->env == SceneValue::CraterLake,
+            SkillValue::MaxConditionVolcano => $this->sceneHandler->GetInfo()->env == SceneValue::Volcano,
+            default => false
+        };
     }
     
     /**

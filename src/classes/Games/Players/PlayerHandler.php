@@ -3,6 +3,7 @@
 namespace Games\Players;
 
 use Games\Consts\SceneValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
@@ -38,6 +39,7 @@ class PlayerHandler {
     
     public float $offsetSun = 0;
 
+    private array $skills = [];
     private array $skillIDs = [];
 
     public function __construct(int|string $id) {
@@ -45,7 +47,10 @@ class PlayerHandler {
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
         $this->info = $info;
-        foreach($this->info->skills as $skill) $this->skillIDs[] = $skill->id;
+        foreach($this->info->skills as $skill){
+            $this->skills[$skill->id] = $skill;
+            $this->skillIDs[] = $skill->id;
+        }
     }
     
     public function GetInfo() : PlayerInfoHolder|stdClass{
@@ -119,5 +124,10 @@ class PlayerHandler {
     
     public function HasSkill(int $id) : bool{
         return in_array($id, $this->skillIDs);
+    }
+    
+    public function SkillLevel(int $id) : int{
+        if(!isset($this->skills[$id])) return SkillValue::LevelMin;
+        return $this->skills[$id]->level;
     }
 }

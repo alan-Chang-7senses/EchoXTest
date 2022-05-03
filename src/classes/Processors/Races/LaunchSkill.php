@@ -5,6 +5,7 @@ namespace Processors\Races;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
@@ -61,8 +62,27 @@ class LaunchSkill extends BaseRace{
             ];
         }
         
-        $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerID);
-        $racePlayerEffectHandler->AddAll($binds);
+        $raceHandler->SetPlayer($playerHandler);
+        $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
+        
+        if($playerHandler->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
+            
+            $maxEffects = $skillHandler->GetMaxEffects();
+            foreach($maxEffects as $effect){
+
+                if($effect['target'] != SkillValue::TargetSelf) continue;
+
+                $binds[] = [
+                    'RacePlayerID' => $racePlayerID,
+                    'EffectType' => $effect['type'],
+                    'EffectValue' => $effect['formulaValue'],
+                    'StartTime' => $currentTime,
+                    'EndTime' => $endTime,
+                ];
+            }
+        }
+        
+        if(!empty($binds)) (new RacePlayerEffectHandler($racePlayerID))->AddAll($binds);
         
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         
@@ -71,9 +91,6 @@ class LaunchSkill extends BaseRace{
             'CreateTime' => $currentTime,
             'SkillID' => $skillID,
         ]);
-        
-        $raceHandler->SetPlayer($playerHandler);
-        $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
         
         $result = new ResultData(ErrorCode::Success);
         $result->valueS = $raceHandler->ValueS();

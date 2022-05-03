@@ -17,6 +17,9 @@ class SkillValue {
     
     const NotInSlot = 0;
     
+    const LevelMin = 1;
+    const LevelMax = 5;
+    
     const EffectH = 101;
     const EffectS = 102;
     const EffectSPD = 111;
@@ -52,4 +55,32 @@ class SkillValue {
     const EffectClimateSunny = 504;
     const EffectClimateAurora = 505;
     const EffectClimateSandDust = 506;
+    
+    const TargetSelf = 0;
+    const TargetNext = 1;
+    const TargetLast = 2;
+    const TargetPrevious = 3;
+    const TargetFirst = 4;
+    const TargetOthers = 5;
+    
+    const MaxConditionNone = 0;
+    const MaxConditionRank = 1;
+    const MaxConditionTop = 2;
+    const MaxConditionBotton = 3;
+    const MaxConditionOffside = 4;
+    const MaxConditionHit = 5;
+    const MaxConditionStraight = 11;
+    const MaxConditionCurved = 12;
+    const MaxConditionFlat = 21;
+    const MaxConditionUpslope = 22;
+    const MaxConditionDownslope = 23;
+    const MaxConditionTailwind = 31;
+    const MaxConditionHeadwind = 32;
+    const MaxConditionCrosswind = 33;
+    const MaxConditionSunny = 41;
+    const MaxConditionAurora = 42;
+    const MaxConditionSandDust = 43;
+    const MaxConditionDune = 51;
+    const MaxConditionCraterLake = 52;
+    const MaxConditionVolcano = 53;
 }
