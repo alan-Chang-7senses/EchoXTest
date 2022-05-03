@@ -40,9 +40,9 @@ class SkillEffectFormula {
         $this->racePlayerHandler = $racePlayer;
     }
 
-    public function Process() : float|null{
+    public function Process() : float{
         
-        if($this->formula === null) return null;
+        if($this->formula === null) return 0;
         
         $matches = [];
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
