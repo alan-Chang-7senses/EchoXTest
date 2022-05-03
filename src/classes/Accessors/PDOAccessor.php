@@ -81,7 +81,7 @@ class PDOAccessor {
             $names = [];
             foreach($rows[$i] as $key => $value){
                 
-                $name = $key.$i;
+                $name = $key.'_'.$i;
                 $names[] = ':'.$name;
                 $bind[$name] = $value;
             }
