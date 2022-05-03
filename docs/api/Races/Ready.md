@@ -130,7 +130,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
 | target | int | [作用對象](../codes/skill.md#target) |
-| typeValue | int | [滿星效果類型值](../codes/skill.md#maxEffectType) |
 
 ### Example
 
@@ -184,8 +183,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -211,8 +209,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 2,
-	                            "target": 0,
-	                            "typeValue": 1
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -238,8 +235,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 12,
-	                            "target": 0,
-	                            "typeValue": 1
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -265,8 +261,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -292,8 +287,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -319,8 +313,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 10,
-	                            "target": 0,
-	                            "typeValue": 1
+	                            "target": 0
 	                        }
 	                    ]
 	                }
@@ -362,8 +355,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -389,8 +381,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 12,
-	                            "target": 0,
-	                            "typeValue": 1
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -416,8 +407,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -443,8 +433,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 402,
-	                            "target": 0,
-	                            "typeValue": 0
+	                            "target": 0
 	                        }
 	                    ]
 	                },
@@ -470,8 +459,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    "maxEffects": [
 	                        {
 	                            "type": 10,
-	                            "target": 0,
-	                            "typeValue": 1
+	                            "target": 0
 	                        }
 	                    ]
 	                }
