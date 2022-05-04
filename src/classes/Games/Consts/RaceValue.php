@@ -10,6 +10,9 @@ class RaceValue {
     
     const NotInRace = 0;
     
+    const LaunchMaxDisabled = 0;
+    const LaunchMaxEnabled = 1;
+    
     const StatusInit = 0;
     const StatusUpdate = 1;
     const StatusReach = 2;

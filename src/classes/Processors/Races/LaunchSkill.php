@@ -15,6 +15,7 @@ use Games\Races\RacePlayerHandler;
 use Games\Races\RacePlayerSkillHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
+use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 /**
@@ -27,76 +28,141 @@ class LaunchSkill extends BaseRace{
     public function Process(): ResultData {
         
         $skillID = InputHelper::post('id');
+        $launchMax = (int)InputHelper::post('launchMax');
         
-        $playerHandler = new PlayerHandler($this->userInfo->player);
-        $playerInfo = $playerHandler->GetInfo();
-        if(!$playerHandler->HasSkill($skillID)) throw new PlayerException(PlayerException::NoSuchSkill, ['[player]' => $playerInfo->id, '[skillID]' => $skillID]);
+        $playerHandlerSelf = new PlayerHandler($this->userInfo->player);
+        $playerInfo = $playerHandlerSelf->GetInfo();
+        if(!$playerHandlerSelf->HasSkill($skillID)) throw new PlayerException(PlayerException::NoSuchSkill, ['[player]' => $playerInfo->id, '[skillID]' => $skillID]);
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
         
-        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
-        $racePlayerHandler = new RacePlayerHandler($racePlayerID);
+        $racePlayerIDSelf = $raceInfo->racePlayers->{$this->userInfo->player};
+        $racePlayerHandlerSelf = new RacePlayerHandler($racePlayerIDSelf);
         
         $skillHandler = new SkillHandler($skillID);
         $skillInfo = $skillHandler->GetInfo();
-        if(!$racePlayerHandler->EnoughEnergy($skillInfo->energy)) throw new RaceException(RaceException::EnergyNotEnough);
+        if(!$racePlayerHandlerSelf->EnoughEnergy($skillInfo->energy)) throw new RaceException(RaceException::EnergyNotEnough);
         
-        $skillHandler->playerHandler = $playerHandler;
-        $skillHandler->racePlayerHandler = $racePlayerHandler;
-        
-        $binds = [];
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $endTime = $currentTime + $skillInfo->duration;
+        
+        $skillHandler->playerHandler = $playerHandlerSelf;
+        $skillHandler->racePlayerHandler = $racePlayerHandlerSelf;
         $effects = $skillHandler->GetEffects();
+        
+        $selfBinds = [];
         foreach($effects as $effect){
 
-            if(!in_array($effect['type'], RaceValue::PlayerEffectTypes)) continue;
-            
-            $binds[] = [
-                'RacePlayerID' => $racePlayerID,
-                'EffectType' => $effect['type'],
-                'EffectValue' => $effect['formulaValue'],
-                'StartTime' => $currentTime,
-                'EndTime' => $endTime,
-            ];
-        }
-        
-        $raceHandler->SetPlayer($playerHandler);
-        $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
-        
-        if($playerHandler->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
-            
-            $maxEffects = $skillHandler->GetMaxEffects();
-            foreach($maxEffects as $effect){
-
-                if($effect['target'] != SkillValue::TargetSelf) continue;
-
-                $binds[] = [
-                    'RacePlayerID' => $racePlayerID,
-                    'EffectType' => $effect['type'],
-                    'EffectValue' => $effect['formulaValue'],
-                    'StartTime' => $currentTime,
-                    'EndTime' => $endTime,
-                ];
+            if(in_array($effect['type'], RaceValue::PlayerEffectTypes)){
+                
+                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $effect['type'], $effect['formulaValue'], $currentTime, $endTime);
             }
         }
         
-        if(!empty($binds)) (new RacePlayerEffectHandler($racePlayerID))->AddAll($binds);
+        $raceHandler->SetPlayer($playerHandlerSelf);
+        $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
         
-        $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
+        $otherBinds = [];
+        $racePlayerHandlerOthers = [];
+        $launchMaxResult = RaceValue::LaunchMaxDisabled;
+        if($launchMax == RaceValue::LaunchMaxEnabled && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
+            
+            $rankingSelf = $racePlayerHandlerSelf->GetInfo()->ranking;
+            foreach($raceInfo->racePlayers as $racePlayerID){
+
+                if($racePlayerID == $racePlayerIDSelf) continue;
+
+                $racePlayerHandler = new RacePlayerHandler($racePlayerID);
+                $racePlayerInfo = $racePlayerHandler->GetInfo();
+
+                match($racePlayerInfo->ranking){
+                    $rankingSelf + 1 => $racePlayerHandlers[SkillValue::TargetNext] = $racePlayerHandler,
+                    ConfigGenerator::Instance()->AmountRacePlayerMax => $racePlayerHandlers[SkillValue::TargetLast] = $racePlayerHandler,
+                    $rankingSelf - 1 => $racePlayerHandlers[SkillValue::TargetPrevious] = $racePlayerHandler,
+                    1 => $racePlayerHandlers[SkillValue::TargetFirst] = $racePlayerHandler,
+                    default => null
+                };
+
+                $racePlayerHandlers[SkillValue::TargetOthers][] = $racePlayerHandler;
+            }
+            
+            $maxEffects = $skillHandler->GetMaxEffects();
+            foreach($maxEffects as $effect){
+                
+                $target = $effect['target'];
+                $type = $effect['type'];
+                $value = $effect['formulaValue'];
+                
+                if($target == SkillValue::TargetSelf){
+                    
+                    $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $endTime);
+                
+                }elseif($target == SkillValue::TargetOthers){
+                    
+                    foreach ($racePlayerHandlers[SkillValue::TargetOthers] as $handler) {
+                        $info = $handler->GetInfo();
+                        $otherBinds[$info->id][] = $this->bindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
+                        $racePlayerHandlerOthers[$info->player] = $handler;
+                    }
+                    
+                }elseif(isset($racePlayerHandlers[$target])){
+                    
+                    $handler = $racePlayerHandlers[$target];
+                    $info = $handler->GetInfo();
+                    $otherBinds[$info->id][] = $this->bindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
+                    $racePlayerHandlerOthers[$info->player] = $handler;
+                }
+            }
+            
+            $launchMaxResult = RaceValue::LaunchMaxEnabled;
+        }
         
-        (new RacePlayerSkillHandler($racePlayerID))->Add([
-            'RacePlayerID' => $racePlayerID,
+        if(!empty($selfBinds)) (new RacePlayerEffectHandler($racePlayerIDSelf))->AddAll($selfBinds);
+        foreach($otherBinds as $racePlayerID => $binds) (new RacePlayerEffectHandler($racePlayerID))->AddAll($binds);
+        
+        (new RacePlayerSkillHandler($racePlayerIDSelf))->Add([
+            'RacePlayerID' => $racePlayerIDSelf,
             'CreateTime' => $currentTime,
             'SkillID' => $skillID,
+            'LaunchMax' => $launchMax,
+            'Result' => $launchMaxResult
         ]);
         
+        $playerHandlerSelf = RacePlayerEffectHandler::EffectPlayer($playerHandlerSelf, $racePlayerHandlerSelf);
+        $raceHandler->SetPlayer($playerHandlerSelf);
+        $self = [
+            'valueS' => $raceHandler->ValueS(),
+            'valueH' => $raceHandler->ValueH(),
+        ];
+        
+        $others = [];
+        foreach($racePlayerHandlerOthers as $playerID => $racePlayerHandler){
+            $playerHandler = new PlayerHandler($playerID);
+            $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
+            $raceHandler->SetPlayer($playerHandler);
+            $others[] = [
+                'valueS' => $raceHandler->ValueS(),
+                'valueH' => $raceHandler->ValueH(),
+            ];
+        }
+        
         $result = new ResultData(ErrorCode::Success);
-        $result->valueS = $raceHandler->ValueS();
-        $result->valueH = $raceHandler->ValueH();
-        $result->info = $playerInfo;
+        $result->self = $self;
+        $result->others = $others;
+        $result->launchMax = $launchMax;
+        $result->launchMaxResult = $launchMaxResult;
         
         return $result;
+    }
+    
+    private function bindRacePlayerEffect(int $racePlayerID, int $type, float $value, float $start, float $end) : array{
+        return [
+            'RacePlayerID' => $racePlayerID,
+            'EffectType' => $type,
+            'EffectValue' => $value,
+            'StartTime' => $start,
+            'EndTime' => $end,
+        ];
     }
 }
