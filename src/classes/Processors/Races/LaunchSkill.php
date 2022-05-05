@@ -29,6 +29,7 @@ class LaunchSkill extends BaseRace{
         
         $skillID = InputHelper::post('id');
         $launchMax = (int)InputHelper::post('launchMax');
+        if($launchMax != RaceValue::LaunchMaxYes) $launchMax = RaceValue::LaunchMaxNot;
         
         $playerHandlerSelf = new PlayerHandler($this->userInfo->player);
         $playerInfo = $playerHandlerSelf->GetInfo();
@@ -65,8 +66,8 @@ class LaunchSkill extends BaseRace{
         
         $otherBinds = [];
         $racePlayerHandlerOthers = [];
-        $launchMaxResult = RaceValue::LaunchMaxDisabled;
-        if($launchMax == RaceValue::LaunchMaxEnabled && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
+        $launchMaxResult = RaceValue::LaunchMaxFail;
+        if($launchMax == RaceValue::LaunchMaxYes && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
             
             $rankingSelf = $racePlayerHandlerSelf->GetInfo()->ranking;
             foreach($raceInfo->racePlayers as $racePlayerID){
@@ -115,7 +116,7 @@ class LaunchSkill extends BaseRace{
                 }
             }
             
-            $launchMaxResult = RaceValue::LaunchMaxEnabled;
+            $launchMaxResult = RaceValue::LaunchMaxSuccess;
         }
         
         if(!empty($selfBinds)) (new RacePlayerEffectHandler($racePlayerIDSelf))->AddAll($selfBinds);
