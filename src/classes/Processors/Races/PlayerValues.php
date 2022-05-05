@@ -25,6 +25,7 @@ class PlayerValues extends BaseRace{
         'trackShape',
         'rhythm',
         'trackNumber',
+        'ranking',
     ];
     
     public function Process(): ResultData {
@@ -43,6 +44,11 @@ class PlayerValues extends BaseRace{
         $values = json_decode(InputHelper::post('values'));
         if($values === null) $values = new stdClass();
         DataGenerator::ValidProperties($values, $this->validValues);
+        
+        if(isset($values->ranking)){
+            $offside = $racePlayerInfo->ranking - $values->ranking;
+            if($offside > 0) $values->offside = $racePlayerInfo->offside + $offside;
+        }
         
         $values->hp = $hp * RaceValue::DivisorHP;
         $values->status = RaceValue::StatusUpdate;
