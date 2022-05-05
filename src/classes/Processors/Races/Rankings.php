@@ -35,18 +35,13 @@ class Rankings extends BaseRace{
             $rankings[$player->id] = $player->ranking;
         }
         
-        $currentTime = microtime(true);
         foreach ($raceInfo->racePlayers as $racePlayerID) {
 
             $racePlayerHandler = new RacePlayerHandler($racePlayerID);
             $racePlayerInfo = $racePlayerHandler->GetInfo();
             if($racePlayerInfo->status == RaceValue::StatusReach) continue;
             
-            $racePlayerHandler->SaveData([
-                'Ranking' => $rankings[$racePlayerInfo->player],
-                'Status' => RaceValue::StatusUpdate,
-                'UpdateTime' => $currentTime,
-            ]);
+            $racePlayerHandler->SaveData(['Ranking' => $rankings[$racePlayerInfo->player]]);
         }
         
         $result = new ResultData(ErrorCode::Success);
