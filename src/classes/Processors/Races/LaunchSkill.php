@@ -116,6 +116,14 @@ class LaunchSkill extends BaseRace{
                 }
             }
             
+            if($skillInfo->maxCondition == SkillValue::MaxConditionOffside){
+                $racePlayerHandlerSelf->SaveData([
+                    'status' => RaceValue::StatusUpdate,
+                    'updateTime' => $currentTime,
+                    'offside' => 0
+                ]);
+            }
+            
             $launchMaxResult = RaceValue::LaunchMaxSuccess;
         }
         
