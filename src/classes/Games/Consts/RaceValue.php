@@ -85,4 +85,13 @@ class RaceValue {
         SkillValue::EffectAdaptDownslope,
         SkillValue::EffectAdaptSun,
     ];
+    
+    const PlayerEffectOnceType = [
+        SkillValue::EffectHP,
+        SkillValue::EffectEnergyAll,
+        SkillValue::EffectEnergyRed,
+        SkillValue::EffectEnergyYellow,
+        SkillValue::EffectEnergyBlue,
+        SkillValue::EffectEnergyGreen,
+    ];
 }

@@ -46,7 +46,7 @@ class LaunchSkill extends BaseRace{
         if(!$racePlayerHandlerSelf->EnoughEnergy($skillInfo->energy)) throw new RaceException(RaceException::EnergyNotEnough);
         
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
-        $endTime = $currentTime + $skillInfo->duration;
+        $expireTime = $currentTime + $skillInfo->duration;
         
         $skillHandler->playerHandler = $playerHandlerSelf;
         $skillHandler->racePlayerHandler = $racePlayerHandlerSelf;
@@ -57,7 +57,7 @@ class LaunchSkill extends BaseRace{
 
             if(in_array($effect['type'], RaceValue::PlayerEffectTypes)){
                 
-                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $effect['type'], $effect['formulaValue'], $currentTime, $endTime);
+                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $effect['type'], $effect['formulaValue'], $currentTime, $expireTime);
             }
         }
         
@@ -94,6 +94,8 @@ class LaunchSkill extends BaseRace{
                 $target = $effect['target'];
                 $type = $effect['type'];
                 $value = $effect['formulaValue'];
+                
+                $endTime = in_array($type, RaceValue::PlayerEffectOnceType) ? $currentTime : $expireTime;
                 
                 if($target == SkillValue::TargetSelf){
                     
