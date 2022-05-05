@@ -37,6 +37,10 @@ class RacePlayerHolder extends stdClass{
     public int $trackNumber;
     /** @var int 剩餘體力 */
     public int $hp;
+    /** @var int 超越 N 名（累計） */
+    public int $offside;
+    /** @var int 被妨礙次數（成功妨礙） */
+    public int $hit;
     public float $createTime;
     public float $updateTime;
     public float $finishTime;

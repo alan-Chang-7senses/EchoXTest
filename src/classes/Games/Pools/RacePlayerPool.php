@@ -42,6 +42,8 @@ class RacePlayerPool extends PoolAccessor{
         $holder->ranking = $row->Ranking;
         $holder->trackNumber = $row->TrackNumber;
         $holder->hp = $row->HP;
+        $holder->offside = $row->Offside;
+        $holder->hit = $row->Hit;
         $holder->createTime = $row->CreateTime;
         $holder->updateTime = $row->UpdateTime;
         $holder->finishTime = $row->FinishTime;

@@ -570,6 +570,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
   `HP` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
+  `Offside` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '超越 n 名',
+  `Hit` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '被妨礙次數',
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
