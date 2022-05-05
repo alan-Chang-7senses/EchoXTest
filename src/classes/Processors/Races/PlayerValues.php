@@ -51,8 +51,6 @@ class PlayerValues extends BaseRace{
         }
         
         $values->hp = $hp * RaceValue::DivisorHP;
-        $values->status = RaceValue::StatusUpdate;
-        $values->updateTime = microtime(true);
         $raceHandler->SaveRacePlayer((array)$values);
         
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));

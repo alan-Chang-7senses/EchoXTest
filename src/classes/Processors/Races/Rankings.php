@@ -41,7 +41,7 @@ class Rankings extends BaseRace{
             $racePlayerInfo = $racePlayerHandler->GetInfo();
             if($racePlayerInfo->status == RaceValue::StatusReach) continue;
             
-            $racePlayerHandler->SaveData(['Ranking' => $rankings[$racePlayerInfo->player]]);
+            $racePlayerHandler->SaveData(['ranking' => $rankings[$racePlayerInfo->player]]);
         }
         
         $result = new ResultData(ErrorCode::Success);
