@@ -116,13 +116,7 @@ class LaunchSkill extends BaseRace{
                 }
             }
             
-            if($skillInfo->maxCondition == SkillValue::MaxConditionOffside){
-                $racePlayerHandlerSelf->SaveData([
-                    'status' => RaceValue::StatusUpdate,
-                    'updateTime' => $currentTime,
-                    'offside' => 0
-                ]);
-            }
+            if($skillInfo->maxCondition == SkillValue::MaxConditionOffside) $racePlayerHandlerSelf->SaveData(['offside' => 0]);
             
             $launchMaxResult = RaceValue::LaunchMaxSuccess;
         }
@@ -147,6 +141,7 @@ class LaunchSkill extends BaseRace{
         
         $others = [];
         foreach($racePlayerHandlerOthers as $playerID => $racePlayerHandler){
+            
             $playerHandler = new PlayerHandler($playerID);
             $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
             $raceHandler->SetPlayer($playerHandler);
@@ -154,6 +149,8 @@ class LaunchSkill extends BaseRace{
                 'valueS' => $raceHandler->ValueS(),
                 'valueH' => $raceHandler->ValueH(),
             ];
+            
+            $racePlayerHandler->SaveData(['hit' => $racePlayerHandler->GetInfo()->hit + 1]);
         }
         
         $result = new ResultData(ErrorCode::Success);

@@ -6,6 +6,8 @@ use Accessors\PoolAccessor;
 use Games\Accessors\RaceAccessor;
 use Games\Races\Holders\RacePlayerHolder;
 use stdClass;
+use Consts\Globals;
+use Games\Consts\RaceValue;
 /**
  * Description of RacePlayerPool
  *
@@ -53,6 +55,8 @@ class RacePlayerPool extends PoolAccessor{
     
     protected function SaveData(stdClass $data, array $values) : stdClass{
         
+        if(!isset($values['status'])) $values['status'] = RaceValue::StatusUpdate;
+        $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
         $bind = [];
         foreach($values as $key => $value){
             $bind[ucfirst($key)] = $value;
