@@ -108,6 +108,12 @@ class LaunchSkill extends BaseRace{
                     continue;
                 }
                 
+                if(isset(RaceValue::WindDirectionEffect[$type])){
+                    $raceInfo = $raceHandler->SaveData(['windDirection' => RaceValue::WindDirectionEffect[$type]]);
+                    $racePlayerHandlerOthers = $racePlayerhandlerAll;
+                    continue;
+                }
+                
                 $endTime = in_array($type, RaceValue::PlayerEffectOnceType) ? $currentTime : $expireTime;
                 
                 if($target == SkillValue::TargetSelf){
@@ -179,6 +185,7 @@ class LaunchSkill extends BaseRace{
         $result->launchMax = $launchMax;
         $result->launchMaxResult = $launchMaxResult;
         $result->weather = $raceInfo->weather;
+        $result->windDirection = $raceInfo->windDirection;
         $result->self = $self;
         $result->others = $others;
         

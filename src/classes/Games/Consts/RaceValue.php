@@ -100,4 +100,10 @@ class RaceValue {
         SkillValue::EffectWeatherAurora => SceneValue::Aurora,
         SkillValue::EffectWeatherSandDust => SceneValue::SandDust,
     ];
+    
+    const WindDirectionEffect = [
+        SkillValue::EffectWindTailwind => SceneValue::Tailwind,
+        SkillValue::EffectWindCrosswind => SceneValue::Crosswind,
+        SkillValue::EffectWindHeadwind => SceneValue::Headwind,
+    ];
 }
