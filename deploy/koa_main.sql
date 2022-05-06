@@ -597,7 +597,6 @@ CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色資料編號',
-  `Status` tinyint(3) NOT NULL DEFAULT 0 COMMENT '狀態',
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '觸發時間',
   `SkillID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '技能編號',
   `LaunchMax` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否發動滿星效果',
@@ -614,6 +613,7 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
+  `Weather` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '天氣',
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
   `RacePlayerIDs` text DEFAULT NULL COMMENT '競賽角色編號',
   PRIMARY KEY (`RaceID`)
