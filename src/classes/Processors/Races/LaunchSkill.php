@@ -74,12 +74,15 @@ class LaunchSkill extends BaseRace{
         $launchMaxResult = RaceValue::LaunchMaxFail;
         if($launchMax == RaceValue::LaunchMaxYes && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
             
-            foreach($raceInfo->racePlayers as $racePlayerID){
+            $racePlayerHandlers = [];
+            $racePlayerhandlerAll = [];
+            foreach($raceInfo->racePlayers as $playerID => $racePlayerID){
 
                 if($racePlayerID == $racePlayerIDSelf) continue;
 
                 $racePlayerHandler = new RacePlayerHandler($racePlayerID);
                 $racePlayerInfo = $racePlayerHandler->GetInfo();
+                $racePlayerhandlerAll[$playerID] = $racePlayerHandler;
 
                 match($racePlayerInfo->ranking){
                     $racePlayerInfoSelf->ranking + 1 => $racePlayerHandlers[SkillValue::TargetNext] = $racePlayerHandler,
@@ -98,6 +101,12 @@ class LaunchSkill extends BaseRace{
                 $target = $effect['target'];
                 $type = $effect['type'];
                 $value = $effect['formulaValue'];
+                
+                if(isset(RaceValue::WeatherEffect[$type])){
+                    $raceInfo = $raceHandler->SaveData(['weather' => RaceValue::WeatherEffect[$type]]);
+                    $racePlayerHandlerOthers = $racePlayerhandlerAll;
+                    continue;
+                }
                 
                 $endTime = in_array($type, RaceValue::PlayerEffectOnceType) ? $currentTime : $expireTime;
                 
@@ -167,10 +176,11 @@ class LaunchSkill extends BaseRace{
         }
         
         $result = new ResultData(ErrorCode::Success);
-        $result->self = $self;
-        $result->others = $others;
         $result->launchMax = $launchMax;
         $result->launchMaxResult = $launchMaxResult;
+        $result->weather = $raceInfo->weather;
+        $result->self = $self;
+        $result->others = $others;
         
         return $result;
     }

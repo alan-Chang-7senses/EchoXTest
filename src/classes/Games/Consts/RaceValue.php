@@ -94,4 +94,10 @@ class RaceValue {
         SkillValue::EffectEnergyBlue,
         SkillValue::EffectEnergyGreen,
     ];
+    
+    const WeatherEffect = [
+        SkillValue::EffectWeatherSunny => SceneValue::Sunny,
+        SkillValue::EffectWeatherAurora => SceneValue::Aurora,
+        SkillValue::EffectWeatherSandDust => SceneValue::SandDust,
+    ];
 }

@@ -57,9 +57,9 @@ class SkillValue {
     const EffectWindTailwind = 501;
     const EffectWindHeadwind = 502;
     const EffectWindCrosswind = 503;
-    const EffectClimateSunny = 504;
-    const EffectClimateAurora = 505;
-    const EffectClimateSandDust = 506;
+    const EffectWeatherSunny = 504;
+    const EffectWeatherAurora = 505;
+    const EffectWeatherSandDust = 506;
     
     const TargetSelf = 0;
     const TargetNext = 1;
