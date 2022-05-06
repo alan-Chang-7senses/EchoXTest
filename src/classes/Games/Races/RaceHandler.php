@@ -37,8 +37,9 @@ class RaceHandler {
         $this->ResetInfo();
     }
     
-    private function ResetInfo() : void{
+    private function ResetInfo() : RaceInfoHolder|stdClass{
         $this->info = $this->pool->{$this->id};
+        return $this->info;
     }
     
     public function SetPlayer(PlayerHandler $handler) : RacePlayerHandler{
@@ -50,10 +51,10 @@ class RaceHandler {
     public function SetSecne(SceneHandler $handler) : void{
         $this->sceneHandler = $handler;
     }
-
-    public function SaveRacePlayerIDs(array $ids) : void{
-        $this->pool->Save($this->info->id, 'RacePlayerIDs', $ids);
-        $this->ResetInfo();
+    
+    public function SaveData(array $bind) : RaceInfoHolder|stdClass{
+        $this->pool->Save($this->id, 'Data', $bind);
+        return $this->ResetInfo();
     }
     
     public function GetInfo() : RaceInfoHolder|stdClass{

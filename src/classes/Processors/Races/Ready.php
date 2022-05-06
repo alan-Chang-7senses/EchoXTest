@@ -128,7 +128,7 @@ class Ready extends BaseRace{
         }
         
         $raceHandler = new RaceHandler($raceID);
-        $raceHandler->SaveRacePlayerIDs($racePlayerIDs);
+        $raceHandler->SaveData(['racePlayers' => $racePlayerIDs]);
         
         $raceHandler->SetSecne($sceneHandler);
         $readyUserInfos = [];
