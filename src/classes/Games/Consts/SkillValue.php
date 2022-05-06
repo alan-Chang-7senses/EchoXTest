@@ -16,6 +16,7 @@ class SkillValue {
     const DivisorDuration = 100;
     
     const NotInSlot = 0;
+    const DurationForever = -1;
     
     const LevelMin = 1;
     const LevelMax = 5;

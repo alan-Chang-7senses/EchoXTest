@@ -10,6 +10,8 @@ class RaceValue {
     
     const NotInRace = 0;
     
+    const ForeverAdditiveSec = 1000000000;
+    
     const LaunchMaxNot = 0;
     const LaunchMaxYes = 1;
     const LaunchMaxFail = 0;
