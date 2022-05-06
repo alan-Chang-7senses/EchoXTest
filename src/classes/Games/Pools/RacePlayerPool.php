@@ -59,7 +59,7 @@ class RacePlayerPool extends PoolAccessor{
         $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
         $bind = [];
         foreach($values as $key => $value){
-            $bind[ucfirst($key)] = $value;
+            $bind[ucfirst($key)] = $key == 'energy' ? implode(',', $value) : $value;
             $data->$key = $value;
         }
         

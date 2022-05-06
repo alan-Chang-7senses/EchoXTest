@@ -40,6 +40,7 @@ class LaunchSkill extends BaseRace{
         
         $racePlayerIDSelf = $raceInfo->racePlayers->{$this->userInfo->player};
         $racePlayerHandlerSelf = new RacePlayerHandler($racePlayerIDSelf);
+        $racePlayerInfoSelf = $racePlayerHandlerSelf->GetInfo();
         
         $skillHandler = new SkillHandler($skillID);
         $skillInfo = $skillHandler->GetInfo();
@@ -55,9 +56,13 @@ class LaunchSkill extends BaseRace{
         $selfBinds = [];
         foreach($effects as $effect){
 
-            if(in_array($effect['type'], RaceValue::PlayerEffectTypes)){
-                
-                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $effect['type'], $effect['formulaValue'], $currentTime, $expireTime);
+            $type = $effect['type'];
+            $value = $effect['formulaValue'];
+            
+            if(in_array($type, RaceValue::PlayerEffectTypes)){
+                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $expireTime);
+            }elseif(in_array($type, RaceValue::PlayerEffectOnceType)){
+                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $currentTime);
             }
         }
         
@@ -69,7 +74,6 @@ class LaunchSkill extends BaseRace{
         $launchMaxResult = RaceValue::LaunchMaxFail;
         if($launchMax == RaceValue::LaunchMaxYes && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
             
-            $rankingSelf = $racePlayerHandlerSelf->GetInfo()->ranking;
             foreach($raceInfo->racePlayers as $racePlayerID){
 
                 if($racePlayerID == $racePlayerIDSelf) continue;
@@ -78,9 +82,9 @@ class LaunchSkill extends BaseRace{
                 $racePlayerInfo = $racePlayerHandler->GetInfo();
 
                 match($racePlayerInfo->ranking){
-                    $rankingSelf + 1 => $racePlayerHandlers[SkillValue::TargetNext] = $racePlayerHandler,
+                    $racePlayerInfoSelf->ranking + 1 => $racePlayerHandlers[SkillValue::TargetNext] = $racePlayerHandler,
                     ConfigGenerator::Instance()->AmountRacePlayerMax => $racePlayerHandlers[SkillValue::TargetLast] = $racePlayerHandler,
-                    $rankingSelf - 1 => $racePlayerHandlers[SkillValue::TargetPrevious] = $racePlayerHandler,
+                    $racePlayerInfoSelf->ranking - 1 => $racePlayerHandlers[SkillValue::TargetPrevious] = $racePlayerHandler,
                     1 => $racePlayerHandlers[SkillValue::TargetFirst] = $racePlayerHandler,
                     default => null
                 };
@@ -135,11 +139,14 @@ class LaunchSkill extends BaseRace{
             'Result' => $launchMaxResult
         ]);
         
+        $racePlayerInfoSelf = $racePlayerHandlerSelf->PayEnergy($skillInfo->energy);
         $playerHandlerSelf = RacePlayerEffectHandler::EffectPlayer($playerHandlerSelf, $racePlayerHandlerSelf);
         $raceHandler->SetPlayer($playerHandlerSelf);
         $self = [
             'valueS' => $raceHandler->ValueS(),
             'valueH' => $raceHandler->ValueH(),
+            'hp' => $racePlayerInfoSelf->hp / RaceValue::DivisorHP,
+            'energy' => $racePlayerInfoSelf->energy,
         ];
         
         $others = [];
@@ -148,9 +155,12 @@ class LaunchSkill extends BaseRace{
             $playerHandler = new PlayerHandler($playerID);
             $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
             $raceHandler->SetPlayer($playerHandler);
+            $racePlayerInfo = $racePlayerHandler->GetInfo();
             $others[] = [
                 'valueS' => $raceHandler->ValueS(),
                 'valueH' => $raceHandler->ValueH(),
+                'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
+                'energy' => $racePlayerInfo->energy,
             ];
             
             $racePlayerHandler->SaveData(['hit' => $racePlayerHandler->GetInfo()->hit + 1]);

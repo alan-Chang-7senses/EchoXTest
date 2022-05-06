@@ -7,6 +7,7 @@ use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
 use stdClass;
+use Games\Consts\RaceValue;
 /**
  * Description of RacePlayerEffectHandler
  *
@@ -33,8 +34,9 @@ class RacePlayerEffectHandler {
         
         $current = $GLOBALS[Globals::TIME_BEGIN];
         $playerInfo = $playerHandler->GetInfo();
+        $racePlayerInfo = $racePlayerHandler->GetInfo();
         
-        $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerHandler->GetInfo()->id);
+        $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerInfo->id);
         foreach($racePlayerEffectHandler->info->list as $playerEffect){
             
             if($current > $playerEffect->EndTime) continue;
@@ -61,10 +63,22 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptUpslope => $playerHandler->offsetUpslope += $value,
                 SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
                 SkillValue::EffectAdaptSun => $playerHandler->offsetSun += $value,
+                SkillValue::EffectHP => $racePlayerHandler->SaveData(['hp' => $racePlayerInfo->hp + $value * RaceValue::DivisorHP]),
+                SkillValue::EffectEnergyAll => $racePlayerHandler->SaveData(['energy' => array_map(function($val) use ($value) { return $val + $value; }, $racePlayerInfo->energy)]),
+                SkillValue::EffectEnergyRed => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
+                SkillValue::EffectEnergyYellow => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyYellow, $value),
+                SkillValue::EffectEnergyBlue => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyBlue, $value),
+                SkillValue::EffectEnergyGreen => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyGreen, $value),
                 default => null
             };
         }
         
         return $playerHandler;
+    }
+    
+    private function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
+        $energy = $racePlayerHandler->GetInfo()->energy;
+        $energy[$type] += $value;
+        $racePlayerHandler->SaveData(['energy' => $energy]);
     }
 }

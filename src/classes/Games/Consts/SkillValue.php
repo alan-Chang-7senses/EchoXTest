@@ -20,6 +20,11 @@ class SkillValue {
     const LevelMin = 1;
     const LevelMax = 5;
     
+    const EnergyRed = 0;
+    const EnergyYellow = 1;
+    const EnergyBlue = 2;
+    const EnergyGreen = 3;
+    
     const EffectH = 101;
     const EffectS = 102;
     const EffectSPD = 111;

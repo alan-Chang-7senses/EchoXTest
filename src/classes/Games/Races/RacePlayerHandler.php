@@ -22,17 +22,18 @@ class RacePlayerHandler {
         $this->ResetInfo();
     }
     
-    public function ResetInfo() : void{
+    private function ResetInfo() : RacePlayerHolder|stdClass{
         $this->info = $this->pool->{$this->id};
+        return $this->info;
     }
 
     public function GetInfo() : RacePlayerHolder|stdClass{
         return $this->info;
     }
     
-    public function SaveData(array $bind) : void{
+    public function SaveData(array $bind) : RacePlayerHolder|stdClass{
         $this->pool->Save($this->id, 'Data', $bind);
-        $this->ResetInfo();
+        return $this->ResetInfo();
     }
     
     public function Delete() : void{
@@ -45,5 +46,11 @@ class RacePlayerHandler {
             if($value < $energy[$key]) return false;
         }
         return true;
+    }
+    
+    public function PayEnergy(array $energy) : RacePlayerHolder|stdClass{
+        return $this->SaveData(['energy' => array_map(function($original, $pay){
+            return $original - $pay;
+        }, $this->info->energy, $energy)]);
     }
 }
