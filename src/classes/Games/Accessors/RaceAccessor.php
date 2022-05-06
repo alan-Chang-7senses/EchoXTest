@@ -59,10 +59,6 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Modify($bind);
     }
     
-    public function ModifyRacePlayerSkillBySerial(int $serial, array $bind) : bool{
-        return $this->MainAccessor()->FromTable('RacePlayerSkill')->WhereEqual('Serial', $serial)->Modify($bind);
-    }
-    
     public function FinishRaceByRaceID(int $id, int $status) : array{
         return $this->MainAccessor()->CallProcedure('RaceFinish', ['raceID' => $id, 'status' => $status, 'time' => microtime(true)]);
     }
