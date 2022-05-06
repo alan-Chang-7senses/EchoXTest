@@ -47,7 +47,7 @@ class LaunchSkill extends BaseRace{
         if(!$racePlayerHandlerSelf->EnoughEnergy($skillInfo->energy)) throw new RaceException(RaceException::EnergyNotEnough);
         
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
-        $expireTime = $currentTime + $skillInfo->duration;
+        $expireTime = $currentTime + $skillInfo->duration * $playerInfo->intelligent / RaceValue::DivisorSkillDuration;
         
         $skillHandler->playerHandler = $playerHandlerSelf;
         $skillHandler->racePlayerHandler = $racePlayerHandlerSelf;

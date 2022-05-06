@@ -26,6 +26,7 @@ class RaceValue {
     const EnergyTypeCount = 4;
     
     const DivisorHP = 100;
+    const DivisorSkillDuration = 75;
     
     const SunNone = 100;
     const SunSame = 120;
