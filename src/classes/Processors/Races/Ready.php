@@ -2,6 +2,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
@@ -65,8 +66,14 @@ class Ready extends BaseRace{
         $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
-        $currentTime = microtime(true);
-        $raceID = $raceAccessor->AddRace($sceneInfo->id, $currentTime, $climate->windDirection);
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        $raceID = $raceAccessor->AddRace([
+            'SceneID' => $sceneInfo->id,
+            'CreateTime' => $currentTime,
+            'UpdateTime' => $currentTime,
+            'Weather' => $climate->weather,
+            'WindDirection' => $climate->windDirection,
+        ]);
         
         $racePlayerIDs = [];
         $playerSkills = [];
