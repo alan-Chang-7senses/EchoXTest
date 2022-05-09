@@ -158,8 +158,8 @@ class LaunchSkill extends BaseRace{
         $playerHandlerSelf = RacePlayerEffectHandler::EffectPlayer($playerHandlerSelf, $racePlayerHandlerSelf);
         $raceHandler->SetPlayer($playerHandlerSelf);
         $self = [
-            'valueS' => $raceHandler->ValueS(),
-            'valueH' => $raceHandler->ValueH(),
+            'h' => $raceHandler->ValueH(),
+            's' => $raceHandler->ValueS(),
             'hp' => $racePlayerInfoSelf->hp / RaceValue::DivisorHP,
             'energy' => $racePlayerInfoSelf->energy,
         ];
@@ -172,8 +172,8 @@ class LaunchSkill extends BaseRace{
             $raceHandler->SetPlayer($playerHandler);
             $racePlayerInfo = $racePlayerHandler->GetInfo();
             $others[] = [
-                'valueS' => $raceHandler->ValueS(),
-                'valueH' => $raceHandler->ValueH(),
+                'h' => $raceHandler->ValueH(),
+                's' => $raceHandler->ValueS(),
                 'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
                 'energy' => $racePlayerInfo->energy,
             ];
