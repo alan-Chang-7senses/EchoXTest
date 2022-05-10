@@ -18,6 +18,8 @@
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
 	- 競賽：
+		- [機器人角色](Races/BotPlayer.md)。
+		- [釋放機器人角色](Races/BotPlayerRelease.md)。
 		- [開局](Races/Ready.md)。
 		- [角色數值](Races/PlayerValues.md)。
 		- [發動技能](Races/LaunchSkill.md)。
