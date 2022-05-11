@@ -937,6 +937,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `PlayerID` bigint(20) NOT NULL DEFAULT 0 COMMENT '角色編號',
   `RaceNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '參與比賽號碼',
   `Status` tinyint(3) NOT NULL DEFAULT 0 COMMENT '狀態',
+  `Position` varchar(50) DEFAULT NULL COMMENT '所在位置',
   `Direction` tinyint(3) NOT NULL DEFAULT 0 COMMENT '角色方向',
   `Energy` varchar(50) DEFAULT NULL COMMENT '能量 紅,黃,藍,綠',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
@@ -1028,10 +1029,10 @@ CREATE TABLE IF NOT EXISTS `Users` (
 -- 正在傾印表格  koa_main.Users 的資料：~48 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `Player`, `Scene`, `Race`, `CreateTime`, `UpdateTime`) VALUES
-	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, -38, 1, 0, 0, 1652180955),
-	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, -37, 1, 0, 0, 1652182081),
-	(-36, 1, 'ai0036', 'aiacc0036', 'pass0036', 1, 0, 0, 0, -36, 1, 0, 0, 1652183806),
-	(-35, 1, 'ai0035', 'aiacc0035', 'pass0035', 1, 0, 0, 0, -35, 1, 0, 0, 1652179348),
+	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, -38, 1, 0, 0, 0),
+	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, -37, 1, 0, 0, 0),
+	(-36, 1, 'ai0036', 'aiacc0036', 'pass0036', 1, 0, 0, 0, -36, 1, 0, 0, 0),
+	(-35, 1, 'ai0035', 'aiacc0035', 'pass0035', 1, 0, 0, 0, -35, 1, 0, 0, 0),
 	(-34, 1, 'ai0034', 'aiacc0034', 'pass0034', 1, 0, 0, 0, -34, 1, 0, 0, 0),
 	(-33, 1, 'ai0033', 'aiacc0033', 'pass0033', 1, 0, 0, 0, -33, 1, 0, 0, 0),
 	(-32, 1, 'ai0032', 'aiacc0032', 'pass0032', 1, 0, 0, 0, -32, 1, 0, 0, 0),
