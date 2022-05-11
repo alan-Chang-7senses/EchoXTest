@@ -22,6 +22,7 @@
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
 		- [開局](Races/Ready.md)。
 		- [角色數值](Races/PlayerValues.md)。
+		- [託管角色數值](Races/HostedPlayerValues.md)。
 		- [發動技能](Races/LaunchSkill.md)。
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
