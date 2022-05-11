@@ -3,6 +3,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
@@ -73,7 +74,7 @@ class OfflineRecovery extends BaseRace {
                 'user' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
                 'energy' => $racePlayerInfo->energy,
-                'hp' => $racePlayerInfo->hp,
+                'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
                 's' => $raceHandler->ValueS(),
                 'h' => $raceHandler->ValueH(),
                 'position' => $racePlayerInfo->position,
