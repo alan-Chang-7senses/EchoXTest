@@ -25,6 +25,7 @@ class PlayerValues extends BaseRace{
         'trackShape',
         'rhythm',
         'trackNumber',
+        'ranking',
     ];
     
     public function Process(): ResultData {
@@ -44,9 +45,12 @@ class PlayerValues extends BaseRace{
         if($values === null) $values = new stdClass();
         DataGenerator::ValidProperties($values, $this->validValues);
         
+        if(isset($values->ranking)){
+            $offside = $racePlayerInfo->ranking - $values->ranking;
+            if($offside > 0) $values->offside = $racePlayerInfo->offside + $offside;
+        }
+        
         $values->hp = $hp * RaceValue::DivisorHP;
-        $values->status = RaceValue::StatusUpdate;
-        $values->updateTime = microtime(true);
         $raceHandler->SaveRacePlayer((array)$values);
         
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));

@@ -4,6 +4,8 @@ namespace Games\Players;
 
 use Games\Consts\AdaptablilityLevel;
 use Games\Consts\NFTDNA;
+use Games\Consts\PlayerValue;
+use Games\Consts\SceneValue;
 /**
  * Description of PlayerUtility
  *
@@ -28,6 +30,14 @@ class PlayerUtility {
                 $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::ValueS,
                 default => 0,
             },
+        };
+    }
+    
+    public static function SunValueByLighting(int $sunAdapt, int $lighting) : float{
+        return match ($sunAdapt) {
+            SceneValue::SunNone => PlayerValue::SunNone,
+            $lighting => PlayerValue::SunSame,
+            default => PlayerValue::SunDiff,
         };
     }
 }

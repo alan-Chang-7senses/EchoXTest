@@ -2,8 +2,8 @@
 
 namespace Games\Players;
 
-use Games\Consts\PlayerValue;
 use Games\Consts\SceneValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
@@ -21,6 +21,25 @@ class PlayerHandler {
     public float $offsetS = 0;
     public float $offsetH = 0;
     
+    public float $offsetDune = 0;
+    public float $offsetCraterLake = 0;
+    public float $offsetVolcano = 0;
+    
+    public float $offsetTailwind = 0;
+    public float $offsetHeadwind = 0;
+    public float $offsetCrosswind = 0;
+    
+    public float $offsetSunny = 0;
+    public float $offsetAurora = 0;
+    public float $offsetSandDust = 0;
+    
+    public float $offsetFlat = 0;
+    public float $offsetUpslope = 0;
+    public float $offsetDownslope = 0;
+    
+    public float $offsetSun = 0;
+
+    private array $skills = [];
     private array $skillIDs = [];
 
     public function __construct(int|string $id) {
@@ -28,7 +47,10 @@ class PlayerHandler {
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
         $this->info = $info;
-        foreach($this->info->skills as $skill) $this->skillIDs[] = $skill->id;
+        foreach($this->info->skills as $skill){
+            $this->skills[$skill->id] = $skill;
+            $this->skillIDs[] = $skill->id;
+        }
     }
     
     public function GetInfo() : PlayerInfoHolder|stdClass{
@@ -42,9 +64,9 @@ class PlayerHandler {
      */
     public function GetEnvValue(int $env) : float{
         return match ($env) {
-            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune),
-            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake),
-            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano),
+            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune) + $this->offsetDune,
+            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake) + $this->offsetCraterLake,
+            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano) + $this->offsetVolcano,
             default => 0,
         };
     }
@@ -56,9 +78,9 @@ class PlayerHandler {
      */
     public function GetClimateValue(int $weather) : float{
         return match ($weather) {
-            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny),
-            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora),
-            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust),
+            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny) + $this->offsetSunny,
+            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora) + $this->offsetAurora,
+            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust) + $this->offsetSandDust,
             default => 0,
         };
     }
@@ -69,11 +91,7 @@ class PlayerHandler {
      * @return float
      */
     public function GetSunValue(int $lighting) : float{
-        return match ($this->info->sun) {
-            SceneValue::SunNone => PlayerValue::SunNone,
-            $lighting => PlayerValue::SunSame,
-            default => PlayerValue::SunDiff,
-        };
+        return PlayerUtility::SunValueByLighting($this->info->sun, $lighting) + $this->offsetSun;
     }
 
     /**
@@ -83,9 +101,9 @@ class PlayerHandler {
      */
     public function GetTerrainValue(int $trackType) : float{
         return match ($trackType) {
-            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat),
-            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope),
-            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope),
+            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat) + $this->offsetFlat,
+            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope) + $this->offsetUpslope,
+            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope) + $this->offsetDownslope,
             default => 0,
         };
     }
@@ -95,16 +113,21 @@ class PlayerHandler {
      * @param int $playerWindDirection 角色對應場景風向
      * @return int
      */
-    public function GetWinValue(int $playerWindDirection) : int{
+    public function GetWindValue(int $playerWindDirection) : int{
         return match ($playerWindDirection) {
-            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind),
-            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind),
-            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind),
+            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind) + $this->offsetTailwind,
+            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind) + $this->offsetCrosswind,
+            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind) + $this->offsetHeadwind,
             default => 0,
         };
     }
     
     public function HasSkill(int $id) : bool{
         return in_array($id, $this->skillIDs);
+    }
+    
+    public function SkillLevel(int $id) : int{
+        if(!isset($this->skills[$id])) return SkillValue::LevelMin;
+        return $this->skills[$id]->level;
     }
 }

@@ -5,13 +5,16 @@ namespace Games\Races;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePool;
 use Games\Races\Holders\RaceInfoHolder;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Scenes\SceneHandler;
+use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
+use Generators\ConfigGenerator;
 use Helpers\LogHelper;
 use stdClass;
 /**
@@ -34,8 +37,9 @@ class RaceHandler {
         $this->ResetInfo();
     }
     
-    private function ResetInfo() : void{
+    private function ResetInfo() : RaceInfoHolder|stdClass{
         $this->info = $this->pool->{$this->id};
+        return $this->info;
     }
     
     public function SetPlayer(PlayerHandler $handler) : RacePlayerHandler{
@@ -47,10 +51,10 @@ class RaceHandler {
     public function SetSecne(SceneHandler $handler) : void{
         $this->sceneHandler = $handler;
     }
-
-    public function SaveRacePlayerIDs(array $ids) : void{
-        $this->pool->Save($this->info->id, 'RacePlayerIDs', $ids);
-        $this->ResetInfo();
+    
+    public function SaveData(array $bind) : RaceInfoHolder|stdClass{
+        $this->pool->Save($this->id, 'Data', $bind);
+        return $this->ResetInfo();
     }
     
     public function GetInfo() : RaceInfoHolder|stdClass{
@@ -94,48 +98,48 @@ class RaceHandler {
         if($racePlayer->trackShape == SceneValue::Straight){
             
             if($racePlayer->hp > 0){
-                $result = RaceValue::ClimateAccelerations[$climate->weather] * 
+                $result = RaceValue::ClimateAccelerations[$this->info->weather] * 
                 ($player->breakOut / ($slope * 5) + $player->velocity / ($slope * 15)) * 
                 ((
                     $this->playerHandler->GetEnvValue($scene->env) + 
-                    $this->playerHandler->GetClimateValue($climate->weather) + 
+                    $this->playerHandler->GetClimateValue($this->info->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }else{
-                $result = RaceValue::ClimateAccelerations[$climate->weather] * 
+                $result = RaceValue::ClimateAccelerations[$this->info->weather] * 
                 ($player->breakOut + $player->will) / ($slope * 15) * 
                 ((
                     $this->playerHandler->GetEnvValue($scene->env) + 
-                    $this->playerHandler->GetClimateValue($climate->weather) + 
+                    $this->playerHandler->GetClimateValue($this->info->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }
             
         }else{
             
             if($racePlayer->hp > 0){
-                $result = RaceValue::ClimateAccelerations[$climate->weather] * 
+                $result = RaceValue::ClimateAccelerations[$this->info->weather] * 
                 ($player->velocity / ($slope * 5) + $player->breakOut / ($slope * 15)) * 
                 ((
                     $this->playerHandler->GetEnvValue($scene->env) + 
-                    $this->playerHandler->GetClimateValue($climate->weather) + 
+                    $this->playerHandler->GetClimateValue($this->info->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }else{
-                $result = RaceValue::ClimateAccelerations[$climate->weather] * 
+                $result = RaceValue::ClimateAccelerations[$this->info->weather] * 
                 ($player->velocity + $player->will) / ($slope * 15) * 
                 ((
                     $this->playerHandler->GetEnvValue($scene->env) + 
-                    $this->playerHandler->GetClimateValue($climate->weather) + 
+                    $this->playerHandler->GetClimateValue($this->info->weather) + 
                     $this->playerHandler->GetSunValue($climate->lighting) + 
                     $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                    $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                    $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                 ) / 100);
             }
         }
@@ -152,32 +156,32 @@ class RaceHandler {
         $slope = RaceValue::TrackType[$racePlayer->trackType];
         
         $result = match ($racePlayer->trackType){
-            SceneValue::Upslope => RaceValue::ClimateLoses[$climate->weather] + 
+            SceneValue::Upslope => RaceValue::ClimateLoses[$this->info->weather] + 
                     4 * $slope * $this->ValueS() / $player->will * 
                     ( 100 / (
                         $this->playerHandler->GetEnvValue($scene->env) + 
-                        $this->playerHandler->GetClimateValue($climate->weather) + 
+                        $this->playerHandler->GetClimateValue($this->info->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     )),
-            SceneValue::Downslope => RaceValue::ClimateLoses[$climate->weather] + 
+            SceneValue::Downslope => RaceValue::ClimateLoses[$this->info->weather] + 
                     4 * $slope * $this->ValueS() / $player->intelligent * 
                     ( 100 / (
                         $this->playerHandler->GetEnvValue($scene->env) + 
-                        $this->playerHandler->GetClimateValue($climate->weather) + 
+                        $this->playerHandler->GetClimateValue($this->info->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     )),
-            default => RaceValue::ClimateLoses[$climate->weather] + 
+            default => RaceValue::ClimateLoses[$this->info->weather] + 
                     4 * $slope * 2 * $this->ValueS() / ($player->intelligent + $player->will) * 
                     ( 100 / (
                         $this->playerHandler->GetEnvValue($scene->env) + 
-                        $this->playerHandler->GetClimateValue($climate->weather) + 
+                        $this->playerHandler->GetClimateValue($this->info->weather) + 
                         $this->playerHandler->GetSunValue($climate->lighting) + 
                         $this->playerHandler->GetTerrainValue($racePlayer->trackType) + 
-                        $this->playerHandler->GetWinValue($this->PlayerWindDirection()) - 400
+                        $this->playerHandler->GetWindValue($this->PlayerWindDirection()) - 400
                     ))
         };
         
@@ -188,7 +192,43 @@ class RaceHandler {
         $scene = $this->sceneHandler->GetInfo();
         $climate = $this->sceneHandler->GetClimate();
         $player = $this->playerHandler->GetInfo();
-        return 0.01 * ( 100 / $player->intelligent + 100 / $this->playerHandler->GetEnvValue($scene->env) + 100 / $this->playerHandler->GetClimateValue($climate->weather) + 100 / $this->playerHandler->GetSunValue($climate->lighting));
+        return 0.01 * ( 100 / $player->intelligent + 100 / $this->playerHandler->GetEnvValue($scene->env) + 100 / $this->playerHandler->GetClimateValue($this->info->weather) + 100 / $this->playerHandler->GetSunValue($climate->lighting));
+    }
+    
+    /**
+     * 是否發動滿星效果
+     * @param SkillHandler $skill
+     * @return bool
+     */
+    public function LaunchMaxEffect(SkillHandler $skill) : bool{
+        
+        $config = ConfigGenerator::Instance();
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        $skillInfo = $skill->GetInfo();
+        
+        return match ($skillInfo->maxCondition){
+            SkillValue::MaxConditionNone => true,
+            SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionTop => $racePlayerInfo->ranking <= $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionOffside => $racePlayerInfo->offside >= $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionHit => $racePlayerInfo->hit >= $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
+            SkillValue::MaxConditionCurved => $racePlayerInfo->trackShape == SceneValue::Curved,
+            SkillValue::MaxConditionFlat => $racePlayerInfo->trackType == SceneValue::Flat,
+            SkillValue::MaxConditionUpslope => $racePlayerInfo->trackType == SceneValue::Upslope,
+            SkillValue::MaxConditionDownslope => $racePlayerInfo->trackType == SceneValue::Downslope,
+            SkillValue::MaxConditionTailwind => $this->PlayerWindDirection() == SceneValue::Tailwind,
+            SkillValue::MaxConditionHeadwind => $this->PlayerWindDirection() == SceneValue::Headwind,
+            SkillValue::MaxConditionCrosswind => $this->PlayerWindDirection() == SceneValue::Crosswind,
+            SkillValue::MaxConditionSunny => $this->info->weather == SceneValue::Sunny,
+            SkillValue::MaxConditionAurora => $this->info->weather == SceneValue::Aurora,
+            SkillValue::MaxConditionSandDust => $this->info->weather == SceneValue::SandDust,
+            SkillValue::MaxConditionDune => $this->sceneHandler->GetInfo()->env == SceneValue::Dune,
+            SkillValue::MaxConditionCraterLake => $this->sceneHandler->GetInfo()->env == SceneValue::CraterLake,
+            SkillValue::MaxConditionVolcano => $this->sceneHandler->GetInfo()->env == SceneValue::Volcano,
+            default => false
+        };
     }
     
     /**

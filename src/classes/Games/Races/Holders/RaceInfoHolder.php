@@ -14,6 +14,8 @@ class RaceInfoHolder extends stdClass{
     public int $status;
     /** @var int 場景編號 SceneID */
     public int $scene;
+    /** @var int 當前天氣 */
+    public int $weather;
     /** @var int 當前風向 */
     public int $windDirection;
     /** @var int 競賽角色資料編號 PlayerID->RacePlayerID */

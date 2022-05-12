@@ -27,21 +27,17 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('RacePlayerSkill')
                 ->WhereEqual('RacePlayerID', $id)->FetchAll();
     }
+    
+    public function rowsPlayerEffectByRacePlayerID(int $id) : array{
+        return $this->MainAccessor()->FromTable('RacePlayerEffect')->WhereEqual('RacePlayerID', $id)->FetchAll();
+    }
 
-    public function AddRace(int $sceneID, float $createTime, int $windDirection) : string{
-        
-        $this->MainAccessor()->FromTable('Races')->Add([
-            'SceneID' => $sceneID,
-            'CreateTime' => $createTime,
-            'UpdateTime' => $createTime,
-            'WindDirection' => $windDirection,
-        ]);
-        
+    public function AddRace(array $bind) : string{
+        $this->MainAccessor()->FromTable('Races')->Add($bind);
         return $this->MainAccessor()->LastInsertID();
     }
     
     public function AddRacePlayer(array $player) : string{
-        
         $this->MainAccessor()->FromTable('RacePlayer')->Add($player);
         return $this->MainAccessor()->LastInsertID();
     }
@@ -51,16 +47,16 @@ class RaceAccessor extends BaseAccessor{
         return $this->MainAccessor()->LastInsertID();
     }
     
-    public function ModifyRacePlayerIDsByID(int $id, string $idData, float $updateTime) : bool{
-        return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify(['RacePlayerIDs' => $idData, 'UpdateTime' => $updateTime]);
+    public function AddRacePlayerEffects(array $binds) : bool{
+        return $this->MainAccessor()->FromTable('RacePlayerEffect')->AddAll($binds);
+    }
+    
+    public function ModifyRaceByID(int $id, array $bind) : bool{
+        return $this->MainAccessor()->FromTable('Races')->WhereEqual('RaceID', $id)->Modify($bind);
     }
     
     public function ModifyRacePlayerValuesByID(int $id, array $bind) : bool {
         return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Modify($bind);
-    }
-    
-    public function ModifyRacePlayerSkillBySerial(int $serial, array $bind) : bool{
-        return $this->MainAccessor()->FromTable('RacePlayerSkill')->WhereEqual('Serial', $serial)->Modify($bind);
     }
     
     public function FinishRaceByRaceID(int $id, int $status) : array{

@@ -2,7 +2,6 @@
 
 namespace Games\Races;
 
-use Games\Consts\RaceValue;
 use Games\Pools\RacePlayerSkillPool;
 use stdClass;
 /**
@@ -25,9 +24,5 @@ class RacePlayerSkillHandler {
     
     public function Add(array $bind) : void{
         $this->pool->Save($this->id, 'NewData', $bind);
-    }
-    
-    public function Finish(int $serial) : void {
-        $this->pool->Save($this->id, 'Data', ['Serial' => $serial, 'Status' => RaceValue::StatusFinish]);
     }
 }

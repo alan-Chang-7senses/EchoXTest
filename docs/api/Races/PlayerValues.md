@@ -36,6 +36,7 @@ _此欄位資料為物件，以下欄位可擇一提供：_
 | trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
 | rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 | trackNumber | int | 賽道號碼 |
+| ranking | int | 排名 |
 
 #### users 範例
 

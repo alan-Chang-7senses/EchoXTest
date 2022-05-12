@@ -570,6 +570,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Ranking` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '排名',
   `TrackNumber` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '賽道號碼',
   `HP` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘耐力',
+  `Offside` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '超越 n 名',
+  `Hit` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '被妨礙次數',
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
@@ -579,11 +581,22 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   KEY `RaceID` (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
 
+-- 傾印  資料表 koa_main.RacePlayerEffect 結構
+CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色資料編號',
+  `EffectType` smallint(6) NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `EffectValue` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '效果影響值',
+  `StartTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '起始時間',
+  `EndTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
+  PRIMARY KEY (`Serial`),
+  KEY `RacePlayerID` (`RacePlayerID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色效果';
+
 -- 傾印  資料表 koa_main.RacePlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色資料編號',
-  `Status` tinyint(3) NOT NULL DEFAULT 0 COMMENT '狀態',
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '觸發時間',
   `SkillID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '技能編號',
   `LaunchMax` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否發動滿星效果',
@@ -600,6 +613,7 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
+  `Weather` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '天氣',
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
   `RacePlayerIDs` text DEFAULT NULL COMMENT '競賽角色編號',
   PRIMARY KEY (`RaceID`)

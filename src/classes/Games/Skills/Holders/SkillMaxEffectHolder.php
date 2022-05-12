@@ -12,6 +12,5 @@ class SkillMaxEffectHolder extends stdClass{
     public int $id;
     public int $type;
     public int $target;
-    public int $typeValue;
     public string|null $formula;
 }
