@@ -61,6 +61,7 @@ abstract class BasePlayerValues extends BaseRace{
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
         
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
+        $raceHandler->SetPlayer($playerHandler);
         
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
