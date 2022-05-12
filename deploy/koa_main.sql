@@ -591,7 +591,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
   `EndTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
   PRIMARY KEY (`Serial`),
   KEY `RacePlayerID` (`RacePlayerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色效果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色效果';
 
 -- 傾印  資料表 koa_main.RacePlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
