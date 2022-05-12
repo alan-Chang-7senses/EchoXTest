@@ -14,6 +14,7 @@ class SkillValue {
     
     const DivisorCooldown = 100;
     const DivisorDuration = 100;
+    const DivisorLevel = 100;
     
     const NotInSlot = 0;
     const DurationForever = -1;

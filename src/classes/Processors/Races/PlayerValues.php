@@ -7,6 +7,7 @@ use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\RaceHandler;
+use Games\Races\RacePlayerEffectHandler;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -33,7 +34,8 @@ class PlayerValues extends BaseRace{
         $hp = InputHelper::post('hp');
         
         $raceHandler = new RaceHandler($this->userInfo->race);
-        $raceHandler->SetPlayer(new PlayerHandler($this->userInfo->player));
+        $playerHandler = new PlayerHandler($this->userInfo->player);
+        $racePlayerHandler = $raceHandler->SetPlayer($playerHandler);
         
         $raceInfo = $raceHandler->GetInfo();
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
@@ -54,6 +56,8 @@ class PlayerValues extends BaseRace{
         $raceHandler->SaveRacePlayer((array)$values);
         
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
+        
+        $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
