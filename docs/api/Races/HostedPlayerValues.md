@@ -1,14 +1,15 @@
-# 競賽 - 角色數值
+# 競賽 - 託管角色數值
 
 ## 介紹
 
-- 競賽過程中，用於角色本身的狀態數值更新。
+- 競賽過程中，指定角色的狀態數值更新。
 - 更新數值後，取回最新的相關競賽公式計算數值。
 - 若不進行狀態數值變更，也可藉此取回角色當前的競賽數值。
+- 建議房主專用。
 
 ## URL
 
-http(s)://`域名`/Races/PlayerValues/
+http(s)://`域名`/Races/HostedPlayerValues/
 
 ## Method
 
@@ -22,6 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| player | int | 角色編號 |
 | hp | float | 剩餘耐力 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
@@ -64,6 +66,6 @@ Content Type: `application/json`
 	        "code": 0,
 	        "message": ""
 	    },
-	    "h": 1.2308113391984357,
-	    "s": 6.295599999999999
+	    "h": 1.0774688179425564,
+	    "s": 1.4908666666666668
 	}
