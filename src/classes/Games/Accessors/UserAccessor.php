@@ -2,6 +2,8 @@
 
 namespace Games\Accessors;
 
+use Games\Consts\PlayerValue;
+use Games\Consts\RaceValue;
 /**
  * Description of UserAccessor
  *
@@ -19,6 +21,12 @@ class UserAccessor extends BaseAccessor {
     
     public function rowSessionByID(string $id) : mixed{
         return $this->MainAccessor()->FromTable('Sessions')->WhereEqual('SessionID', $id)->Fetch();
+    }
+    
+    public function rowsByIdleBotAssoc(int $amount) : array{
+        return $this->MainAccessor()->FromTable('Users')->
+                WhereLess('UserID', PlayerValue::BotIDLimit)->WhereEqual('Race', RaceValue::NotInRace)->
+                Limit($amount)->FetchStyleAssoc()->FetchAll();
     }
     
     public function ModifyUserValuesByID(int $id, array $bind) : bool{
