@@ -21,6 +21,8 @@ class RacePlayerHolder extends stdClass{
     public int $number;
     /** @var int 狀態 */
     public int $status;
+    /** @var string 所在位置 */
+    public string|null $position;
     /** @var int 角色方向 */
     public int $direction;
     /** @var int 能量 [紅,黃,藍,綠] */
