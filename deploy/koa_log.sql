@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `UserID` int(10) unsigned NOT NULL COMMENT '使用者ID',
   `UserIP` varchar(50) NOT NULL DEFAULT '' COMMENT '使用者IP',
   `RedirectURL` varchar(255) NOT NULL COMMENT '執行網址',
-  `Content` text NOT NULL COMMENT '內容',
+  `Content` longtext NOT NULL COMMENT '內容',
   `Result` tinyint(4) NOT NULL DEFAULT 0 COMMENT '處理結果(1=成功)',
   `HttpCode` varchar(5) DEFAULT NULL COMMENT 'HTTP回應狀態碼',
   `Message` text DEFAULT NULL COMMENT '處理結果訊息',
