@@ -3,6 +3,7 @@
 namespace Games\Pools;
 
 use Accessors\PoolAccessor;
+use Consts\Globals;
 use Games\Accessors\RaceAccessor;
 use Games\Races\Holders\RaceInfoHolder;
 use stdClass;
@@ -31,6 +32,7 @@ class RacePool extends PoolAccessor{
         $holder->id = $id;
         $holder->scene = $row->SceneID;
         $holder->status = $row->Status;
+        $holder->weather = $row->Weather;
         $holder->windDirection = $row->WindDirection;
         $holder->racePlayers = json_decode($row->RacePlayerIDs ?? '') ?? new stdClass();
         $holder->createTime = $row->CreateTime;
@@ -40,13 +42,28 @@ class RacePool extends PoolAccessor{
         return $holder;
     }
     
-    protected function SaveRacePlayerIDs(stdClass $data, mixed $value) : stdClass{
+    protected function SaveData(stdClass $data, array $values) : stdClass{
         
-        $value = json_encode($value);
-        $updateTime = microtime(true);
-        (new RaceAccessor())->ModifyRacePlayerIDsByID($data->id, $value, $updateTime);
-        $data->racePlayers = json_decode($value);
-        $data->updateTime = $updateTime;
+        $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+        
+        $bind = [];
+        foreach($values as $key => $value){
+            
+            if($key == 'racePlayers'){
+                
+                $value = json_encode($value);
+                $bind['RacePlayerIDs'] = $value;
+                $data->$key = json_decode($value);
+                
+            }else{
+                
+                $bind[ucfirst($key)] = $value;
+                $data->$key = $value;
+            }
+        }
+        
+        (new RaceAccessor())->ModifyRaceByID($data->id, $bind);
+        
         return $data;
     }
 }

@@ -4,7 +4,10 @@ namespace Games\Skills;
 
 use Games\Players\PlayerHandler;
 use Games\Pools\SkillMaxEffectPool;
+use Games\Races\RacePlayerHandler;
 use Games\Skills\Holders\SkillMaxEffectHolder;
+use Games\Skills\SkillEffectFormula;
+use Games\Skills\SkillHandler;
 use stdClass;
 /**
  * Description of SkillMaxEffectHandler
@@ -16,7 +19,6 @@ class SkillMaxEffectHandler {
     private SkillMaxEffectPool $pool;
     private int|string $id;
     private SkillMaxEffectHolder|stdClass $info;
-    private PlayerHandler $playerHandler;
     
     public function __construct(int|string $id) {
         $this->pool = SkillMaxEffectPool::Instance();
@@ -28,11 +30,9 @@ class SkillMaxEffectHandler {
         return $this->info;
     }
     
-    public function SetPlayer(PlayerHandler $hanlder) : void{
-        $this->playerHandler = $hanlder;
-    }
-    
-    public function GetFormulaResult() : float{
-        return 0; //未計算
+    public function GetFormulaResult(SkillHandler $skill, PlayerHandler $player, RacePlayerHandler|null $racePlayer) : float{
+        
+        $formula = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
+        return $formula->Process();
     }
 }

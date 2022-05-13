@@ -2,12 +2,17 @@
 
 namespace Games\Skills;
 
+use Consts\Sessions;
 use Games\Consts\SkillValue;
+use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\PlayerHandler;
+use Games\Players\PlayerUtility;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
+use Games\Users\UserHandler;
+use stdClass;
 /**
  * Description of SkillEffectFormula
  *
@@ -15,11 +20,15 @@ use Games\Skills\SkillHandler;
  */
 class SkillEffectFormula {
     
-    const OperandAll = [ 'FIG', 'INT', 'POW', 'SPD', 'STA', 'HP', 'H', 'S'];
+    const OperandAll = [
+        'CraterLake', 'Crosswind', 'Downslope', 'Headwind', 'SandDust', 'Tailwind', 'Upslope', 'Volcano', 'Aurora', 'Sunny', 'Dune', 'Flat',
+        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S'
+    ];
 
     private SkillHandler $skillHandler;
     private string|null $formula;
     private PlayerHandler|null $playerHandler;
+    private PlayerInfoHolder|stdClass $playerInfo;
     private RacePlayerHandler| null $racePlayerHandler;
 
     public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null) {
@@ -27,12 +36,13 @@ class SkillEffectFormula {
         $this->skillHandler = $skill;
         $this->formula = $formula;
         $this->playerHandler = $player;
+        $this->playerInfo = $player->GetInfo();
         $this->racePlayerHandler = $racePlayer;
     }
 
-    public function Process() : float|null{
+    public function Process() : float{
         
-        if($this->formula === null) return null;
+        if($this->formula === null) return 0;
         
         $matches = [];
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
@@ -40,7 +50,7 @@ class SkillEffectFormula {
         
         $skillInfo = $this->skillHandler->GetInfo();
         $valueN = $skillInfo->ranks[0];
-        foreach($this->playerHandler->GetInfo()->skills as $playerSkill){
+        foreach($this->playerInfo->skills as $playerSkill){
             if($playerSkill->id == $skillInfo->id){
                 $valueN = $skillInfo->ranks[$playerSkill->level - 1];
                 break;
@@ -58,29 +68,13 @@ class SkillEffectFormula {
         return $result;
     }
     
-    private function ValueFIG() : float{
-        return $this->playerHandler->GetInfo()->will;
-    }
+    private function ValueFIG() : float{ return $this->playerInfo->will; }
+    private function ValueINT() : float{ return $this->playerInfo->intelligent; }
+    private function ValuePOW() : float{ return $this->playerInfo->breakOut; }
+    private function ValueSPD() : float{ return $this->playerInfo->breakOut; }
+    private function ValueSTA() : float{ return $this->playerInfo->stamina; }
     
-    private function ValueINT() : float{
-        return $this->playerHandler->GetInfo()->intelligent;
-    }
-    
-    private function ValuePOW() : float{
-        return $this->playerHandler->GetInfo()->breakOut;
-    }
-    
-    private function ValueSPD() : float{
-        return $this->playerHandler->GetInfo()->breakOut;
-    }
-    
-    private function ValueSTA() : float{
-        return $this->playerHandler->GetInfo()->stamina;
-    }
-    
-    private function ValueHP() : float{
-        return $this->racePlayerHandler === null ? $this->playerHandler->GetInfo()->stamina : $this->racePlayerHandler->GetInfo()->hp;
-    }
+    private function ValueHP() : float{ return $this->racePlayerHandler === null ? $this->playerInfo->stamina : $this->racePlayerHandler->GetInfo()->hp; }
     
     private function ValueH() : float{
         
@@ -94,6 +88,31 @@ class SkillEffectFormula {
         if($this->racePlayerHandler === null) return SkillValue::SkillS;
         
         return $this->CreateRaceHandler()->ValueS();
+    }
+    
+    private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }
+    private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake); }
+    private function ValueVolcano() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->volcano); }
+
+    private function ValueTailwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->tailwind); }
+    private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind); }
+    private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind); }
+    
+    private function ValueSunny() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny); }
+    private function ValueAurora() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora); }
+    private function ValueSandDust() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust); }
+    
+    private function ValueFloat() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->flat); }
+    private function ValueUpslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->upslope); }
+    private function ValueDownslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->downslope); }
+    
+    private function ValueSun() : float{
+        
+        $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        $sceneHandler = new SceneHandler($userHandler->GetInfo()->scene);
+        $climate = $sceneHandler->GetClimate();
+        
+        return PlayerUtility::SunValueByLighting($this->playerInfo->sun, $climate->lighting);
     }
     
     private function CreateRaceHandler() : RaceHandler{

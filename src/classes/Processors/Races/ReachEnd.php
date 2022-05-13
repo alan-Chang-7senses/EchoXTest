@@ -3,6 +3,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Races\RaceHandler;
@@ -29,8 +30,7 @@ class ReachEnd extends BaseRace{
         
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
-        $currentTime = microtime(true);
-        $racePlayerHandler->SaveData(['status' => RaceValue::StatusReach, 'updateTime' => $currentTime, 'finishTime' => $currentTime]);
+        $racePlayerHandler->SaveData(['status' => RaceValue::StatusReach, 'finishTime' => $GLOBALS[Globals::TIME_BEGIN]]);
         
         $result = new ResultData(ErrorCode::Success);
         return $result;

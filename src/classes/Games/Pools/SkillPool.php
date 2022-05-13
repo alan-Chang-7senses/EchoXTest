@@ -39,7 +39,7 @@ class SkillPool extends PoolAccessor{
         $skill->duration = $skillInfo->Duration;
         
         $skill->energy = array_map('intval',explode(',', $skillInfo->Energy));
-        $skill->ranks = [$skillInfo->Level1, $skillInfo->Level2, $skillInfo->Level3, $skillInfo->Level4, $skillInfo->Level5];
+        $skill->ranks = array_map(function($value){ return $value / SkillValue::DivisorLevel; }, [$skillInfo->Level1, $skillInfo->Level2, $skillInfo->Level3, $skillInfo->Level4, $skillInfo->Level5]);
         $skill->effects = explode(',', $skillInfo->Effect);
         $skill->maxDescription = $skillInfo->MaxDescription;
         $skill->maxCondition = $skillInfo->MaxCondition;

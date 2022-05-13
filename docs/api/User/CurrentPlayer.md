@@ -109,8 +109,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
 | target | int | [作用對象](../codes/skill.md#target) |
-| typeValue | int | [滿星效果類型值](../codes/skill.md#maxEffectType) |
-| formulaValue | float | 效果值**（未實作計算，固定傳回 0）** |
+| formulaValue | float | 公式計算結果的效果值 |
 
 ### Example
 
@@ -120,49 +119,163 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "message": ""
 	    },
 	    "player": {
-	        "id": 1010000000000015,
-	        "name": "1010000000000015",
+	        "id": 1010000000000001,
+	        "name": "1010000000000001",
 	        "ele": 1,
 	        "sync": 0,
 	        "level": 1,
 	        "exp": 0,
 	        "maxExp": null,
 	        "rank": 1,
-	        "velocity": 30.69,
-	        "stamina": 28.74,
-	        "intelligent": 30.52,
-	        "breakOut": 35.32,
-	        "will": 30.45,
-	        "dune": 10,
+	        "velocity": 30.67,
+	        "stamina": 34.43,
+	        "intelligent": 33.4,
+	        "breakOut": 33.05,
+	        "will": 32.5,
+	        "dune": 11,
 	        "craterLake": 0,
-	        "volcano": 2,
+	        "volcano": 1,
 	        "tailwind": 7,
-	        "crosswind": 3,
+	        "crosswind": 2,
 	        "headwind": 0,
-	        "sunny": 8,
-	        "aurora": 3,
-	        "sandDust": 1,
-	        "flat": 9,
-	        "upslope": 2,
+	        "sunny": 9,
+	        "aurora": 1,
+	        "sandDust": 2,
+	        "flat": 10,
+	        "upslope": 1,
 	        "downslope": 1,
 	        "sun": 0,
-	        "habit": 1,
-	        "slotNumber": 5,
+	        "habit": 4,
+	        "slotNumber": 6,
 	        "skills": [
 	            {
-	                "id": 10,
-	                "name": "21004",
-	                "description": "22201",
+	                "id": 1,
+	                "name": "21001",
+	                "description": "22204",
 	                "level": 1,
 	                "slot": 1,
 	                "energy": [
 	                    0,
-	                    1,
-	                    1,
+	                    2,
+	                    0,
+	                    1
+	                ],
+	                "cooldown": 2,
+	                "duration": 7.2,
+	                "ranks": [
+	                    5,
+	                    10,
+	                    15,
+	                    20,
+	                    25
+	                ],
+	                "maxDescription": "23007",
+	                "maxCondition": 2,
+	                "maxConditionValue": 3,
+	                "effects": [
+	                    {
+	                        "type": 204,
+	                        "formulaValue": 35.07
+	                    }
+	                ],
+	                "maxEffects": [
+	                    {
+	                        "type": 402,
+	                        "target": 0,
+	                        "formulaValue": 0.5
+	                    }
+	                ]
+	            },
+	            {
+	                "id": 2,
+	                "name": "21002",
+	                "description": "22205",
+	                "level": 1,
+	                "slot": 2,
+	                "energy": [
+	                    2,
+	                    0,
+	                    2,
+	                    0
+	                ],
+	                "cooldown": 2,
+	                "duration": 9.8,
+	                "ranks": [
+	                    5,
+	                    10,
+	                    15,
+	                    20,
+	                    25
+	                ],
+	                "maxDescription": "23008",
+	                "maxCondition": 4,
+	                "maxConditionValue": 1,
+	                "effects": [
+	                    {
+	                        "type": 205,
+	                        "formulaValue": 36.1515
+	                    }
+	                ],
+	                "maxEffects": [
+	                    {
+	                        "type": 2,
+	                        "target": 0,
+	                        "formulaValue": 0
+	                    }
+	                ]
+	            },
+	            {
+	                "id": 3,
+	                "name": "21003",
+	                "description": "22202",
+	                "level": 1,
+	                "slot": 3,
+	                "energy": [
+	                    0,
+	                    0,
+	                    0,
+	                    3
+	                ],
+	                "cooldown": 2,
+	                "duration": 7.2,
+	                "ranks": [
+	                    5,
+	                    10,
+	                    15,
+	                    20,
+	                    25
+	                ],
+	                "maxDescription": "23011",
+	                "maxCondition": 1,
+	                "maxConditionValue": 1,
+	                "effects": [
+	                    {
+	                        "type": 202,
+	                        "formulaValue": 34.7025
+	                    }
+	                ],
+	                "maxEffects": [
+	                    {
+	                        "type": 12,
+	                        "target": 0,
+	                        "formulaValue": 100
+	                    }
+	                ]
+	            },
+	            {
+	                "id": 4,
+	                "name": "21004",
+	                "description": "22201",
+	                "level": 1,
+	                "slot": 4,
+	                "energy": [
+	                    0,
+	                    0,
+	                    2,
 	                    2
 	                ],
-	                "cooldown": 4,
-	                "duration": 7.8,
+	                "cooldown": 2,
+	                "duration": 9.8,
 	                "ranks": [
 	                    5,
 	                    10,
@@ -176,32 +289,31 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                "effects": [
 	                    {
 	                        "type": 201,
-	                        "formulaValue": 38.852
+	                        "formulaValue": 34.7025
 	                    }
 	                ],
 	                "maxEffects": [
 	                    {
 	                        "type": 402,
 	                        "target": 0,
-	                        "typeValue": 0,
-	                        "formulaValue": 0
+	                        "formulaValue": 1.32
 	                    }
 	                ]
 	            },
 	            {
-	                "id": 11,
+	                "id": 5,
 	                "name": "21005",
 	                "description": "22203",
 	                "level": 1,
-	                "slot": 2,
+	                "slot": 5,
 	                "energy": [
-	                    1,
+	                    2,
 	                    0,
 	                    1,
-	                    1
+	                    0
 	                ],
-	                "cooldown": 3,
-	                "duration": 5.4,
+	                "cooldown": 2,
+	                "duration": 7.2,
 	                "ranks": [
 	                    5,
 	                    10,
@@ -210,37 +322,36 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    25
 	                ],
 	                "maxDescription": "23012",
-	                "maxCondition": 33,
+	                "maxCondition": 31,
 	                "maxConditionValue": 0,
 	                "effects": [
 	                    {
 	                        "type": 203,
-	                        "formulaValue": 33.495
+	                        "formulaValue": 34.125
 	                    }
 	                ],
 	                "maxEffects": [
 	                    {
 	                        "type": 402,
 	                        "target": 0,
-	                        "typeValue": 0,
-	                        "formulaValue": 0
+	                        "formulaValue": 1.32
 	                    }
 	                ]
 	            },
 	            {
-	                "id": 12,
+	                "id": 6,
 	                "name": "21006",
-	                "description": "22204",
+	                "description": "22202",
 	                "level": 1,
-	                "slot": 3,
+	                "slot": 6,
 	                "energy": [
 	                    1,
-	                    2,
-	                    1,
+	                    3,
+	                    0,
 	                    0
 	                ],
-	                "cooldown": 4,
-	                "duration": 7.8,
+	                "cooldown": 2,
+	                "duration": 9.8,
 	                "ranks": [
 	                    5,
 	                    10,
@@ -253,111 +364,32 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                "maxConditionValue": 0,
 	                "effects": [
 	                    {
-	                        "type": 204,
-	                        "formulaValue": 33.572
+	                        "type": 202,
+	                        "formulaValue": 34.7025
 	                    }
 	                ],
 	                "maxEffects": [
 	                    {
 	                        "type": 10,
 	                        "target": 0,
-	                        "typeValue": 1,
-	                        "formulaValue": 0
+	                        "formulaValue": 10
 	                    }
 	                ]
 	            },
 	            {
-	                "id": 20,
-	                "name": "21014",
-	                "description": "22205",
-	                "level": 1,
-	                "slot": 4,
-	                "energy": [
-	                    1,
-	                    2,
-	                    0,
-	                    1
-	                ],
-	                "cooldown": 4,
-	                "duration": 7.8,
-	                "ranks": [
-	                    5,
-	                    10,
-	                    15,
-	                    20,
-	                    25
-	                ],
-	                "maxDescription": "23009",
-	                "maxCondition": 1,
-	                "maxConditionValue": 1,
-	                "effects": [
-	                    {
-	                        "type": 205,
-	                        "formulaValue": 31.614
-	                    }
-	                ],
-	                "maxEffects": [
-	                    {
-	                        "type": 2,
-	                        "target": 0,
-	                        "typeValue": 2,
-	                        "formulaValue": 0
-	                    }
-	                ]
-	            },
-	            {
-	                "id": 25,
-	                "name": "21019",
-	                "description": "22204",
-	                "level": 1,
-	                "slot": 5,
-	                "energy": [
-	                    2,
-	                    1,
-	                    1,
-	                    2
-	                ],
-	                "cooldown": 6,
-	                "duration": 13.5,
-	                "ranks": [
-	                    5,
-	                    10,
-	                    15,
-	                    20,
-	                    25
-	                ],
-	                "maxDescription": "23024",
-	                "maxCondition": 23,
-	                "maxConditionValue": 0,
-	                "effects": [
-	                    {
-	                        "type": 204,
-	                        "formulaValue": 33.572
-	                    }
-	                ],
-	                "maxEffects": [
-	                    {
-	                        "type": 401,
-	                        "target": 1,
-	                        "typeValue": 0,
-	                        "formulaValue": 0
-	                    }
-	                ]
-	            },
-	            {
-	                "id": 37,
-	                "name": "21031",
+	                "id": 34,
+	                "name": "21034",
 	                "description": "22201",
 	                "level": 1,
 	                "slot": 0,
 	                "energy": [
-	                    1,
-	                    1,
-	                    1,
+	                    2,
+	                    2,
+	                    2,
 	                    0
 	                ],
-	                "cooldown": 3,
-	                "duration": 5.4,
+	                "cooldown": 2,
+	                "duration": 15.7,
 	                "ranks": [
 	                    5,
 	                    10,
@@ -365,31 +397,31 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                    20,
 	                    25
 	                ],
-	                "maxDescription": "23030",
+	                "maxDescription": "23033",
 	                "maxCondition": 41,
 	                "maxConditionValue": 0,
 	                "effects": [
 	                    {
 	                        "type": 201,
-	                        "formulaValue": 38.852
+	                        "formulaValue": 34.7025
 	                    }
 	                ],
 	                "maxEffects": [
 	                    {
 	                        "type": 402,
 	                        "target": 0,
-	                        "typeValue": 0,
-	                        "formulaValue": 0
+	                        "formulaValue": 1.98
 	                    }
 	                ]
 	            }
 	        ],
 	        "skillHole": [
-	            10,
-	            11,
-	            12,
-	            20,
-	            25
+	            1,
+	            2,
+	            3,
+	            4,
+	            5,
+	            6
 	        ]
 	    }
 	}

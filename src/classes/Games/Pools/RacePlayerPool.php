@@ -6,6 +6,8 @@ use Accessors\PoolAccessor;
 use Games\Accessors\RaceAccessor;
 use Games\Races\Holders\RacePlayerHolder;
 use stdClass;
+use Consts\Globals;
+use Games\Consts\RaceValue;
 /**
  * Description of RacePlayerPool
  *
@@ -34,6 +36,7 @@ class RacePlayerPool extends PoolAccessor{
         $holder->player = $row->PlayerID;
         $holder->number = $row->RaceNumber;
         $holder->status = $row->Status;
+        $holder->position = $row->Position;
         $holder->direction = $row->Direction;
         $holder->energy = array_map('intval',explode(',', $row->Energy));
         $holder->trackType = $row->TrackType;
@@ -42,6 +45,8 @@ class RacePlayerPool extends PoolAccessor{
         $holder->ranking = $row->Ranking;
         $holder->trackNumber = $row->TrackNumber;
         $holder->hp = $row->HP;
+        $holder->offside = $row->Offside;
+        $holder->hit = $row->Hit;
         $holder->createTime = $row->CreateTime;
         $holder->updateTime = $row->UpdateTime;
         $holder->finishTime = $row->FinishTime;
@@ -51,9 +56,11 @@ class RacePlayerPool extends PoolAccessor{
     
     protected function SaveData(stdClass $data, array $values) : stdClass{
         
+        if(!isset($values['status'])) $values['status'] = RaceValue::StatusUpdate;
+        $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
         $bind = [];
         foreach($values as $key => $value){
-            $bind[ucfirst($key)] = $value;
+            $bind[ucfirst($key)] = $key == 'energy' ? implode(',', $value) : $value;
             $data->$key = $value;
         }
         

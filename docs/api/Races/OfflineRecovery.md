@@ -1,16 +1,12 @@
-# 競賽 - 開局
+# 競賽 - 斷線恢復
 
 ## 介紹
 
-- 當玩家準備就緒，即將進入競賽時，透過此功能建立賽局。
-- 為每位參與玩家建立競賽角色資料。
-- 提供競賽場景資訊，包含該時段的氣候資訊。
-- 提供參與競賽各使用者的當前角色競賽初始數據。
-- 提供各參與競賽角色的已裝備技能資訊。
+- 當玩家於競賽中斷線，恢復連線進入競賽可透過此功能獲取競賽場中的場景與角色相關資料。
 
 ## URL
 
-http(s)://`域名`/Races/Ready/
+http(s)://`域名`/Races/OfflineRecovery/
 
 ## Method
 
@@ -22,41 +18,8 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| [users](#user1) | string | 參賽玩家所組成的 JSON 陣列字串。 |
-| trackType | int | [賽道類別](../codes/race.md#trackType) |
-| trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
-| direction | int | [角色方向](../codes/player.md#direction) |
+無
 
-#### <span id="users1">users 內容</span>
-
-_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| id | int | 使用者編號 |
-| ranking | int | 排名 |
-| trackNumber | int | 賽道號碼 |
-| rhythm | int | [比賽節奏](../codes/race.md#rhythm)|
-
-#### users 範例
-
-	[
-		{
-			"id": 1,
-			"ranking": 1,
-			"trackNumber": 1,
-			"rhythm": 1
-		},
-		{
-			"id": 2,
-			"ranking": 1,
-			"trackNumber": 2,
-			"rhythm": 2
-		}
-	]
-	
 ## Response
 
 Content Type: `application/json`
@@ -66,35 +29,47 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| user | int | 使用者編號 |
+| player | int | 角色編號 |
 | [scene](#scene) | object | 場景資訊 |
-| [users](#users2) | array | 各玩家的角色競賽資料陣列 |
+| [players](#players) | array | 各玩家的角色競賽資料陣列 |
 
 #### <span id="scene">scene 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| readySec | int | 起跑準備時間（秒） |
 | env | int | [環境](../codes/scene.md#env) |
 | weather | int | [天氣](../codes/scene.md#weather) |
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
 | windSpeed | int | 風速 |
 | lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
 
-#### <span id="users2">users 內容</span>
+#### <span id="players"> players 內容</span>
 
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| id | int | 使用者編號 |
+| user | int | 使用者編號 |
 | player | int | 角色編號 |
 | energy | array | 能量陣列，依序為 紅,黃,藍,綠 |
 | hp | float | 剩餘耐力 |
 | s | float | S值 |
 | h | float | H值 |
-| startSec | float | 起跑秒數 |
+| position | string | 所在位置，若未紀錄過位置則為 null |
+| [parts](#parts) | object | 角色各部位的 Avatar 編號 |
 | [skills](#skills) | array | 角色裝備的技能清單陣列 |
 
+#### <span id="parts"> parts 內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| head | string | 頭部代碼 |
+| body | string | 身體代碼 |
+| hand | string | 手部代碼 |
+| leg | string | 腿部代碼 |
+| back | string | 背部代碼 |
+| hat | string | 頭冠代碼 |
 
 #### <span id="skills">skills 內容</span>
 
@@ -138,181 +113,190 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "code": 0,
 	        "message": ""
 	    },
+	    "user": 1,
+	    "player": 1010000000000001,
 	    "scene": {
-	        "readySec": 7,
 	        "env": 1,
 	        "weather": 1,
-	        "windDirection": 2,
-	        "windSpeed": 100,
-	        "ligthing": 1
+	        "windDirection": 3,
+	        "windSpeed": 50,
+	        "ligthing": 2
 	    },
-	    "users": [
+	    "players": [
 	        {
-	            "id": 1,
+	            "user": 1,
 	            "player": 1010000000000001,
 	            "energy": [
-	                4,
+	                6,
 	                3,
-	                3,
-	                8
+	                6,
+	                3
 	            ],
 	            "hp": 34.43,
-	            "s": 0.4616959999999999,
-	            "h": 0.4203605462822456,
-	            "startSec": 0.05532473514509443,
+	            "s": 1.8694079999999997,
+	            "h": 1.5129250379362666,
+	            "position": "(-313.2, -96.5, -84.6)",
+	            "parts": {
+	                "head": "110101",
+	                "body": "110101",
+	                "hand": "110101",
+	                "leg": "110101",
+	                "back": "110101",
+	                "hat": "110101"
+	            },
 	            "skills": [
 	                {
-	                    "id": 7,
+	                    "id": 1,
 	                    "name": "21001",
 	                    "level": 1,
 	                    "slot": 1,
 	                    "energy": [
-	                        1,
-	                        1,
-	                        1,
-	                        0
+	                        0,
+	                        2,
+	                        0,
+	                        1
 	                    ],
-	                    "cooldown": 3,
+	                    "cooldown": 2,
 	                    "maxCondition": 2,
 	                    "maxConditionValue": 3,
 	                    "effects": [
 	                        {
-	                            "type": 204
+	                            "type": 114
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 402,
+	                            "type": 102,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 8,
+	                    "id": 2,
 	                    "name": "21002",
 	                    "level": 1,
 	                    "slot": 2,
 	                    "energy": [
 	                        2,
 	                        0,
-	                        1,
-	                        1
+	                        2,
+	                        0
 	                    ],
-	                    "cooldown": 4,
+	                    "cooldown": 2,
 	                    "maxCondition": 4,
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 205
+	                            "type": 115
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 2,
+	                            "type": 504,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 9,
+	                    "id": 3,
 	                    "name": "21003",
 	                    "level": 1,
 	                    "slot": 3,
 	                    "energy": [
 	                        0,
-	                        1,
-	                        1,
-	                        1
+	                        0,
+	                        0,
+	                        3
 	                    ],
-	                    "cooldown": 3,
+	                    "cooldown": 2,
 	                    "maxCondition": 1,
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 202
+	                            "type": 112
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 12,
+	                            "type": 141,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 10,
+	                    "id": 4,
 	                    "name": "21004",
 	                    "level": 1,
 	                    "slot": 4,
 	                    "energy": [
 	                        0,
-	                        1,
-	                        1,
+	                        0,
+	                        2,
 	                        2
 	                    ],
-	                    "cooldown": 4,
+	                    "cooldown": 2,
 	                    "maxCondition": 41,
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 201
+	                            "type": 111
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 402,
+	                            "type": 102,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 11,
+	                    "id": 5,
 	                    "name": "21005",
 	                    "level": 1,
 	                    "slot": 5,
 	                    "energy": [
-	                        1,
+	                        2,
 	                        0,
 	                        1,
-	                        1
+	                        0
 	                    ],
-	                    "cooldown": 3,
-	                    "maxCondition": 33,
+	                    "cooldown": 2,
+	                    "maxCondition": 31,
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 203
+	                            "type": 113
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 402,
+	                            "type": 102,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 12,
+	                    "id": 6,
 	                    "name": "21006",
 	                    "level": 1,
 	                    "slot": 6,
 	                    "energy": [
 	                        1,
-	                        2,
-	                        1,
+	                        3,
+	                        0,
 	                        0
 	                    ],
-	                    "cooldown": 4,
+	                    "cooldown": 2,
 	                    "maxCondition": 11,
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 204
+	                            "type": 112
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 10,
+	                            "type": 121,
 	                            "target": 0
 	                        }
 	                    ]
@@ -320,145 +304,179 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            ]
 	        },
 	        {
-	            "id": 2,
-	            "player": 1010000000000003,
+	            "user": -38,
+	            "player": -38,
 	            "energy": [
-	                4,
-	                4,
-	                3,
-	                6
+	                7,
+	                1,
+	                6,
+	                4
 	            ],
-	            "hp": 36.76,
-	            "s": 0.34165333333333336,
-	            "h": 0.25918171243615035,
-	            "startSec": 0.05710044158188782,
+	            "hp": 28.14,
+	            "s": 1.4908666666666668,
+	            "h": 1.0774688179425564,
+	            "position": "(-327.0, -96.5, -47.4)",
+	            "parts": {
+	                "head": "110102",
+	                "body": "110102",
+	                "hand": "110101",
+	                "leg": "110101",
+	                "back": "110101",
+	                "hat": "110103"
+	            },
 	            "skills": [
 	                {
-	                    "id": 7,
-	                    "name": "21001",
+	                    "id": 3,
+	                    "name": "21003",
 	                    "level": 1,
 	                    "slot": 1,
 	                    "energy": [
-	                        1,
-	                        1,
-	                        1,
-	                        0
-	                    ],
-	                    "cooldown": 3,
-	                    "maxCondition": 2,
-	                    "maxConditionValue": 3,
-	                    "effects": [
-	                        {
-	                            "type": 204
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 402,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 9,
-	                    "name": "21003",
-	                    "level": 1,
-	                    "slot": 2,
-	                    "energy": [
 	                        0,
-	                        1,
-	                        1,
-	                        1
+	                        0,
+	                        0,
+	                        3
 	                    ],
-	                    "cooldown": 3,
+	                    "cooldown": 2,
 	                    "maxCondition": 1,
 	                    "maxConditionValue": 1,
 	                    "effects": [
 	                        {
-	                            "type": 202
+	                            "type": 112
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 12,
+	                            "type": 141,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 10,
+	                    "id": 4,
 	                    "name": "21004",
 	                    "level": 1,
-	                    "slot": 3,
+	                    "slot": 2,
 	                    "energy": [
 	                        0,
-	                        1,
-	                        1,
+	                        0,
+	                        2,
 	                        2
 	                    ],
-	                    "cooldown": 4,
+	                    "cooldown": 2,
 	                    "maxCondition": 41,
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 201
+	                            "type": 111
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 402,
+	                            "type": 102,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 11,
+	                    "id": 5,
 	                    "name": "21005",
+	                    "level": 1,
+	                    "slot": 3,
+	                    "energy": [
+	                        2,
+	                        0,
+	                        1,
+	                        0
+	                    ],
+	                    "cooldown": 2,
+	                    "maxCondition": 31,
+	                    "maxConditionValue": 0,
+	                    "effects": [
+	                        {
+	                            "type": 113
+	                        }
+	                    ],
+	                    "maxEffects": [
+	                        {
+	                            "type": 102,
+	                            "target": 0
+	                        }
+	                    ]
+	                },
+	                {
+	                    "id": 7,
+	                    "name": "21007",
 	                    "level": 1,
 	                    "slot": 4,
 	                    "energy": [
 	                        1,
 	                        0,
-	                        1,
-	                        1
+	                        0,
+	                        0
 	                    ],
-	                    "cooldown": 3,
-	                    "maxCondition": 33,
+	                    "cooldown": 2,
+	                    "maxCondition": 32,
 	                    "maxConditionValue": 0,
 	                    "effects": [
 	                        {
-	                            "type": 203
+	                            "type": 114
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 402,
+	                            "type": 102,
 	                            "target": 0
 	                        }
 	                    ]
 	                },
 	                {
-	                    "id": 12,
-	                    "name": "21006",
+	                    "id": 8,
+	                    "name": "21008",
 	                    "level": 1,
 	                    "slot": 5,
 	                    "energy": [
-	                        1,
-	                        2,
-	                        1,
-	                        0
+	                        0,
+	                        0,
+	                        0,
+	                        2
 	                    ],
-	                    "cooldown": 4,
-	                    "maxCondition": 11,
-	                    "maxConditionValue": 0,
+	                    "cooldown": 2,
+	                    "maxCondition": 2,
+	                    "maxConditionValue": 3,
 	                    "effects": [
 	                        {
-	                            "type": 204
+	                            "type": 115
 	                        }
 	                    ],
 	                    "maxEffects": [
 	                        {
-	                            "type": 10,
+	                            "type": 102,
+	                            "target": 0
+	                        }
+	                    ]
+	                },
+	                {
+	                    "id": 18,
+	                    "name": "21018",
+	                    "level": 1,
+	                    "slot": 6,
+	                    "energy": [
+	                        0,
+	                        0,
+	                        2,
+	                        0
+	                    ],
+	                    "cooldown": 2,
+	                    "maxCondition": 43,
+	                    "maxConditionValue": 0,
+	                    "effects": [
+	                        {
+	                            "type": 114
+	                        }
+	                    ],
+	                    "maxEffects": [
+	                        {
+	                            "type": 101,
 	                            "target": 0
 	                        }
 	                    ]

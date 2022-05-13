@@ -9,6 +9,14 @@ namespace Games\Consts;
 class RaceValue {
     
     const NotInRace = 0;
+    const BotMatch = -1;
+    
+    const ForeverAdditiveSec = 1000000000;
+    
+    const LaunchMaxNot = 0;
+    const LaunchMaxYes = 1;
+    const LaunchMaxFail = 0;
+    const LaunchMaxSuccess = 1;
     
     const StatusInit = 0;
     const StatusUpdate = 1;
@@ -21,6 +29,7 @@ class RaceValue {
     const EnergyTypeCount = 4;
     
     const DivisorHP = 100;
+    const DivisorSkillDuration = 75;
     
     const SunNone = 100;
     const SunSame = 120;
@@ -57,4 +66,48 @@ class RaceValue {
     const NormalSpeed = 2;
     /* 比賽節奏 保留體力 */
     const RetainStrength = 3;
+    
+    const PlayerEffectTypes = [
+        SkillValue::EffectH,
+        SkillValue::EffectS,
+        SkillValue::EffectSPD,
+        SkillValue::EffectPOW,
+        SkillValue::EffectFIG,
+        SkillValue::EffectINT,
+        SkillValue::EffectSTA,
+        SkillValue::EffectAdaptDune,
+        SkillValue::EffectAdaptCraterLake,
+        SkillValue::EffectAdaptVolcano,
+        SkillValue::EffectAdaptTailwind,
+        SkillValue::EffectAdaptHeadwind,
+        SkillValue::EffectAdaptCrosswind,
+        SkillValue::EffectAdaptSunny,
+        SkillValue::EffectAdaptAurora,
+        SkillValue::EffectAdaptSandDust,
+        SkillValue::EffectAdaptFlat,
+        SkillValue::EffectAdaptUpslope,
+        SkillValue::EffectAdaptDownslope,
+        SkillValue::EffectAdaptSun,
+    ];
+    
+    const PlayerEffectOnceType = [
+        SkillValue::EffectHP,
+        SkillValue::EffectEnergyAll,
+        SkillValue::EffectEnergyRed,
+        SkillValue::EffectEnergyYellow,
+        SkillValue::EffectEnergyBlue,
+        SkillValue::EffectEnergyGreen,
+    ];
+    
+    const WeatherEffect = [
+        SkillValue::EffectWeatherSunny => SceneValue::Sunny,
+        SkillValue::EffectWeatherAurora => SceneValue::Aurora,
+        SkillValue::EffectWeatherSandDust => SceneValue::SandDust,
+    ];
+    
+    const WindDirectionEffect = [
+        SkillValue::EffectWindTailwind => SceneValue::Tailwind,
+        SkillValue::EffectWindCrosswind => SceneValue::Crosswind,
+        SkillValue::EffectWindHeadwind => SceneValue::Headwind,
+    ];
 }

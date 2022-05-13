@@ -2,6 +2,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
@@ -46,7 +47,7 @@ class Ready extends BaseRace{
             
             $handler = new UserHandler($user->id);
             $userInfo = $handler->GetInfo();
-            if($userInfo->race != RaceValue::NotInRace) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
+            if($userInfo->race != RaceValue::NotInRace && $userInfo->race != RaceValue::BotMatch) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
             
             $readyRaceInfo = new ReadyRaceInfoHolder();
             $readyRaceInfo->raceNumber = $n;
@@ -65,8 +66,14 @@ class Ready extends BaseRace{
         $climate = $sceneHandler->GetClimate();
         
         $raceAccessor = new RaceAccessor();
-        $currentTime = microtime(true);
-        $raceID = $raceAccessor->AddRace($sceneInfo->id, $currentTime, $climate->windDirection);
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        $raceID = $raceAccessor->AddRace([
+            'SceneID' => $sceneInfo->id,
+            'CreateTime' => $currentTime,
+            'UpdateTime' => $currentTime,
+            'Weather' => $climate->weather,
+            'WindDirection' => $climate->windDirection,
+        ]);
         
         $racePlayerIDs = [];
         $playerSkills = [];
@@ -121,7 +128,7 @@ class Ready extends BaseRace{
         }
         
         $raceHandler = new RaceHandler($raceID);
-        $raceHandler->SaveRacePlayerIDs($racePlayerIDs);
+        $raceHandler->SaveData(['racePlayers' => $racePlayerIDs]);
         
         $raceHandler->SetSecne($sceneHandler);
         $readyUserInfos = [];

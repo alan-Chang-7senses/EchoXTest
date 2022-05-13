@@ -21,6 +21,8 @@ class RacePlayerHolder extends stdClass{
     public int $number;
     /** @var int 狀態 */
     public int $status;
+    /** @var string 所在位置 */
+    public string|null $position;
     /** @var int 角色方向 */
     public int $direction;
     /** @var int 能量 [紅,黃,藍,綠] */
@@ -37,6 +39,10 @@ class RacePlayerHolder extends stdClass{
     public int $trackNumber;
     /** @var int 剩餘體力 */
     public int $hp;
+    /** @var int 超越 N 名（累計） */
+    public int $offside;
+    /** @var int 被妨礙次數（成功妨礙） */
+    public int $hit;
     public float $createTime;
     public float $updateTime;
     public float $finishTime;

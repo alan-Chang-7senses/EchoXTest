@@ -67,11 +67,11 @@ class PlayerInfoHolder extends stdClass {
     /** @var int 比賽習慣 */
     public int $habit;
     /** @var int 耐久適性 中距離 */
-    public int $mid;
+//    public int $mid;
     /** @var int 耐久適性 長距離 */
-    public int $long;
+//    public int $long;
     /** @var int 耐久適性 短距離 */
-    public int $short;
+//    public int $short;
     /** @var int 插槽數量 */
     public int $slotNumber;
     /** @var array PlayerSkillHolder 角色技能資料 */
