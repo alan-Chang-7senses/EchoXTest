@@ -50,7 +50,7 @@ class BotPlayer extends BaseRace{
         foreach($userIDs as $id){
             
             $handler = new UserHandler($id);
-            $handler->SaveData(['Race' => RaceValue::BotMatch]);
+            $handler->SaveData(['race' => RaceValue::BotMatch]);
         }
         
         $result = new ResultData(ErrorCode::Success);
