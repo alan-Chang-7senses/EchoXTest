@@ -3,7 +3,11 @@ namespace Handlers;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\HTTPCode;
 use Consts\Sessions;
+use Exception;
+use Helpers\LogHelper;
+use Holders\ResultData;
 use SessionHandler;
 /**
  * Description of Session
@@ -16,7 +20,16 @@ class SessionToDBHandler extends SessionHandler {
 
     public function open(string $path, string $name): bool {
         
-        $this->accessor = new PDOAccessor(getenv(EnvVar::DBLabelMain));
+        try {    
+            $this->accessor = new PDOAccessor(getenv(EnvVar::DBLabelMain));
+        } catch (Exception $ex) {
+            http_response_code(HTTPCode::BadRequest);
+            $result = new ResultData($ex->getCode(), $ex->getMessage());
+            LogHelper::Save($ex);
+            echo json_encode ($result, JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
         return parent::open($path, $name);
     }
     
