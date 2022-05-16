@@ -10,7 +10,7 @@
 
 ## URL
 
-http(s)://`域名`/Player/BotPlayer/
+http(s)://`域名`/Races/BotPlayer/
 
 ## Method
 

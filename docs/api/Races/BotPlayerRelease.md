@@ -9,7 +9,7 @@
 
 ## URL
 
-http(s)://`域名`/Player/BotPlayerRelease/
+http(s)://`域名`/Races/BotPlayerRelease/
 
 ## Method
 
