@@ -26,7 +26,7 @@ class FastestList extends Leaderboard{
             $result->list[] = [
                 'ranking' => $ranking,
                 'account' => $row->Username,
-                'duration' => $row->Duration,
+                'duration' => $row->DurationStr,
             ];
             
             ++$ranking;

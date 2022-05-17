@@ -185,9 +185,9 @@ WHERE `UserID` > 0 AND `'.$column.'` = (
     }
     
     public function rowsFastest(int $offset, int $length) : array{
-        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `Username`, SUBSTRING( FROM_UNIXTIME(`Duration`, "%T.%f"), 1, 12) AS Duration
+        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `Username`, SUBSTRING( FROM_UNIXTIME(`Duration`, "%T.%f"), 1, 12) AS DurationStr
 FROM `Users` LEFT JOIN `RacePlayer` USING(UserID) 
-WHERE `UserID` > 0 AND `Duration` > 0 GROUP BY `UserID` ORDER BY `Duration` ASC, `Score` DESC
+WHERE `UserID` > 0 AND `Duration` > 0 AND `RaceID` > 0 GROUP BY `UserID` ORDER BY `Duration` ASC
 LIMIT '.$offset.', '.$length, []);
     }
     
