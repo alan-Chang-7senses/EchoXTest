@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `TotalUserRace` (
 CREATE TABLE IF NOT EXISTS `UserLogin` (
   `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者ID',
-  `UserIP` varchar(50) NOT NULL DEFAULT '' COMMENT '使用者IP',
+  `UserIP` varchar(255) NOT NULL DEFAULT '' COMMENT '使用者IP',
   `RecordTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
   PRIMARY KEY (`Serial`),
   KEY `UserID` (`UserID`)

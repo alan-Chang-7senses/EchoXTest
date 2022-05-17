@@ -9,7 +9,7 @@
 
 ## URL
 
-http(s)://`域名`/Player/BotPlayerRelease/
+http(s)://`域名`/Races/BotPlayerRelease/
 
 ## Method
 
@@ -34,6 +34,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| id | int | 被釋放的使用者編號（角色編號） |
 
 ### Example
 
@@ -41,5 +42,6 @@ Content Type: `application/json`
 	    "error": {
 	        "code": 0,
 	        "message": ""
-	    }
+	    },
+	    "id": "-36",
 	}
