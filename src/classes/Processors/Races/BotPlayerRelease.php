@@ -30,9 +30,11 @@ class BotPlayerRelease extends BaseRace {
         
         if($info->race != RaceValue::BotMatch) throw new RaceException(RaceException::NotBotInMatch);
         
-        $handler->SaveData(['Race' => RaceValue::NotInRace]);
+        $handler->SaveData(['race' => RaceValue::NotInRace]);
         
         $result = new ResultData(ErrorCode::Success);
+        $result->id = $id;
+        
         return $result;
     }
 }
