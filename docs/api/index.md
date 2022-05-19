@@ -29,6 +29,8 @@
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
+	- 公告：
+		- [跑馬燈](Notices/Marquee.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
@@ -47,3 +49,4 @@
 	- [場景](codes/scene.md)。
 	- [技能](codes/skill.md)。
 	- [競賽](codes/race.md)。
+	- [其它](codes/other.md)。
