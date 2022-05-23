@@ -17,6 +17,33 @@
 CREATE DATABASE IF NOT EXISTS `koa_static` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_static`;
 
+-- 傾印  資料表 koa_static.ItemDrop 結構
+CREATE TABLE IF NOT EXISTS `ItemDrop` (
+  `ItemDropID` int(11) NOT NULL DEFAULT 0 COMMENT '掉落物編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `Proportion` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '比例權重',
+  PRIMARY KEY (`ItemDropID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
+
+-- 傾印  資料表 koa_static.ItemInfo 結構
+CREATE TABLE IF NOT EXISTS `ItemInfo` (
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `ItemName` varchar(50) NOT NULL COMMENT '物品名稱代號',
+  `Description` varchar(50) NOT NULL COMMENT '物品敘述代號',
+  `ItemType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '物品種類',
+  `Icon` varchar(50) NOT NULL COMMENT '圖號',
+  `StackLimit` int(11) NOT NULL DEFAULT 0 COMMENT '堆疊上限',
+  `UseType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用類型',
+  `EffectType` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `EffectValue` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果值',
+  `ItemDropIDs` text DEFAULT NULL COMMENT '掉落物編號',
+  `DropType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落類型',
+  `DropCount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落次數',
+  `Source` varchar(255) NOT NULL DEFAULT '' COMMENT '來源代號',
+  PRIMARY KEY (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
+
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
   `SceneClimateID` int(10) unsigned NOT NULL AUTO_INCREMENT,

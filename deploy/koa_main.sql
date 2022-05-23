@@ -1019,6 +1019,19 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   KEY `SessionExpires` (`SessionExpires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 傾印  資料表 koa_main.UserItems 結構
+CREATE TABLE IF NOT EXISTS `UserItems` (
+  `UserItemID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者物品編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserItemID`),
+  KEY `UserID` (`UserID`),
+  KEY `ItemID` (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者持有物品';
+
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
   `UserID` int(10) NOT NULL AUTO_INCREMENT,

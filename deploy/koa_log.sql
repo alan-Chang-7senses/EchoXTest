@@ -33,6 +33,21 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
 
+-- 傾印  資料表 koa_log.UserItemsLog 結構
+CREATE TABLE IF NOT EXISTS `UserItemsLog` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UserItemID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者物品編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Action` tinyint(4) NOT NULL DEFAULT 0 COMMENT '動作',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `LogTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  PRIMARY KEY (`Serial`,`LogTime`),
+  KEY `UserItemID` (`UserItemID`),
+  KEY `UserID` (`UserID`),
+  KEY `ItemID` (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者物品紀錄';
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
