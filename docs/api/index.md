@@ -14,6 +14,7 @@
 		- [當前場景](User/CurrentScene.md)。
 		- [當前角色](User/CurrentPlayer.md)。
 		- [當前使用者資訊](User/CurrentInfo.md)。
+		- [持有物品](User/Items.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
@@ -49,4 +50,5 @@
 	- [場景](codes/scene.md)。
 	- [技能](codes/skill.md)。
 	- [競賽](codes/race.md)。
+	- [物品](codes/item.md)。
 	- [其它](codes/other.md)。
