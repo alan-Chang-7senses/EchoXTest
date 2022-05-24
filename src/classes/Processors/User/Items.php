@@ -37,7 +37,7 @@ class Items extends BaseProcessor{
                 'itemType' => $userItemInfo->itemType,
                 'icon' => $userItemInfo->icon,
                 'stackLimit' => $userItemInfo->stackLimit,
-                'userType' => $userItemInfo->useType,
+                'useType' => $userItemInfo->useType,
                 'source' => $userItemInfo->source,
             ];
         }
