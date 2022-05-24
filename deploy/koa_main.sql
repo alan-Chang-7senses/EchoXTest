@@ -918,16 +918,16 @@ BEGIN
     
     BEGIN
     
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+        ROLLBACK;
         SELECT step, @full_error;
     
     END;
 
     START TRANSACTION;
 
-        UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RacePlayerID` IN (SELECT `RacePlayerID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+        UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
         SET step = 1;
 
         UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
@@ -1024,7 +1024,7 @@ CREATE TABLE IF NOT EXISTS `UserItems` (
   `UserItemID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者物品編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
-  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `Amount` int(10) NOT NULL DEFAULT 0 COMMENT '數量',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserItemID`),
