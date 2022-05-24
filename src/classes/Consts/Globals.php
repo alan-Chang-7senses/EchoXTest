@@ -14,4 +14,5 @@ class Globals {
     const TIME_BEGIN = 'beginTime';
     const RESULT_PROCESS = 'processResult';
     const RESULT_PROCESS_MESSAGE = 'processResultMessage';
+    const RESULT_PROCESS_DATA = 'processResultData';
 }
