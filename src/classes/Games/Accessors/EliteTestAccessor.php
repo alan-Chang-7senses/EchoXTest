@@ -153,15 +153,19 @@ class EliteTestAccessor extends BaseAccessor{
     }
     
     public function rowsFastestFinishTime(bool $fastest) : array{
-        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `UserID`, `Username`, `Score`, FORMAT(`Duration`, 2) AS duration 
-FROM `Users` LEFT JOIN `RacePlayer` USING(UserID) 
-WHERE `UserID` > 0 AND `Duration` = (
-    SELECT `Duration` 
-    FROM `RacePlayer` 
-    WHERE `UserID` > 0 
-    ORDER BY `Duration` '.($fastest ? 'ASC' : 'DESC').' 
-    LIMIT 1
-)GROUP BY `UserID` ORDER BY UserID', []);
+        return $this->EliteTestAccessor()->SelectExpr('`UserID`, `Username`, `Score`, SUBSTRING( FROM_UNIXTIME(`Duration`, "%T.%f"), 1, 12) AS durationStr')
+                ->FromTableJoinUsing('Users', 'RacePlayer', 'LEFT', 'UserID')
+                ->WhereGreater('UserID', 0)->WhereGreater('RaceID', 0)->WhereGreater('Duration', 0)
+                ->GroupBy('UserID')->OrderBy('Duration', $fastest ? 'ASC' : 'DESC')->Limit(5)->FetchAll();
+//        return $this->EliteTestAccessor()->executeBindFetchAll('SELECT `UserID`, `Username`, `Score`, FORMAT(`Duration`, 2) AS duration 
+//FROM `Users` LEFT JOIN `RacePlayer` USING(UserID) 
+//WHERE `UserID` > 0 AND `Duration` = (
+//    SELECT `Duration` 
+//    FROM `RacePlayer` 
+//    WHERE `UserID` > 0 
+//    ORDER BY `Duration` '.($fastest ? 'ASC' : 'DESC').' 
+//    LIMIT 1
+//)GROUP BY `UserID` ORDER BY UserID', []);
     }
     
     public function rowsTotalLoginHours() : array {
