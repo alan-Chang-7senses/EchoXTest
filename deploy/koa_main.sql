@@ -68,6 +68,24 @@ CREATE TABLE IF NOT EXISTS `Marquee` (
   KEY `Staus` (`Status`,`Lang`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
 
+-- 正在傾印表格  koa_main.Marquee 的資料：~4 rows (近似值)
+/*!40000 ALTER TABLE `Marquee` DISABLE KEYS */;
+INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 0, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
+	(2, 1, 1, 0, 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 0, 0),
+	(3, 1, 2, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
+	(4, 1, 3, 0, '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 0, 0),
+	(5, 1, 4, 0, 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 0, 0),
+	(6, 1, 5, 0, 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 0, 0),
+	(7, 1, 6, 0, '《PetaRush》へようこそ一緒に《PetaRush》で盛り上がりましょう！', 0, 0),
+	(8, 1, 7, 0, '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', 0, 0),
+	(9, 1, 8, 0, '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 0, 0),
+	(10, 1, 9, 0, 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 0, 0),
+	(11, 1, 10, 0, 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 0, 0),
+	(12, 1, 11, 0, 'ยินดีต้อนรับสู่ 《PetaRush》. เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush', 0, 0),
+	(13, 1, 12, 0, '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', 0, 0);
+/*!40000 ALTER TABLE `Marquee` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.PlayerHolder 結構
 CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   `PlayerID` bigint(20) NOT NULL,
