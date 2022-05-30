@@ -17,6 +17,53 @@
 CREATE DATABASE IF NOT EXISTS `koa_static` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_static`;
 
+-- 傾印  資料表 koa_static.ItemDrop 結構
+CREATE TABLE IF NOT EXISTS `ItemDrop` (
+  `ItemDropID` int(11) NOT NULL DEFAULT 0 COMMENT '掉落物編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `Proportion` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '比例權重',
+  PRIMARY KEY (`ItemDropID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
+
+-- 正在傾印表格  koa_static.ItemDrop 的資料：~5 rows (近似值)
+/*!40000 ALTER TABLE `ItemDrop` DISABLE KEYS */;
+INSERT INTO `ItemDrop` (`ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
+	(1, 1, 2, 100),
+	(2, 2, 5, 50),
+	(3, 1, 4, 75),
+	(4, 2, 10, 200),
+	(5, 3, 1, 10);
+/*!40000 ALTER TABLE `ItemDrop` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.ItemInfo 結構
+CREATE TABLE IF NOT EXISTS `ItemInfo` (
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `ItemName` varchar(50) NOT NULL COMMENT '物品名稱代號',
+  `Description` varchar(50) NOT NULL COMMENT '物品敘述代號',
+  `ItemType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '物品種類',
+  `Icon` varchar(50) NOT NULL COMMENT '圖號',
+  `StackLimit` int(11) NOT NULL DEFAULT 0 COMMENT '堆疊上限',
+  `UseType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用類型',
+  `EffectType` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果類型',
+  `EffectValue` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果值',
+  `ItemDropIDs` text DEFAULT NULL COMMENT '掉落物編號',
+  `DropType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落類型',
+  `DropCount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落次數',
+  `Source` varchar(255) NOT NULL DEFAULT '' COMMENT '來源代號',
+  PRIMARY KEY (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
+
+-- 正在傾印表格  koa_static.ItemInfo 的資料：~5 rows (近似值)
+/*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
+INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `ItemDropIDs`, `DropType`, `DropCount`, `Source`) VALUES
+	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, NULL, 0, 0, 's001,s002,s003'),
+	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, NULL, 0, 0, 's002'),
+	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, '1,2', 1, 1, 's003'),
+	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, '1,2', 2, 1, 's004'),
+	(5, 'n0005', 'd0005', 3, '5', 555, 1, 0, 0, '1,2,3,4,5', 3, 2, 's003,s005');
+/*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
   `SceneClimateID` int(10) unsigned NOT NULL AUTO_INCREMENT,

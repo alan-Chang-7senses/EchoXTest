@@ -54,6 +54,38 @@ INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Po
 	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
 /*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.Marquee 結構
+CREATE TABLE IF NOT EXISTS `Marquee` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態(1=啟用)',
+  `Lang` tinyint(4) NOT NULL DEFAULT 1 COMMENT '語系',
+  `Sorting` tinyint(4) NOT NULL DEFAULT 0 COMMENT '排序',
+  `Content` text NOT NULL COMMENT '內容',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`Serial`),
+  KEY `Sorting` (`Sorting`),
+  KEY `Staus` (`Status`,`Lang`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
+
+-- 正在傾印表格  koa_main.Marquee 的資料：~4 rows (近似值)
+/*!40000 ALTER TABLE `Marquee` DISABLE KEYS */;
+INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 0, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
+	(2, 1, 1, 0, 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 0, 0),
+	(3, 1, 2, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
+	(4, 1, 3, 0, '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 0, 0),
+	(5, 1, 4, 0, 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 0, 0),
+	(6, 1, 5, 0, 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 0, 0),
+	(7, 1, 6, 0, '《PetaRush》へようこそ一緒に《PetaRush》で盛り上がりましょう！', 0, 0),
+	(8, 1, 7, 0, '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', 0, 0),
+	(9, 1, 8, 0, '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 0, 0),
+	(10, 1, 9, 0, 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 0, 0),
+	(11, 1, 10, 0, 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 0, 0),
+	(12, 1, 11, 0, 'ยินดีต้อนรับสู่ 《PetaRush》. เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush', 0, 0),
+	(13, 1, 12, 0, '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', 0, 0);
+/*!40000 ALTER TABLE `Marquee` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.PlayerHolder 結構
 CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   `PlayerID` bigint(20) NOT NULL,
@@ -904,16 +936,16 @@ BEGIN
     
     BEGIN
     
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+        ROLLBACK;
         SELECT step, @full_error;
     
     END;
 
     START TRANSACTION;
 
-        UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RacePlayerID` IN (SELECT `RacePlayerID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+        UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
         SET step = 1;
 
         UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
@@ -1004,6 +1036,19 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   PRIMARY KEY (`SessionID`),
   KEY `SessionExpires` (`SessionExpires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.UserItems 結構
+CREATE TABLE IF NOT EXISTS `UserItems` (
+  `UserItemID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者物品編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Amount` int(10) NOT NULL DEFAULT 0 COMMENT '數量',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserItemID`),
+  KEY `UserID` (`UserID`),
+  KEY `ItemID` (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者持有物品';
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (

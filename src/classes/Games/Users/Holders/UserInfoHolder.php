@@ -18,4 +18,5 @@ class UserInfoHolder extends stdClass{
     public int $scene;
     public int $race;
     public array $players;
+    public array $items;
 }
