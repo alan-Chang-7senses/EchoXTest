@@ -12,4 +12,5 @@ class UserException extends NormalException{
     
     const UserNotExist = 2001;
     const NotHoldPlayer = 2002;
+    const ItemNotEnough = 2003;
 }

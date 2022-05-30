@@ -63,6 +63,7 @@ class OfflineRecovery extends BaseRace {
                     'slot' => $playerSkill->slot,
                     'energy' => $skillInfo->energy,
                     'cooldown' => $skillInfo->cooldown,
+                    'duration' => $skillInfo->duration,
                     'maxCondition' => $skillInfo->maxCondition,
                     'maxConditionValue' => $skillInfo->maxConditionValue,
                     'effects' => $skillHandler->GetEffects(),

@@ -83,6 +83,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | slot | int | 技能所在插槽 |
 | energy | array | 使用條件能量值（int），陣列元素依序為 紅、黃、藍、綠 |
 | cooldown | float | 冷卻時間（秒） |
+| duration | float | 時效性<br>0 = 單次效果<br>大於 0 = 時效秒數<br>-1 = 持續到比賽結束 |
 | maxCondition | int | [滿星效果條件](../codes/skill.md#maxCondition) |
 | maxConditionValue | int | 滿星效果條件值 |
 | [effects](#effects) | array | 技能效果陣列 |
@@ -118,23 +119,23 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	    "scene": {
 	        "env": 1,
 	        "weather": 1,
-	        "windDirection": 3,
+	        "windDirection": 2,
 	        "windSpeed": 50,
-	        "ligthing": 2
+	        "ligthing": 1
 	    },
 	    "players": [
 	        {
 	            "user": 1,
 	            "player": 1010000000000001,
 	            "energy": [
+	                5,
 	                6,
 	                3,
-	                6,
-	                3
+	                4
 	            ],
 	            "hp": 34.43,
-	            "s": 1.8694079999999997,
-	            "h": 1.5129250379362666,
+	            "s": 1.0616959999999998,
+	            "h": 0.966642792109256,
 	            "position": "(-313.2, -96.5, -84.6)",
 	            "parts": {
 	                "head": "110101",
@@ -157,6 +158,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        1
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 7.2,
 	                    "maxCondition": 2,
 	                    "maxConditionValue": 3,
 	                    "effects": [
@@ -183,6 +185,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 9.8,
 	                    "maxCondition": 4,
 	                    "maxConditionValue": 1,
 	                    "effects": [
@@ -209,6 +212,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        3
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 7.2,
 	                    "maxCondition": 1,
 	                    "maxConditionValue": 1,
 	                    "effects": [
@@ -235,6 +239,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        2
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 9.8,
 	                    "maxCondition": 41,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -261,6 +266,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 7.2,
 	                    "maxCondition": 31,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -287,6 +293,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 9.8,
 	                    "maxCondition": 11,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -308,13 +315,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "player": -38,
 	            "energy": [
 	                7,
-	                1,
+	                2,
 	                6,
-	                4
+	                3
 	            ],
 	            "hp": 28.14,
-	            "s": 1.4908666666666668,
-	            "h": 1.0774688179425564,
+	            "s": 0.755466666666667,
+	            "h": 0.6483579356905826,
 	            "position": "(-327.0, -96.5, -47.4)",
 	            "parts": {
 	                "head": "110102",
@@ -337,6 +344,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        3
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 7.2,
 	                    "maxCondition": 1,
 	                    "maxConditionValue": 1,
 	                    "effects": [
@@ -363,6 +371,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        2
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 9.8,
 	                    "maxCondition": 41,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -389,6 +398,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 7.2,
 	                    "maxCondition": 31,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -415,6 +425,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": -1,
 	                    "maxCondition": 32,
 	                    "maxConditionValue": 0,
 	                    "effects": [
@@ -441,6 +452,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        2
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": -1,
 	                    "maxCondition": 2,
 	                    "maxConditionValue": 3,
 	                    "effects": [
@@ -467,6 +479,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                        0
 	                    ],
 	                    "cooldown": 2,
+	                    "duration": 5,
 	                    "maxCondition": 43,
 	                    "maxConditionValue": 0,
 	                    "effects": [

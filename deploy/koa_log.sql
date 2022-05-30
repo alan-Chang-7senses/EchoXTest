@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `RedirectURL` varchar(255) NOT NULL COMMENT '執行網址',
   `Content` longtext NOT NULL COMMENT '內容',
   `Result` tinyint(4) NOT NULL DEFAULT 0 COMMENT '處理結果(1=成功)',
+  `ResultData` longtext NOT NULL COMMENT '處理結果資料',
   `HttpCode` varchar(5) DEFAULT NULL COMMENT 'HTTP回應狀態碼',
   `Message` text DEFAULT NULL COMMENT '處理結果訊息',
   `BeginTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '起始時間',
@@ -32,6 +33,22 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   PRIMARY KEY (`Serial`,`RecordTime`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
+
+-- 傾印  資料表 koa_log.UserItemsLog 結構
+CREATE TABLE IF NOT EXISTS `UserItemsLog` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `UserItemID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者物品編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Action` tinyint(4) NOT NULL DEFAULT 0 COMMENT '動作',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `Remain` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘數量',
+  `LogTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  PRIMARY KEY (`Serial`,`LogTime`),
+  KEY `UserItemID` (`UserItemID`),
+  KEY `UserID` (`UserID`),
+  KEY `ItemID` (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者物品紀錄';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

@@ -75,4 +75,6 @@ try{
 header('Content-Type: application/json');
 
 if(ConfigGenerator::Instance()->EnabledProcessTime == 1) $result->processTime = microtime(true) - $t;
-echo json_encode ($result, JSON_UNESCAPED_UNICODE);
+$resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
+$GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
+echo $resultData;
