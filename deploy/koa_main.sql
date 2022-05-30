@@ -54,6 +54,20 @@ INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Po
 	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
 /*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.Marquee 結構
+CREATE TABLE IF NOT EXISTS `Marquee` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態(1=啟用)',
+  `Lang` tinyint(4) NOT NULL DEFAULT 1 COMMENT '語系',
+  `Sorting` tinyint(4) NOT NULL DEFAULT 0 COMMENT '排序',
+  `Content` text NOT NULL COMMENT '內容',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`Serial`),
+  KEY `Sorting` (`Sorting`),
+  KEY `Staus` (`Status`,`Lang`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
+
 -- 傾印  資料表 koa_main.PlayerHolder 結構
 CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   `PlayerID` bigint(20) NOT NULL,
