@@ -172,6 +172,7 @@ class LaunchSkill extends BaseRace{
             $raceHandler->SetPlayer($playerHandler);
             $racePlayerInfo = $racePlayerHandler->GetInfo();
             $others[] = [
+                'id' => $playerID,
                 'h' => $raceHandler->ValueH(),
                 's' => $raceHandler->ValueS(),
                 'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
