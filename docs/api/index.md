@@ -27,6 +27,7 @@
 		- [角色數值](Races/PlayerValues.md)。
 		- [託管角色數值](Races/HostedPlayerValues.md)。
 		- [發動技能](Races/LaunchSkill.md)。
+		- [託管發動技能](Races/HostedLaunchSkill.md)。
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
