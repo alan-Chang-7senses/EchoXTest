@@ -27,6 +27,7 @@ class RaceValue {
 
     const BaseEnergyCount = 12;
     const EnergyTypeCount = 4;
+    const EnergyFixedCount = 10;
     
     const DivisorHP = 100;
     const DivisorSkillDuration = 75;

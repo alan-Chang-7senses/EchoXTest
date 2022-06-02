@@ -77,6 +77,8 @@ class Ready extends BaseRace{
         
         $racePlayerIDs = [];
         $playerSkills = [];
+        $ratioEnergy = [];
+        $randomEnergy = [];
         foreach($userHandlers as $userHandler){
             
             $userInfo = $userHandler->GetInfo();
@@ -86,6 +88,8 @@ class Ready extends BaseRace{
             $playerInfo = $playerHandler->GetInfo();
             
             $skills = [];
+            $energyCounts = array_fill(0, RaceValue::EnergyTypeCount, 0);
+            $energyTotal = 0;
             foreach($playerInfo->skills as $playerSkill){
                 
                 if($playerSkill->slot == SkillValue::NotInSlot) continue;
@@ -105,6 +109,18 @@ class Ready extends BaseRace{
                     'effects' => $handler->GetEffects(),
                     'maxEffects' => $handler->GetMaxEffects(),
                 ];
+                
+                for($i = 0; $i < RaceValue::EnergyTypeCount; ++$i){
+                    $energyCounts[$i] += $skillInfo->energy[$i];
+                    $energyTotal += $skillInfo->energy[$i];
+                }
+            }
+            
+            $ratioEnergy[$userInfo->player] = RaceUtility::RatioEnergy($energyCounts, $energyTotal);
+            $randomEnergy[$userInfo->player] = RaceUtility::RandomEnergy($playerInfo->slotNumber);
+            $energy = [];
+            for($i = 0; $i < RaceValue::EnergyTypeCount; ++$i){
+                $energy[] = $ratioEnergy[$userInfo->player][$i] + $randomEnergy[$userInfo->player][$i];
             }
             
             $racePlayerID = $raceAccessor->AddRacePlayer([
@@ -113,7 +129,7 @@ class Ready extends BaseRace{
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $readyRaceInfo->raceNumber,
                 'Direction' => $direction,
-                'Energy' => implode(',', RaceUtility::RandomEnergy($playerInfo->slotNumber)),
+                'Energy' => implode(',', $energy),
                 'TrackType' => $trackType,
                 'TrackShape' => $trackShape,
                 'Rhythm' => $readyRaceInfo->rhythm,
@@ -141,7 +157,9 @@ class Ready extends BaseRace{
             $readyUserInfos[] = [
                 'id' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
-                'energy' => $racePlayerInfo->energy,
+                'energyRatio' => $ratioEnergy[$racePlayerInfo->player],
+                'energyRandom' => $randomEnergy[$racePlayerInfo->player],
+                'energyTotal' => $racePlayerInfo->energy,
                 'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
                 's' => $raceHandler->ValueS(),
                 'h' => $raceHandler->ValueH(),

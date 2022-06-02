@@ -11,11 +11,29 @@ class RaceUtility {
     
     public static function RandomEnergy(int $slotNumber) : array{
         
-        $count = RaceValue::BaseEnergyCount + $slotNumber;
+        $count = RaceValue::BaseEnergyCount - RaceValue::EnergyFixedCount + $slotNumber;
         $energy = array_fill(0, RaceValue::EnergyTypeCount, 0);
         $max = RaceValue::EnergyTypeCount - 1;
         for($i = 0; $i < $count; ++$i){
             ++$energy[random_int(0, $max)];
+        }
+        
+        return $energy;
+    }
+    
+    public static function RatioEnergy(array $counts, int $total) : array {
+        
+        $energy = [];
+        $amount = 0;
+        for($i = 0; $i < RaceValue::EnergyTypeCount; ++$i){
+             $value = round($counts[$i] / $total * RaceValue::EnergyFixedCount);
+             $energy[] = $value;
+             $amount += $value;
+        }
+        
+        $remain = RaceValue::EnergyFixedCount - $amount;
+        for($i = 0; $i < $remain; ++$i){
+            ++$energy[$i % RaceValue::EnergyTypeCount];
         }
         
         return $energy;
