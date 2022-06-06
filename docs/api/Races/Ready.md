@@ -73,7 +73,6 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| readySec | int | 起跑準備時間（秒） |
 | env | int | [環境](../codes/scene.md#env) |
 | weather | int | [天氣](../codes/scene.md#weather) |
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
@@ -142,7 +141,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "message": ""
 	    },
 	    "scene": {
-	        "readySec": 7,
 	        "env": 1,
 	        "weather": 1,
 	        "windDirection": 3,
