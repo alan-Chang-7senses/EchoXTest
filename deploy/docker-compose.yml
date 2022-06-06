@@ -17,6 +17,7 @@ services:
             - ./src:/var/www/html
         environment:
             SYSENV: local
+#            PROCESS_TIMING: 'true'
 #            MAINTAIN: 'true'
             DBLABEL_MAIN: KoaMain
             DBLABEL_STATIC: KoaStatic

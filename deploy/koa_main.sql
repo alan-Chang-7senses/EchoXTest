@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
-	('EnabledProcessTime', '0', '啟用回傳紀錄處理時間(1=啟用)'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)'),
 	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
