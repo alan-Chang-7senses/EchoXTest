@@ -90,15 +90,14 @@ INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirecti
 CREATE TABLE IF NOT EXISTS `SceneInfo` (
   `SceneID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `SceneName` varchar(50) NOT NULL DEFAULT '' COMMENT '場景代號（名稱）',
-  `ReadyToStart` tinyint(3) unsigned NOT NULL DEFAULT 7 COMMENT '起跑準備（秒）',
   `SceneEnv` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '場景環境',
   PRIMARY KEY (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景主要資訊';
 
 -- 正在傾印表格  koa_static.SceneInfo 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
-INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `ReadyToStart`, `SceneEnv`) VALUES
-	(1, 'CloseBeta', 7, 1);
+INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `SceneEnv`) VALUES
+	(1, 'CloseBeta', 1);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillAffixAlias 結構
