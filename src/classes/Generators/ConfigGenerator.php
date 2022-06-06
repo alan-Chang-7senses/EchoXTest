@@ -29,7 +29,7 @@ class ConfigGenerator {
         
         if($value === false){
             
-            $row = (new PDOAccessor(getenv(EnvVar::DBLabelMain)))->FromTable('Configs')->WhereEqual('Name', $property)->Fetch();
+            $row = (new PDOAccessor(EnvVar::DBMain))->FromTable('Configs')->WhereEqual('Name', $property)->Fetch();
             if(empty($row)) throw new Exception ('Config '.$property.' undefined', ErrorCode::ConfigError);
             
             $memcache->set($key, $row->Value);
