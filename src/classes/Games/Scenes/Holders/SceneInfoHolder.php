@@ -10,7 +10,6 @@ use stdClass;
 class SceneInfoHolder extends stdClass {
     public int $id;
     public string $name;
-    public int $readySec;
     public int $env;
     public array $climates;
 }
