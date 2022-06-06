@@ -19,6 +19,7 @@ services:
             SYSENV: local
 #            PROCESS_TIMING: 'true'
 #            MAINTAIN: 'true'
+            TIMEZONE_DEFAULT: 8
             DBLABEL_MAIN: KoaMain
             DBLABEL_STATIC: KoaStatic
             DBLABEL_LOG: KoaLog

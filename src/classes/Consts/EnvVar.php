@@ -12,6 +12,7 @@ class EnvVar {
     const SysEnv = 'SYSENV';
     const Maintain = 'MAINTAIN';
     const ProcessTiming = 'PROCESS_TIMING';
+    const TimezoneDefault = 'TIMEZONE_DEFAULT';
     
     const DBLabelMain = 'DBLABEL_MAIN';
     const DBLabelStatic = 'DBLABEL_STATIC';

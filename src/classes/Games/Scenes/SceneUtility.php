@@ -1,8 +1,8 @@
 <?php
 namespace Games\Scenes;
 
+use Consts\EnvVar;
 use Games\Scenes\Holders\SceneClimateHolder;
-use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use stdClass;
 /**
@@ -14,7 +14,7 @@ class SceneUtility {
     
     public static function CurrentClimate(array $climates) : SceneClimateHolder|stdClass{
         
-        $currentSceond = DataGenerator::TodaySecondByTimezone(ConfigGenerator::Instance()->TimezoneDefault);
+        $currentSceond = DataGenerator::TodaySecondByTimezone(getenv(EnvVar::TimezoneDefault));
         $currentClimate = end($climates);
         foreach($climates as $climate){
             if($currentSceond >= $climate->startTime){

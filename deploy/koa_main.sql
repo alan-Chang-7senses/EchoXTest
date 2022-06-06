@@ -29,8 +29,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
-	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)'),
-	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
+	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.DatabaseInfo 結構
