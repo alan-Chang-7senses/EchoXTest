@@ -15,6 +15,7 @@ class Predefined {
     const FormatPassword = '/^.{4,16}$/';
     const UserEnabled = 1;
     const Maintaining = 'true';
+    const ProcessTiming = 'true';
     
     const SysLocal = 'local';
 }

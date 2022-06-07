@@ -2,8 +2,8 @@
 
 namespace Games\Accessors;
 
+use Consts\EnvVar;
 use Games\EliteTest\EliteTestValues;
-use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 /**
  * Description of EliteTestAccessor
@@ -75,14 +75,14 @@ class EliteTestAccessor extends BaseAccessor{
     public function IncreaseTotalLoginHours() : bool{
         return $this->EliteTestAccessor()->executeBind('UPDATE `TotalLoginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE Hours = :hour', [
             'updateTime' => time(),
-            'hour' => DataGenerator::TodayHourByTimezone(ConfigGenerator::Instance()->TimezoneDefault),
+            'hour' => DataGenerator::TodayHourByTimezone(getenv(EnvVar::TimezoneDefault)),
         ]);
     }
     
     public function IncreaseTotalRaceBeginHours() : bool{
         return $this->EliteTestAccessor()->executeBind('UPDATE `TotalRaceBeginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE Hours = :hour', [
             'updateTime' => time(),
-            'hour' => DataGenerator::TodayHourByTimezone(ConfigGenerator::Instance()->TimezoneDefault),
+            'hour' => DataGenerator::TodayHourByTimezone(getenv(EnvVar::TimezoneDefault)),
         ]);
     }
     

@@ -2,7 +2,9 @@
 
 namespace Processors\EliteTest;
 
+use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Predefined;
 use Games\Accessors\EliteTestAccessor;
 use Games\Consts\RaceValue;
 use Games\EliteTest\EliteTestValues;
@@ -76,7 +78,7 @@ class RaceFinish extends BaseProcessor{
         $res['totalUserRace']['Win'] = $accessor->IncreaseTotalUserRaceWinByUserIDs($winUsers);
         
         $result = new ResultData(ErrorCode::Success);
-        if(ConfigGenerator::Instance()->EnabledProcessTime == 1) $result->res = $res;
+        if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->res = $res;
         
         return $result;
     }

@@ -1,6 +1,8 @@
-# 30點競速遊戲 API
+# Peta Rush 遊戲後端 API
 
-提供給 30 點競速遊戲前端 Unity 使用的後端邏輯與資料存取相關 API。
+ - 提供給 Peta Rush 遊戲前端 Unity 使用的後端邏輯與資料存取相關 API。
+ - 包含輔助工作使用的工具 API。
+ - 包含使用命令列執行的 CLI 工具程式。
 
 ## 資料夾
 
@@ -26,7 +28,8 @@
 
 當有詢問請求進來時，將經由 .htaccess 敘述的 rewrite 導向 index.php 進行處理，或依據 .htaccess 敘述的例外直接執行。
 
-- __logs：__ 系統運行的 log 存放區，通常為 error log。
+- __logs：__ 系統運行的 log 存放區，通常為 error log，環境變數 SYSENV 為 local 時才有作用。
+- __cli：__ 透過命令列介面（CLI）執行的程式。
 
 ## 環境部署
 
@@ -57,16 +60,28 @@
 	- 發行環境不需提供此環境變數。
 	- local：本機環境，此環境才會紀錄 log 檔案。
 	- developement：系統處於開發環境。
+- PROCESS_TIMING：是否回傳處理計時，無此環境變數或變數值不為「字串 true」，代表不回傳。
 - MAINTAIN：是否維護中，無此環境變數或變數值不為「字串 true」，代表非維護中。
-- DBLABEL_MAIN：主資料庫標籤名稱。
-- DBLABEL_STATIC：靜態資料庫標籤名稱。
-- DBLABEL_LOG：日誌資料庫標籤名稱。
-- DBLABEL_ELITE_TEST：菁英測試資料庫標籤名稱。
-- DB_HOST：資料庫主機位址。
-- DB_PORT：資料庫主機 Port。
-- DB_USERNAME：資料庫使用者名稱。
-- DB_PASSWORD：資料庫使用者密碼。
-- DB_NAME：資料庫名稱。
+- DB_MAIN_HOST：「主遊戲」資料庫主機位址。
+- DB_MAIN_PORT：「主遊戲」資料庫主機 Port。
+- DB_MAIN_USERNAME：「主遊戲」資料庫使用者名稱。
+- DB_MAIN_PASSWORD：「主遊戲」資料庫使用者密碼。
+- DB_MAIN_NAME：「主遊戲」資料庫名稱。
+- DB_STATIC_HOST：「遊戲設定數據」資料庫主機位址。
+- DB_STATIC_PORT：「遊戲設定數據」資料庫主機 Port。
+- DB_STATIC_USERNAME：「遊戲設定數據」資料庫使用者名稱。
+- DB_STATIC_PASSWORD：「遊戲設定數據」資料庫使用者密碼。
+- DB_STATIC_NAME：「遊戲設定數據」資料庫名稱。
+- DB_LOG_HOST：「遊戲 Log」資料庫主機位址。
+- DB_LOG_PORT：「遊戲 Log」資料庫主機 Port。
+- DB_LOG_USERNAME：「遊戲 Log」資料庫使用者名稱。
+- DB_LOG_PASSWORD：「遊戲 Log」資料庫使用者密碼。
+- DB_LOG_NAME：「遊戲 Log」資料庫名稱。
+- DB_ELITE_HOST：「菁英測試」資料庫主機位址。
+- DB_ELITE_PORT：「菁英測試」資料庫主機 Port。
+- DB_ELITE_USERNAME：「菁英測試」資料庫使用者名稱。
+- DB_ELITE_PASSWORD：「菁英測試」資料庫使用者密碼。
+- DB_ELITE_NAME：「菁英測試」資料庫名稱。
 - MEMCACHED_HOST：Memcache Server 位址。
 - MEMCACHED_PORT：Memcache Server Port。
 

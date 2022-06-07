@@ -8,11 +8,12 @@ spl_autoload_register(function($className){
     if(file_exists($file)) require $file;
 });
 
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
+use Consts\Predefined;
 use Exceptions\NormalException;
-use Generators\ConfigGenerator;
 use Handlers\SessionToDBHandler;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -74,7 +75,7 @@ try{
 
 header('Content-Type: application/json');
 
-if(ConfigGenerator::Instance()->EnabledProcessTime == 1) $result->processTime = microtime(true) - $t;
+if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->processTime = microtime(true) - $t;
 $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
 $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
 echo $resultData;

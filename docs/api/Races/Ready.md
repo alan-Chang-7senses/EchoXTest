@@ -73,7 +73,6 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| readySec | int | 起跑準備時間（秒） |
 | env | int | [環境](../codes/scene.md#env) |
 | weather | int | [天氣](../codes/scene.md#weather) |
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
@@ -88,7 +87,9 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | id | int | 使用者編號 |
 | player | int | 角色編號 |
-| energy | array | 能量陣列，依序為 紅,黃,藍,綠 |
+| energyRatio | array | 依據技能能量所佔比例的能量陣列，依序為 紅,黃,藍,綠 |
+| energyRandom | array | 隨機生成的能量陣列，依序為 紅,黃,藍,綠 |
+| energyTotal | array | 總能量陣列，依序為 紅,黃,藍,綠 |
 | hp | float | 剩餘耐力 |
 | s | float | S值 |
 | h | float | H值 |
@@ -140,26 +141,37 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "message": ""
 	    },
 	    "scene": {
-	        "readySec": 7,
 	        "env": 1,
 	        "weather": 1,
-	        "windDirection": 2,
+	        "windDirection": 3,
 	        "windSpeed": 50,
-	        "ligthing": 1
+	        "ligthing": 2
 	    },
 	    "users": [
 	        {
 	            "id": 1,
 	            "player": 1010000000000001,
-	            "energy": [
-	                5,
-	                6,
+	            "energyRatio": [
 	                3,
-	                4
+	                2,
+	                2,
+	                3
+	            ],
+	            "energyRandom": [
+	                1,
+	                4,
+	                3,
+	                0
+	            ],
+	            "energyTotal": [
+	                4,
+	                6,
+	                5,
+	                3
 	            ],
 	            "hp": 34.43,
-	            "s": 1.0616959999999998,
-	            "h": 0.966642792109256,
+	            "s": 1.8694079999999997,
+	            "h": 1.5129250379362666,
 	            "startSec": 0.05532473514509443,
 	            "skills": [
 	                {
@@ -329,15 +341,27 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        {
 	            "id": -38,
 	            "player": -38,
-	            "energy": [
-	                7,
+	            "energyRatio": [
 	                2,
-	                6,
-	                3
+	                0,
+	                3,
+	                5
+	            ],
+	            "energyRandom": [
+	                3,
+	                3,
+	                2,
+	                0
+	            ],
+	            "energyTotal": [
+	                5,
+	                3,
+	                5,
+	                5
 	            ],
 	            "hp": 28.14,
-	            "s": 0.755466666666667,
-	            "h": 0.6483579356905826,
+	            "s": 1.4908666666666668,
+	            "h": 1.0774688179425564,
 	            "startSec": 0.06063311732328299,
 	            "skills": [
 	                {

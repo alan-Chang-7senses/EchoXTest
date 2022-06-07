@@ -20,8 +20,8 @@ class SessionToDBHandler extends SessionHandler {
 
     public function open(string $path, string $name): bool {
         
-        try {    
-            $this->accessor = new PDOAccessor(getenv(EnvVar::DBLabelMain));
+        try {
+            $this->accessor = new PDOAccessor(EnvVar::DBMain);
         } catch (Exception $ex) {
             http_response_code(HTTPCode::BadRequest);
             $result = new ResultData($ex->getCode(), $ex->getMessage());
