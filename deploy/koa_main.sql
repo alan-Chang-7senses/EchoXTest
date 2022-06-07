@@ -29,30 +29,8 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
-	('EnabledProcessTime', '0', '啟用回傳紀錄處理時間(1=啟用)'),
-	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)'),
-	('TimezoneDefault', '8', '預設時區，數值範圍 -11~12');
+	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
-
--- 傾印  資料表 koa_main.DatabaseInfo 結構
-CREATE TABLE IF NOT EXISTS `DatabaseInfo` (
-  `Label` varchar(255) NOT NULL COMMENT '標記代號',
-  `Host` varchar(255) NOT NULL COMMENT '主機名稱或IP',
-  `Username` varchar(255) NOT NULL COMMENT '帳號',
-  `Password` varchar(255) NOT NULL COMMENT '密碼',
-  `Name` varchar(255) NOT NULL COMMENT '資料庫名稱',
-  `Port` smallint(5) unsigned DEFAULT 3306,
-  PRIMARY KEY (`Label`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='資料庫連線資訊';
-
--- 正在傾印表格  koa_main.DatabaseInfo 的資料：~4 rows (近似值)
-/*!40000 ALTER TABLE `DatabaseInfo` DISABLE KEYS */;
-INSERT INTO `DatabaseInfo` (`Label`, `Host`, `Username`, `Password`, `Name`, `Port`) VALUES
-	('EliteTest', 'db', 'root', '1111', 'koa_elitetest', 3306),
-	('KoaLog', 'db', 'root', '1111', 'koa_log', 3306),
-	('KoaMain', 'db', 'root', '1111', 'koa_main', 3306),
-	('KoaStatic', 'db', 'root', '1111', 'koa_static', 3306);
-/*!40000 ALTER TABLE `DatabaseInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Marquee 結構
 CREATE TABLE IF NOT EXISTS `Marquee` (

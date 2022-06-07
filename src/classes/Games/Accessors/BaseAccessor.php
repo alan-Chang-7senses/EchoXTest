@@ -12,23 +12,23 @@ use Consts\EnvVar;
 abstract class BaseAccessor {
     
     protected function MainAccessor() : PDOAccessor {
-        return $this->GetAccessor(EnvVar::DBLabelMain);
+        return $this->GetAccessor(EnvVar::DBMain);
     }
     
     protected function StaticAccessor() : PDOAccessor{
-        return $this->GetAccessor(EnvVar::DBLabelStatic);
+        return $this->GetAccessor(EnvVar::DBStatic);
     }
     
     protected function LogAccessor() : PDOAccessor{
-        return $this->GetAccessor(EnvVar::DBLabelLog);
+        return $this->GetAccessor(EnvVar::DBLog);
     }
     
     protected function EliteTestAccessor() : PDOAccessor{
-        return $this->GetAccessor(EnvVar::DBLabelEliteTest);
+        return $this->GetAccessor(EnvVar::DBEliteTest);
     }
 
     private function GetAccessor(string $label) : PDOAccessor{
-        if(empty($this->$label)) $this->$label = new PDOAccessor (getenv($label));
+        if(empty($this->$label)) $this->$label = new PDOAccessor ($label);
         else $this->$label->ClearAll ();
         return $this->$label;
     }

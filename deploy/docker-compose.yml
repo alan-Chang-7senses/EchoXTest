@@ -17,16 +17,31 @@ services:
             - ./src:/var/www/html
         environment:
             SYSENV: local
+#            PROCESS_TIMING: 'true'
 #            MAINTAIN: 'true'
-            DBLABEL_MAIN: KoaMain
-            DBLABEL_STATIC: KoaStatic
-            DBLABEL_LOG: KoaLog
-            DBLABEL_ELITE_TEST: EliteTest
-            DB_HOST: db
-            DB_PORT: 3306
-            DB_USERNAME: root
-            DB_PASSWORD: 1111
-            DB_NAME: koa_main
+            TIMEZONE_DEFAULT: 8
+            
+            DB_MAIN_HOST: db
+            DB_MAIN_PORT: 3306
+            DB_MAIN_USERNAME: root
+            DB_MAIN_PASSWORD: 1111
+            DB_MAIN_NAME: koa_main
+            DB_STATIC_HOST: db
+            DB_STATIC_PORT: 3306
+            DB_STATIC_USERNAME: root
+            DB_STATIC_PASSWORD: 1111
+            DB_STATIC_NAME: koa_static
+            DB_LOG_HOST: db
+            DB_LOG_PORT: 3306
+            DB_LOG_USERNAME: root
+            DB_LOG_PASSWORD: 1111
+            DB_LOG_NAME: koa_log
+            DB_ELITE_HOST: db
+            DB_ELITE_PORT: 3306
+            DB_ELITE_USERNAME: root
+            DB_ELITE_PASSWORD: 1111
+            DB_ELITE_NAME: koa_elitetest
+            
             MEMCACHED_HOST: memcached
             MEMCACHED_PORT: 11211
 #            XDEBUG_CLIENT_HOST: 192.168.3.243

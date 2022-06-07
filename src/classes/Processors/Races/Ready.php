@@ -171,7 +171,6 @@ class Ready extends BaseRace{
         }
         
         $scene = [
-            'readySec' => $sceneInfo->readySec,
             'env' => $sceneInfo->env,
             'weather' => $climate->weather,
             'windDirection' => $climate->windDirection,
