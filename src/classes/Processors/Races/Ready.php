@@ -175,7 +175,7 @@ class Ready extends BaseRace{
             'weather' => $climate->weather,
             'windDirection' => $climate->windDirection,
             'windSpeed' => $climate->windSpeed,
-            'ligthing' => $climate->lighting,
+            'lighting' => $climate->lighting,
         ];
         
         $result = new ResultData(ErrorCode::Success);
