@@ -17,11 +17,11 @@ class AdaptablilityLevel {
     const ParamE = 1;
     const ParamF = 0;
     
-    const ValueS = 130;
-    const ValueA = 120;
-    const ValueB = 110;
+    const ValueS = 115;
+    const ValueA = 110;
+    const ValueB = 105;
     const ValueC = 100;
-    const ValueD = 90;
-    const ValueE = 80;
-    const ValueF = 70;
+    const ValueD = 95;
+    const ValueE = 90;
+    const ValueF = 85;
 }
