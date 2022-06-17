@@ -111,11 +111,11 @@ class RaceHandler {
             
             if($racePlayer->hp > 0){
                 $result = $climatAccelerations * 
-                ($player->breakOut / ($slope * 5) + $player->velocity / ($slope * 15)) * 
+                ($player->breakOut / $slope + $player->velocity / ($slope * 3)) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }else{
                 $result = $climatAccelerations * 
-                ($player->breakOut + $player->will) / ($slope * 15) * 
+                ($player->breakOut + $player->will) / ($slope * 3) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }
             
@@ -123,11 +123,11 @@ class RaceHandler {
             
             if($racePlayer->hp > 0){
                 $result = $climatAccelerations * 
-                ($player->velocity / ($slope * 5) + $player->breakOut / ($slope * 15)) * 
+                ($player->velocity / ($slope * 3) + $player->breakOut / ($slope * 3)) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }else{
                 $result = $climatAccelerations * 
-                ($player->velocity + $player->will) / ($slope * 15) * 
+                ($player->velocity + $player->will) / ($slope * 3) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }
         }
@@ -135,8 +135,8 @@ class RaceHandler {
         $rhythmValueS = $this->RhythmValueS();
         
         return match ($windDirection) {
-            SceneValue::Tailwind => max($result + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
-            SceneValue::Headwind => min($result - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
+            SceneValue::Tailwind => min($result + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
+            SceneValue::Headwind => max($result - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
             default => $result,
         } * $rhythmValueS + $this->playerHandler->offsetS;
     }
@@ -159,13 +159,13 @@ class RaceHandler {
         
         $result = match ($racePlayer->trackType){
             SceneValue::Upslope => $climateLoses + 
-                    4 * $slope * $valueS / $player->will * 
+                    $slope * $valueS / $player->will * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             SceneValue::Downslope => $climateLoses + 
-                    4 * $slope * $valueS / $player->intelligent * 
+                    $slope * $valueS / $player->intelligent * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             default => $climateLoses + 
-                    4 * $slope * 2 * $valueS / ($player->intelligent + $player->will) * 
+                    $slope * 2 * $valueS / ($player->intelligent + $player->will) * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400))
         };
         
