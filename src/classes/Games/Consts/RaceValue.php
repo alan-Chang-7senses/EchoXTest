@@ -55,11 +55,11 @@ class RaceValue {
     
     const WindCheckPositive = 2;
     const WindCheckReverse = 0;
-    const WindEffectFactor = [
-        SceneValue::Tailwind => 0.01,
-        SceneValue::Crosswind => 0,
-        SceneValue::Headwind => -0.01,
-    ];
+    
+    /* S 值 + 風速影響值 的速度上限 */
+    const ValueSMax = 20;
+    /* S 值 + 風速影響值 的速度下限 */
+    const ValueSMin = 5;
     
     /* 比賽節奏 全力衝刺 */
     const Sprint = 1;

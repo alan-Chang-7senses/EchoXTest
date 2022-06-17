@@ -102,7 +102,9 @@ class RaceHandler {
         $climateValue = $this->playerHandler->GetClimateValue($this->info->weather);
         $sunValue = $this->playerHandler->GetSunValue($climate->lighting);
         $terrainValue = $this->playerHandler->GetTerrainValue($racePlayer->trackType);
-        $windValue = $this->playerHandler->GetWindValue($this->PlayerWindDirection());
+        
+        $windDirection = $this->PlayerWindDirection();
+        $windValue = $this->playerHandler->GetWindValue($windDirection);
         
         $result = 0;
         if($racePlayer->trackShape == SceneValue::Straight){
@@ -130,9 +132,13 @@ class RaceHandler {
             }
         }
         
-        $windEffectValue = $this->WindEffectValue();
         $rhythmValueS = $this->RhythmValueS();
-        return ($result + $windEffectValue) * $rhythmValueS + $this->playerHandler->offsetS;
+        
+        return match ($windDirection) {
+            SceneValue::Tailwind => max($result + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
+            SceneValue::Headwind => min($result - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
+            default => $result,
+        } * $rhythmValueS + $this->playerHandler->offsetS;
     }
     
     public function ValueH() : float{
@@ -221,15 +227,6 @@ class RaceHandler {
             RaceValue::WindCheckReverse => SceneValue::Headwind,
             default => SceneValue::Crosswind,
         };
-    }
-    
-    /**
-     * 風向影響值
-     * @return float
-     */
-    private function WindEffectValue() : float {
-        
-        return RaceValue::WindEffectFactor[$this->PlayerWindDirection()] * $this->sceneHandler->GetClimate()->windSpeed;
     }
     
     /**
