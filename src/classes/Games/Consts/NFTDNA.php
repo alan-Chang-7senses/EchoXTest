@@ -31,4 +31,23 @@ class NFTDNA {
     const SpeciesAdaptOffset = 0;
     /** 物種適性長度 */
     const SpeciesAdaptLength = 1;
+    
+    /** 來源標記第一碼 - 推廣用 */
+    const SourcePromote = 0;
+    /** 來源標記第一碼 - 正常付費購買產出 */
+    const SourceNormal = 1;
+    /** 來源標記第一碼 - 繁殖產出 */
+    const SourceBreed = 2;
+    
+    /** 來源標記第二碼 - 強度級別 */
+    const StrengthS = 0;
+    const StrengthPlusA = 1;
+    const StrengthNormalA = 2;
+    const StrengthMinusA = 3;
+    const StrengthPlusB = 4;
+    const StrengthNormalB = 5;
+    const StrengthMinusB = 6;
+    const StrengthPlusC = 7;
+    const StrengthNormalC = 8;
+    const StrengthMinusC = 9;
 }
