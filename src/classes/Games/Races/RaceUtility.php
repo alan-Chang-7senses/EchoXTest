@@ -38,4 +38,14 @@ class RaceUtility {
         
         return $energy;
     }
+    
+    public static function BindRacePlayerEffect(int $racePlayerID, int $type, float $value, float $start, float $end) : array{
+        return [
+            'RacePlayerID' => $racePlayerID,
+            'EffectType' => $type,
+            'EffectValue' => $value,
+            'StartTime' => $start,
+            'EndTime' => $end,
+        ];
+    }
 }
