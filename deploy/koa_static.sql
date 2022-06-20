@@ -63,6 +63,39 @@ INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`,
 	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, '1,2', 2, 1, 's004'),
 	(5, 'n0005', 'd0005', 3, '5', 555, 1, 0, 0, '1,2,3,4,5', 3, 2, 's003,s005');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
+CREATE TABLE `MailsInfo` (
+	`Serial` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '流水號',
+	`MailsID` INT(10) UNSIGNED NOT NULL COMMENT '信件編號',
+	`Status` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '啟用狀態',
+	`Type` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '信件分類',
+	`Lang` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '多國語言',
+	`Title` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '信件標題' COLLATE 'utf8mb4_general_ci',
+	`Content` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '信件內容' COLLATE 'utf8mb4_general_ci',
+	`Sender` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '寄件者' COLLATE 'utf8mb4_general_ci',
+	`URL` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '連結' COLLATE 'utf8mb4_general_ci',
+	`RewardID` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT '信件獎勵',
+	`CreateTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '建立時間',
+	`UpdateTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新時間',
+	`FinishTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '結束時間',
+	PRIMARY KEY (`Serial`) USING BTREE,
+	INDEX `RewardID` (`RewardID`) USING BTREE
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB;
+
+CREATE TABLE `MailsRewards` (
+	`RewardID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '獎勵編號',
+	`ItemID1` INT(11) NOT NULL COMMENT '道具編號A',
+	`ItemNumber1` INT(10) UNSIGNED NOT NULL COMMENT '道具數量A',
+	`ItemID2` INT(11) NULL DEFAULT NULL COMMENT '道具編號B',
+	`ItemNumber2` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT '道具數量B',
+	`ItemID3` INT(11) NULL DEFAULT NULL COMMENT '道具編號C',
+	`ItemNumber3` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT '道具數量C',
+	PRIMARY KEY (`RewardID`) USING BTREE,
+	INDEX `ItemID` (`ItemID1`, `ItemID2`, `ItemID3`) USING BTREE
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB;
 
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
