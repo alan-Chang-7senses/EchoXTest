@@ -29,6 +29,7 @@
 		- [發動技能](Races/LaunchSkill.md)。
 		- [託管發動技能](Races/HostedLaunchSkill.md)。
 		- [能量耗盡獎勵](Races/BonusEnergyRunOut.md)。
+		- [能量再獲得](Races/EnergyAgain.md)。
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
