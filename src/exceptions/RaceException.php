@@ -15,5 +15,6 @@ $lang[RaceException::EnergyNotEnough] = 'The player\'s current energy not enough
 $lang[RaceException::PlayerNotInThisRace] = 'The player is not in this race.';
 $lang[RaceException::NotBotPlayer] = 'The player is not a bot';
 $lang[RaceException::NotBotInMatch] = 'The bot player is not in match';
+$lang[RaceException::EnergyNotRunOut] = 'The player\'s current energy not exhausted.';
 
 return $lang;

@@ -28,6 +28,7 @@ class RacePlayerEffectHandler {
     
     public function AddAll(array $binds) : void{
         $this->pool->Save($this->id, 'NewData', $binds);
+        $this->info = $this->pool->{$this->id};
     }
     
     public static function EffectPlayer(PlayerHandler $playerHandler, RacePlayerHandler $racePlayerHandler) : PlayerHandler{
