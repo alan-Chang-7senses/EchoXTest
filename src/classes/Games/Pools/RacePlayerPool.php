@@ -39,6 +39,7 @@ class RacePlayerPool extends PoolAccessor{
         $holder->position = $row->Position;
         $holder->direction = $row->Direction;
         $holder->energy = array_map('intval',explode(',', $row->Energy));
+        $holder->energyAgain = $row->EnergyAgain;
         $holder->trackType = $row->TrackType;
         $holder->trackShape = $row->TrackShape;
         $holder->rhythm = $row->Rhythm;
