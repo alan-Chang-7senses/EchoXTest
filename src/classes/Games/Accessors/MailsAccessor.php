@@ -17,9 +17,9 @@ class MailsAccessor extends BaseAccessor{
                 ->WhereEqual('RewardID', $mailID)->FetchAll();
     }
     public function receiveMailsRewards(int $mailsID,int|string $userID, array $bind){
-        $this->MainAccessor()->FromTable('PlayerMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
+        $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
     }
     public function deleteMails(int $mailsID,int|string $userID, array $bind){
-        $this->MainAccessor()->FromTable('PlayerMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
+        $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
     }
 }
