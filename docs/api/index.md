@@ -38,6 +38,10 @@
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
+	- 信箱:
+		- [查詢信件](Mails/GetMails.md)。
+		- [信件已讀/領獎](Mails/ReceiveMailsRewards.md)。
+		- [刪除信件](Mails/DeleteMails.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
 		- [使用者資料](EliteTest/UserInfo.md)。
