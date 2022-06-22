@@ -262,6 +262,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
   `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
   `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
+  `Source` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '來源標記',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
@@ -950,6 +951,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Position` varchar(50) DEFAULT NULL COMMENT '所在位置',
   `Direction` tinyint(3) NOT NULL DEFAULT 0 COMMENT '角色方向',
   `Energy` varchar(50) DEFAULT NULL COMMENT '能量 紅,黃,藍,綠',
+  `EnergyAgain` tinyint(4) NOT NULL DEFAULT 0 COMMENT '能量再獲得次數',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
   `TrackShape` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道形狀',
   `Rhythm` tinyint(3) NOT NULL DEFAULT 0 COMMENT '比賽節奏',
@@ -1027,6 +1029,21 @@ CREATE TABLE IF NOT EXISTS `UserItems` (
   KEY `UserID` (`UserID`),
   KEY `ItemID` (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者持有物品';
+
+-- 傾印  資料表 koa_main.UserMails 結構
+CREATE TABLE IF NOT EXISTS `UserMails` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
+  `UserID` int(10) NOT NULL,
+  `MailsID` int(10) NOT NULL COMMENT '信件編號',
+  `OpenStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開啟狀態',
+  `ReceiveStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '領取狀態',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  `FinishTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '結束時間',
+  PRIMARY KEY (`Serial`) USING BTREE,
+  KEY `UserID` (`UserID`) USING BTREE,
+  KEY `MailsID` (`MailsID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (

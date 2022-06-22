@@ -13,6 +13,13 @@ class RaceValue {
     
     const ForeverAdditiveSec = 1000000000;
     
+    /* 能量再獲得次數上限 */
+    const EnergyAgainCount = 2;
+    /* 能量再獲得 最大數量 */
+    const EnergyAgainMax = 12;
+    /* 能量再獲得 最小數量 */
+    const EnergyAgainMin = 3;
+    
     const LaunchMaxNot = 0;
     const LaunchMaxYes = 1;
     const LaunchMaxFail = 0;
@@ -55,11 +62,11 @@ class RaceValue {
     
     const WindCheckPositive = 2;
     const WindCheckReverse = 0;
-    const WindEffectFactor = [
-        SceneValue::Tailwind => 0.01,
-        SceneValue::Crosswind => 0,
-        SceneValue::Headwind => -0.01,
-    ];
+    
+    /* S 值 + 風速影響值 的速度上限 */
+    const ValueSMax = 20;
+    /* S 值 + 風速影響值 的速度下限 */
+    const ValueSMin = 5;
     
     /* 比賽節奏 全力衝刺 */
     const Sprint = 1;

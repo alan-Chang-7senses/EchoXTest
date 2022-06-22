@@ -145,7 +145,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "weather": 1,
 	        "windDirection": 3,
 	        "windSpeed": 50,
-	        "ligthing": 2
+	        "lighting": 2
 	    },
 	    "users": [
 	        {

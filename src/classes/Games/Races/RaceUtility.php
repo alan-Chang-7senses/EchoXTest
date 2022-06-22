@@ -10,14 +10,23 @@ use Games\Consts\RaceValue;
 class RaceUtility {
     
     public static function RandomEnergy(int $slotNumber) : array{
-        
         $count = RaceValue::BaseEnergyCount - RaceValue::EnergyFixedCount + $slotNumber;
+        return self::RandomEnergyBase($count);
+    }
+    
+    public static function RandomEnergyAgain(float $stamina) : array{
+        $count = floor(10 * $stamina / 135);
+        if($count >= RaceValue::EnergyAgainMax) $count = RaceValue::EnergyAgainMax;
+        else if($count <= RaceValue::EnergyAgainMin) $count = RaceValue::EnergyAgainMin;
+        return self::RandomEnergyBase($count);
+    }
+    
+    private static function RandomEnergyBase(int $count) : array{
         $energy = array_fill(0, RaceValue::EnergyTypeCount, 0);
         $max = RaceValue::EnergyTypeCount - 1;
         for($i = 0; $i < $count; ++$i){
             ++$energy[random_int(0, $max)];
         }
-        
         return $energy;
     }
     
@@ -37,5 +46,15 @@ class RaceUtility {
         }
         
         return $energy;
+    }
+    
+    public static function BindRacePlayerEffect(int $racePlayerID, int $type, float $value, float $start, float $end) : array{
+        return [
+            'RacePlayerID' => $racePlayerID,
+            'EffectType' => $type,
+            'EffectValue' => $value,
+            'StartTime' => $start,
+            'EndTime' => $end,
+        ];
     }
 }

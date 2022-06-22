@@ -27,6 +27,8 @@ class RacePlayerHolder extends stdClass{
     public int $direction;
     /** @var int 能量 [紅,黃,藍,綠] */
     public array $energy;
+    /** @var int 能量再獲得次數 */
+    public int $energyAgain;
     /** @var int 賽道類別 平地、上坡、下坡 */
     public int $trackType;
     /** @var int 賽道形狀 直到、彎道 */

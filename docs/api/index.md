@@ -28,6 +28,8 @@
 		- [託管角色數值](Races/HostedPlayerValues.md)。
 		- [發動技能](Races/LaunchSkill.md)。
 		- [託管發動技能](Races/HostedLaunchSkill.md)。
+		- [能量耗盡獎勵](Races/BonusEnergyRunOut.md)。
+		- [能量再獲得](Races/EnergyAgain.md)。
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
@@ -37,6 +39,10 @@
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
+	- 信箱:
+		- [查詢信件](Mails/GetMails.md)。
+		- [信件已讀/領獎](Mails/ReceiveMailsRewards.md)。
+		- [刪除信件](Mails/DeleteMails.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
 		- [使用者資料](EliteTest/UserInfo.md)。

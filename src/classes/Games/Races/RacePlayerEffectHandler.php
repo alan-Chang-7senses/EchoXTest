@@ -28,6 +28,7 @@ class RacePlayerEffectHandler {
     
     public function AddAll(array $binds) : void{
         $this->pool->Save($this->id, 'NewData', $binds);
+        $this->info = $this->pool->{$this->id};
     }
     
     public static function EffectPlayer(PlayerHandler $playerHandler, RacePlayerHandler $racePlayerHandler) : PlayerHandler{
@@ -65,10 +66,10 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptSun => $playerHandler->offsetSun += $value,
                 SkillValue::EffectHP => $racePlayerHandler->SaveData(['hp' => $racePlayerInfo->hp + $value * RaceValue::DivisorHP]),
                 SkillValue::EffectEnergyAll => $racePlayerHandler->SaveData(['energy' => array_map(function($val) use ($value) { return $val + $value; }, $racePlayerInfo->energy)]),
-                SkillValue::EffectEnergyRed => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
-                SkillValue::EffectEnergyYellow => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyYellow, $value),
-                SkillValue::EffectEnergyBlue => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyBlue, $value),
-                SkillValue::EffectEnergyGreen => $this->AddEnergy($racePlayerHandler, SkillValue::EnergyGreen, $value),
+                SkillValue::EffectEnergyRed => self::AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
+                SkillValue::EffectEnergyYellow => self::AddEnergy($racePlayerHandler, SkillValue::EnergyYellow, $value),
+                SkillValue::EffectEnergyBlue => self::AddEnergy($racePlayerHandler, SkillValue::EnergyBlue, $value),
+                SkillValue::EffectEnergyGreen => self::AddEnergy($racePlayerHandler, SkillValue::EnergyGreen, $value),
                 default => null
             };
         }
@@ -76,7 +77,7 @@ class RacePlayerEffectHandler {
         return $playerHandler;
     }
     
-    private function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
+    private static function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
         $energy = $racePlayerHandler->GetInfo()->energy;
         $energy[$type] += $value;
         $racePlayerHandler->SaveData(['energy' => $energy]);
