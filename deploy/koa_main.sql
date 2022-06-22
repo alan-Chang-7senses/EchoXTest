@@ -1030,22 +1030,20 @@ CREATE TABLE IF NOT EXISTS `UserItems` (
   KEY `ItemID` (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者持有物品';
 
-CREATE TABLE `UserMails` (
-	`Serial` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
-	`UserID` INT(10) NOT NULL,
-	`MailsID` INT(10) NOT NULL COMMENT '信件編號',
-	`OpenStatus` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '開啟狀態',
-	`ReceiveStatus` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '領取狀態',
-	`CreateTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '建立時間',
-	`UpdateTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '更新時間',
-	`FinishTime` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '結束時間',
-	PRIMARY KEY (`Serial`) USING BTREE,
-	INDEX `UserID` (`UserID`) USING BTREE,
-	INDEX `MailsID` (`MailsID`) USING BTREE
-)
-COLLATE='utf8mb4_general_ci'
-ENGINE=InnoDB
-;
+-- 傾印  資料表 koa_main.UserMails 結構
+CREATE TABLE IF NOT EXISTS `UserMails` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
+  `UserID` int(10) NOT NULL,
+  `MailsID` int(10) NOT NULL COMMENT '信件編號',
+  `OpenStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開啟狀態',
+  `ReceiveStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '領取狀態',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  `FinishTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '結束時間',
+  PRIMARY KEY (`Serial`) USING BTREE,
+  KEY `UserID` (`UserID`) USING BTREE,
+  KEY `MailsID` (`MailsID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
