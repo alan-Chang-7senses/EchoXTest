@@ -54,26 +54,26 @@ Content Type: `application/json`
 ### Example
 
 	{
-	    "error": {
-        "code": 0,
-        "message": ""
-		},
-		"Mails": [
-			{
-				"mailsID": 2,
-				"openStatus": 0,
-				"receiveStatus": 0,
-				"title": "歡迎",
-				"content": "歡迎來到PETARUSH",
-				"sender": "寄件人:研發團隊",
-				"url": "",
-				"remainingTime": 918911.8287000656,
-				"mailsRewards1": null,
-				"mailsRewards1Number1": null,
-				"mailsRewards2": null,
-				"mailsRewards1Number2": null,
-				"mailsRewards3": null,
-				"mailsRewards1Number3": null
-			}
-		]
+	    "error":{
+	        "code":0,
+	        "message":""
+	    },
+	    "Mails":[
+	        {
+	            "mailsID":2,
+	            "openStatus":0,
+	            "receiveStatus":0,
+	            "title":"歡迎",
+	            "content":"歡迎來到PETARUSH",
+	            "sender":"寄件人:研發團隊",
+	            "url":"",
+	            "remainingTime":918911.8287000656,
+	            "mailsRewards1":null,
+	            "mailsRewards1Number1":null,
+	            "mailsRewards2":null,
+	            "mailsRewards1Number2":null,
+	            "mailsRewards3":null,
+	            "mailsRewards1Number3":null
+	        }
+	    ]
 	}
