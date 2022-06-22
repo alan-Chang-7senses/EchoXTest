@@ -13,6 +13,7 @@ use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RacePlayerSkillHandler;
+use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Generators\ConfigGenerator;
@@ -64,9 +65,9 @@ abstract class BaseLaunchSkill extends BaseRace{
             $value = $effect['formulaValue'];
             
             if(in_array($type, RaceValue::PlayerEffectTypes)){
-                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $expireTime);
+                $selfBinds[] = RaceUtility::BindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $expireTime);
             }elseif(in_array($type, RaceValue::PlayerEffectOnceType)){
-                $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $currentTime);
+                $selfBinds[] = RaceUtility::BindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $currentTime);
             }
         }
         
@@ -122,13 +123,13 @@ abstract class BaseLaunchSkill extends BaseRace{
                 
                 if($target == SkillValue::TargetSelf){
                     
-                    $selfBinds[] = $this->bindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $endTime);
+                    $selfBinds[] = RaceUtility::BindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $endTime);
                 
                 }elseif($target == SkillValue::TargetOthers){
                     
                     foreach ($racePlayerHandlers[SkillValue::TargetOthers] as $handler) {
                         $info = $handler->GetInfo();
-                        $otherBinds[$info->id][] = $this->bindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
+                        $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
                         $racePlayerHandlerOthers[$info->player] = $handler;
                     }
                     
@@ -136,7 +137,7 @@ abstract class BaseLaunchSkill extends BaseRace{
                     
                     $handler = $racePlayerHandlers[$target];
                     $info = $handler->GetInfo();
-                    $otherBinds[$info->id][] = $this->bindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
+                    $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
                     $racePlayerHandlerOthers[$info->player] = $handler;
                 }
             }
@@ -195,15 +196,5 @@ abstract class BaseLaunchSkill extends BaseRace{
         $result->others = $others;
         
         return $result;
-    }
-    
-    private function bindRacePlayerEffect(int $racePlayerID, int $type, float $value, float $start, float $end) : array{
-        return [
-            'RacePlayerID' => $racePlayerID,
-            'EffectType' => $type,
-            'EffectValue' => $value,
-            'StartTime' => $start,
-            'EndTime' => $end,
-        ];
     }
 }

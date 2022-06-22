@@ -28,6 +28,7 @@
 		- [託管角色數值](Races/HostedPlayerValues.md)。
 		- [發動技能](Races/LaunchSkill.md)。
 		- [託管發動技能](Races/HostedLaunchSkill.md)。
+		- [能量耗盡獎勵](Races/BonusEnergyRunOut.md)。
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
