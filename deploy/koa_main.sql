@@ -262,6 +262,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
   `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
   `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
+  `Source` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '來源標記',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
