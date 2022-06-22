@@ -951,6 +951,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `Position` varchar(50) DEFAULT NULL COMMENT '所在位置',
   `Direction` tinyint(3) NOT NULL DEFAULT 0 COMMENT '角色方向',
   `Energy` varchar(50) DEFAULT NULL COMMENT '能量 紅,黃,藍,綠',
+  `EnergyAgain` tinyint(4) NOT NULL DEFAULT 0 COMMENT '能量再獲得次數',
   `TrackType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道類別',
   `TrackShape` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽道形狀',
   `Rhythm` tinyint(3) NOT NULL DEFAULT 0 COMMENT '比賽節奏',

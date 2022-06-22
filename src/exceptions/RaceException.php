@@ -11,10 +11,11 @@ $lang[RaceException::Finished] = 'The race has finished.';
 $lang[RaceException::PlayerNotReached] = 'The player not reach the end yet.(Player ID: [player])';
 $lang[RaceException::RankingNoMatch] = 'The player ranking no match. (Player ID: [player], Ranking: [front] => [back])';
 $lang[RaceException::FinishFailure] = 'The race execute finish process failure.';
-$lang[RaceException::EnergyNotEnough] = 'The player\'s current energy not enough.';
+$lang[RaceException::EnergyNotEnough] = 'The player current energy not enough.';
 $lang[RaceException::PlayerNotInThisRace] = 'The player is not in this race.';
 $lang[RaceException::NotBotPlayer] = 'The player is not a bot';
 $lang[RaceException::NotBotInMatch] = 'The bot player is not in match';
-$lang[RaceException::EnergyNotRunOut] = 'The player\'s current energy not exhausted.';
+$lang[RaceException::EnergyNotRunOut] = 'The player current energy not exhausted.';
+$lang[RaceException::EnergyAgainOver] = 'The player energy reacquired more than.';
 
 return $lang;
