@@ -102,18 +102,20 @@ class RaceHandler {
         $climateValue = $this->playerHandler->GetClimateValue($this->info->weather);
         $sunValue = $this->playerHandler->GetSunValue($climate->lighting);
         $terrainValue = $this->playerHandler->GetTerrainValue($racePlayer->trackType);
-        $windValue = $this->playerHandler->GetWindValue($this->PlayerWindDirection());
+        
+        $windDirection = $this->PlayerWindDirection();
+        $windValue = $this->playerHandler->GetWindValue($windDirection);
         
         $result = 0;
         if($racePlayer->trackShape == SceneValue::Straight){
             
             if($racePlayer->hp > 0){
                 $result = $climatAccelerations * 
-                ($player->breakOut / ($slope * 5) + $player->velocity / ($slope * 15)) * 
+                ($player->breakOut / $slope + $player->velocity / ($slope * 3)) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }else{
                 $result = $climatAccelerations * 
-                ($player->breakOut + $player->will) / ($slope * 15) * 
+                ($player->breakOut + $player->will) / ($slope * 3) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }
             
@@ -121,18 +123,22 @@ class RaceHandler {
             
             if($racePlayer->hp > 0){
                 $result = $climatAccelerations * 
-                ($player->velocity / ($slope * 5) + $player->breakOut / ($slope * 15)) * 
+                ($player->velocity / ($slope * 3) + $player->breakOut / ($slope * 3)) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }else{
                 $result = $climatAccelerations * 
-                ($player->velocity + $player->will) / ($slope * 15) * 
+                ($player->velocity + $player->will) / ($slope * 3) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }
         }
         
-        $windEffectValue = $this->WindEffectValue();
         $rhythmValueS = $this->RhythmValueS();
-        return ($result + $windEffectValue) * $rhythmValueS + $this->playerHandler->offsetS;
+        
+        return match ($windDirection) {
+            SceneValue::Tailwind => min($result + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
+            SceneValue::Headwind => max($result - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
+            default => $result,
+        } * $rhythmValueS + $this->playerHandler->offsetS;
     }
     
     public function ValueH() : float{
@@ -153,13 +159,13 @@ class RaceHandler {
         
         $result = match ($racePlayer->trackType){
             SceneValue::Upslope => $climateLoses + 
-                    4 * $slope * $valueS / $player->will * 
+                    $slope * $valueS / $player->will * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             SceneValue::Downslope => $climateLoses + 
-                    4 * $slope * $valueS / $player->intelligent * 
+                    $slope * $valueS / $player->intelligent * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             default => $climateLoses + 
-                    4 * $slope * 2 * $valueS / ($player->intelligent + $player->will) * 
+                    $slope * 2 * $valueS / ($player->intelligent + $player->will) * 
                     ( 100 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400))
         };
         
@@ -221,15 +227,6 @@ class RaceHandler {
             RaceValue::WindCheckReverse => SceneValue::Headwind,
             default => SceneValue::Crosswind,
         };
-    }
-    
-    /**
-     * 風向影響值
-     * @return float
-     */
-    private function WindEffectValue() : float {
-        
-        return RaceValue::WindEffectFactor[$this->PlayerWindDirection()] * $this->sceneHandler->GetClimate()->windSpeed;
     }
     
     /**
