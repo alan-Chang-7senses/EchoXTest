@@ -14,6 +14,10 @@ class UserInfoHolder extends stdClass{
     public int $exp;
     public int $vitality;
     public int $money;
+    public int $ucg;
+    public int $coin;
+    public int $power;
+    public int $diamond;
     public int $player;
     public int $scene;
     public int $race;
