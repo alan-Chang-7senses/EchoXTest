@@ -35,8 +35,6 @@ class UserPool extends PoolAccessor{
         $holder->nickname = $row->Nickname;
         $holder->level = $row->Level;
         $holder->exp = $row->Exp;
-        $holder->vitality = $row->Vitality;
-        $holder->money = $row->Money;
         $holder->ucg = $row->UCG;
         $holder->coin  = $row->Coin;
         $holder->power = $row->Power;
@@ -44,6 +42,8 @@ class UserPool extends PoolAccessor{
         $holder->player = $row->Player;
         $holder->scene = $row->Scene;
         $holder->race = $row->Race;
+        $holder->lobby = $row->Lobby;
+        $holder->room = $row->Room;
         
         $playerAccessor = new PlayerAccessor();
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
