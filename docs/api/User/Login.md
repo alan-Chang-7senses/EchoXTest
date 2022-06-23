@@ -43,12 +43,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | userID | int | 使用者編號 |
 | nickname | string | 暱稱 |
-| level | int | 等級 |
-| exp | int | 經驗值 |
-| vitality | int | 體力 |
-| money | int | 金錢 |
 | player | int | 當前角色 ID |
-| scene | int | 當前場景 ID |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
 
 ### Example
@@ -62,13 +57,8 @@ Content Type: `application/json`
 	    },
 	    "userInfo": {
 	        "userID": 1,
-	        "nickname": "Zhiwei",
-	        "level": 1,
-	        "exp": 0,
-	        "vitality": 0,
-	        "money": 0
-	        "player": 1010000000000015,
-	        "scene": 1,
-	        "race": 2
+	        "nickname": "test001",
+	        "player": 1010000000000001,
+	        "race": 3
 	    }
 	}
