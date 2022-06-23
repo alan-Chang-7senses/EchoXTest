@@ -44,6 +44,8 @@ class Login extends BaseProcessor{
             'nickname' => $row->Nickname,
             'player' => $row->Player,
             'race' => $row->Race,
+            'lobby' => $row->Lobby,
+            'room' => $row->Room,
         ];
         
         return $result;
