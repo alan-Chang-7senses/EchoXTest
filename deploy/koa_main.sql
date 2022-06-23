@@ -1057,7 +1057,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `Vitality` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '體力',
   `Money` bigint(20) NOT NULL DEFAULT 0 COMMENT '金錢',
   `UCG` int(11) NOT NULL DEFAULT 0 COMMENT 'Metasens 通用貨幣',
-  `GameCoin` int(11) NOT NULL DEFAULT 0 COMMENT '遊戲幣',
+  `Coin` int(11) NOT NULL DEFAULT 0 COMMENT '遊戲幣',
   `Power` int(11) NOT NULL DEFAULT 0 COMMENT '電力',
   `Diamond` int(11) NOT NULL DEFAULT 0 COMMENT '鑽石',
   `Player` bigint(20) NOT NULL DEFAULT 0 COMMENT '當前角色',
@@ -1072,7 +1072,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 
 -- 正在傾印表格  koa_main.Users 的資料：~48 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `UCG`, `GameCoin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `CreateTime`, `UpdateTime`) VALUES
+INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `Vitality`, `Money`, `UCG`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `CreateTime`, `UpdateTime`) VALUES
 	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, 0, 0, 0, 0, -38, 1, 1, 0, 0),
 	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, 0, 0, 0, 0, -37, 1, 0, 0, 0),
 	(-36, 1, 'ai0036', 'aiacc0036', 'pass0036', 1, 0, 0, 0, 0, 0, 0, 0, -36, 1, 0, 0, 0),

@@ -42,8 +42,10 @@ class MainData extends BaseProcessor{
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $userInfo->nickname;
-        $result->money = $userInfo->money;
-        $result->energy = $userInfo->vitality;
+        $result->ucg = $userInfo->ucg;
+        $result->coin = $userInfo->coin;
+        $result->power = $userInfo->power;
+        $result->diamond = $userInfo->diamond;
         $result->roomMax = (int)ConfigGenerator::Instance()->AmountRacePlayerMax;
         $result->map = $map;
         $result->player = $player;

@@ -40,7 +40,7 @@ class UserPool extends PoolAccessor{
         $holder->ucg = $row->UCG;
         $holder->coin  = $row->Coin;
         $holder->power = $row->Power;
-        $holder->diamond = $row->Daimond;
+        $holder->diamond = $row->Diamond;
         $holder->player = $row->Player;
         $holder->scene = $row->Scene;
         $holder->race = $row->Race;
