@@ -45,6 +45,8 @@ Content Type: `application/json`
 | nickname | string | 暱稱 |
 | player | int | 當前角色 ID |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
+| lobby | int | [當前競賽所在大廳](../codes/race.md#lobby) |
+| room | int | 當前競賽房號 |
 
 ### Example
 
@@ -59,6 +61,8 @@ Content Type: `application/json`
 	        "userID": 1,
 	        "nickname": "test001",
 	        "player": 1010000000000001,
-	        "race": 3
+	        "race": 3,
+	        "lobby": 0,
+	        "room": 0
 	    }
 	}
