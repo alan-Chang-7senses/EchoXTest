@@ -6,9 +6,7 @@ use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
-use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
-use Generators\ConfigGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -34,20 +32,12 @@ class MainData extends BaseProcessor{
         $player->back = PlayerUtility::PartCodeByDNA($playerInfo->dna->back);
         $player->hat = PlayerUtility::PartCodeByDNA($playerInfo->dna->hat);
         
-        $sceneHandler = new SceneHandler($userInfo->scene);
-        $map = $sceneHandler->GetClimate();
-        unset($map->id);
-        unset($map->startTime);
-        $map->sceneEnv = $sceneHandler->GetInfo()->env;
-        
         $result = new ResultData(ErrorCode::Success);
         $result->name = $userInfo->nickname;
         $result->ucg = $userInfo->ucg;
         $result->coin = $userInfo->coin;
         $result->power = $userInfo->power;
         $result->diamond = $userInfo->diamond;
-        $result->roomMax = (int)ConfigGenerator::Instance()->AmountRacePlayerMax;
-        $result->map = $map;
         $result->player = $player;
         
         return $result;
