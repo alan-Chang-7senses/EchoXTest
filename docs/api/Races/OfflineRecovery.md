@@ -33,6 +33,7 @@ Content Type: `application/json`
 | player | int | 角色編號 |
 | [scene](#scene) | object | 場景資訊 |
 | [players](#players) | array | 各玩家的角色競賽資料陣列 |
+| [recoveryDataArray](#recoveryDataArray) | array | 斷線恢復額外儲存的資料 |
 
 #### <span id="scene">scene 內容</span>
 
@@ -106,6 +107,38 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
 | target | int | [作用對象](../codes/skill.md#target) |
+
+
+##### <span id="recoveryDataArray">recoveryDataArray  內容</span>
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| raceID| int | 賽局編號
+| countDown| float | 倒數時間
+| runTime| float | 比賽時間
+| playerID| int | 角色編號
+| moveDistance| int | 移動距離
+| [skillData](#skillData) | int | 技能資料
+| createTime| int | 建立時間
+
+##### <span id="skillData">skillData  內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| [skillData1](#skill) | int | 技能1
+| [skillData2](#skill) | int | 技能2
+| [skillData3](#skill) | int | 技能3
+| [skillData4](#skill)| int | 技能4
+| [skillData5](#skill) | int | 技能5
+
+##### <span id="skill">skill  內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| skillID | int | 技能編號
+| skillCoolTime | int | 技能冷卻時間
+| normalSkillTime | int | 一般技能持續時間
+| fullLVSkillTime | int | 滿星技能持續時間
+
 
 ### Example
 
@@ -496,5 +529,57 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                }
 	            ]
 	        }
-	    ]
+	    ],
+    "recoveryDataArray": {
+        "raceID": 1,
+        "countDown": 0,
+        "runTime": 10,
+        "playerID": 1010000000000001,
+        "moveDistance": 250,
+        "skillData": [
+            {
+                "skill1": [
+                    {
+                        "skillID": 101101,
+                        "skillCoolTime": 5,
+                        "normalSkillTime1": 5,
+                        "fullLVSkillTime": 10
+                    }
+                ],
+                "skill2": [
+                    {
+                        "skillID": 101101,
+                        "skillCoolTime": 5,
+                        "normalSkillTime1": 5,
+                        "fullLVSkillTime": 10
+                    }
+                ],
+                "skill3": [
+                    {
+                        "skillID": 101101,
+                        "skillCoolTime": 5,
+                        "normalSkillTime1": 5,
+                        "fullLVSkillTime": 10
+                    }
+                ],
+                "skill4": [
+                    {
+                        "skillID": 101101,
+                        "skillCoolTime": 5,
+                        "normalSkillTime1": 5,
+                        "fullLVSkillTime": 10
+                    }
+                ],
+                "skill5": [
+                    {
+                        "skillID": 101101,
+                        "skillCoolTime": 5,
+                        "normalSkillTime1": 5,
+                        "fullLVSkillTime": 10
+                    }
+                ]
+            }
+        ],
+        "createTime": 1655961018
+    }
 	}

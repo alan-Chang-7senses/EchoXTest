@@ -3,6 +3,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
@@ -10,6 +11,7 @@ use Games\Players\PlayerUtility;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
+use Games\Races\OfflineRecoveryDataHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Holders\ResultData;
@@ -90,12 +92,63 @@ class OfflineRecovery extends BaseRace {
                 'skills' => $skills,
             ];
         }
-        
+
+        $recoveryDataHandler = new OfflineRecoveryDataHandler();
+        $recoveryDataArray = $recoveryDataHandler->GetRecoveryData($this->userInfo->player);
+        $skillData1[]= [
+            'skillID' =>$recoveryDataArray[0]->SkillID1,
+            'skillCoolTime' =>$recoveryDataArray[0]->SkillCoolTime1,
+            'normalSkillTime1' =>$recoveryDataArray[0]->NormalSkillTime1,
+            'fullLVSkillTime' =>$recoveryDataArray[0]->FullLVSkillTime1,
+        ];
+        $skillData2[]= [
+            'skillID' =>$recoveryDataArray[0]->SkillID2,
+            'skillCoolTime' =>$recoveryDataArray[0]->SkillCoolTime2,
+            'normalSkillTime1' =>$recoveryDataArray[0]->NormalSkillTime2,
+            'fullLVSkillTime' =>$recoveryDataArray[0]->FullLVSkillTime2,
+        ];
+        $skillData3[]= [
+            'skillID' =>$recoveryDataArray[0]->SkillID3,
+            'skillCoolTime' =>$recoveryDataArray[0]->SkillCoolTime3,
+            'normalSkillTime1' =>$recoveryDataArray[0]->NormalSkillTime3,
+            'fullLVSkillTime' =>$recoveryDataArray[0]->FullLVSkillTime3,
+        ];
+        $skillData4[]= [
+            'skillID' =>$recoveryDataArray[0]->SkillID4,
+            'skillCoolTime' =>$recoveryDataArray[0]->SkillCoolTime4,
+            'normalSkillTime1' =>$recoveryDataArray[0]->NormalSkillTime4,
+            'fullLVSkillTime' =>$recoveryDataArray[0]->FullLVSkillTime4,
+        ];
+        $skillData5[]= [
+            'skillID' =>$recoveryDataArray[0]->SkillID5,
+            'skillCoolTime' =>$recoveryDataArray[0]->SkillCoolTime5,
+            'normalSkillTime1' =>$recoveryDataArray[0]->NormalSkillTime5,
+            'fullLVSkillTime' =>$recoveryDataArray[0]->FullLVSkillTime5,
+        ];
+        $skillData[] = [
+            'skill1' => $skillData1,
+            'skill2' => $skillData2,
+            'skill3' => $skillData3,
+            'skill4' => $skillData4,
+            'skill5' => $skillData5,
+        ];
+
+        $recoveryDataArray = [
+            'raceID' => $recoveryDataArray[0]->RaceID,
+            'countDown' => $recoveryDataArray[0]->CountDown,
+            'runTime' => $recoveryDataArray[0]->RunTime,
+            'playerID' => $recoveryDataArray[0]->PlayerID,
+            'moveDistance' => $recoveryDataArray[0]->MoveDistance,
+            'skillData' => $skillData,
+            'createTime' =>$recoveryDataArray[0]->CreateTime,
+        ];
+
         $result = new ResultData(ErrorCode::Success);
         $result->user = $this->userInfo->id;
         $result->player = $this->userInfo->player;
         $result->scene = $scene;
         $result->players = $players;
+        $result->recoveryDataArray = $recoveryDataArray;
         
         return $result;
     }
