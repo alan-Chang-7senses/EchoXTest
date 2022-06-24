@@ -90,7 +90,7 @@ class RaceRecoveryDataAccessor extends BaseAccessor{
     }
 
     public function GetRecoveryData(int $playerID) : mixed{
-        return $this->MainAccessor()->FromTable('RecoveryData')->WhereEqual('PlayerID', $playerID)->FetchAll();
+        return $this->MainAccessor()->FromTable('RecoveryData')->WhereEqual('PlayerID', $playerID)->Fetch();
     }
 
 }

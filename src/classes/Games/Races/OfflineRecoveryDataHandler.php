@@ -10,7 +10,7 @@ class OfflineRecoveryDataHandler {
         $raceAccessor->SetRecoveryData( $raceID, $countDown, $runTime, $userID,  $moveDistance, $skillID, $skillCoolTime,  $normalSkillTime,  $fullLVSkillTime, $skillID1, $skillCoolTime1,  $normalSkillTime1,  $fullLVSkillTime1, $skillID2, $skillCoolTime2,  $normalSkillTime2,  $fullLVSkillTime2, $skillID3, $skillCoolTime3,  $normalSkillTime3,  $fullLVSkillTime3, $skillID4, $skillCoolTime4,  $normalSkillTime4,  $fullLVSkillTime4, $skillID5, $skillCoolTime5,  $normalSkillTime5,  $fullLVSkillTime5,  $createTime);
     }
 
-    public function GetRecoveryData(int $playerID):array{
+    public function GetRecoveryData(int $playerID):mixed{
         $raceAccessor = new RaceRecoveryDataAccessor();
         return $raceAccessor->GetRecoveryData($playerID);
     }
