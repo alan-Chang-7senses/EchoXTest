@@ -117,18 +117,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | runTime| float | 比賽時間
 | playerID| int | 角色編號
 | moveDistance| int | 移動距離
-| [skillData](#skillData) | int | 技能資料
+| [skill](#skill) | array | 技能資料
 | createTime| int | 建立時間
-
-##### <span id="skillData">skillData  內容</span>
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| [skillData1](#skill) | int | 技能1
-| [skillData2](#skill) | int | 技能2
-| [skillData3](#skill) | int | 技能3
-| [skillData4](#skill)| int | 技能4
-| [skillData5](#skill) | int | 技能5
 
 ##### <span id="skill">skill  內容</span>
 
@@ -537,46 +527,42 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
         "playerID": 1010000000000001,
         "moveDistance": 250,
         "skillData": [
-            {
-                "skill1": [
-                    {
-                        "skillID": 101101,
-                        "skillCoolTime": 5,
-                        "normalSkillTime1": 5,
-                        "fullLVSkillTime": 10
-                    }
-                ],
-                "skill2": [
-                    {
-                        "skillID": 101101,
-                        "skillCoolTime": 5,
-                        "normalSkillTime1": 5,
-                        "fullLVSkillTime": 10
-                    }
-                ],
-                "skill3": [
-                    {
-                        "skillID": 101101,
-                        "skillCoolTime": 5,
-                        "normalSkillTime1": 5,
-                        "fullLVSkillTime": 10
-                    }
-                ],
-                "skill4": [
-                    {
-                        "skillID": 101101,
-                        "skillCoolTime": 5,
-                        "normalSkillTime1": 5,
-                        "fullLVSkillTime": 10
-                    }
-                ],
-                "skill5": [
-                    {
-                        "skillID": 101101,
-                        "skillCoolTime": 5,
-                        "normalSkillTime1": 5,
-                        "fullLVSkillTime": 10
-                    }
+					{
+						"skillID": 101101,
+						"skillCoolTime": 5,
+						"normalSkillTime": 5,
+						"fullLVSkillTime": 10
+					},
+					{
+						"skillID": 101101,
+						"skillCoolTime": 5,
+						"normalSkillTime": 5,
+						"fullLVSkillTime": 10
+					},
+					{
+						"skillID": 101101,
+						"skillCoolTime": 5,
+						"normalSkillTime": 5,
+						"fullLVSkillTime": 10
+					},
+					{
+						"skillID": 101101,
+						"skillCoolTime": 5,
+						"normalSkillTime": 5,
+						"fullLVSkillTime": 10
+					},
+					{
+						"skillID": 101101,
+						"skillCoolTime": 5,
+						"normalSkillTime": 5,
+						"fullLVSkillTime": 10
+					},
+					{
+						"skillID": 0,
+						"skillCoolTime": 0,
+						"normalSkillTime": 0,
+						"fullLVSkillTime": 0
+					}
                 ]
             }
         ],
