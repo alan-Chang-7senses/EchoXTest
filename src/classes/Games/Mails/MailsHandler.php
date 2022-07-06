@@ -22,7 +22,18 @@ class MailsHandler {
         return $this->userMailsinfo;
     }
     public function GetMailsInfo(int $mailID): MailsHolder|stdClass {
-        $this->mailsinfo = MailsInfoPool::Instance()->$mailID;
+        $mailsAccessor = new MailsAccessor();
+        $rows = $mailsAccessor->rowsMailsInfo($mailID);
+
+        $holder = new stdClass();
+        $holder->rows = $rows;
+        
+        $holder->data = [];
+        foreach($rows as $row){
+            $holder->data[$row->Lang] = $row;
+        }
+        $this->mailsinfo = $holder;
+        //$this->mailsinfo = MailsInfoPool::Instance()->$mailID;
         return $this->mailsinfo;
     }
     public function GetMailsRewards(int $RewardID): MailsHolder|stdClass{
