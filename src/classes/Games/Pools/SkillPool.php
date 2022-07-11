@@ -48,4 +48,8 @@ class SkillPool extends PoolAccessor{
         return $skill;
     }
 
+    public function SetSkillSlot(int $plyerID, int $skillID, int $slot): mixed{
+        $skillAccessor = new SkillAccessor();
+        return $skillAccessor->setSkillSlot( $plyerID,  $skillID,  $slot);
+    }
 }
