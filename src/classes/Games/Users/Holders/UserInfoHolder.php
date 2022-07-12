@@ -12,7 +12,7 @@ class UserInfoHolder extends stdClass{
     public string $nickname;
     public int $level;
     public int $exp;
-    public int $ucg;
+    public int $petaToken;
     public int $coin;
     public int $power;
     public int $diamond;

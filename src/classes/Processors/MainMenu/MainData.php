@@ -34,7 +34,7 @@ class MainData extends BaseProcessor{
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $userInfo->nickname;
-        $result->ucg = $userInfo->ucg;
+        $result->petaToken = $userInfo->petaToken;
         $result->coin = $userInfo->coin;
         $result->power = $userInfo->power;
         $result->diamond = $userInfo->diamond;
