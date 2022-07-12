@@ -25,7 +25,7 @@ class CurrentInfo extends BaseProcessor{
             'nickname' => $userInfo->nickname,
             'level' => $userInfo->level,
             'exp' => $userInfo->exp,
-            'ucg' => $userInfo->ucg,
+            'petaToken' => $userInfo->petaToken,
             'coin' => $userInfo->coin,
             'power' => $userInfo->power,
             'diamond' => $userInfo->diamond,
