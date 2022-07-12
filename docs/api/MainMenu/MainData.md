@@ -31,8 +31,8 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | name | string | 使用者暱稱 |
-| ucg | int | UCG、Metasens 通用貨幣 |
-| coin | int | 遊戲幣 |
+| petaToken | int | Peta 虛擬幣 |
+| coin | int | 遊戲金幣 |
 | power | int | 電力 |
 | diamond | int | 遊戲鑽石 |
 | [player](#player) | object | 角色資訊 |
@@ -57,7 +57,7 @@ Content Type: `application/json`
 	        "message": ""
 	    },
 	    "name": "test004",
-	    "ucg": 0,
+	    "petaToken": 0,
 	    "coin": 0,
 	    "power": 0,
 	    "diamond": 0,
