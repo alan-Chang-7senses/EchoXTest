@@ -1007,6 +1007,41 @@ CREATE TABLE IF NOT EXISTS `Races` (
   PRIMARY KEY (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
 
+-- 傾印  資料表 koa_main.RecoveryData 結構
+CREATE TABLE IF NOT EXISTS `RecoveryData` (
+  `RaceID` int(10) unsigned NOT NULL,
+  `CountDown` float unsigned NOT NULL,
+  `RunTime` float unsigned NOT NULL,
+  `PlayerID` bigint(20) unsigned NOT NULL,
+  `MoveDistance` int(10) unsigned NOT NULL,
+  `SkillID1` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime1` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime1` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime1` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillID2` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime2` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime2` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime2` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillID3` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime3` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime3` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime3` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillID4` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime4` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime4` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime4` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillID5` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime5` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime5` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime5` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillID6` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime6` int(10) unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime6` int(10) unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime6` int(10) unsigned NOT NULL DEFAULT 0,
+  `CreateTime` int(10) unsigned NOT NULL,
+  UNIQUE KEY `PlayerID` (`PlayerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 傾印  資料表 koa_main.Sessions 結構
 CREATE TABLE IF NOT EXISTS `Sessions` (
   `SessionID` varchar(255) NOT NULL,
