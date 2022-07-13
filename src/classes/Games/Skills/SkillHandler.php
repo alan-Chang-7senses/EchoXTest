@@ -69,4 +69,8 @@ class SkillHandler {
         }
         return $this->maxEffects;
     }
+
+    public function SetSkillSlot(int $plyerID, int $skillID, int $slot) : mixed{
+        return $this->pool->SetSkillSlot( $plyerID,  $skillID,  $slot);
+    }
 }
