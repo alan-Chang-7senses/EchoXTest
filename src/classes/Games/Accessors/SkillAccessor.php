@@ -39,4 +39,8 @@ class SkillAccessor extends BaseAccessor{
     public function rowsMaxEffectByEffectIDs(array $ids) : array{
         return $this->StaticAccessor()->FromTable('SkillMaxEffect')->WhereIn('MaxEffectID', $ids)->FetchAll();
     }
+
+    public function setSkillSlot(int $plyerID, int $skillID, int $slot) : mixed{
+        return $this->MainAccessor()->FromTable('PlayerSkill')->WhereEqual('PlayerID',$plyerID)->WhereEqual('skillID',$skillID)->Modify([ 'Slot' => $slot,]);
+    }
 }

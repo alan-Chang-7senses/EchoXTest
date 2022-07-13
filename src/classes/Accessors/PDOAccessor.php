@@ -8,6 +8,7 @@ use Helpers\LogHelper;
 use Helpers\PDOHelper;
 use Holders\SQLWhereInValues;
 use Holders\SQLWhereStatement;
+use Exception;
 use PDO;
 /**
  * Description of BaseAccessors
@@ -283,7 +284,20 @@ class PDOAccessor {
         
         return new SQLWhereInValues($values, $bind);
     }
-    
+    public function Trasaction($func){
+        
+        try{
+            
+            $this->ph->beginTransaction();
+            $func();
+            $this->ph->commitTransaction();
+            
+        } catch (\Exception $ex) {  
+
+            $this->ph->rollbackTransaction();
+            throw new Exception($ex->getMessage(), $ex->getCode(), $ex);
+        }
+    }
     private function LogExtra(string $statement, array|null $bind){
         LogHelper::Extra('SQL'.DataGenerator::RandomString(3), ['statement' => $statement, 'bind' => $bind]);
     }
