@@ -35,7 +35,7 @@ class UserPool extends PoolAccessor{
         $holder->nickname = $row->Nickname;
         $holder->level = $row->Level;
         $holder->exp = $row->Exp;
-        $holder->ucg = $row->UCG;
+        $holder->petaToken = $row->PetaToken;
         $holder->coin  = $row->Coin;
         $holder->power = $row->Power;
         $holder->diamond = $row->Diamond;

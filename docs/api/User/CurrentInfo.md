@@ -40,8 +40,8 @@ Content Type: `application/json`
 | nickname | string | 暱稱 |
 | level | int | 等級 |
 | exp | int | 經驗值 |
-| ucg | int | UCG、Metasens 通用貨幣 |
-| coin | int | 遊戲幣 |
+| petaToken | int | Peta 虛擬幣 |
+| coin | int | 遊戲金幣 |
 | power | int | 電力 |
 | diamond | int | 遊戲鑽石 |
 | player | int | 當前角色 ID |
@@ -62,7 +62,7 @@ Content Type: `application/json`
 	        "nickname": "test004",
 	        "level": 1,
 	        "exp": 0,
-	        "ucg": 0,
+	        "petaToken": 0,
 	        "coin": 0,
 	        "power": 0,
 	        "diamond": 0,
