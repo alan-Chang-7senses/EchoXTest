@@ -3,6 +3,7 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
@@ -10,6 +11,7 @@ use Games\Players\PlayerUtility;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
+use Games\Races\OfflineRecoveryDataHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Holders\ResultData;
@@ -90,12 +92,35 @@ class OfflineRecovery extends BaseRace {
                 'skills' => $skills,
             ];
         }
-        
+
+        $recoveryDataHandler = new OfflineRecoveryDataHandler();
+        $recoveryDataArray = $recoveryDataHandler->GetRecoveryData($this->userInfo->player);
+        $skillData = [];
+        for($i = 1; $i < 7; $i++){
+            $skillData[] = [
+                'skillID' =>$recoveryDataArray->{'SkillID'.$i},
+                'skillCoolTime' =>$recoveryDataArray->{'SkillCoolTime'.$i},
+                'normalSkillTime' =>$recoveryDataArray->{'NormalSkillTime'.$i},
+                'fullLVSkillTime' =>$recoveryDataArray->{'FullLVSkillTime'.$i},
+            ];
+        }
+
+        $recoveryDataArray = [
+            'raceID' => $recoveryDataArray->RaceID,
+            'countDown' => $recoveryDataArray->CountDown,
+            'runTime' => $recoveryDataArray->RunTime,
+            'playerID' => $recoveryDataArray->PlayerID,
+            'moveDistance' => $recoveryDataArray->MoveDistance,
+            'skillData' => $skillData,
+            'createTime' =>$recoveryDataArray->CreateTime,
+        ];
+
         $result = new ResultData(ErrorCode::Success);
         $result->user = $this->userInfo->id;
         $result->player = $this->userInfo->player;
         $result->scene = $scene;
         $result->players = $players;
+        $result->recoveryDataArray = $recoveryDataArray;
         
         return $result;
     }
