@@ -69,7 +69,8 @@ class UserItemPool extends PoolAccessor{
         ];
         
         $itemAccessor = new ItemAccessor();
-        $result = $itemAccessor->ModifyUserItemByID($data->UserItemID, $bind);
+        
+        $result = $itemAccessor->ModifyUserItemByID($data->id, $bind);
         
         if($result === true){
             $data->amount = $value;

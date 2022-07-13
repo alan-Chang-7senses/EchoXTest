@@ -104,12 +104,12 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`,
 -- 傾印  資料表 koa_static.MailsRewards 結構
 CREATE TABLE IF NOT EXISTS `MailsRewards` (
   `RewardID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '獎勵編號',
-  `ItemID1` int(11) NOT NULL COMMENT '道具編號A',
-  `ItemNumber1` int(10) unsigned NOT NULL COMMENT '道具數量A',
-  `ItemID2` int(11) DEFAULT NULL COMMENT '道具編號B',
-  `ItemNumber2` int(10) unsigned DEFAULT NULL COMMENT '道具數量B',
-  `ItemID3` int(11) DEFAULT NULL COMMENT '道具編號C',
-  `ItemNumber3` int(10) unsigned DEFAULT NULL COMMENT '道具數量C',
+  `ItemID1` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號A',
+  `ItemNumber1` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量A',
+  `ItemID2` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號B',
+  `ItemNumber2` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量B',
+  `ItemID3` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號C',
+  `ItemNumber3` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量C',
   PRIMARY KEY (`RewardID`) USING BTREE,
   KEY `ItemID` (`ItemID1`,`ItemID2`,`ItemID3`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件獎勵表';
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `MailsRewards` (
 -- 正在傾印表格  koa_static.MailsRewards 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `MailsRewards` DISABLE KEYS */;
 INSERT INTO `MailsRewards` (`RewardID`, `ItemID1`, `ItemNumber1`, `ItemID2`, `ItemNumber2`, `ItemID3`, `ItemNumber3`) VALUES
-	(1, 8129, 2, 8130, 2, NULL, NULL);
+	(1, 8129, 2, 8130, 2, 0, 0);
 /*!40000 ALTER TABLE `MailsRewards` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneClimate 結構

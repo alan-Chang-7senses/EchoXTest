@@ -42,13 +42,10 @@ class Login extends BaseProcessor{
         $result->userInfo = [
             'userID' => $row->UserID,
             'nickname' => $row->Nickname,
-            'level' => $row->Level,
-            'exp' => $row->Exp,
-            'vitality' => $row->Vitality,
-            'money' => $row->Money,
             'player' => $row->Player,
-            'scene' => $row->Scene,
             'race' => $row->Race,
+            'lobby' => $row->Lobby,
+            'room' => $row->Room,
         ];
         
         return $result;

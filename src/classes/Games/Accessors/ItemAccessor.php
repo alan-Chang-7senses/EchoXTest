@@ -3,6 +3,8 @@
 namespace Games\Accessors;
 
 use Consts\Globals;
+use Games\Users\UserItemHandler;
+
 /**
  * Description of ItemAccessor
  *
@@ -31,7 +33,7 @@ class ItemAccessor extends BaseAccessor{
     }
     
     public function AddLog(int $userItemID, int $userID, int $itemID, int $action, int $amount, int $remain) : mixed{
-        return $this->LogAccessor()->Add([
+        return $this->LogAccessor()->FromTable('UserItemsLog')->Add([
             'UserItemID' => $userItemID,
             'UserID' => $userID,
             'ItemID' => $itemID,
@@ -40,5 +42,36 @@ class ItemAccessor extends BaseAccessor{
             'Remain' => $remain,
             'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);
+    }
+
+
+    public function UserItemByItemID(int $userID, int $itemID) : mixed{
+        return $this->MainAccessor()->FromTable('UserItems')->WhereEqual('UserItemID', $userID)->WhereEqual('UserItemID', $itemID)->Fetch();
+    }
+    
+    public function AddItemByItemID(int $userID, int $itemID, int $amount) : bool{
+        return $this->MainAccessor()->FromTable('UserItems')->Add([
+            'UserItemID' => null,
+            'UserID' => $userID,
+            'ItemID' => $itemID,
+            'Amount' => $amount,
+            'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
+            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+        ]);
+    }
+
+    public function Transaction(int $id,array $usedItem, array $dropItem){
+        $this->id = $id;
+        $this->usedItem = $usedItem;
+        $this->dropItem = $dropItem;
+
+        $this->MainAccessor()->Trasaction(function(){
+            $this->ModifyUserItemByID($this->id,$this->usedItem);
+            $userItemHandler = new UserItemHandler($this->id);
+            for($i=0; $i<count($this->dropItem); $i++){
+                //var_dump($this->dropItem[$i]);
+                $userItemHandler->UseItemDrop($this->dropItem[$i]['itemID'],$this->dropItem[$i]['amoount']);
+            }
+        });
     }
 }

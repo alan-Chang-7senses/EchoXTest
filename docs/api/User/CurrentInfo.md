@@ -3,6 +3,7 @@
 ## 介紹
 
 - 取得使用者帳號的當前資訊。
+- 需要完成登入驗證才可正常使用此 API。
 
 ## URL
 
@@ -39,8 +40,10 @@ Content Type: `application/json`
 | nickname | string | 暱稱 |
 | level | int | 等級 |
 | exp | int | 經驗值 |
-| vitality | int | 體力 |
-| money | int | 金錢 |
+| ucg | int | UCG、Metasens 通用貨幣 |
+| coin | int | 遊戲幣 |
+| power | int | 電力 |
+| diamond | int | 遊戲鑽石 |
 | player | int | 當前角色 ID |
 | scene | int | 當前場景 ID |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
@@ -55,14 +58,16 @@ Content Type: `application/json`
 	        "message": ""
 	    },
 	    "info": {
-	        "userID": 1,
-	        "nickname": "test001",
+	        "userID": 4,
+	        "nickname": "test004",
 	        "level": 1,
 	        "exp": 0,
-	        "vitality": 0,
-	        "money": 0,
-	        "player": 1010000000000001,
+	        "ucg": 0,
+	        "coin": 0,
+	        "power": 0,
+	        "diamond": 0,
+	        "player": 1010000000000007,
 	        "scene": 1,
-	        "race": 7
+	        "race": 0
 	    }
 	}
