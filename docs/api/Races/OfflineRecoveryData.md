@@ -20,7 +20,6 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| raceID | int | 賽局編號 |
 | countDown | float | 倒數計時 |
 | runTime | float | 比賽時間 |
 | [playersData](#playersData) | json | 各玩家的角色競賽資料陣列 |
