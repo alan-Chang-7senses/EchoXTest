@@ -1,4 +1,4 @@
-# 競賽 - 斷線恢復(取多人資料)
+# 競賽 - 斷線恢復(存資料)
 
 ## 介紹
 
@@ -24,23 +24,22 @@ Content Type: `application/x-www-form-urlencoded`
 | countDown | float | 倒數計時 |
 | runTime | float | 比賽時間 |
 | [playersData](#playersData) | json | 各玩家的角色競賽資料陣列 |
-| createTime | int | 建立時間 |
 
 #### <span id="playersData">playersData 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | playerID | int | 玩家編號 |
-| moveDistance | int | 移動距離 |
+| moveDistance | float | 移動距離 |
 | [skillData](#skillData) | json | 技能資料 |
 
 #### <span id="skillData">skillData 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| SkillCoolTime | int | 技能冷卻時間 |
-| normalSkillTime | int | 一般技能持續時間 |
-| fullLVSkillTime | int | 滿星技能持續時間 |
+| SkillCoolTime | float | 技能冷卻時間 |
+| normalSkillTime | float | 一般技能持續時間 |
+| fullLVSkillTime | float | 滿星技能持續時間 |
 
 
 
