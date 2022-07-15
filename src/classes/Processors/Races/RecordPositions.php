@@ -5,6 +5,8 @@ namespace Processors\Races;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Races\RaceHandler;
 use Generators\ConfigGenerator;
@@ -27,6 +29,8 @@ class RecordPositions extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
+        if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException (RaceException::Finished);
+
         $racePlayerPositions = [];
         foreach($positions as $position){
             $racePlayerID = $raceInfo->racePlayers->{$position->player} ?? null;
@@ -37,11 +41,15 @@ class RecordPositions extends BaseRace{
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Trasaction(function() use ($accessor, $racePlayerPositions){
             
-            $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($racePlayerPositions))->ForUpdate()->FetchAll();
-            
-            foreach($racePlayerPositions as $racePlayerID => $position){
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($racePlayerPositions))->ForUpdate()->FetchAll();
+            foreach($rows as $row){
+                if($row->Status == RaceValue::StatusReach) continue;
                 $accessor->ClearCondition();
-                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify(['Position' => $position]);
+                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify([
+                    'Position' => $racePlayerPositions[$row->RacePlayerID],
+                    'Status' => RaceValue::StatusUpdate,
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                ]);
             }
         });
         
