@@ -2,10 +2,11 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Games\Exceptions\RaceException;
 use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -26,16 +27,23 @@ class RecordPositions extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerHandlers = [];
+        $racePlayerPositions = [];
         foreach($positions as $position){
             $racePlayerID = $raceInfo->racePlayers->{$position->player} ?? null;
             if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace);
-            $racePlayerHandlers[$position->player] = new RacePlayerHandler($racePlayerID);
+            $racePlayerPositions[$racePlayerID] = $position->position;
         }
         
-        foreach ($positions as $position) {
-            $racePlayerHandlers[$position->player]->SaveData(['position' => $position->position]);
-        }
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Trasaction(function() use ($accessor, $racePlayerPositions){
+            
+            $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($racePlayerPositions))->ForUpdate()->FetchAll();
+            
+            foreach($racePlayerPositions as $racePlayerID => $position){
+                $accessor->ClearCondition();
+                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify(['Position' => $position]);
+            }
+        });
         
         $result = new ResultData(ErrorCode::Success);
         return $result;
