@@ -123,7 +123,7 @@ class RaceHandler {
             
             if($racePlayer->hp > 0){
                 $result = $climatAccelerations * 
-                ($player->velocity / ($slope * 3) + $player->breakOut / ($slope * 3)) * 
+                ($player->velocity / $slope  + $player->breakOut / ($slope * 3)) * 
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
             }else{
                 $result = $climatAccelerations * 
@@ -135,10 +135,11 @@ class RaceHandler {
         $rhythmValueS = $this->RhythmValueS();
         
         return match ($windDirection) {
-            SceneValue::Tailwind => min($result + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
-            SceneValue::Headwind => max($result - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
+            SceneValue::Tailwind => min($result*$rhythmValueS + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
+            SceneValue::Headwind => max($result*$rhythmValueS - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
             default => $result,
-        } * $rhythmValueS + $this->playerHandler->offsetS;
+        }  + $this->playerHandler->offsetS;
+       
     }
     
     public function ValueH() : float{
