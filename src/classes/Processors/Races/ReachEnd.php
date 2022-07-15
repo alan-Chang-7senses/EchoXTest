@@ -2,12 +2,13 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
 /**
@@ -26,11 +27,22 @@ class ReachEnd extends BaseRace{
         
         if(!property_exists($raceInfo->racePlayers, $player)) throw new RaceException(RaceException::PlayerNotInThisRace);
         $racePlayerID = $raceInfo->racePlayers->{$player};
-        $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
-        $racePlayerHandler->SaveData(['status' => RaceValue::StatusReach, 'finishTime' => $GLOBALS[Globals::TIME_BEGIN]]);
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function() use ($accessor, $racePlayerID){
+            
+            $row = $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            if($row->Status == RaceValue::StatusReach) throw new RaceException (RaceException::PlayerReached);
+            
+            $accessor->ClearCondition();
+            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
+                'Status' => RaceValue::StatusReach,
+                'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ]);
+        });
         
         $result = new ResultData(ErrorCode::Success);
         return $result;
