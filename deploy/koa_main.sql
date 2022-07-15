@@ -902,43 +902,43 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構
-DELIMITER //
-CREATE PROCEDURE `RaceFinish`(
-	IN `inRaceID` INT,
-	IN `inStatus` INT,
-	IN `inTime` DECIMAL(20,6)
-)
-BEGIN
-    
-    DECLARE step INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
-    
-    BEGIN
-    
-        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
-        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
-        ROLLBACK;
-        SELECT step, @full_error;
-    
-    END;
-
-    START TRANSACTION;
-
-        UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
-        SET step = 1;
-
-        UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
-        SET step = 2;
-
-        UPDATE `Races` SET `Status` = inStatus, `UpdateTime` = inTime, `FinishTime` = inTime WHERE `RaceID` = inRaceID;
-        SET step = 3;
-
-        SELECT step, '';
-
-    COMMIT;
-
-END//
-DELIMITER ;
+-- DELIMITER //
+-- CREATE PROCEDURE `RaceFinish`(
+-- 	IN `inRaceID` INT,
+-- 	IN `inStatus` INT,
+-- 	IN `inTime` DECIMAL(20,6)
+-- )
+-- BEGIN
+--     
+--     DECLARE step INT DEFAULT 0;
+--     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+--     
+--     BEGIN
+--     
+--         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+--         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+--         ROLLBACK;
+--         SELECT step, @full_error;
+--     
+--     END;
+-- 
+--     START TRANSACTION;
+-- 
+--         UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
+--         SET step = 1;
+-- 
+--         UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+--         SET step = 2;
+-- 
+--         UPDATE `Races` SET `Status` = inStatus, `UpdateTime` = inTime, `FinishTime` = inTime WHERE `RaceID` = inRaceID;
+--         SET step = 3;
+-- 
+--         SELECT step, '';
+-- 
+--     COMMIT;
+-- 
+-- END//
+-- DELIMITER ;
 
 -- 傾印  資料表 koa_main.RacePlayer 結構
 CREATE TABLE IF NOT EXISTS `RacePlayer` (
