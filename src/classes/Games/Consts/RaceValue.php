@@ -38,6 +38,7 @@ class RaceValue {
     
     const DivisorHP = 100;
     const DivisorSkillDuration = 75;
+    const DivisorSkillDurationForOther = 50;
     
     const SunNone = 100;
     const SunSame = 120;
