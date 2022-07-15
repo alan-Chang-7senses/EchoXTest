@@ -295,7 +295,7 @@ class PDOAccessor {
         return new SQLWhereInValues($values, $bind);
     }
     
-    public function Trasaction($func){
+    public function Transaction($func){
         
         try{
             

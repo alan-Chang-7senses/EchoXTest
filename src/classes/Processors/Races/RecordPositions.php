@@ -39,7 +39,7 @@ class RecordPositions extends BaseRace{
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Trasaction(function() use ($accessor, $racePlayerPositions){
+        $accessor->Transaction(function() use ($accessor, $racePlayerPositions){
             
             $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($racePlayerPositions))->ForUpdate()->FetchAll();
             foreach($rows as $row){
