@@ -2,11 +2,14 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -32,16 +35,28 @@ class Rankings extends BaseRace{
         $rankings = [];
         foreach ($players as $player){
             if(!property_exists($raceInfo->racePlayers, $player->id)) throw new RaceException (RaceException::PlayerNotInThisRace);
-            $rankings[$player->id] = $player->ranking;
+            $rankings[$raceInfo->racePlayers->{$player->id}] = $player->ranking;
         }
         
-        foreach ($raceInfo->racePlayers as $racePlayerID) {
-
-            $racePlayerHandler = new RacePlayerHandler($racePlayerID);
-            $racePlayerInfo = $racePlayerHandler->GetInfo();
-            if($racePlayerInfo->status == RaceValue::StatusReach) continue;
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function() use ($accessor, $rankings){
             
-            $racePlayerHandler->SaveData(['ranking' => $rankings[$racePlayerInfo->player]]);
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($rankings))->FetchAll();
+            foreach($rows as $row){
+                
+                if($row->Status == RaceValue::StatusReach) continue;
+                $accessor->ClearCondition();
+                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify([
+                    'Ranking' => $rankings[$row->RacePlayerID],
+                    'Status' => RaceValue::StatusUpdate,
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                ]);
+            }
+        });
+        
+        $racePlayerPool = RacePlayerPool::Instance();
+        foreach($raceInfo->racePlayers as $racePlayerID){
+            $racePlayerPool->Delete($racePlayerID);
         }
         
         $result = new ResultData(ErrorCode::Success);

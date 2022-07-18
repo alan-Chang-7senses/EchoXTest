@@ -2,10 +2,14 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -26,15 +30,33 @@ class RecordPositions extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerHandlers = [];
+        if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException (RaceException::Finished);
+
+        $racePlayerPositions = [];
         foreach($positions as $position){
             $racePlayerID = $raceInfo->racePlayers->{$position->player} ?? null;
             if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace);
-            $racePlayerHandlers[$position->player] = new RacePlayerHandler($racePlayerID);
+            $racePlayerPositions[$racePlayerID] = $position->position;
         }
         
-        foreach ($positions as $position) {
-            $racePlayerHandlers[$position->player]->SaveData(['position' => $position->position]);
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function() use ($accessor, $racePlayerPositions){
+            
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($racePlayerPositions))->ForUpdate()->FetchAll();
+            foreach($rows as $row){
+                if($row->Status == RaceValue::StatusReach) continue;
+                $accessor->ClearCondition();
+                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify([
+                    'Position' => $racePlayerPositions[$row->RacePlayerID],
+                    'Status' => RaceValue::StatusUpdate,
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                ]);
+            }
+        });
+        
+        $racePlayerPool = RacePlayerPool::Instance();
+        foreach($raceInfo->racePlayers as $racePlayerID){
+            $racePlayerPool->Delete($racePlayerID);
         }
         
         $result = new ResultData(ErrorCode::Success);

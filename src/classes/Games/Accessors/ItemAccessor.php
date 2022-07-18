@@ -65,7 +65,7 @@ class ItemAccessor extends BaseAccessor{
         $this->usedItem = $usedItem;
         $this->dropItem = $dropItem;
 
-        $this->MainAccessor()->Trasaction(function(){
+        $this->MainAccessor()->Transaction(function(){
             $this->ModifyUserItemByID($this->id,$this->usedItem);
             $userItemHandler = new UserItemHandler($this->id);
             for($i=0; $i<count($this->dropItem); $i++){
