@@ -41,7 +41,7 @@ class Rankings extends BaseRace{
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function() use ($accessor, $rankings){
             
-            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($rankings))->FetchAll();
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($rankings))->ForUpdate()->FetchAll();
             foreach($rows as $row){
                 
                 if($row->Status == RaceValue::StatusReach) continue;
