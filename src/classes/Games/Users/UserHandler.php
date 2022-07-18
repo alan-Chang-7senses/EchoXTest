@@ -1,7 +1,7 @@
 <?php
 namespace Games\Users;
 
-//use Games\Consts\RaceValue;
+use Games\Consts\RaceValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
 use Games\Users\Holders\UserInfoHolder;
@@ -38,7 +38,7 @@ class UserHandler {
         $this->ResetInfo();
     }
     
-//    public function LeaveRace(){
-//        $this->pool->Set($this->id, 'race', RaceValue::NotInRace);
-//    }
+    public function LeaveRace(){
+        $this->pool->Set($this->id, 'race', RaceValue::NotInRace);
+    }
 }
