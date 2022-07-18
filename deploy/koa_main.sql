@@ -901,7 +901,7 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000038, 31, 1, 0);
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
--- 傾印  程序 koa_main.RaceFinish 結構
+傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
 	IN `inRaceID` INT,

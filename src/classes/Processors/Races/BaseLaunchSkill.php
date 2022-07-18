@@ -129,6 +129,7 @@ abstract class BaseLaunchSkill extends BaseRace{
                     
                     foreach ($racePlayerHandlers[SkillValue::TargetOthers] as $handler) {
                         $info = $handler->GetInfo();
+                        $endTime = $this->DeterminOtherTargetExpireTime($info,$skillInfo,$endTime);
                         $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
                         $racePlayerHandlerOthers[$info->player] = $handler;
                     }
@@ -137,6 +138,7 @@ abstract class BaseLaunchSkill extends BaseRace{
                     
                     $handler = $racePlayerHandlers[$target];
                     $info = $handler->GetInfo();
+                    $endTime = $this->DeterminOtherTargetExpireTime($info,$skillInfo,$endTime);
                     $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
                     $racePlayerHandlerOthers[$info->player] = $handler;
                 }
@@ -196,5 +198,19 @@ abstract class BaseLaunchSkill extends BaseRace{
         $result->others = $others;
         
         return $result;
+    }
+
+    
+    function DeterminOtherTargetExpireTime($info, $skillInfo,$endTime) : float{
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        $interval  = $endTime - $currentTime;
+        $playerHandler = new PlayerHandler($info->player);
+        $playerIntelligent = $playerHandler->GetInfo()->intelligent;
+
+        if($skillInfo->duration == SkillValue::DurationForever){
+            return $currentTime + RaceValue::ForeverAdditiveSec;
+        }
+        if($interval < 0.001)return $endTime;
+        return $currentTime + ($interval  * RaceValue::DivisorSkillDurationForOther / $playerIntelligent);
     }
 }

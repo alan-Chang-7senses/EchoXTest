@@ -29,6 +29,7 @@ class PDOAccessor {
     private int $fetchStyle = PDO::FETCH_OBJ;
     private string $prepareName = PDOHelper::PREPARE_DEFAULT;
     private bool $ignore = false;
+    private bool $forUpdate = false;
     
     public function __construct(string $label) {
         $this->ph = PDOHGenerator::Instance()->$label;
@@ -58,6 +59,10 @@ class PDOAccessor {
         if($this->groupBy !== null) $statement .= $this->groupBy;
         if($this->orderBy !== null) $statement .= $this->orderBy;
         if($this->limit !== null) $statement .= $this->limit;
+        if($this->forUpdate) {
+            $statement .= ' FOR UPDATE';
+            $this->forUpdate = false;
+        }
         
         $this->executeBind($statement, $where->bind);
         return $this->ph->$func($this->fetchStyle);
@@ -253,6 +258,11 @@ class PDOAccessor {
         $this->ignore = $ignore;
         return $this;
     }
+    
+    public function ForUpdate() : PDOAccessor {
+        $this->forUpdate = true;
+        return $this;
+    }
 
     public function executeBind(string $statement, array|null $bind) : bool{
         $this->LogExtra($statement, $bind);
@@ -284,20 +294,24 @@ class PDOAccessor {
         
         return new SQLWhereInValues($values, $bind);
     }
-    public function Trasaction($func){
+    
+    public function Transaction($func){
         
         try{
             
             $this->ph->beginTransaction();
-            $func();
+            $result = $func();
             $this->ph->commitTransaction();
             
-        } catch (\Exception $ex) {  
+        } catch (Exception $ex) {
 
             $this->ph->rollbackTransaction();
             throw new Exception($ex->getMessage(), $ex->getCode(), $ex);
         }
+        
+        return $result;
     }
+    
     private function LogExtra(string $statement, array|null $bind){
         LogHelper::Extra('SQL'.DataGenerator::RandomString(3), ['statement' => $statement, 'bind' => $bind]);
     }
