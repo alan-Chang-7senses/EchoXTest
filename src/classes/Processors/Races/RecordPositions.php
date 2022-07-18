@@ -8,6 +8,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
@@ -52,6 +53,11 @@ class RecordPositions extends BaseRace{
                 ]);
             }
         });
+        
+        $racePlayerPool = RacePlayerPool::Instance();
+        foreach($raceInfo->racePlayers as $racePlayerID){
+            $racePlayerPool->Delete($racePlayerID);
+        }
         
         $result = new ResultData(ErrorCode::Success);
         return $result;

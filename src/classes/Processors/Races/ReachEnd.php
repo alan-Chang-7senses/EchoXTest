@@ -8,6 +8,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -43,6 +44,8 @@ class ReachEnd extends BaseRace{
                 'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
             ]);
         });
+        
+        RacePlayerPool::Instance()->Delete($racePlayerID);
         
         $result = new ResultData(ErrorCode::Success);
         return $result;
