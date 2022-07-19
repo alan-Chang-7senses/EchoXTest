@@ -11,8 +11,10 @@ use Exception;
 use Processors\BaseProcessor;
 use Exceptions\NormalException;
 use Games\Accessors\PlayerAccessor;
+use Games\Players\PlayerHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
+use Processors\EliteTest\UserInfo;
 
 class SetNickname extends BaseProcessor{
 
@@ -20,23 +22,23 @@ class SetNickname extends BaseProcessor{
     {
         // input：角色ID，欲更改之角色暱稱
         // 回傳：更改是否成功、成功之暱稱字串。
-        $nickName = InputHelper::post('nickName');
-        $playerID = InputHelper::post('playerID');
+        $playerID = InputHelper::post('id');
+        $nickName = InputHelper::post('nickname');
 
         //檢查送來暱稱是否合法
         $bandedWords = ['fuck','shit'];//測試用禁字庫
         $this->ValidateName($bandedWords,$nickName);
 
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
-        $userID = $userHandler->GetInfo()->id;
-        
+        $userInfo = $userHandler->GetInfo();
+        $userID = $userInfo->id;
+
         // //檢查User是否擁有此角色
-        // $pdo = new PDOAccessor(EnvVar::DBMain);
-        // $hasPlayer = $pdo->FromTable('PlayerHolder')
-        // ->WhereEqual('UserID',$userID)
-        // ->WhereEqual('PlayerID',$playerID)
-        // ->Fetch();
-        // if($hasPlayer === false)throw new Exception("User does not have this player",ErrorCode::Unknown);
+        $hasPlayer = false;
+        foreach($userInfo->players as $player){
+            if($player == $playerID)$hasPlayer = true;
+        }
+        if($hasPlayer === false)throw new Exception("User does not have this player",ErrorCode::Unknown);
         
         // 改名
         $pdo = new PDOAccessor(EnvVar::DBMain);
@@ -46,7 +48,10 @@ class SetNickname extends BaseProcessor{
         ->Modify(['Nickname' => $nickName]);
         $pdo->ClearCondition();
 
+        
         $results = new ResultData(ErrorCode::Success);
+        // $playerHandler = new PlayerHandler($playerID);
+        // $nickName = $playerHandler->GetInfo()->name;
         $nickName = $pdo->FromTable('PlayerHolder')
         ->WhereEqual('PlayerID',$playerID)
         ->Fetch();
