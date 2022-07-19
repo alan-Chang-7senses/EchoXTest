@@ -50,11 +50,12 @@ class SetNickname extends BaseProcessor{
 
         
         $results = new ResultData(ErrorCode::Success);
-        // $playerHandler = new PlayerHandler($playerID);
-        // $nickName = $playerHandler->GetInfo()->name;
         $nickName = $pdo->FromTable('PlayerHolder')
         ->WhereEqual('PlayerID',$playerID)
         ->Fetch();
+        $playerHandler = new PlayerHandler($playerID);
+        //更新快取中的暱稱資料
+        $playerHandler->GetInfo()->name = $nickName;
         $results->newNickName = ['newNickName' => $nickName->Nickname];
         return $results;
     }
