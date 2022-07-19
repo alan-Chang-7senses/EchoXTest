@@ -36,6 +36,7 @@ Content Type: `application/json`
 | power | int | 電力 |
 | diamond | int | 遊戲鑽石 |
 | [player](#player) | object | 角色資訊 |
+| unreadmail | int | 未讀郵件數量 |
 
 #### <span id="player">player 內容</span>
 
@@ -69,5 +70,6 @@ Content Type: `application/json`
 	        "leg": "110002",
 	        "back": "110001",
 	        "hat": "110002"
-	    }
+	    },				
+		"unreadmail": 0
 	}
