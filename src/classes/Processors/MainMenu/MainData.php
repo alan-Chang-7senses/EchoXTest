@@ -4,12 +4,14 @@ namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Mails\MailsHandler;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
+
 /**
  * Description of MainData
  *
@@ -39,6 +41,9 @@ class MainData extends BaseProcessor{
         $result->power = $userInfo->power;
         $result->diamond = $userInfo->diamond;
         $result->player = $player;
+
+        $userMailsHandler = new MailsHandler();               
+        $result->unreadmail = $userMailsHandler->GetUnreadMails();
         
         return $result;
     }

@@ -60,4 +60,11 @@ class MailsHandler {
         $mailsAccessor->deleteMails($mailsID,$_SESSION[Sessions::UserID],$bind);
         UserMailsPool::Instance()->Delete($mailsID);
     }
+
+    public function GetUnreadMails(): int {
+
+        $mailsAccessor = new MailsAccessor();
+        return $mailsAccessor->getUnreadMails($_SESSION[Sessions::UserID]);
+    }
+
 }
