@@ -14,7 +14,7 @@ class RaceValue {
     const ForeverAdditiveSec = 1000000000;
     
     /* 能量再獲得次數上限 */
-    const EnergyAgainCount = 2;
+    const EnergyAgainCount = 1;
     /* 能量再獲得 最大數量 */
     const EnergyAgainMax = 12;
     /* 能量再獲得 最小數量 */
