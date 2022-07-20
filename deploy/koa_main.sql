@@ -266,6 +266,28 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
+-- 新增數值標記與骨架類別的新koa_main.PlayerNFT 結構
+CREATE TABLE IF NOT EXISTS `PlayerNFT` (
+  `PlayerID` bigint(20) NOT NULL,
+  `Constitution` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '體力',
+  `Strength` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '力量',
+  `Dexterity` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '技巧',
+  `Agility` smallint(5) unsigned NOT NULL DEFAULT 100 COMMENT '敏捷',
+  `Attribute` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '屬性',
+  `HeadDNA` varchar(50) NOT NULL COMMENT '頭部 DNA 編碼',
+  `BodyDNA` varchar(50) NOT NULL COMMENT '身體 DNA 編碼',
+  `HandDNA` varchar(50) NOT NULL COMMENT '手部 DNA 編碼',
+  `LegDNA` varchar(50) NOT NULL COMMENT '腿部 DNA 編碼',
+  `BackDNA` varchar(50) NOT NULL COMMENT '背脊 DNA 編碼',
+  `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
+  `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
+  `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
+  `Source` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0 COMMENT '來源標記',
+  `StrengthLevel` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0 COMMENT '數值標記、強度級別',
+  `SkeletonType` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '骨架類別',
+  PRIMARY KEY (`PlayerID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
+
 -- 正在傾印表格  koa_main.PlayerNFT 的資料：~76 rows (近似值)
 /*!40000 ALTER TABLE `PlayerNFT` DISABLE KEYS */;
 INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`) VALUES
