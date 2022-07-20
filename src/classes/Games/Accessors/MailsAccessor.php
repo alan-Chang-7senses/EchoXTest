@@ -26,7 +26,6 @@ class MailsAccessor extends BaseAccessor{
     }
     public function getUnreadMails(string $userID): int
     {
-        echo $GLOBALS[Globals::TIME_BEGIN]; 
         return count($this->MainAccessor()->FromTable('UserMails')
             ->WhereEqual('UserID', $userID)->WhereGreater('MailsID', 0)
             ->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])
