@@ -2,6 +2,8 @@
 
 namespace Games\Accessors;
 
+use Consts\Globals;
+
 class MailsAccessor extends BaseAccessor{
     
     public function rowsMails(int $userID) : array {
@@ -21,5 +23,13 @@ class MailsAccessor extends BaseAccessor{
     }
     public function deleteMails(int $mailsID,int|string $userID, array $bind) : bool{
         return $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
+    }
+    public function getUnreadMails(string $userID): int
+    {
+        return count($this->MainAccessor()->FromTable('UserMails')
+            ->WhereEqual('UserID', $userID)->WhereGreater('MailsID', 0)
+            ->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])
+            ->WhereEqual('OpenStatus', 0)
+            ->FetchAll());
     }
 }

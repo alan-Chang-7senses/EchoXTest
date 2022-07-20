@@ -6,7 +6,7 @@ use PDO;
 
 class RaceRecoveryDataAccessor extends BaseAccessor{
     
-    public function SetRecoveryData(int $raceID,float $countDown,float $runTime,int $userID, int $moveDistance,int $skillID, int $skillCoolTime, int $normalSkillTime, int $fullLVSkillTime,int $skillID1, int $skillCoolTime1, int $normalSkillTime1, int $fullLVSkillTime1,int $skillID2, int $skillCoolTime2, int $normalSkillTime2, int $fullLVSkillTime2,int $skillID3, int $skillCoolTime3, int $normalSkillTime3, int $fullLVSkillTime3,int $skillID4, int $skillCoolTime4, int $normalSkillTime4, int $fullLVSkillTime4,int $skillID5, int $skillCoolTime5, int $normalSkillTime5, int $fullLVSkillTime5, int $createTime) : bool{
+    public function SetRecoveryData(int $raceID,float $countDown,float $runTime,int $userID, float $moveDistance,int $skillID, float $skillCoolTime, float $normalSkillTime, float $fullLVSkillTime,int $skillID1, float $skillCoolTime1, float $normalSkillTime1, float $fullLVSkillTime1,int $skillID2, float $skillCoolTime2, float $normalSkillTime2, float $fullLVSkillTime2,int $skillID3, float $skillCoolTime3, float $normalSkillTime3, float $fullLVSkillTime3,int $skillID4, float $skillCoolTime4, float $normalSkillTime4, float $fullLVSkillTime4,int $skillID5, float $skillCoolTime5, float $normalSkillTime5, float $fullLVSkillTime5, int $createTime) : bool{
         /*return $this->MainAccessor()->FromTable('RecoveryData')->Add($bind);*/
         $accessor = $this->MainAccessor();
         return $accessor->executeBind('INSERT INTO `RecoveryData` VALUES (:raceID, :countDown, :runTime, :userID, :moveDistance, '

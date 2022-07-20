@@ -901,7 +901,7 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000038, 31, 1, 0);
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
-傾印  程序 koa_main.RaceFinish 結構
+-- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
 	IN `inRaceID` INT,
@@ -1013,33 +1013,33 @@ CREATE TABLE IF NOT EXISTS `RecoveryData` (
   `CountDown` float unsigned NOT NULL,
   `RunTime` float unsigned NOT NULL,
   `PlayerID` bigint(20) unsigned NOT NULL,
-  `MoveDistance` int(10) unsigned NOT NULL,
+  `MoveDistance` float unsigned NOT NULL DEFAULT 0,
   `SkillID1` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime1` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime1` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime1` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime1` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime1` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime1` float unsigned NOT NULL DEFAULT 0,
   `SkillID2` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime2` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime2` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime2` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime2` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime2` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime2` float unsigned NOT NULL DEFAULT 0,
   `SkillID3` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime3` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime3` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime3` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime3` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime3` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime3` float unsigned NOT NULL DEFAULT 0,
   `SkillID4` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime4` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime4` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime4` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime4` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime4` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime4` float unsigned NOT NULL DEFAULT 0,
   `SkillID5` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime5` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime5` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime5` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime5` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime5` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime5` float unsigned NOT NULL DEFAULT 0,
   `SkillID6` int(10) unsigned NOT NULL DEFAULT 0,
-  `SkillCoolTime6` int(10) unsigned NOT NULL DEFAULT 0,
-  `NormalSkillTime6` int(10) unsigned NOT NULL DEFAULT 0,
-  `FullLVSkillTime6` int(10) unsigned NOT NULL DEFAULT 0,
+  `SkillCoolTime6` float unsigned NOT NULL DEFAULT 0,
+  `NormalSkillTime6` float unsigned NOT NULL DEFAULT 0,
+  `FullLVSkillTime6` float unsigned NOT NULL DEFAULT 0,
   `CreateTime` int(10) unsigned NOT NULL,
-  UNIQUE KEY `PlayerID` (`PlayerID`)
+  UNIQUE KEY `PlayerID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_main.Sessions 結構
@@ -1146,8 +1146,8 @@ INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Le
 	(-3, 1, 'ai0003', 'aiacc0003', 'pass0003', 1, 0, 0, 0, 0, 0, -3, 1, 0, 0, 0, 0, 0),
 	(-2, 1, 'ai0002', 'aiacc0002', 'pass0002', 1, 0, 0, 0, 0, 0, -2, 1, 0, 0, 0, 0, 0),
 	(-1, 1, 'ai0001', 'aiacc0001', 'pass0001', 1, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0),
-	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000001, 1, 3, 0, 0, 0, 0),
-	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000003, 1, 3, 0, 0, 0, 0),
+	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000001, 1, 0, 0, 0, 0, 0),
+	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000003, 1, 0, 0, 0, 0, 0),
 	(3, 1, 'test003', 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000005, 1, 0, 0, 0, 0, 0),
 	(4, 1, 'test004', 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000007, 1, 0, 0, 0, 0, 0),
 	(5, 1, 'test005', 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000009, 1, 0, 0, 0, 0, 0),
