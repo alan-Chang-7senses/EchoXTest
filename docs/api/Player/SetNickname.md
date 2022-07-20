@@ -1,4 +1,4 @@
-# 角色 - Peta名稱設定
+# 角色 - 設定暱稱
 
 ## 介紹
 
@@ -33,15 +33,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| [newNickname](#newNickname) | object | 設定好的新角色暱稱 |
 
-
-#### <span id="newNickname">newNickname 內容</span>
-
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| newNickname | string | 新的名稱 |
 
 ### Example
 
@@ -51,8 +43,5 @@ Content Type: `application/json`
 		"error": {
 			"code": 0,
 			"message": ""
-		},
-		"newNickName": {
-			"newNickName": "1234"
 		}
 	}

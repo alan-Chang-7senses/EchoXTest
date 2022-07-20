@@ -19,7 +19,7 @@
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
 		- [儲存技能](Player/SetSkill.md)。
-		- [Peta名稱設定](Player/SetNickname.md)。
+		- [設定暱稱](Player/SetNickname.md)。
 	- 競賽：
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
