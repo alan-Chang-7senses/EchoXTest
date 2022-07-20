@@ -9,14 +9,18 @@ use Holders\ResultData;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Games\Races\OfflineRecoveryDataHandler;
+use Games\Users\UserHandler;
+use Consts\Sessions;
 
 
 class OfflineRecoveryData extends BaseRace {
     
     public function Process(): ResultData {
 
+        $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        $userInfo = $userHandler->GetInfo();
+        $raceID  = $userInfo->race;
 
-        $raceID = InputHelper::post('raceID');
         $countDown = InputHelper::post('countDown');
         $runTime = InputHelper::post('runTime');
         $playersData = json_decode(InputHelper::post('playersData'));
