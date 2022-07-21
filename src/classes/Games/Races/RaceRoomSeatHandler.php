@@ -10,56 +10,73 @@ use Games\Accessors\RaceRoomSeatAccessor;
 class RaceRoomSeatHandler
 {
 
-    private RaceRoomSeatAccessor $raceRoomSeatAccessor;
+    private RaceRoomSeatAccessor $accessor;
     private int $raceRoomID;
+    private int $userID;
 
     public function __construct(int $raceRoomID)
     {
-        $this->raceRoomSeatAccessor = new RaceRoomSeatAccessor();
+        $this->accessor = new RaceRoomSeatAccessor();
         $this->raceRoomID = $raceRoomID;
+        $this->userID = $_SESSION[Sessions::UserID];
     }
 
 
-    public function TakeSeat(array &$seatUserIDs): int
+    public function TakeSeat(): int
     {
-        $raceRoomSeatID = -1;
-
-        $roomSeats = $this->raceRoomSeatAccessor->GetSeats($this->raceRoomID, ConfigGenerator::Instance()->AmountRacePlayerMax);
-
-        $raceRoomSeatID = -1;
-        foreach ($roomSeats as $roomSeat) {
-            if ($roomSeat->UserID == 0) {
-                if ($raceRoomSeatID == -1) {
-                    $raceRoomSeatID = $roomSeat->RaceRoomSeatID;
-                }
-            }
-            else {
-                $seatUserIDs[$roomSeat->UserID] = $roomSeat->RaceRoomSeatID;
-            }
+        $allSeats = $this->accessor->GetSeats($this->raceRoomID);
+        if (count($allSeats) == 0) {
+            $allSeats = $this->accessor->CreateSeats($this->raceRoomID, ConfigGenerator::Instance()->AmountRacePlayerMax);
         }
 
-        if ($raceRoomSeatID == -1) {
-            //RaceRoom 標記有問題
-            throw new RaceException(RaceException::UserMatchError);
-        }
-
-        $seatUserIDs[$_SESSION[Sessions::UserID]] = $raceRoomSeatID;
+        $raceRoomSeatID = $this->FindSeatID($allSeats, 0);
 
         $bind = [
-            'UserID' => $_SESSION[Sessions::UserID]
+            'UserID' => $this->userID
         ];
 
-        $this->raceRoomSeatAccessor->Update($raceRoomSeatID, $bind);
+        $this->accessor->Update($raceRoomSeatID, $bind);
 
         return $raceRoomSeatID;
     }
 
-
-    public function LeaveSeat(int $raceRoomSeatID)
+    public function LeaveSeat()
     {
+        $raceRoomSeatID = $this->FindSeatID($this->raceRoomID, $this->userID);
         $bind = [
             'UserID' => 0
         ];
-        return $this->raceRoomSeatAccessor->Update($raceRoomSeatID, $bind);
+        return $this->accessor->Update($raceRoomSeatID, $bind);
     }
+
+
+    private function FindSeatID(array|int $allSeats, int $userID): int
+    {
+        if (!is_array($allSeats)) {
+            $allSeats = $this->accessor->GetSeats($allSeats);
+        }
+
+        foreach ($allSeats as $seat) {
+            if ($seat->UserID == $userID) {
+                return $seat->RaceRoomSeatID;
+            }
+        }
+
+        //RaceRoom 標記有問題
+        throw new RaceException(RaceException::UserMatchError);
+    }
+
+    public function GetSeatUsers(): array
+    {
+        $allSeats = $this->accessor->GetSeats($this->raceRoomID);
+        $result = array();
+        foreach ($allSeats as $seat) {
+            if ($seat->UserID != 0) {
+                $result[$seat->UserID] = $seat->RaceRoomSeatID;
+            }
+        }
+        return $result;
+    }
+
+
 }

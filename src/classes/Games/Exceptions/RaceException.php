@@ -25,5 +25,6 @@ class RaceException extends NormalException{
     const EnergyNotRunOut = 4014;
     const EnergyAgainOver = 4015;
     const UserInMatch = 4016;
-    const UserMatchError = 4017;    
+    const UserNotInMatch = 4017;
+    const UserMatchError = 4018;    
 }

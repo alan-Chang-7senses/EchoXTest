@@ -8,52 +8,46 @@ use Games\Accessors\RaceRoomsAccessor;
 class RaceRoomsHandler
 {
 
-    private RaceRoomsAccessor $raceRoomsAccessor;
-    private int $lobby;
-
-    private int $raceRoomID;
+    private RaceRoomsAccessor $accessor;
 
     public function __construct()
     {
-        $this->raceRoomsAccessor = new RaceRoomsAccessor();
+        $this->accessor = new RaceRoomsAccessor();
     }
 
-
-    public function SetConfig(int $lobby){
-        $this->lobby = $lobby;
-
+    private function GetNewRomRate(int $lobby): int
+    {
         switch ($lobby) {
             case 1: //1. 金幣晉級賽
-                $this->newRoomRate = ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
-                break;
+                return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
             case 2: //2. UCG晉級賽
-                $this->newRoomRate = ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
+                return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
         }
+
+        return 0;
     }
 
-    public function GetMatchRoomID(int $lowBound, int $upBound): int
+    public function GetMatchRoomID(int $lobby, int $lowBound, int $upBound): int
     {
-
-
-        $rooms = $this->raceRoomsAccessor->GetMatchRooms($this->lobby, $lowBound, $upBound);
+        $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound);
+        $newRoomRate = $this->GetNewRomRate($lobby);
         $roomNumber = count($rooms);
-        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->newRoomRate) : true;
+        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $newRoomRate) : true;
 
         if ($isAddNewroom) {
-            $this->raceRoomID = $this->raceRoomsAccessor->AddNewRoom($this->lobby, $lowBound, $upBound);
+            $this->raceRoomID = $this->accessor->AddNewRoom($lobby, $lowBound, $upBound);
 
         }
         else {
-            $race = rand(0, $roomNumber - 1);
-            $this->raceRoomID = $rooms[$race]->RaceRoomID;
+            $rnd = rand(0, $roomNumber - 1);
+            $this->raceRoomID = $rooms[$rnd]->RaceRoomID;
         }
-
 
         return $this->raceRoomID;
     }
 
 
-    public function UpdateUsers(array $users)
+    public function UpdateUsers(int $raceRoomID, array $users)
     {
         $seatCount = count($users);
 
@@ -62,7 +56,7 @@ class RaceRoomsHandler
         }
 
         $bind["RaceRoomSeats"] = json_encode($users);
-        return $this->raceRoomsAccessor->Update($this->raceRoomID, $bind);
+        return $this->accessor->Update($raceRoomID, $bind);
     }
 
 
@@ -72,7 +66,7 @@ class RaceRoomsHandler
             'Status' => 3,
             'RaceID' => $raceID,
         ];
-        return $this->raceRoomsAccessor->Update($raceRoomID, $bind);
+        return $this->accessor->Update($raceRoomID, $bind);
     }
 
 }

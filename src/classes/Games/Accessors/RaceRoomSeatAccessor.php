@@ -7,28 +7,17 @@ use Accessors\PDOAccessor;
 
 class RaceRoomSeatAccessor extends BaseAccessor
 {
-
-    private $allSeats;
-
-    public function useTable(): PDOAccessor
+    private function useTable(): PDOAccessor
     {
-
         return $this->MainAccessor()->FromTable('RaceRoomSeat');
     }
 
-    public function GetSeats(int $raceRoomID, int $maxseats): array
+    public function GetSeats(int $raceRoomID): array    
     {
-        $this->allSeats = $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->FetchAll();
-
-        if  (count( $this->allSeats ) == 0)
-        {
-            $this->CreateSeats( $raceRoomID, $maxseats);
-        }
-
-        return $this->allSeats;
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->FetchAll();
     }
 
-    private function CreateSeats(int $raceRoomID, int $maxseats)
+    public function CreateSeats(int $raceRoomID, int $maxseats)
     {
 
         for ($i = 1; $i <= $maxseats; ++$i) {
@@ -41,9 +30,8 @@ class RaceRoomSeatAccessor extends BaseAccessor
             ]);
         }
 
-        $this->allSeats = $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->FetchAll();
+        return $this->GetSeats($raceRoomID);
     }
-
 
     public function Update(int $raceRoomSeatID, array $bind): bool
     {

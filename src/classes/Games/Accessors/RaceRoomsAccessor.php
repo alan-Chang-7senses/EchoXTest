@@ -8,11 +8,10 @@ use Accessors\PDOAccessor;
 class RaceRoomsAccessor extends BaseAccessor
 {
 
-    public function useTable():PDOAccessor
+    private function useTable():PDOAccessor
     {
         return $this->MainAccessor()->FromTable('RaceRooms');        
     }
-
 
     public function GetMatchRooms(int $lobby, int $lowBound, int $upBound): array
     {
