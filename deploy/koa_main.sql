@@ -32,6 +32,8 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
 	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
+	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
 
 -- 傾印  資料表 koa_main.Marquee 結構
