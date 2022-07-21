@@ -10,6 +10,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
+use Games\Races\RaceRoomsHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
@@ -74,6 +75,9 @@ class Ready extends BaseRace{
             'Weather' => $climate->weather,
             'WindDirection' => $climate->windDirection,
         ]);
+
+        $raceRoomsHandler = new RaceRoomsHandler();
+        $raceRoomsHandler->StartRace($userInfo->room, $raceID);
         
         $racePlayerIDs = [];
         $playerSkills = [];
