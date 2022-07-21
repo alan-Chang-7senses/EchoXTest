@@ -27,9 +27,11 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~4 rows (近似值)
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
+	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
 
 -- 傾印  資料表 koa_main.Marquee 結構
