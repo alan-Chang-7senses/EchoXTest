@@ -70,6 +70,7 @@ class Ready extends BaseRace{
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $raceID = $raceAccessor->AddRace([
             'SceneID' => $sceneInfo->id,
+            'Room' => $userInfo->room, 
             'CreateTime' => $currentTime,
             'UpdateTime' => $currentTime,
             'Weather' => $climate->weather,
