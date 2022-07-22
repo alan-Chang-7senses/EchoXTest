@@ -15,6 +15,9 @@
 		- [當前角色](User/CurrentPlayer.md)。
 		- [當前使用者資訊](User/CurrentInfo.md)。
 		- [持有物品](User/Items.md)。
+		- [設定使用者暱稱](User/SetUserNickname.md)。
+		- 免費Peta三選一：
+			- [查詢使用者進度](User/FreePeta/FreePetaProccess.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
