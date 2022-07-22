@@ -9,6 +9,7 @@ use Helpers\InputHelper;
 use Accessors\PDOAccessor;
 use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
+use Generators\ConfigGenerator;
 use Games\Races\RaceRoomsHandler;
 use Games\Exceptions\RaceException;
 use Games\Races\RaceRoomSeatHandler;
@@ -50,7 +51,9 @@ class PVPMatch extends BaseRace
         $userHandler->SaveData(['room' => $raceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
-        $result->RaceRoomID = $raceRoomID;
+        $result->raceRoomID = $raceRoomID;
+        $result->extraMatchSeconds = ConfigGenerator::Instance()->PvP_ExtraMatchSeconds;
+        $result->maxMatchSeconds = ConfigGenerator::Instance()->PvP_MaxMatchSeconds;
 
         return $result;
     }
