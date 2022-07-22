@@ -7,7 +7,7 @@
 
 ## URL
 
-http(s)://`域名`/User/FreePeta/FreePetaProccess
+http(s)://`域名`/User/FreePeta/FreePetaProcess
 
 ## Method
 
@@ -30,4 +30,4 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| proccess | int | 使用者目前進度。0：還未設定使用者暱稱、1：已設定好暱稱、2：已選好免費Peta，流程結束。 |
+| process | int | 使用者目前進度。0：還未設定使用者暱稱、1：已設定好暱稱、2：已選好免費Peta，流程結束。 |

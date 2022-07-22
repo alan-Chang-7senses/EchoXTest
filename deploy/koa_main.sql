@@ -75,9 +75,9 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
-CREATE TABLE IF NOT EXISTS `FreePetaProccess`(
+CREATE TABLE IF NOT EXISTS `FreePetaProcess`(
 	`UserID` int(10) NOT NULL DEFAULT 0,
-	`Proccess` tinyint(1) NOT NULL DEFAULT 0 COMMENT '初次進入遊戲進度',
+	`Process` tinyint(1) NOT NULL DEFAULT 0 COMMENT '初次進入遊戲進度',
 	`FreePetaIDs` varchar(100) DEFAULT NULL COMMENT '抽中的三隻免費Peta在靜態表格中的ID',		
 )
 

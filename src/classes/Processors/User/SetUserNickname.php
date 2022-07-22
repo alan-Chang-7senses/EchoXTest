@@ -29,16 +29,16 @@ class SetUserNickname extends BaseProcessor{
         if(NamingUtility::HasBandedWord($nickname,$bandedWords))throw new UserException(UserException::UsernameDirty,['username' => $nickname]);
         
         $pdo = new PDOAccessor(EnvVar::DBMain);
-        $row = $pdo->FromTable("FreePetaProccess")
+        $row = $pdo->FromTable("FreePetaProcess")
             ->WhereEqual("UserID",$_SESSION[Sessions::UserID])
             ->Fetch();
 
         $canSetNickname = true;
-        $proccess = 0;
+        $process = 0;
         if($row !== false)
         {            
             $canSetNickname = false;            
-            $proccess = $row->Proccess;
+            $process = $row->Process;
             $freePetaIDs = $row->FreePetaIDs;
             // if(/*檢查是否能夠重設暱稱，與暱稱是否與原先相同*/)
             // {
@@ -54,10 +54,10 @@ class SetUserNickname extends BaseProcessor{
         $userHandler->SaveData(["Nickname" => $nickname]);
         //TODO：成功時要更新玩家在創角流程的進度
         $pdo->ClearAll();
-        $pdo->FromTable("FreePetaProccess")
+        $pdo->FromTable("FreePetaProcess")
             ->Add([
                 "UserID" => $_SESSION[Sessions::UserID],
-                "Proccess" => $proccess >= SetUserNicknameValue::HadNickname ? $proccess : SetUserNicknameValue::HadNickname,
+                "Process" => $process >= SetUserNicknameValue::HadNickname ? $process : SetUserNicknameValue::HadNickname,
                 "FreePetaIDs" => empty($freePetaIDs) ? null : $freePetaIDs,
                 ],true);
         $results = new ResultData(ErrorCode::Success);
