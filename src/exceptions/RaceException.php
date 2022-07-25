@@ -17,5 +17,8 @@ $lang[RaceException::NotBotPlayer] = 'The player is not a bot';
 $lang[RaceException::NotBotInMatch] = 'The bot player is not in match';
 $lang[RaceException::EnergyNotRunOut] = 'The player current energy not exhausted.';
 $lang[RaceException::EnergyAgainOver] = 'The player energy reacquired more than.';
+$lang[RaceException::UserInMatch] = 'The player is matching.';
+$lang[RaceException::UserNotInMatch] = 'The player is not in match.';
+$lang[RaceException::UserMatchError] = 'Match params have errors.';
 
 return $lang;

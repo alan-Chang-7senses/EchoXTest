@@ -3,6 +3,7 @@
 namespace Games\Skills;
 
 use Games\Players\PlayerHandler;
+use Games\Pools\PlayerPool;
 use Games\Pools\SkillPool;
 use Games\Races\RacePlayerHandler;
 use Games\Skills\Holders\SkillInfoHolder;
@@ -69,8 +70,10 @@ class SkillHandler {
         }
         return $this->maxEffects;
     }
-
+    
     public function SetSkillSlot(int $plyerID, int $skillID, int $slot) : mixed{
-        return $this->pool->SetSkillSlot( $plyerID,  $skillID,  $slot);
+        $result = $this->pool->SetSkillSlot( $plyerID,  $skillID,  $slot);
+        PlayerPool::Instance()->Delete($plyerID);
+        return $result;
     }
 }
