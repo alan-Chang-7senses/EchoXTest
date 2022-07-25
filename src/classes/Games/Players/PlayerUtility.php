@@ -6,6 +6,8 @@ use Games\Consts\AdaptablilityLevel;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
 use Games\Consts\SceneValue;
+use Games\Exceptions\PlayerException;
+
 /**
  * Description of PlayerUtility
  *
@@ -39,5 +41,13 @@ class PlayerUtility {
             $lighting => PlayerValue::SunSame,
             default => PlayerValue::SunDiff,
         };
+    }
+
+    
+    public static function ValidateName($nickName){
+        $pattern = "/幹|操/i";
+        $nickNameLength = strlen($nickName);
+        if($nickNameLength > 24) throw new PlayerException(PlayerException::NicknameLengthError);        
+        if(preg_match($pattern,$nickName,$match)) throw new PlayerException(PlayerException::NicknameInValid,['[nickname]' => $nickName]);
     }
 }
