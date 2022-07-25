@@ -23,6 +23,8 @@
 	- 競賽：
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
+		- [PVP配對](Races/PVPMatch.md)。
+		- [PVP配對離開](Races/PVPMatchQuit.md)。		
 		- [開局](Races/Ready.md)。
 		- [紀錄位置](Races/RecordPositions.md)。
 		- [斷線恢復](Races/OfflineRecovery.md)。

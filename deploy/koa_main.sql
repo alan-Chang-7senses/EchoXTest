@@ -1,13 +1,15 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.196
--- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
+-- 主機:                           127.0.0.1
+-- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
--- HeidiSQL 版本:                  11.3.0.6295
+-- HeidiSQL 版本:                  12.0.0.6468
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -26,11 +28,13 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
 -- 正在傾印表格  koa_main.Configs 的資料：~4 rows (近似值)
-/*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
+	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
+	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
-/*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.Marquee 結構
 CREATE TABLE IF NOT EXISTS `Marquee` (
@@ -44,10 +48,9 @@ CREATE TABLE IF NOT EXISTS `Marquee` (
   PRIMARY KEY (`Serial`),
   KEY `Sorting` (`Sorting`),
   KEY `Staus` (`Status`,`Lang`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
 
--- 正在傾印表格  koa_main.Marquee 的資料：~12 rows (近似值)
-/*!40000 ALTER TABLE `Marquee` DISABLE KEYS */;
+-- 正在傾印表格  koa_main.Marquee 的資料：~13 rows (近似值)
 INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `CreateTime`, `UpdateTime`) VALUES
 	(1, 1, 0, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
 	(2, 1, 1, 0, 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 0, 0),
@@ -62,7 +65,6 @@ INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `Create
 	(11, 1, 10, 0, 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 0, 0),
 	(12, 1, 11, 0, 'ยินดีต้อนรับสู่ 《PetaRush》. เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush', 0, 0),
 	(13, 1, 12, 0, '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', 0, 0);
-/*!40000 ALTER TABLE `Marquee` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerHolder 結構
 CREATE TABLE IF NOT EXISTS `PlayerHolder` (
@@ -76,7 +78,6 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
 -- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
-/*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
 	(-37, -37, 'aichar0037', 0),
@@ -154,7 +155,6 @@ INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(1010000000000036, 0, NULL, 0),
 	(1010000000000037, 0, NULL, 0),
 	(1010000000000038, 0, NULL, 0);
-/*!40000 ALTER TABLE `PlayerHolder` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerLevel 結構
 CREATE TABLE IF NOT EXISTS `PlayerLevel` (
@@ -166,7 +166,6 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
 -- 正在傾印表格  koa_main.PlayerLevel 的資料：~76 rows (近似值)
-/*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(-38, 1, 1, 0),
 	(-37, 1, 1, 0),
@@ -244,7 +243,6 @@ INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(1010000000000036, 1, 1, 0),
 	(1010000000000037, 1, 1, 0),
 	(1010000000000038, 1, 1, 0);
-/*!40000 ALTER TABLE `PlayerLevel` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerNFT 結構
 CREATE TABLE IF NOT EXISTS `PlayerNFT` (
@@ -267,7 +265,6 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
 -- 正在傾印表格  koa_main.PlayerNFT 的資料：~76 rows (近似值)
-/*!40000 ALTER TABLE `PlayerNFT` DISABLE KEYS */;
 INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`) VALUES
 	(-38, 3494, 3669, 3086, 3654, 1, '140303701101047031020170', '110211702103017011010370', '140206701102053021030170', '140204701203017011010270', '110109703102017011010370', '170201701101027012030170', '0000000000000000', 00, 00),
 	(-37, 4492, 4308, 4178, 4153, 1, '140105701101037021030170', '170302701203017011010470', '130302703102017012030170', '110208701101027011010470', '110211702103017011010170', '110109701101017011010470', '0000000000000000', 00, 00),
@@ -345,7 +342,6 @@ INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `A
 	(1010000000000036, 3634, 3841, 4165, 4071, 1, '110208701101027012030170', '110109701101017012030170', '140102701203017011010470', '140303701101047011010370', '110106701203017011020530', '110110303102017011010370', '0000000000000000', 00, 00),
 	(1010000000000037, 4492, 4308, 4178, 4153, 1, '140204701101037021030170', '140303701203017011010470', '130301703102017012030170', '110106701101027011010470', '110211702103017011010170', '130301701101017011010470', '0000000000000000', 00, 00),
 	(1010000000000038, 3494, 3669, 3086, 3655, 1, '140204701101047031020170', '130301702103017011010370', '110211701102053021030170', '110109701203017011010270', '140301703102017011010370', '110110701101027012030170', '0000000000000000', 00, 00);
-/*!40000 ALTER TABLE `PlayerNFT` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerrCounts 結構
 CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
@@ -361,8 +357,6 @@ CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
 
 -- 正在傾印表格  koa_main.PlayerrCounts 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `PlayerrCounts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PlayerrCounts` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `PlayerSkill` (
@@ -375,7 +369,6 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
 -- 正在傾印表格  koa_main.PlayerSkill 的資料：~522 rows (近似值)
-/*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 3, 1, 0),
 	(-38, 4, 1, 0),
@@ -899,7 +892,6 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000038, 8, 1, 0),
 	(1010000000000038, 18, 1, 0),
 	(1010000000000038, 31, 1, 0);
-/*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
@@ -969,6 +961,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   KEY `RaceID` (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色';
 
+-- 正在傾印表格  koa_main.RacePlayer 的資料：~0 rows (近似值)
+
 -- 傾印  資料表 koa_main.RacePlayerEffect 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -980,6 +974,8 @@ CREATE TABLE IF NOT EXISTS `RacePlayerEffect` (
   PRIMARY KEY (`Serial`),
   KEY `RacePlayerID` (`RacePlayerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色效果';
+
+-- 正在傾印表格  koa_main.RacePlayerEffect 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.RacePlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
@@ -993,11 +989,43 @@ CREATE TABLE IF NOT EXISTS `RacePlayerSkill` (
   KEY `RacePlayerID` (`RacePlayerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽角色技能';
 
+-- 正在傾印表格  koa_main.RacePlayerSkill 的資料：~0 rows (近似值)
+
+-- 傾印  資料表 koa_main.RaceRooms 結構
+CREATE TABLE IF NOT EXISTS `RaceRooms` (
+  `RaceRoomID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽房間編號',
+  `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
+  `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
+  `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
+  `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
+  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '競賽席次房間編號',
+  PRIMARY KEY (`RaceRoomID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
+
+-- 正在傾印表格  koa_main.RaceRooms 的資料：~0 rows (近似值)
+
+-- 傾印  資料表 koa_main.RaceRoomSeat 結構
+CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
+  `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
+  `RaceRoomID` int(10) unsigned NOT NULL COMMENT '競賽房間編號',
+  `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
+  `UserID` int(10) NOT NULL COMMENT '使用者編號',
+  `CreateTime` int(11) NOT NULL COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  PRIMARY KEY (`RaceRoomSeatID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
+
+-- 正在傾印表格  koa_main.RaceRoomSeat 的資料：~0 rows (近似值)
+
 -- 傾印  資料表 koa_main.Races 結構
 CREATE TABLE IF NOT EXISTS `Races` (
   `RaceID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `SceneID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '場景編號',
   `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態',
+  `Room` int(10) unsigned NOT NULL DEFAULT 0,
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
@@ -1006,6 +1034,8 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `RacePlayerIDs` text DEFAULT NULL COMMENT '競賽角色編號',
   PRIMARY KEY (`RaceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
+
+-- 正在傾印表格  koa_main.Races 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.RecoveryData 結構
 CREATE TABLE IF NOT EXISTS `RecoveryData` (
@@ -1042,6 +1072,8 @@ CREATE TABLE IF NOT EXISTS `RecoveryData` (
   UNIQUE KEY `PlayerID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 正在傾印表格  koa_main.RecoveryData 的資料：~0 rows (近似值)
+
 -- 傾印  資料表 koa_main.Sessions 結構
 CREATE TABLE IF NOT EXISTS `Sessions` (
   `SessionID` varchar(255) NOT NULL,
@@ -1051,6 +1083,8 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   PRIMARY KEY (`SessionID`),
   KEY `SessionExpires` (`SessionExpires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 正在傾印表格  koa_main.Sessions 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.UserItems 結構
 CREATE TABLE IF NOT EXISTS `UserItems` (
@@ -1064,6 +1098,8 @@ CREATE TABLE IF NOT EXISTS `UserItems` (
   KEY `UserID` (`UserID`),
   KEY `ItemID` (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者持有物品';
+
+-- 正在傾印表格  koa_main.UserItems 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.UserMails 結構
 CREATE TABLE IF NOT EXISTS `UserMails` (
@@ -1079,6 +1115,8 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `UserID` (`UserID`) USING BTREE,
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 正在傾印表格  koa_main.UserMails 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
@@ -1103,10 +1141,9 @@ CREATE TABLE IF NOT EXISTS `Users` (
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`),
   KEY `Race` (`Race`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
 -- 正在傾印表格  koa_main.Users 的資料：~48 rows (近似值)
-/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`) VALUES
 	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, 0, 0, -38, 1, 1, 0, 0, 0, 0),
 	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, 0, 0, -37, 1, 0, 0, 0, 0, 0),
@@ -1156,8 +1193,8 @@ INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Le
 	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000015, 1, 0, 0, 0, 0, 0),
 	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000017, 1, 0, 0, 0, 0, 0),
 	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000019, 1, 0, 0, 0, 0, 0);
-/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
