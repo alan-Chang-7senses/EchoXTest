@@ -10,6 +10,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
+use Games\Races\RaceRoomsHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
@@ -69,11 +70,15 @@ class Ready extends BaseRace{
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $raceID = $raceAccessor->AddRace([
             'SceneID' => $sceneInfo->id,
+            'Room' => $userInfo->room, 
             'CreateTime' => $currentTime,
             'UpdateTime' => $currentTime,
             'Weather' => $climate->weather,
             'WindDirection' => $climate->windDirection,
         ]);
+
+        $raceRoomsHandler = new RaceRoomsHandler();
+        $raceRoomsHandler->StartRace($userInfo->room, $raceID);
         
         $racePlayerIDs = [];
         $playerSkills = [];
@@ -167,7 +172,8 @@ class Ready extends BaseRace{
                 'skills' => $playerSkills[$racePlayerInfo->player],
             ];
             
-            $userHandler->SaveData(['race' => $raceID]);
+            $userHandler->SaveData(['race' => $raceID, 'room'=>0]);
+
         }
         
         $scene = [
