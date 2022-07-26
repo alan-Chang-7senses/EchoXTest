@@ -5,6 +5,6 @@ class SetUserNicknameValue{
     const FirstSet = 0;
     const Modify = 1;
     const MaxLenght = 16;
-    const HadNickname = 1;
-    const HadFreePeta = 2;
+    const HadFreePeta = 1;
+    const HadNickname = 2;
 }

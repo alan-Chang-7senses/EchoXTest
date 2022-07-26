@@ -33,13 +33,14 @@ class SetUserNickname extends BaseProcessor{
             ->WhereEqual("UserID",$_SESSION[Sessions::UserID])
             ->Fetch();
 
+        if($row === false)throw new UserException(UserException::CanNotResetName);    
         $canSetNickname = true;
-        $process = 0;
-        if($row !== false)
+        // $process = 0;
+        $process = $row->Process;
+        if($process < SetUserNicknameValue::HadFreePeta) throw new UserException(UserException::CanNotResetName);    
+        if($process >= SetUserNicknameValue::HadNickname)
         {            
             $canSetNickname = false;            
-            $process = $row->Process;
-            $freePetaIDs = $row->FreePetaIDs;
             // if(/*檢查是否能夠重設暱稱，與暱稱是否與原先相同*/)
             // {
             //         $canSetNickname = true;
@@ -55,11 +56,11 @@ class SetUserNickname extends BaseProcessor{
         //TODO：成功時要更新玩家在創角流程的進度
         $pdo->ClearAll();
         $pdo->FromTable("FreePetaProcess")
-            ->Add([
-                "UserID" => $_SESSION[Sessions::UserID],
+            ->WhereEqual("UserID",$_SESSION[Sessions::UserID])
+            ->Modify([
                 "Process" => $process >= SetUserNicknameValue::HadNickname ? $process : SetUserNicknameValue::HadNickname,
-                "FreePetaIDs" => empty($freePetaIDs) ? null : $freePetaIDs,
-                ],true);
+                ]);
+        //TODO：將持有的免費peta寫入DB
         $results = new ResultData(ErrorCode::Success);
         return $results;
     }

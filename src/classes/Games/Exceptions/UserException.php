@@ -20,4 +20,5 @@ class UserException extends NormalException{
     const UsernameNotEnglishOrNumber = 2007;
     const CanNotResetName = 2008;
     const UserNameNotSetYet = 2009;
+    const AlreadyHadFreePeta = 2010;
 }

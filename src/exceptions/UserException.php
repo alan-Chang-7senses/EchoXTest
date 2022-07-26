@@ -10,6 +10,7 @@ $lang[UserException::UsernameAlreadyExist] = 'Username [username] is already exi
 $lang[UserException::UsernameTooLong] = 'Username must under 16 characters.';
 $lang[UserException::UsernameDirty] = 'Username [username] has banded word.';
 $lang[UserException::UsernameNotEnglishOrNumber] = 'Username can only be English or number.';
-$lang[UserException::CanNotResetName] = 'User do not have the item to reset name.';
+$lang[UserException::CanNotResetName] = 'Can not set name.';
 $lang[UserException::UserNameNotSetYet] = 'User:[user] nickname have not set yet';
+$lang[UserException::AlreadyHadFreePeta] = 'Already had free peta.';
 return $lang;
