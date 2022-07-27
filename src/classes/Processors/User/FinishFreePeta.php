@@ -28,17 +28,17 @@ class FinishFreePeta extends BaseProcessor{
         $petaNumber = InputHelper::post("number");
         $nickname = InputHelper::post("nickname");
         if($petaNumber  < 1 || $petaNumber > 3)return new ResultData(ErrorCode::ParamError);
-        
-        if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
-        if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
-        $pdo = new PDOAccessor(EnvVar::DBMain);
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userInfo = $userHandler->GetInfo();
         
 
+        if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
+        
+        if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
+        if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
+        $pdo = new PDOAccessor(EnvVar::DBMain);
         $isAlreayExist = NamingUtility::IsNameAlreadyExist($nickname,EnvVar::DBMain,"Users","Nickname");
         if($isAlreayExist)throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);                 
-        if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta);
         
         $row = $pdo->FromTable("UserFreePeta")
             ->WhereEqual("UserID",$userInfo->id)
@@ -80,7 +80,7 @@ class FinishFreePeta extends BaseProcessor{
             "SkeletonType" => $chosenPeta->SkeletonType,
         ];
         //開始存檔
-        $userHandler->SaveData(["Nickname" => $nickname]);
+        $userHandler->SaveData(["nickname" => $nickname]);
         $pdo->ClearAll();
         $pdo->FromTable("PlayerNFT")
             ->Add($bind,true);
