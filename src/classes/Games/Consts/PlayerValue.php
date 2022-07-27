@@ -44,5 +44,10 @@ class PlayerValue {
     /** 骨架類別 杰倫熊模組 */
     const JayBearSkeletonType = 1;
 
+    /** 免費Peta的PlayerID的最大值，用來與其他Peta進行區分 */
+    const freePetaMaxPlayerID = 999999999999999;
+
+    /** 免費Peta的PlayerID產生的倍率 */
+    const freePetaPlayerIDModifier = 100;
 
 }

@@ -8,6 +8,7 @@ use Consts\Sessions;
 use Consts\SetUserNicknameValue;
 use Error;
 use Games\Accessors\UserAccessor;
+use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
 use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
@@ -54,9 +55,9 @@ class FinishFreePeta extends BaseProcessor{
         $pdo->ClearAll();
         $freePetaRows = $pdo->FromTable("PlayerHolder")
             ->WhereEqual("UserID",$userInfo->id)
-            ->WhereLess("PlayerID",999999999999999) // 暫定。小於16位為免費peta編號
+            ->WhereLess("PlayerID",PlayerValue::freePetaMaxPlayerID) // 暫定。小於16位為免費peta編號
             ->FetchAll();
-        $playerID = $userInfo->id * 100 + 1; // 暫定。需常數化 
+        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDModifier + 1; // 暫定。需常數化 
         if($freePetaRows !== false && count($freePetaRows) > 0)
         $playerID += count($freePetaRows);
 
