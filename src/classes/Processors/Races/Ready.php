@@ -172,7 +172,7 @@ class Ready extends BaseRace{
                 'skills' => $playerSkills[$racePlayerInfo->player],
             ];
             
-            $userHandler->SaveData(['race' => $raceID, 'room'=>0]);
+            $userHandler->SaveData(['race' => $raceID]);
 
         }
         

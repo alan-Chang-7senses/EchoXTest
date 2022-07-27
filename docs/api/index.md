@@ -20,11 +20,12 @@
 		- [技能](Player/Skills.md)。
 		- [儲存技能](Player/SetSkill.md)。
 		- [設定暱稱](Player/SetNickname.md)。
+	- PVP：
+		- [PVP配對](PVP/PVPMatch.md)。
+		- [PVP配對離開](PVP/PVPMatchQuit.md)。		
 	- 競賽：
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
-		- [PVP配對](Races/PVPMatch.md)。
-		- [PVP配對離開](Races/PVPMatchQuit.md)。		
 		- [開局](Races/Ready.md)。
 		- [紀錄位置](Races/RecordPositions.md)。
 		- [斷線恢復](Races/OfflineRecovery.md)。

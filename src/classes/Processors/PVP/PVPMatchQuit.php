@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\Races;
+namespace Processors\PVP;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
@@ -18,7 +18,6 @@ class PVPMatchQuit extends BaseRace
     protected bool|null $mustInRace = false;
     public function Process(): ResultData
     {
-
         
         if ($this->userInfo->room == 0) {
             throw new RaceException(RaceException::UserNotInMatch);
@@ -36,7 +35,7 @@ class PVPMatchQuit extends BaseRace
         });
 
         $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['room' => 0]);
+        $userHandler->SaveData(['lobby' => 0, 'room' => 0]);
 
         $result = new ResultData(ErrorCode::Success);
         return $result;

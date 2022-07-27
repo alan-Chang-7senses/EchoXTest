@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\Races;
+namespace Processors\PVP;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
@@ -48,7 +48,7 @@ class PVPMatch extends BaseRace
         });
 
         $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['room' => $raceRoomID]);
+        $userHandler->SaveData(['lobby' => $lobby,'room' => $raceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
         $result->raceRoomID = $raceRoomID;
