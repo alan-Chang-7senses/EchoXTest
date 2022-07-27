@@ -17,6 +17,7 @@
 		- [持有物品](User/Items.md)。
 		- [設定使用者暱稱](User/SetUserNickname.md)。
 		- [隨機三隻免費Peta](User/Get3FreePeta.md)。
+		- [完成免費Peta三選一](User/FinishFreePeta.md)。
 			
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
