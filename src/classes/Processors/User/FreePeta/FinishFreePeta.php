@@ -1,5 +1,5 @@
 <?php
-namespace Processors\User;
+namespace Processors\User\FreePeta;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
@@ -86,8 +86,18 @@ class FinishFreePeta extends BaseProcessor{
         $pdo->FromTable("PlayerNFT")
             ->Add($bind,true);
         $pdo->ClearAll();
+        $pdo->FromTable("PlayerLevel")
+            ->Add(["PlayerID" => $playerID],true);    
+        $pdo->ClearAll();
         $pdo->FromTable("PlayerHolder")
             ->Add(["PlayerID" => $playerID, "UserID" => $userInfo->id],true);
+        foreach($chosenPeta->skills as $skillID)
+        {
+            $pdo->ClearAll();
+            $pdo->FromTable("PlayerSkill")
+                ->Add(["PlayerID" => $playerID, "SkillID" => $skillID->id],true);
+        }    
+
                       
         $results = new ResultData(ErrorCode::Success);
         return $results;
