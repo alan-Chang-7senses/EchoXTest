@@ -83,7 +83,7 @@ class Get3FreePeta extends BaseProcessor
             $peta->StrengthLevel = NFTDNA::StrengthNormalC;
             $peta->SkeletonType = PlayerValue::PetaSkeletonType;
 
-            $freePetaTemp[] = $peta;
+            
 
             $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->head),PlayerValue::Head,$skillPartTable);
             $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->body),PlayerValue::Body,$skillPartTable);
@@ -124,7 +124,9 @@ class Get3FreePeta extends BaseProcessor
                     "effects" => $handler->GetEffects(),
                     "maxEffects" => $handler->GetMaxEffects(),
                 ];
+                $peta->skills[] = ["id" => $info->id];
             }            
+            $freePetaTemp[] = $peta;
             $players[] = $player;
         }
 
