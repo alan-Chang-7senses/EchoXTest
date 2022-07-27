@@ -5,6 +5,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Consts\SetUserNicknameValue;
 use Error;
 use Games\Accessors\UserAccessor;
 use Games\Exceptions\UserException;
@@ -29,18 +30,16 @@ class FinishFreePeta extends BaseProcessor{
         if($petaNumber  < 1 || $petaNumber > 3)return new ResultData(ErrorCode::ParamError);
         
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
-        // if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
+        if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
         $pdo = new PDOAccessor(EnvVar::DBMain);
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userInfo = $userHandler->GetInfo();
+        
 
-        
-        
         $isAlreayExist = NamingUtility::IsNameAlreadyExist($nickname,EnvVar::DBMain,"Users","Nickname");
         if($isAlreayExist)throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);                 
+        if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta);
         
-        
-        //TODO：將持有的免費peta寫入DB
         $row = $pdo->FromTable("UserFreePeta")
             ->WhereEqual("UserID",$userInfo->id)
             ->Fetch();
