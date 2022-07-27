@@ -19,6 +19,7 @@ use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\PlayerUtility;
 use Games\Skills\SkillHandler;
+use Games\Users\FreePeta\FreePetaUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -37,6 +38,7 @@ class Get3FreePeta extends BaseProcessor
         if(!empty($userInfo->nickname))
         throw new UserException(UserException::AlreadyHadFreePeta);
 
+        //分類所有免費peta
         $pdo = new PDOAccessor(EnvVar::DBStatic);
         $table = $pdo->FromTable("FreePetaInfo")->FetchAll();
         $freePetas = array();
@@ -44,13 +46,13 @@ class Get3FreePeta extends BaseProcessor
         {
             $freePetas[$row->Type][] = $row;
         }
+        //選出三隻屬性不一樣的
         $free3Peta = [];
         for($i = 0; $i < FreePetaValue::FreePetaTypeCount; ++$i)
         {
-            $free3Peta[] = Get3FreePeta::GetRandomElementInArray($freePetas[$i]);
+            $free3Peta[] = FreePetaUtility::GetRandomElementInArray($freePetas[$i]);
             // $free3Peta[$i]->dnaHolder = new PlayerDnaHolder();
         }
-        //隨機組合DNA
         $pdo->ClearAll();
         $table = $pdo->FromTable("FreePetaDNA")->FetchAll();
         
@@ -64,31 +66,30 @@ class Get3FreePeta extends BaseProcessor
         foreach($free3Peta as $peta)
         {
             $i++;            
-            //TODO：從表中可隨機的DNA去隨機一組六個部位的DNA，根據公式算出數值，生成六個技能。
             $aliasCodes = [];
             // $skills = [];
             $peta->dna = new PlayerDnaHolder();
-            $peta->dna->head = Get3FreePeta::GetRandomElementInArray($table)->HeadDNA;
-            $peta->dna->body = Get3FreePeta::GetRandomElementInArray($table)->BodyDNA;
-            $peta->dna->hand = Get3FreePeta::GetRandomElementInArray($table)->HandDNA;
-            $peta->dna->leg = Get3FreePeta::GetRandomElementInArray($table)->LegDNA;
-            $peta->dna->back = Get3FreePeta::GetRandomElementInArray($table)->BackDNA;
-            $peta->dna->hat = Get3FreePeta::GetRandomElementInArray($table)->HatDNA;
+            $peta->dna->head = FreePetaUtility::GetRandomElementInArray($table)->HeadDNA;
+            $peta->dna->body = FreePetaUtility::GetRandomElementInArray($table)->BodyDNA;
+            $peta->dna->hand = FreePetaUtility::GetRandomElementInArray($table)->HandDNA;
+            $peta->dna->leg = FreePetaUtility::GetRandomElementInArray($table)->LegDNA;
+            $peta->dna->back = FreePetaUtility::GetRandomElementInArray($table)->BackDNA;
+            $peta->dna->hat = FreePetaUtility::GetRandomElementInArray($table)->HatDNA;
 
             unset($peta->ID);
             $peta->number = $i;
-            $peta->source = 0;
-            $peta->StrengthLevel = 8;
-            $peta->SkeletonType = 00;
+            $peta->source = PlayerValue::FreePetaSource;
+            $peta->StrengthLevel = NFTDNA::StrengthNormalC;
+            $peta->SkeletonType = PlayerValue::PetaSkeletonType;
 
             $freePetaTemp[] = $peta;
 
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->head),PlayerValue::Head,$skillPartTable);
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->body),PlayerValue::Body,$skillPartTable);
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hand),PlayerValue::Hand,$skillPartTable);
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->leg),PlayerValue::Leg,$skillPartTable);
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->back),PlayerValue::Back,$skillPartTable);
-            $aliasCodes[] = Get3FreePeta::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hat),PlayerValue::Hat,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->head),PlayerValue::Head,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->body),PlayerValue::Body,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hand),PlayerValue::Hand,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->leg),PlayerValue::Leg,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->back),PlayerValue::Back,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hat),PlayerValue::Hat,$skillPartTable);
             $sa = new SkillAccessor();            
 
             $skillrows = $sa->rowsInfoByAliasCodes($aliasCodes);
@@ -126,46 +127,17 @@ class Get3FreePeta extends BaseProcessor
         }
 
         
-
-        //TODO：將生成的免費Peta轉Json放進DB
         $pdo = new PDOAccessor(EnvVar::DBMain);        
         $pdo->FromTable("UserFreePeta")
             ->Add(["UserID" => $userID,"FreePetaInfo" => json_encode($freePetaTemp)],true);
         
-        //包給前端
         $results = new ResultData(ErrorCode::Success);
-        foreach($players as $player) Get3FreePeta::PartcodeAllDNA($player->dna);
+        foreach($players as $player) FreePetaUtility::PartcodeAllDNA($player->dna);
         $results->players = $players;
         return $results;
     }
 
 
-    public static function GetRandomElementInArray(array $a)
-    {
-        return $a[rand(0,count($a) - 1)];
-    }
-
-    public static function GetPartSkill(string $partCode,int $partType, $skillPartTable) : string 
-    {        
-        foreach($skillPartTable as $row)
-        {            
-            if($row->PartCode == $partCode && $row->PartType == $partType)
-            {
-                $aliasCode = $row->AliasCode1;
-            }
-        }
-        return empty($aliasCode) ? false : $aliasCode;
-    }
-
-    public static function PartcodeAllDNA(PlayerDnaHolder $dna)
-    {
-        $dna->head = PlayerUtility::PartCodeByDNA($dna->head);
-        $dna->body = PlayerUtility::PartCodeByDNA($dna->body);
-        $dna->hand = PlayerUtility::PartCodeByDNA($dna->hand);
-        $dna->leg = PlayerUtility::PartCodeByDNA($dna->leg);
-        $dna->back = PlayerUtility::PartCodeByDNA($dna->back);
-        $dna->hat = PlayerUtility::PartCodeByDNA($dna->hat);
-    }
 
 }
 

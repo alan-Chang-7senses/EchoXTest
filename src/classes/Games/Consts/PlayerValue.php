@@ -33,4 +33,16 @@ class PlayerValue {
     const Priority = 3;
     /** 比賽習慣 蓄力 */
     const Accumulate = 4;
+
+    /** 來源標記 機器人 */
+    const AISource = -1;
+    /** 來源標記 免費Peta */
+    const FreePetaSource = -2;
+
+    /** 骨架類別 Peta模組 */
+    const PetaSkeletonType = 0;
+    /** 骨架類別 杰倫熊模組 */
+    const JayBearSkeletonType = 1;
+
+
 }
