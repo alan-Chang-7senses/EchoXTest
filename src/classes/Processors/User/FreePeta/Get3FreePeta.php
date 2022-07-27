@@ -36,7 +36,7 @@ class Get3FreePeta extends BaseProcessor
         $userInfo = $userHandler->GetInfo();
         
         if(!empty($userInfo->nickname))
-        throw new UserException(UserException::AlreadyHadFreePeta);
+        throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
 
         //分類所有免費peta
         $pdo = new PDOAccessor(EnvVar::DBStatic);
