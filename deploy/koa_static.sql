@@ -119,6 +119,20 @@ CREATE TABLE IF NOT EXISTS `MailsRewards` (
 INSERT INTO `MailsRewards` (`RewardID`, `ItemID1`, `ItemNumber1`, `ItemID2`, `ItemNumber2`, `ItemID3`, `ItemNumber3`) VALUES
 	(1, 8129, 2, 8130, 2, 0, 0);
 /*!40000 ALTER TABLE `MailsRewards` ENABLE KEYS */;
+-- 傾印  資料表 koa_static.QualifyingArena 結構
+CREATE TABLE IF NOT EXISTS `QualifyingArena` (
+  `QualifyingArenaID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽場編號',
+  `PTScene` int(10) unsigned DEFAULT NULL COMMENT 'PT場地',
+  `CoinScene` int(10) unsigned DEFAULT NULL COMMENT '金幣場地',
+  PRIMARY KEY (`QualifyingArenaID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽場';
+
+-- 正在傾印表格  koa_static.QualifyingArena 的資料：~3 rows (近似值)
+INSERT INTO `QualifyingArena` (`QualifyingArenaID`, `PTScene`, `CoinScene`) VALUES
+	(1, 1, 1),
+	(2, 2, 2),
+	(3, 3, NULL),
+	(4, NULL, NULL);
 
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
