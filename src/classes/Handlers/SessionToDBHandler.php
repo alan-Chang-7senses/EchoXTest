@@ -57,14 +57,21 @@ class SessionToDBHandler extends SessionHandler {
         
         $this->accessor->ClearCondition();
         
-        return $userID == 0 ? 
-                $this->accessor->FromTable('Sessions')->WhereEqual('SessionID', $id)->Delete() : 
-                $this->accessor->FromTable('Sessions')->Add([
-                    'SessionID' => $id,
-                    'SessionExpires' => $_SERVER['REQUEST_TIME'],
-                    'SessionData' => $data,
-                    'UserID' => $userID
-                ], true);
+        return $this->accessor->FromTable('Sessions')->Add([
+            'SessionID' => $id,
+            'SessionExpires' => $_SERVER['REQUEST_TIME'],
+            'SessionData' => $data,
+            'UserID' => $userID
+        ], true);
+        
+//        return $userID == 0 ? 
+//                $this->accessor->FromTable('Sessions')->WhereEqual('SessionID', $id)->Delete() : 
+//                $this->accessor->FromTable('Sessions')->Add([
+//                    'SessionID' => $id,
+//                    'SessionExpires' => $_SERVER['REQUEST_TIME'],
+//                    'SessionData' => $data,
+//                    'UserID' => $userID
+//                ], true);
     }
     
     public function destroy(string $id): bool {
