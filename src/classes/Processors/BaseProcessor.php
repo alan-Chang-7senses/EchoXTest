@@ -4,6 +4,7 @@ namespace Processors;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Consts\Predefined;
 use Consts\Sessions;
 use Exception;
@@ -22,6 +23,7 @@ abstract class BaseProcessor {
     
     protected bool $mustSigned = true;
     protected bool $maintainMode = true;
+    protected bool $resposeJson = true;
 
     public function __construct() {
         
@@ -29,6 +31,8 @@ abstract class BaseProcessor {
         
         if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
             throw new NormalException(NormalException::SignOut);
+        
+        $GLOBALS[Globals::RESULT_RESPOSE_JSON] = $this->resposeJson;
     }
     
     protected function RecordLog() : void{}

@@ -73,9 +73,37 @@ try{
     LogHelper::Save($ex);
 }
 
-header('Content-Type: application/json');
 
 if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->processTime = microtime(true) - $t;
-$resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
-$GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
-echo $resultData;
+
+if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
+    
+    $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
+    $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
+
+    header('Content-Type: application/json');
+    echo $resultData;
+    
+}else{
+    
+    $resultContent = $result->error->code == ErrorCode::Success && !empty($result->content) ? $result->content :  <<<ErrorContent
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{$result->error->message}</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div>Code: {$result->error->code}</div>
+        <div>Message: {$result->error->message}</div>
+    </body>
+</html>
+ErrorContent;
+    
+    unset($result->content);
+    
+    $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
+    $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
+    
+    echo $resultContent;
+}
