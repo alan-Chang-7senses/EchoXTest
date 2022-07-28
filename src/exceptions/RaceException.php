@@ -20,5 +20,6 @@ $lang[RaceException::EnergyAgainOver] = 'The player energy reacquired more than.
 $lang[RaceException::UserInMatch] = 'The player is matching.';
 $lang[RaceException::UserNotInMatch] = 'The player is not in match.';
 $lang[RaceException::UserMatchError] = 'Match params have errors.';
+$lang[RaceException::UserTokenNotEnough] = 'User have not enough tokens.';
 
 return $lang;

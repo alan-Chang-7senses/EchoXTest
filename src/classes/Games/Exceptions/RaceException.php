@@ -27,4 +27,5 @@ class RaceException extends NormalException{
     const UserInMatch = 4016;
     const UserNotInMatch = 4017;
     const UserMatchError = 4018;    
+    const UserTokenNotEnough = 4019; 
 }

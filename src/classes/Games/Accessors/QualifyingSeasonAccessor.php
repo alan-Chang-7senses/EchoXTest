@@ -23,7 +23,7 @@ class QualifyingSeasonAccessor extends BaseAccessor
             'CoinScene' => $value->CoinScene,
             'StartTime' => $startTime,
             'EndTime' => $endTime,
-            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+            'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
         ]);
 
     }

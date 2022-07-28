@@ -22,7 +22,7 @@ class PVPMatch extends BaseRace
     {
         $lobby = InputHelper::post('lobby');
 
-        if (($lobby == 0) || ($lobby > 2)) {
+        if (($lobby <= 0) || ($lobby > 2)) {
             throw new RaceException(RaceException::UserMatchError);
         }
 
@@ -30,12 +30,17 @@ class PVPMatch extends BaseRace
             throw new RaceException(RaceException::UserInMatch);
         }
 
+        $raceroomHandler = new RaceRoomsHandler();
+
+        $useTokenId = $raceroomHandler->GetTokenID($lobby);
+        if ($raceroomHandler->FindItemAmount($this->userInfo->id, $useTokenId) <= 0) {
+            throw new RaceException(RaceException::UserTokenNotEnough);
+        }
+
         $raceRoomID = 0;
-
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($lobby, &$raceRoomID) {
+        $accessor->Transaction(function () use ($raceroomHandler, $lobby, &$raceRoomID) {
 
-            $raceroomHandler = new RaceRoomsHandler();
             //todo
             $lowbound = 0;
             $upbound = 0;
@@ -43,12 +48,12 @@ class PVPMatch extends BaseRace
             $raceRoomID = $raceroomHandler->GetMatchRoomID($lobby, $lowbound, $upbound);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->TakeSeat();
-            $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();     
+            $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();
             $raceroomHandler->UpdateUsers($raceRoomID, $seatUserIDs);
         });
 
         $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['lobby' => $lobby,'room' => $raceRoomID]);
+        $userHandler->SaveData(['lobby' => $lobby, 'room' => $raceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
         $result->raceRoomID = $raceRoomID;

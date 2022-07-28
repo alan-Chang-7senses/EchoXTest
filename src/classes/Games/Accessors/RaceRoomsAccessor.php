@@ -8,9 +8,9 @@ use Accessors\PDOAccessor;
 class RaceRoomsAccessor extends BaseAccessor
 {
 
-    private function useTable():PDOAccessor
+    private function useTable(): PDOAccessor
     {
-        return $this->MainAccessor()->FromTable('RaceRooms');        
+        return $this->MainAccessor()->FromTable('RaceRooms');
     }
 
     public function GetMatchRooms(int $lobby, int $lowBound, int $upBound): array
@@ -41,6 +41,14 @@ class RaceRoomsAccessor extends BaseAccessor
     {
         $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
 
-        return  $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Modify($bind);      
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Modify($bind);
+    }
+
+    public function FindItemAmount($bind): int
+    {
+        $amount = $this->MainAccessor()->
+            executeBindFetch('SELECT * from UserItems WHERE UserID = :UserID AND ItemID = :ItemID', $bind)->Amount;
+
+        return $amount == null ? 0 : $amount;
     }
 }

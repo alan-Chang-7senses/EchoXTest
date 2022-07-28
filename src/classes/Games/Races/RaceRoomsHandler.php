@@ -69,4 +69,19 @@ class RaceRoomsHandler
         return $this->accessor->Update($raceRoomID, $bind);
     }
 
+    public function GetTokenID(int $lobby)
+    {
+        return ($lobby == 1) ?ConfigGenerator::Instance()->PvP_B_TicketId_1 : ConfigGenerator::Instance()->PvP_B_TicketId_2;
+    }
+
+    public function FindItemAmount(int $userID, int $itemID): int
+    {
+        $bind = [
+            'UserID' => $userID,
+            'ItemID' => $itemID
+        ];
+
+        return $this->accessor->FindItemAmount($bind);
+    }
+
 }
