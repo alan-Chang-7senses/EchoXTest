@@ -48,6 +48,6 @@ class PlayerValue {
     const freePetaMaxPlayerID = 999999999999999;
 
     /** 免費Peta的PlayerID產生的倍率 */
-    const freePetaPlayerIDModifier = 100;
+    const freePetaPlayerIDMultiplier = 100;
 
 }

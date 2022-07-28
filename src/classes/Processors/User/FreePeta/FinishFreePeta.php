@@ -14,6 +14,7 @@ use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
+use LDAP\Result;
 use Processors\BaseProcessor;
 use Processors\EliteTest\UserInfo;
 
@@ -21,8 +22,6 @@ class FinishFreePeta extends BaseProcessor{
     
     public function Process(): ResultData
     {
-        // 傳入暱稱字串
-        // 不回傳參數
         
         // $bandedWords = NamingUtility::GetBandedWordEnglish();
         // if(NamingUtility::HasBandedWord($nickname,$bandedWords))throw new UserException(UserException::UsernameDirty,['username' => $nickname]);
@@ -57,9 +56,14 @@ class FinishFreePeta extends BaseProcessor{
             ->WhereEqual("UserID",$userInfo->id)
             ->WhereLess("PlayerID",PlayerValue::freePetaMaxPlayerID) // 暫定。小於16位為免費peta編號
             ->FetchAll();
-        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDModifier + 1; // 暫定。需常數化 
+        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + 1; // 暫定。需常數化 
         if($freePetaRows !== false && count($freePetaRows) > 0)
-        $playerID += count($freePetaRows);
+        {
+            //免費Peta超過免費peta的持有限制
+            if(count($freePetaRows) > PlayerValue::freePetaPlayerIDMultiplier - 1)
+            return new ResultData(ErrorCode::Unknown);
+            $playerID += count($freePetaRows);
+        }
 
         $bind = 
         [
@@ -91,12 +95,12 @@ class FinishFreePeta extends BaseProcessor{
         $pdo->ClearAll();
         $pdo->FromTable("PlayerHolder")
             ->Add(["PlayerID" => $playerID, "UserID" => $userInfo->id],true);
-        foreach($chosenPeta->skills as $skillID)
-        {
-            $pdo->ClearAll();
-            $pdo->FromTable("PlayerSkill")
-                ->Add(["PlayerID" => $playerID, "SkillID" => $skillID->id],true);
-        }    
+        
+        foreach($chosenPeta->skills as $skillID){
+            $ids[] = ["PlayerID" => $playerID, "SkillID" => $skillID->id];
+        }
+        $pdo->ClearAll();
+        if(count($ids) > 0)$pdo->FromTable("PlayerSkill")->AddAll($ids);
 
                       
         $results = new ResultData(ErrorCode::Success);
