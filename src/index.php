@@ -76,34 +76,45 @@ try{
 
 if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->processTime = microtime(true) - $t;
 
+$resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
+$GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
+
 if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
-    
-    $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
-    $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
 
     header('Content-Type: application/json');
     echo $resultData;
     
 }else{
     
-    $resultContent = $result->error->code == ErrorCode::Success && !empty($result->content) ? $result->content :  <<<ErrorContent
+    $script = empty($result->script) ? '' : '';
+    
+    $script = '';
+    
+    if(!empty($result->script)){
+        $script = $result->script;
+    }else if($result->error->code != ErrorCode::Success){
+        $script = 'location.href = "uniwebview://Error?code='.$result->error->code.'&message='. urlencode($result->error->message).'";';
+    }
+    
+    $content = $result->content ?? 'Code: '.$result->error->code.'<br>Message: '.$result->error->message;
+    
+    echo <<<content
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{$result->error->message}</title>
+        <title> - {$result->error->message} - </title>
         <meta charset="UTF-8">
+        <script>
+        window.onload = function(){
+            {$script}
+        }
+        </script>
     </head>
     <body>
-        <div>Code: {$result->error->code}</div>
-        <div>Message: {$result->error->message}</div>
+        <div>
+        {$content}
+        </div>
     </body>
 </html>
-ErrorContent;
-    
-    unset($result->content);
-    
-    $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
-    $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
-    
-    echo $resultContent;
+content;
 }

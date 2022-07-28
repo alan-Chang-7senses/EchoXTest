@@ -27,12 +27,12 @@ abstract class BaseProcessor {
 
     public function __construct() {
         
+        $GLOBALS[Globals::RESULT_RESPOSE_JSON] = $this->resposeJson;
+        
         if(getenv(EnvVar::Maintain) === Predefined::Maintaining && $this->maintainMode) throw new NormalException (ErrorCode::Maintain);
         
         if($this->mustSigned && empty($_SESSION[Sessions::Signed]))
             throw new NormalException(NormalException::SignOut);
-        
-        $GLOBALS[Globals::RESULT_RESPOSE_JSON] = $this->resposeJson;
     }
     
     protected function RecordLog() : void{}
