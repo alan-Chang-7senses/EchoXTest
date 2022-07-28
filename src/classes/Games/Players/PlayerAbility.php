@@ -114,8 +114,19 @@ class PlayerAbility {
         reset($habits);
         return key($habits);
     }
-    
+
+    /**
+     * 計算數值
+     * @param int $type 數值的種類
+     * @param int $level 等級
+     * @param int $strengthType 數值標記，強度級別
+     * @param int $strength 力量
+     * @param int $agility 敏捷
+     * @param int $constitution 體力
+     * @param int $dexterity 技巧
+     */
     public static function GetAbilityValue(int $type,int $level,int $strengthType, int $strength, int $agility, int $constitution, int $dexterity) : float{
+        
         $levelMultiplier = ceil(($level + $type) / AbilityFactor::LevelDivisor);
 
         $strength /= AbilityFactor::NFTDivisor;
@@ -125,10 +136,14 @@ class PlayerAbility {
 
         $rt = ($strength * AbilityFactor::AbilityMultiplier[$type][0] + $agility * AbilityFactor::AbilityMultiplier[$type][1]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][2] + $dexterity * AbilityFactor::AbilityMultiplier[$type][3])
+
          * ($levelMultiplier * AbilityFactor::XValues[$strengthType])
+          
          + ($strength * AbilityFactor::AbilityMultiplier[$type][4] + $agility * AbilityFactor::AbilityMultiplier[$type][5]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][6] + $dexterity * AbilityFactor::AbilityMultiplier[$type][7])
+
          + $levelMultiplier * AbilityFactor::Delta;
          return number_format($rt, AbilityFactor::Decimals);
     }
+
 }
