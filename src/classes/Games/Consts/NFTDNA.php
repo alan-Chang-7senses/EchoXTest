@@ -38,6 +38,14 @@ class NFTDNA {
     const SourceNormal = 1;
     /** 來源標記第一碼 - 繁殖產出 */
     const SourceBreed = 2;
+    /** 來源標記 免費Peta */
+    const FreePetaSource = -2;
+
+    /**骨架編碼 一般Peta */
+    const PetaSkeletonType = 0;
+    
+    /** 骨架類別 杰倫熊模組 */
+    const JayBearSkeletonType = 1;
     
     /** 來源標記第二碼 - 強度級別 */
     const StrengthS = 0;

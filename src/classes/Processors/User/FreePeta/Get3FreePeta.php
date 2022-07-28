@@ -79,9 +79,9 @@ class Get3FreePeta extends BaseProcessor
             unset($peta->ID);
             $peta->number = $i;
             $peta->native = 0; //原生種(暫時數值)
-            $peta->source = PlayerValue::FreePetaSource;
+            $peta->source = NFTDNA::FreePetaSource;
             $peta->StrengthLevel = NFTDNA::StrengthNormalC;
-            $peta->SkeletonType = PlayerValue::PetaSkeletonType;
+            $peta->SkeletonType = NFTDNA::PetaSkeletonType;
 
             
 
