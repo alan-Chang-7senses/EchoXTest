@@ -23,7 +23,7 @@ class PlayerAbility {
      */
     public static function Velocity(int $agility, int $strength, int $level) : float{
         $nftValue = $agility / AbilityFactor::NFTDivisor * AbilityFactor::VelocityAgilityMultiplier + $strength / AbilityFactor::NFTDivisor * AbilityFactor::VelocityStrengthMultiplier;
-        $levelValue = $level * AbilityFactor::VelocityLevelMultiplier + AbilityFactor::VelocityLevelAdditional;
+        $levelValue = $level * AbilityFactor::VelocityLevelMultiplier + AbilityFactor::VelocityLevelAdditional;//在此多乘上X值的樣子。
         return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
     }
     

@@ -14,13 +14,13 @@ class NFTDNA {
     const PartLength = 6;
     
     /** NFT DNA 主要分段切割長度（幾碼一段） */
-    const MainSplitLength = 8;
+    const MainSplitLength = 10;
     /** NFT DNA 主要分段 顯性起始碼偏移位置 */
     const DominantOffset = 0;
     /** NFT DNA 主要分段 第一隱性起始碼偏移位置 */
-    const RecessiveOneOffset = 8;
+    const RecessiveOneOffset = 10;
     /** NFT DNA 主要分段 第隱性起始碼偏移位置 */
-    const RecessiveTwoOffset = 16;
+    const RecessiveTwoOffset = 20;
     
     /** 屬性適性偏移位置 */
     const AttrAdaptOffset = 2;

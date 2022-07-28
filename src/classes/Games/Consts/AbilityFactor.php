@@ -51,4 +51,7 @@ class AbilityFactor {
     const IntelligentAgilityMultiplier = 0.4;
     const IntelligentLevelMultiplier = 0.009;
     const IntelligentLevelAdditional = 1.4;
+
+    /** NFT 數值換算 X值*/
+    const XValues = [0.007,0.0065,0.006,0.0055,0.005,0.0045,0.004,0.0035,0.003,0.0025];
 }
