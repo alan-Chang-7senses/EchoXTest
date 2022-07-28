@@ -78,4 +78,6 @@ class PlayerInfoHolder extends stdClass {
     public array $skills;
     /** @var array 技能插槽 位置=>SkillID */
     public array $skillHole;
+
+    public int $strengthLevel;
 }

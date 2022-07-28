@@ -114,4 +114,21 @@ class PlayerAbility {
         reset($habits);
         return key($habits);
     }
+    
+    public static function GetAbilityValue(int $type,int $level,int $strengthType, int $strength, int $agility, int $constitution, int $dexterity) : float{
+        $levelMultiplier = ceil(($level + $type) / AbilityFactor::LevelDivisor);
+
+        $strength /= AbilityFactor::NFTDivisor;
+        $agility /= AbilityFactor::NFTDivisor;
+        $constitution /= AbilityFactor::NFTDivisor;
+        $dexterity /= AbilityFactor::NFTDivisor;
+
+        $rt = ($strength * AbilityFactor::AbilityMultiplier[$type][0] + $agility * AbilityFactor::AbilityMultiplier[$type][1]
+         + $constitution * AbilityFactor::AbilityMultiplier[$type][2] + $dexterity * AbilityFactor::AbilityMultiplier[$type][3])
+         * ($levelMultiplier * AbilityFactor::XValues[$strengthType])
+         + ($strength * AbilityFactor::AbilityMultiplier[$type][4] + $agility * AbilityFactor::AbilityMultiplier[$type][5]
+         + $constitution * AbilityFactor::AbilityMultiplier[$type][6] + $dexterity * AbilityFactor::AbilityMultiplier[$type][7])
+         + $levelMultiplier * AbilityFactor::Delta;
+         return number_format($rt, AbilityFactor::Decimals);
+    }
 }
