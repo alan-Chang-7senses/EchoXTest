@@ -9,10 +9,10 @@ use Helpers\InputHelper;
 use Accessors\PDOAccessor;
 use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
+use Games\PVP\RaceRoomsHandler;
 use Generators\ConfigGenerator;
-use Games\Races\RaceRoomsHandler;
+use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
-use Games\Races\RaceRoomSeatHandler;
 
 class PVPMatch extends BaseRace
 {
@@ -30,9 +30,9 @@ class PVPMatch extends BaseRace
             throw new RaceException(RaceException::UserInMatch);
         }
 
-        $raceroomHandler = new RaceRoomsHandler();
+        $raceroomHandler = new RaceRoomsHandler($lobby);
 
-        $useTokenId = $raceroomHandler->GetTokenID($lobby);
+        $useTokenId = $raceroomHandler->GetTokenID();
         if ($raceroomHandler->FindItemAmount($this->userInfo->id, $useTokenId) <= 0) {
             throw new RaceException(RaceException::UserTokenNotEnough);
         }
@@ -45,7 +45,7 @@ class PVPMatch extends BaseRace
             $lowbound = 0;
             $upbound = 0;
             //
-            $raceRoomID = $raceroomHandler->GetMatchRoomID($lobby, $lowbound, $upbound);
+            $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->TakeSeat();
             $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();

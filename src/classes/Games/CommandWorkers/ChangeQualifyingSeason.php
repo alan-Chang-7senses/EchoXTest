@@ -6,7 +6,7 @@ use Exception;
 use Consts\Globals;
 use Consts\ErrorCode;
 use Holders\ResultData;
-use Games\Races\QualifyingHandler;
+use Games\PVP\QualifyingHandler;
 
 class ChangeQualifyingSeason extends BaseWorker
 {

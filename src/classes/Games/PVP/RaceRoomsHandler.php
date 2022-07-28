@@ -1,23 +1,26 @@
 <?php
 
-namespace Games\Races;
+namespace Games\PVP;
 
 use Generators\ConfigGenerator;
 use Games\Accessors\RaceRoomsAccessor;
+use Games\PVP\Holders\TicketinfoHolder;
 
 class RaceRoomsHandler
 {
 
     private RaceRoomsAccessor $accessor;
 
-    public function __construct()
+    private int $lobby;
+    public function __construct(int $lobby)
     {
         $this->accessor = new RaceRoomsAccessor();
+        $this->lobby = $lobby;
     }
 
-    private function GetNewRomRate(int $lobby): int
+    private function GetNewRomRate(): int
     {
-        switch ($lobby) {
+        switch ($this->lobby) {
             case 1: //1. 金幣晉級賽
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
             case 2: //2. UCG晉級賽
@@ -27,15 +30,15 @@ class RaceRoomsHandler
         return 0;
     }
 
-    public function GetMatchRoomID(int $lobby, int $lowBound, int $upBound): int
+    public function GetMatchRoomID(int $lowBound, int $upBound): int
     {
-        $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound);
-        $newRoomRate = $this->GetNewRomRate($lobby);
+        $rooms = $this->accessor->GetMatchRooms($this->lobby, $lowBound, $upBound);
+        $newRoomRate = $this->GetNewRomRate();
         $roomNumber = count($rooms);
         $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $newRoomRate) : true;
 
         if ($isAddNewroom) {
-            $this->raceRoomID = $this->accessor->AddNewRoom($lobby, $lowBound, $upBound);
+            $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound);
 
         }
         else {
@@ -60,18 +63,34 @@ class RaceRoomsHandler
     }
 
 
-    public function StartRace(int $raceRoomID, $raceID)
+    public static function StartRace(int $raceRoomID, $raceID)
     {
         $bind = [
             'Status' => 3,
             'RaceID' => $raceID,
         ];
-        return $this->accessor->Update($raceRoomID, $bind);
+
+        $accessor = new RaceRoomsAccessor();
+        return $accessor->Update($raceRoomID, $bind);
     }
 
-    public function GetTokenID(int $lobby)
+    public function GetTokenInfo(int $userID)
     {
-        return ($lobby == 1) ?ConfigGenerator::Instance()->PvP_B_TicketId_1 : ConfigGenerator::Instance()->PvP_B_TicketId_2;
+        $result = new TicketinfoHolder();
+        $result->ticketID = $this->GetTokenID();
+        $result->amount = $this->FindItemAmount($userID, $result->ticketID);
+        $result->maxReceive = $this->GetMaxTokens();
+    }
+
+    public function GetTokenID(): int
+    {
+        return ($this->lobby == 1) ?ConfigGenerator::Instance()->PvP_B_TicketId_1 : ConfigGenerator::Instance()->PvP_B_TicketId_2;
+    }
+
+
+    public function GetMaxTokens(): int
+    {
+        return 0;
     }
 
     public function FindItemAmount(int $userID, int $itemID): int
@@ -80,7 +99,6 @@ class RaceRoomsHandler
             'UserID' => $userID,
             'ItemID' => $itemID
         ];
-
         return $this->accessor->FindItemAmount($bind);
     }
 

@@ -8,9 +8,9 @@ use Holders\ResultData;
 use Accessors\PDOAccessor;
 use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
-use Games\Races\RaceRoomsHandler;
+use Games\PVP\RaceRoomsHandler;
+use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
-use Games\Races\RaceRoomSeatHandler;
 
 class PVPMatchQuit extends BaseRace
 {
@@ -30,7 +30,7 @@ class PVPMatchQuit extends BaseRace
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->LeaveSeat();
             $seatUsers = $raceroomSeatHandler->GetSeatUsers();                      
-            $raceroomHandler = new RaceRoomsHandler();
+            $raceroomHandler = new RaceRoomsHandler($this->userInfo->lobby);
             $raceroomHandler->UpdateUsers($raceRoomID, $seatUsers);
         });
 

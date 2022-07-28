@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Races;
+namespace Games\PVP;
 
 use DateTime;
 use stdClass;
@@ -119,6 +119,25 @@ class QualifyingHandler
          return $weekTimeValue * 604800;    
         //return 2 * 60; //test 2分鐘一季
     }
+
+    public function GetSeasonRemaintime():int
+    {
+        //todo
+        return 0;
+    }
+
+    public function SetNextTokenTime(): bool
+    {
+        //todo
+        return false;
+    }
+
+    public function GetRemainTokenTime(): int
+    {
+        //todo        
+        return 0;
+    }
+
 
 
 }

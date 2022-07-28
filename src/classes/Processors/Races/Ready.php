@@ -77,8 +77,7 @@ class Ready extends BaseRace{
             'WindDirection' => $climate->windDirection,
         ]);
 
-        $raceRoomsHandler = new RaceRoomsHandler();
-        $raceRoomsHandler->StartRace($userInfo->room, $raceID);
+        RaceRoomsHandler::StartRace($userInfo->room, $raceID);
         
         $racePlayerIDs = [];
         $playerSkills = [];

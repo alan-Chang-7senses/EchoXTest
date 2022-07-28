@@ -1,6 +1,6 @@
 <?php
 
-namespace Games\Races;
+namespace Games\PVP;
 
 use Consts\Sessions;
 use Generators\ConfigGenerator;
