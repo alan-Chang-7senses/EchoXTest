@@ -9,7 +9,7 @@ use Games\Accessors\QualifyingSeasonAccessor;
 class QualifyingSeasonPool extends PoolAccessor
 {
 
-    protected string $keyPrefix = 'QualifyingSession_LastID';
+    protected string $keyPrefix = 'QualifyingSession_';
     private static QualifyingSeasonPool $instance;
 
     public static function Instance() : QualifyingSeasonPool{

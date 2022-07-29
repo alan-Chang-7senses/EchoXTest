@@ -21,5 +21,6 @@ $lang[RaceException::UserInMatch] = 'The player is matching.';
 $lang[RaceException::UserNotInMatch] = 'The player is not in match.';
 $lang[RaceException::UserMatchError] = 'Match params have errors.';
 $lang[RaceException::UserTokenNotEnough] = 'User have not enough tokens.';
+$lang[RaceException::NoSeasonData] = 'No season data.';
 
 return $lang;

@@ -44,11 +44,5 @@ class RaceRoomsAccessor extends BaseAccessor
         return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Modify($bind);
     }
 
-    public function FindItemAmount($bind): int
-    {
-        $amount = $this->MainAccessor()->
-            executeBindFetch('SELECT * from UserItems WHERE UserID = :UserID AND ItemID = :ItemID', $bind)->Amount;
 
-        return $amount == null ? 0 : $amount;
-    }
 }

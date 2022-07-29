@@ -10,7 +10,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
-use Games\Races\RaceRoomsHandler;
+use Games\PVP\RaceRoomsHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;

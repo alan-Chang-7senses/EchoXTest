@@ -31,9 +31,9 @@ class QualifyingSeasonAccessor extends BaseAccessor
     public function GetArean(int $id): stdClass
     {
         $ptScenes = $this->StaticAccessor()->FromTable('QualifyingArena')->selectExpr('`QualifyingArenaID`,`PTScene` as SceneID')
-            ->WhereCondition("PTScene", "!=", "null")->FetchAll();
+            ->WhereCondition("PTScene", "!=", "0")->FetchAll();
         $coinScenes = $this->StaticAccessor()->FromTable('QualifyingArena')->selectExpr('`QualifyingArenaID`,`CoinScene` as SceneID')
-            ->WhereCondition("CoinScene", "!=", "null")->FetchAll();
+            ->WhereCondition("CoinScene", "!=", "0")->FetchAll();
 
         //id start from 1
         $ptSceneIdx = --$id % count($ptScenes);
@@ -44,7 +44,12 @@ class QualifyingSeasonAccessor extends BaseAccessor
         $result->CoinScene = $coinScenes[$coinSceneIdx]->SceneID;
 
         return $result;
+    }
 
+    public function FindItemAmount($bind): int
+    {
+        $item = $this->MainAccessor()->executeBindFetch('SELECT * from UserItems WHERE UserID = :UserID AND ItemID = :ItemID', $bind);
+        return $item == null ? 0 : $item->Amount;
     }
 
 }

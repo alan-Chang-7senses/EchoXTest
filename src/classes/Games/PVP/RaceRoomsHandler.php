@@ -74,32 +74,5 @@ class RaceRoomsHandler
         return $accessor->Update($raceRoomID, $bind);
     }
 
-    public function GetTokenInfo(int $userID)
-    {
-        $result = new TicketinfoHolder();
-        $result->ticketID = $this->GetTokenID();
-        $result->amount = $this->FindItemAmount($userID, $result->ticketID);
-        $result->maxReceive = $this->GetMaxTokens();
-    }
-
-    public function GetTokenID(): int
-    {
-        return ($this->lobby == 1) ?ConfigGenerator::Instance()->PvP_B_TicketId_1 : ConfigGenerator::Instance()->PvP_B_TicketId_2;
-    }
-
-
-    public function GetMaxTokens(): int
-    {
-        return 0;
-    }
-
-    public function FindItemAmount(int $userID, int $itemID): int
-    {
-        $bind = [
-            'UserID' => $userID,
-            'ItemID' => $itemID
-        ];
-        return $this->accessor->FindItemAmount($bind);
-    }
 
 }

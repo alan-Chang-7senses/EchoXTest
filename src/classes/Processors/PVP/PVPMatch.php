@@ -11,6 +11,7 @@ use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
 use Games\PVP\RaceRoomsHandler;
 use Generators\ConfigGenerator;
+use Games\PVP\QualifyingHandler;
 use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
 
@@ -22,9 +23,11 @@ class PVPMatch extends BaseRace
     {
         $lobby = InputHelper::post('lobby');
 
-        if (($lobby <= 0) || ($lobby > 2)) {
+
+        if (in_array($lobby, QualifyingHandler::Lobbies) == false) {
             throw new RaceException(RaceException::UserMatchError);
         }
+
 
         if ($this->userInfo->room != 0) {
             throw new RaceException(RaceException::UserInMatch);
