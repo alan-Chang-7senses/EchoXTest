@@ -85,15 +85,27 @@ class Get3FreePlayer extends BaseProcessor
 
             
 
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->head),PlayerValue::Head,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->body),PlayerValue::Body,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hand),PlayerValue::Hand,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->leg),PlayerValue::Leg,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->back),PlayerValue::Back,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hat),PlayerValue::Hat,$skillPartTable);
+            $aliasCodes  =
+            [
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->head),PlayerValue::Head,$skillPartTable),
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->body),PlayerValue::Body,$skillPartTable),
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hand),PlayerValue::Hand,$skillPartTable),
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->leg),PlayerValue::Leg,$skillPartTable),
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->back),PlayerValue::Back,$skillPartTable),
+                FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hat),PlayerValue::Hat,$skillPartTable),
+            ];
             $sa = new SkillAccessor();            
 
-            $skillrows = $sa->rowsInfoByAliasCodes($aliasCodes);
+            $rows = $sa->rowsInfoByAliasCodes($aliasCodes);
+            $skillrows = [];
+            //排序資料
+            foreach($aliasCodes as $code)
+            {
+                foreach($rows as $row)
+                {
+                    if($row->AliasCode == $code)$skillrows[] = $row;
+                }
+            }
             $player = new stdClass();
             $player->number = $i;
             $player->type = $freePlayer->Type;
