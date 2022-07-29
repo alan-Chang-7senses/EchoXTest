@@ -18,7 +18,7 @@ use LDAP\Result;
 use Processors\BaseProcessor;
 use Processors\EliteTest\UserInfo;
 
-class FinishFreePeta extends BaseProcessor{
+class FinishFreePlayer extends BaseProcessor{
     
     public function Process(): ResultData
     {

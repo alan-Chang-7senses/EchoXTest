@@ -27,7 +27,7 @@ use Processors\User\FreePeta\Const\FreePetaValue;
 use Processors\User\SetUserNickname;
 use stdClass;
 
-class Get3FreePeta extends BaseProcessor
+class Get3FreePlayer extends BaseProcessor
 {
     public function Process(): ResultData
     {
@@ -35,23 +35,23 @@ class Get3FreePeta extends BaseProcessor
         $userHandler = new UserHandler($userID);
         $userInfo = $userHandler->GetInfo();
         
-        if(!empty($userInfo->nickname))
-        throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
+        // if(!empty($userInfo->nickname))
+        // throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
 
         //分類所有免費peta
         $pdo = new PDOAccessor(EnvVar::DBStatic);
         $table = $pdo->FromTable("FreePetaInfo")->FetchAll();
-        $freePetas = array();
+        $freePlayers = array();
         foreach ($table as $row) 
         {
-            $freePetas[$row->Type][] = $row;
+            $freePlayers[$row->Type][] = $row;
         }
         //選出三隻屬性不一樣的
-        $free3Peta = [];
+        $free3Players = [];
         for($i = 0; $i < FreePetaValue::FreePetaTypeCount; ++$i)
         {
-            $free3Peta[] = FreePetaUtility::GetRandomElementInArray($freePetas[$i]);
-            // $free3Peta[$i]->dnaHolder = new PlayerDnaHolder();
+            $free3Players[] = FreePetaUtility::GetRandomElementInArray($freePlayers[$i]);
+            // $free3Players[$i]->dnaHolder = new PlayerDnaHolder();
         }
         $pdo->ClearAll();
         $table = $pdo->FromTable("FreePetaDNA")->FetchAll();
@@ -63,48 +63,48 @@ class Get3FreePeta extends BaseProcessor
         $freePetaTemp = []; // DB紀錄用
 
         $i = 0;                              
-        foreach($free3Peta as $peta)
+        foreach($free3Players as $player)
         {
             $i++;            
             $aliasCodes = [];
             // $skills = [];
-            $peta->dna = new PlayerDnaHolder();
-            $peta->dna->head = FreePetaUtility::GetRandomElementInArray($table)->HeadDNA;
-            $peta->dna->body = FreePetaUtility::GetRandomElementInArray($table)->BodyDNA;
-            $peta->dna->hand = FreePetaUtility::GetRandomElementInArray($table)->HandDNA;
-            $peta->dna->leg = FreePetaUtility::GetRandomElementInArray($table)->LegDNA;
-            $peta->dna->back = FreePetaUtility::GetRandomElementInArray($table)->BackDNA;
-            $peta->dna->hat = FreePetaUtility::GetRandomElementInArray($table)->HatDNA;
+            $player->dna = new PlayerDnaHolder();
+            $player->dna->head = FreePetaUtility::GetRandomElementInArray($table)->HeadDNA;
+            $player->dna->body = FreePetaUtility::GetRandomElementInArray($table)->BodyDNA;
+            $player->dna->hand = FreePetaUtility::GetRandomElementInArray($table)->HandDNA;
+            $player->dna->leg = FreePetaUtility::GetRandomElementInArray($table)->LegDNA;
+            $player->dna->back = FreePetaUtility::GetRandomElementInArray($table)->BackDNA;
+            $player->dna->hat = FreePetaUtility::GetRandomElementInArray($table)->HatDNA;
 
-            unset($peta->ID);
-            $peta->number = $i;
-            $peta->native = 0; //原生種(暫時數值)
-            $peta->source = NFTDNA::FreePetaSource;
-            $peta->StrengthLevel = NFTDNA::StrengthNormalC;
-            $peta->SkeletonType = NFTDNA::PetaSkeletonType;
+            unset($player->ID);
+            $player->number = $i;
+            $player->native = 0; //原生種(暫時數值)
+            $player->source = NFTDNA::FreePetaSource;
+            $player->StrengthLevel = NFTDNA::StrengthNormalC;
+            $player->SkeletonType = NFTDNA::PetaSkeletonType;
 
             
 
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->head),PlayerValue::Head,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->body),PlayerValue::Body,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hand),PlayerValue::Hand,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->leg),PlayerValue::Leg,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->back),PlayerValue::Back,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($peta->dna->hat),PlayerValue::Hat,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->head),PlayerValue::Head,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->body),PlayerValue::Body,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->hand),PlayerValue::Hand,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->leg),PlayerValue::Leg,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->back),PlayerValue::Back,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->hat),PlayerValue::Hat,$skillPartTable);
             $sa = new SkillAccessor();            
 
             $skillrows = $sa->rowsInfoByAliasCodes($aliasCodes);
             $player = new stdClass();
             $player->number = $i;
-            $player->type = $peta->Type;
-            $player->ele = $peta->Attribute;
-            $player->velocity = PlayerAbility::Velocity($peta->Agility, $peta->Strength,1);
-            $player->stamina = PlayerAbility::Stamina($peta->Constitution, $peta->Dexterity,1);
-            $player->intelligent = PlayerAbility::Intelligent($peta->Dexterity, $peta->Agility, 1);
-            $player->breakOut = PlayerAbility::BreakOut($peta->Strength, $peta->Dexterity, 1);
-            $player->will = PlayerAbility::Will($peta->Constitution, $peta->Strength, 1);
-            $player->habit = PlayerAbility::Habit($peta->Constitution, $peta->Strength, $peta->Dexterity, $peta->Agility);
-            $player->dna = $peta->dna;
+            $player->type = $player->Type;
+            $player->ele = $player->Attribute;
+            $player->velocity = PlayerAbility::Velocity($player->Agility, $player->Strength,1);
+            $player->stamina = PlayerAbility::Stamina($player->Constitution, $player->Dexterity,1);
+            $player->intelligent = PlayerAbility::Intelligent($player->Dexterity, $player->Agility, 1);
+            $player->breakOut = PlayerAbility::BreakOut($player->Strength, $player->Dexterity, 1);
+            $player->will = PlayerAbility::Will($player->Constitution, $player->Strength, 1);
+            $player->habit = PlayerAbility::Habit($player->Constitution, $player->Strength, $player->Dexterity, $player->Agility);
+            $player->dna = $player->dna;
             foreach($skillrows as $row)
             {
                 $handler = new SkillHandler($row->SkillID);
@@ -124,9 +124,9 @@ class Get3FreePeta extends BaseProcessor
                     "effects" => $handler->GetEffects(),
                     "maxEffects" => $handler->GetMaxEffects(),
                 ];
-                $peta->skills[] = ["id" => $info->id];
+                $player->skills[] = ["id" => $info->id];
             }            
-            $freePetaTemp[] = $peta;
+            $freePetaTemp[] = $player;
             $players[] = $player;
         }
 
