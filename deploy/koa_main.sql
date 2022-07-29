@@ -27,12 +27,17 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~8 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~9 rows (近似值)
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
+	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
 	('PvP_B_SeasonStartTime ', '2022-07-24 02:00:00', '賽季開始時間'),
+	('PvP_B_TicketId_1', '1', '金幣賽入場券的道具Id'),
+	('PvP_B_TicketId_2', '2', 'PT賽入場券的道具Id'),
 	('PvP_B_WeeksPerSeacon', '2', '每個賽季有幾週'),
 	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
 	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),

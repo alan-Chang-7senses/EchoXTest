@@ -1,13 +1,15 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.1.103
--- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
+-- 主機:                           127.0.0.1
+-- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
--- HeidiSQL 版本:                  11.3.0.6295
+-- HeidiSQL 版本:                  12.0.0.6468
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET NAMES utf8 */;
 /*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
@@ -27,14 +29,12 @@ CREATE TABLE IF NOT EXISTS `ItemDrop` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
 
 -- 正在傾印表格  koa_static.ItemDrop 的資料：~5 rows (近似值)
-/*!40000 ALTER TABLE `ItemDrop` DISABLE KEYS */;
 INSERT INTO `ItemDrop` (`ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
 	(1, 1, 2, 100),
 	(2, 2, 5, 50),
 	(3, 1, 4, 75),
 	(4, 2, 10, 200),
 	(5, 3, 1, 10);
-/*!40000 ALTER TABLE `ItemDrop` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
@@ -55,14 +55,12 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
 
 -- 正在傾印表格  koa_static.ItemInfo 的資料：~5 rows (近似值)
-/*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
 INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `ItemDropIDs`, `DropType`, `DropCount`, `Source`) VALUES
 	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, NULL, 0, 0, 's001,s002,s003'),
 	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, NULL, 0, 0, 's002'),
 	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, '1,2', 1, 1, 's003'),
 	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, '1,2', 2, 1, 's004'),
 	(5, 'n0005', 'd0005', 3, '5', 555, 1, 0, 0, '1,2,3,4,5', 3, 2, 's003,s005');
-/*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構
 CREATE TABLE IF NOT EXISTS `MailsInfo` (
@@ -84,7 +82,6 @@ CREATE TABLE IF NOT EXISTS `MailsInfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件資訊';
 
 -- 正在傾印表格  koa_static.MailsInfo 的資料：~13 rows (近似值)
-/*!40000 ALTER TABLE `MailsInfo` DISABLE KEYS */;
 INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`, `RewardID`, `CreateTime`, `UpdateTime`, `FinishTime`) VALUES
 	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', '', 0, 1655797800, 1655797800, 1659110400),
 	(2, 2, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', '', 0, 1655797800, 1655797800, 1659110400),
@@ -99,7 +96,6 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`,
 	(11, 11, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', '', 0, 1655797800, 1655797800, 1659110400),
 	(12, 12, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
 	(13, 13, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
-/*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsRewards 結構
 CREATE TABLE IF NOT EXISTS `MailsRewards` (
@@ -115,24 +111,21 @@ CREATE TABLE IF NOT EXISTS `MailsRewards` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件獎勵表';
 
 -- 正在傾印表格  koa_static.MailsRewards 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `MailsRewards` DISABLE KEYS */;
 INSERT INTO `MailsRewards` (`RewardID`, `ItemID1`, `ItemNumber1`, `ItemID2`, `ItemNumber2`, `ItemID3`, `ItemNumber3`) VALUES
 	(1, 8129, 2, 8130, 2, 0, 0);
-/*!40000 ALTER TABLE `MailsRewards` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.QualifyingArena 結構
 CREATE TABLE IF NOT EXISTS `QualifyingArena` (
   `QualifyingArenaID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽場編號',
-  `PTScene` int(10) unsigned DEFAULT NULL COMMENT 'PT場地',
-  `CoinScene` int(10) unsigned DEFAULT NULL COMMENT '金幣場地',
+  `PTScene` int(10) unsigned DEFAULT 0 COMMENT 'PT場地',
+  `CoinScene` int(10) unsigned DEFAULT 0 COMMENT '金幣場地',
   PRIMARY KEY (`QualifyingArenaID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽場';
 
 -- 正在傾印表格  koa_static.QualifyingArena 的資料：~3 rows (近似值)
 INSERT INTO `QualifyingArena` (`QualifyingArenaID`, `PTScene`, `CoinScene`) VALUES
 	(1, 1, 1),
-	(2, 2, 2),
-	(3, 3, NULL),
-	(4, NULL, NULL);
+	(2, 2, 0);
 
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
@@ -149,12 +142,10 @@ CREATE TABLE IF NOT EXISTS `SceneClimate` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景氣候';
 
 -- 正在傾印表格  koa_static.SceneClimate 的資料：~3 rows (近似值)
-/*!40000 ALTER TABLE `SceneClimate` DISABLE KEYS */;
 INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirection`, `WindSpeed`, `StartTime`, `Lighting`) VALUES
 	(1, 1, 1, 1, 50, 0, 2),
 	(2, 1, 1, 2, 50, 28800, 1),
 	(3, 1, 1, 3, 50, 64800, 2);
-/*!40000 ALTER TABLE `SceneClimate` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneInfo 結構
 CREATE TABLE IF NOT EXISTS `SceneInfo` (
@@ -164,11 +155,10 @@ CREATE TABLE IF NOT EXISTS `SceneInfo` (
   PRIMARY KEY (`SceneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景主要資訊';
 
--- 正在傾印表格  koa_static.SceneInfo 的資料：~1 rows (近似值)
-/*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
+-- 正在傾印表格  koa_static.SceneInfo 的資料：~0 rows (近似值)
 INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `SceneEnv`) VALUES
-	(1, 'CloseBeta', 1);
-/*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
+	(1, 'CloseBeta', 1),
+	(2, 'CloseBeta', 1);
 
 -- 傾印  資料表 koa_static.SkillAffixAlias 結構
 CREATE TABLE IF NOT EXISTS `SkillAffixAlias` (
@@ -182,14 +172,12 @@ CREATE TABLE IF NOT EXISTS `SkillAffixAlias` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='詞綴技能識別碼';
 
 -- 正在傾印表格  koa_static.SkillAffixAlias 的資料：~5 rows (近似值)
-/*!40000 ALTER TABLE `SkillAffixAlias` DISABLE KEYS */;
 INSERT INTO `SkillAffixAlias` (`SkillAffixID`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `Level6`) VALUES
 	(1, NULL, NULL, 'Norn_3', 'Norn_4', 'Norn_5', 'Norn_6'),
 	(2, NULL, NULL, 'Bil_3', 'Bil_4', 'Bil_5', 'Bil_6'),
 	(3, NULL, NULL, 'Demeter_3', 'Demeter_4', 'Demeter_5', 'Demeter_6'),
 	(4, NULL, NULL, 'Artemis_3', 'Artemis_4', 'Artemis_5', 'Artemis_6'),
 	(5, NULL, NULL, 'Eir_3', 'Eir_4', 'Eir_5', 'Eir_6');
-/*!40000 ALTER TABLE `SkillAffixAlias` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillEffect 結構
 CREATE TABLE IF NOT EXISTS `SkillEffect` (
@@ -201,7 +189,6 @@ CREATE TABLE IF NOT EXISTS `SkillEffect` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能效果表';
 
 -- 正在傾印表格  koa_static.SkillEffect 的資料：~65 rows (近似值)
-/*!40000 ALTER TABLE `SkillEffect` DISABLE KEYS */;
 INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Formula`) VALUES
 	(20100, 'Spd_up_00', 111, 'SPD*N%'),
 	(20101, 'Spd_up_01', 111, 'SPD*N%'),
@@ -268,7 +255,6 @@ INSERT INTO `SkillEffect` (`SkillEffectID`, `EffectName`, `EffectType`, `Formula
 	(20514, 'Sta_up_04', 115, 'STA*N%'),
 	(20515, 'Sta_up_05', 115, 'STA*N%'),
 	(20516, 'Sta_up_06', 115, 'STA*N%');
-/*!40000 ALTER TABLE `SkillEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillInfo 結構
 CREATE TABLE IF NOT EXISTS `SkillInfo` (
@@ -293,8 +279,7 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   UNIQUE KEY `AliasCode` (`AliasCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='技能資訊表';
 
--- 正在傾印表格  koa_static.SkillInfo 的資料：~62 rows (近似值)
-/*!40000 ALTER TABLE `SkillInfo` DISABLE KEYS */;
+-- 正在傾印表格  koa_static.SkillInfo 的資料：~56 rows (近似值)
 INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `Energy`, `Effect`, `Cooldown`, `Duration`, `Level1`, `Level2`, `Level3`, `Level4`, `Level5`, `MaxDescription`, `MaxCondition`, `MaxConditionValue`, `MaxEffect`) VALUES
 	(1, 'Lion011', '21001', '22204', '0,2,0,1', '20403', 200, 720, 500, 1000, 1500, 2000, 2500, '23007', 2, 3, '7'),
 	(2, 'Lion012', '21002', '22205', '2,0,2,0', '20504', 200, 980, 500, 1000, 1500, 2000, 2500, '23008', 4, 1, '8'),
@@ -358,7 +343,6 @@ INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Description`, `En
 	(60, 'Pige004', '21060', '22201', '1,0,2,0', '20103', 200, 450, 800, 1600, 2400, 3200, 4000, '23021', 22, 0, '21'),
 	(61, 'Pige005', '21061', '22202', '1,0,0,2', '20203', 200, 450, 800, 1600, 2400, 3200, 4000, '23012', 5, 1, '12'),
 	(62, 'Pige006', '21062', '22202', '0,0,3,0', '20203', 200, 450, 800, 1600, 2400, 3200, 4000, '23007', 22, 0, '7');
-/*!40000 ALTER TABLE `SkillInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillMaxEffect 結構
 CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
@@ -371,7 +355,6 @@ CREATE TABLE IF NOT EXISTS `SkillMaxEffect` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='滿等級技能效果表';
 
 -- 正在傾印表格  koa_static.SkillMaxEffect 的資料：~44 rows (近似值)
-/*!40000 ALTER TABLE `SkillMaxEffect` DISABLE KEYS */;
 INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `Target`, `Formula`) VALUES
 	(7, 'S_ADD_01', 102, 0, '0.5'),
 	(8, 'change_c01', 504, 0, NULL),
@@ -417,7 +400,6 @@ INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `Target
 	(48, 'Eir_ADD_HP_03', 201, 0, '25'),
 	(49, 'Eir_ADD_HP_04', 201, 0, '30'),
 	(50, 'Dune_add_01', 123, 0, '10');
-/*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillPart 結構
 CREATE TABLE IF NOT EXISTS `SkillPart` (
@@ -433,7 +415,6 @@ CREATE TABLE IF NOT EXISTS `SkillPart` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部位技能對照表';
 
 -- 正在傾印表格  koa_static.SkillPart 的資料：~42 rows (近似值)
-/*!40000 ALTER TABLE `SkillPart` DISABLE KEYS */;
 INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `AliasCode2`, `AliasCode3`, `SkillAffixID`) VALUES
 	(1, '110101', 1, 'Lion011', NULL, NULL, 1),
 	(2, '110101', 2, 'Lion012', NULL, NULL, 1),
@@ -477,8 +458,8 @@ INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `A
 	(40, '210301', 4, 'Pige004', NULL, NULL, 3),
 	(41, '210301', 5, 'Pige005', NULL, NULL, 3),
 	(42, '210301', 6, 'Pige006', NULL, NULL, 3);
-/*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
 
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
