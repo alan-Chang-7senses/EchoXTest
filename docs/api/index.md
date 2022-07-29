@@ -21,6 +21,7 @@
 		- [儲存技能](Player/SetSkill.md)。
 		- [設定暱稱](Player/SetNickname.md)。
 	- PVP：
+		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
 		- [PVP配對離開](PVP/PVPMatchQuit.md)。		
 	- 競賽：
