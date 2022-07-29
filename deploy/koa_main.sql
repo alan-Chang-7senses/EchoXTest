@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~9 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
 	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~32 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
 	(-37, -37, 'aichar0037', 0),
@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
--- 正在傾印表格  koa_main.PlayerNFT 的資料：~46 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerNFT 的資料：~76 rows (近似值)
 INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`) VALUES
 	(-38, 3494, 3669, 3086, 3654, 1, '140303701101047031020170', '110211702103017011010370', '140206701102053021030170', '140204701203017011010270', '110109703102017011010370', '170201701101027012030170', '0000000000000000', 00, 00),
 	(-37, 4492, 4308, 4178, 4153, 1, '140105701101037021030170', '170302701203017011010470', '130302703102017012030170', '110208701101027011010470', '110211702103017011010170', '110109701101017011010470', '0000000000000000', 00, 00),
@@ -375,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~49 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~522 rows (近似值)
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 3, 1, 0),
 	(-38, 4, 1, 0),
@@ -912,6 +912,8 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~0 rows (近似值)
+
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
@@ -938,7 +940,7 @@ BEGIN
         UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
         SET step = 1;
 
-        UPDATE `Users` SET `Race` = 0, 'Lobby' = 0, 'Room' = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+        UPDATE `Users` SET `Race` = 0, `Lobby` = 0, `Room` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
         SET step = 2;
 
         UPDATE `Races` SET `Status` = inStatus, `UpdateTime` = inTime, `FinishTime` = inTime WHERE `RaceID` = inRaceID;
