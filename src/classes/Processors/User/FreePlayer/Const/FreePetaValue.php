@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\User\FreePeta\Const;
+namespace Processors\User\FreePlayer\Const;
 
 class FreePetaValue
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Processors\User\FreePeta;
+namespace Processors\User\FreePlayer;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
@@ -32,7 +32,7 @@ class FinishFreePlayer extends BaseProcessor{
         $userInfo = $userHandler->GetInfo();
         
 
-        if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
+        // if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
         
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
         if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);

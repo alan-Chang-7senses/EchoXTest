@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\User\FreePeta;
+namespace Processors\User\FreePlayer;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
@@ -23,7 +23,7 @@ use Games\Users\FreePeta\FreePetaUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use Processors\User\FreePeta\Const\FreePetaValue;
+use Processors\User\FreePlayer\Const\FreePetaValue;
 use Processors\User\SetUserNickname;
 use stdClass;
 
@@ -63,48 +63,48 @@ class Get3FreePlayer extends BaseProcessor
         $freePetaTemp = []; // DB紀錄用
 
         $i = 0;                              
-        foreach($free3Players as $player)
+        foreach($free3Players as $freePlayer)
         {
             $i++;            
             $aliasCodes = [];
             // $skills = [];
-            $player->dna = new PlayerDnaHolder();
-            $player->dna->head = FreePetaUtility::GetRandomElementInArray($table)->HeadDNA;
-            $player->dna->body = FreePetaUtility::GetRandomElementInArray($table)->BodyDNA;
-            $player->dna->hand = FreePetaUtility::GetRandomElementInArray($table)->HandDNA;
-            $player->dna->leg = FreePetaUtility::GetRandomElementInArray($table)->LegDNA;
-            $player->dna->back = FreePetaUtility::GetRandomElementInArray($table)->BackDNA;
-            $player->dna->hat = FreePetaUtility::GetRandomElementInArray($table)->HatDNA;
+            $freePlayer->dna = new PlayerDnaHolder();
+            $freePlayer->dna->head = FreePetaUtility::GetRandomElementInArray($table)->HeadDNA;
+            $freePlayer->dna->body = FreePetaUtility::GetRandomElementInArray($table)->BodyDNA;
+            $freePlayer->dna->hand = FreePetaUtility::GetRandomElementInArray($table)->HandDNA;
+            $freePlayer->dna->leg = FreePetaUtility::GetRandomElementInArray($table)->LegDNA;
+            $freePlayer->dna->back = FreePetaUtility::GetRandomElementInArray($table)->BackDNA;
+            $freePlayer->dna->hat = FreePetaUtility::GetRandomElementInArray($table)->HatDNA;
 
-            unset($player->ID);
-            $player->number = $i;
-            $player->native = 0; //原生種(暫時數值)
-            $player->source = NFTDNA::FreePetaSource;
-            $player->StrengthLevel = NFTDNA::StrengthNormalC;
-            $player->SkeletonType = NFTDNA::PetaSkeletonType;
+            unset($freePlayer->ID);
+            $freePlayer->number = $i;
+            $freePlayer->native = 0; //原生種(暫時數值)
+            $freePlayer->source = NFTDNA::FreePetaSource;
+            $freePlayer->StrengthLevel = NFTDNA::StrengthNormalC;
+            $freePlayer->SkeletonType = NFTDNA::PetaSkeletonType;
 
             
 
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->head),PlayerValue::Head,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->body),PlayerValue::Body,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->hand),PlayerValue::Hand,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->leg),PlayerValue::Leg,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->back),PlayerValue::Back,$skillPartTable);
-            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($player->dna->hat),PlayerValue::Hat,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->head),PlayerValue::Head,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->body),PlayerValue::Body,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hand),PlayerValue::Hand,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->leg),PlayerValue::Leg,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->back),PlayerValue::Back,$skillPartTable);
+            $aliasCodes[] = FreePetaUtility::GetPartSkill(PlayerUtility::PartCodeByDNA($freePlayer->dna->hat),PlayerValue::Hat,$skillPartTable);
             $sa = new SkillAccessor();            
 
             $skillrows = $sa->rowsInfoByAliasCodes($aliasCodes);
             $player = new stdClass();
             $player->number = $i;
-            $player->type = $player->Type;
-            $player->ele = $player->Attribute;
-            $player->velocity = PlayerAbility::Velocity($player->Agility, $player->Strength,1);
-            $player->stamina = PlayerAbility::Stamina($player->Constitution, $player->Dexterity,1);
-            $player->intelligent = PlayerAbility::Intelligent($player->Dexterity, $player->Agility, 1);
-            $player->breakOut = PlayerAbility::BreakOut($player->Strength, $player->Dexterity, 1);
-            $player->will = PlayerAbility::Will($player->Constitution, $player->Strength, 1);
-            $player->habit = PlayerAbility::Habit($player->Constitution, $player->Strength, $player->Dexterity, $player->Agility);
-            $player->dna = $player->dna;
+            $player->type = $freePlayer->Type;
+            $player->ele = $freePlayer->Attribute;
+            $player->velocity = PlayerAbility::Velocity($freePlayer->Agility, $freePlayer->Strength,1);
+            $player->stamina = PlayerAbility::Stamina($freePlayer->Constitution, $freePlayer->Dexterity,1);
+            $player->intelligent = PlayerAbility::Intelligent($freePlayer->Dexterity, $freePlayer->Agility, 1);
+            $player->breakOut = PlayerAbility::BreakOut($freePlayer->Strength, $freePlayer->Dexterity, 1);
+            $player->will = PlayerAbility::Will($freePlayer->Constitution, $freePlayer->Strength, 1);
+            $player->habit = PlayerAbility::Habit($freePlayer->Constitution, $freePlayer->Strength, $freePlayer->Dexterity, $freePlayer->Agility);
+            $player->dna = $freePlayer->dna;
             foreach($skillrows as $row)
             {
                 $handler = new SkillHandler($row->SkillID);
@@ -124,9 +124,9 @@ class Get3FreePlayer extends BaseProcessor
                     "effects" => $handler->GetEffects(),
                     "maxEffects" => $handler->GetMaxEffects(),
                 ];
-                $player->skills[] = ["id" => $info->id];
+                $freePlayer->skills[] = ["id" => $info->id];
             }            
-            $freePetaTemp[] = $player;
+            $freePetaTemp[] = $freePlayer;
             $players[] = $player;
         }
 

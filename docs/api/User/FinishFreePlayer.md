@@ -6,7 +6,7 @@
 
 ## URL
 
-http(s)://`域名`/User/FreePeta/FinishFreePlayer/
+http(s)://`域名`/User/FreePlayer/FinishFreePlayer/
 
 ## Method
 
