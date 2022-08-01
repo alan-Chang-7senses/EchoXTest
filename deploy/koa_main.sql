@@ -1019,6 +1019,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
+  `QualifyingSeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽賽季編號',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',

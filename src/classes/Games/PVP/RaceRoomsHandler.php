@@ -28,16 +28,14 @@ class RaceRoomsHandler
         return 0;
     }
 
-    public function GetMatchRoomID(int $lowBound, int $upBound): int
+    public function GetMatchRoomID(int $lowBound, int $upBound, $qualifyingSeasonID): int
     {
-        $rooms = $this->accessor->GetMatchRooms($this->lobby, $lowBound, $upBound);
-        $newRoomRate = $this->GetNewRomRate();
+        $rooms = $this->accessor->GetMatchRooms($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
         $roomNumber = count($rooms);
-        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $newRoomRate) : true;
+        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->GetNewRomRate()) : true;
 
         if ($isAddNewroom) {
-            $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound);
-
+            $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
         }
         else {
             $rnd = rand(0, $roomNumber - 1);

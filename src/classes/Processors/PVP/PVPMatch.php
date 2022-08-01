@@ -21,14 +21,17 @@ class PVPMatch extends BaseRace
     protected bool|null $mustInRace = false;
     public function Process(): ResultData
     {
-        $lobby = InputHelper::post('lobby');
+        $lobby = InputHelper::post('lobby');       
 
         if ($this->userInfo->room != 0) {
             throw new RaceException(RaceException::UserInMatch);
-        }
+        }       
         
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
+        if ($qualifyingHandler->NowSeasonID == -1) {
+            throw new RaceException(RaceException::NoSeasonData);
+        }
 
         $useTicketId = $qualifyingHandler->GetTicketID($lobby);
         if ($qualifyingHandler->FindItemAmount($this->userInfo->id, $useTicketId) <= 0) {
@@ -37,14 +40,14 @@ class PVPMatch extends BaseRace
 
         $raceRoomID = 0;
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($lobby, &$raceRoomID) {
+        $accessor->Transaction(function () use ($lobby, &$raceRoomID, $qualifyingHandler) {
 
             //todo
             $lowbound = 0;
             $upbound = 0;
             //
             $raceroomHandler = new RaceRoomsHandler($lobby);            
-            $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound);
+            $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound, $qualifyingHandler->NowSeasonID);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->TakeSeat();
             $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();
