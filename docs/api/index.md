@@ -15,6 +15,9 @@
 		- [當前角色](User/CurrentPlayer.md)。
 		- [當前使用者資訊](User/CurrentInfo.md)。
 		- [持有物品](User/Items.md)。
+		- [隨機三隻免費Peta](User/Get3FreePlayer.md)。
+		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
+			
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。

@@ -23,7 +23,7 @@ class PlayerAbility {
      */
     public static function Velocity(int $agility, int $strength, int $level) : float{
         $nftValue = $agility / AbilityFactor::NFTDivisor * AbilityFactor::VelocityAgilityMultiplier + $strength / AbilityFactor::NFTDivisor * AbilityFactor::VelocityStrengthMultiplier;
-        $levelValue = $level * AbilityFactor::VelocityLevelMultiplier + AbilityFactor::VelocityLevelAdditional;
+        $levelValue = $level * AbilityFactor::VelocityLevelMultiplier + AbilityFactor::VelocityLevelAdditional;//在此多乘上X值的樣子。
         return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
     }
     
@@ -114,4 +114,31 @@ class PlayerAbility {
         reset($habits);
         return key($habits);
     }
+
+    /**
+     * 計算數值
+     * @param int $type 數值的種類
+     * @param PlayerBaseInfoHolder 基礎數值的結構類
+     */
+    public static function GetAbilityValue(int $type,PlayerBaseInfoHolder $playerBaseInfo) : float{
+        
+
+        $levelMultiplier = ceil(($playerBaseInfo->level + $type) / AbilityFactor::LevelDivisor);
+        $strength = $playerBaseInfo->strength / AbilityFactor::NFTDivisor;
+        $agility = $playerBaseInfo->agility /  AbilityFactor::NFTDivisor;
+        $constitution = $playerBaseInfo->constitution /  AbilityFactor::NFTDivisor;
+        $dexterity = $playerBaseInfo->dexterity / AbilityFactor::NFTDivisor;
+
+        $rt = ($strength * AbilityFactor::AbilityMultiplier[$type][0] + $agility * AbilityFactor::AbilityMultiplier[$type][1]
+         + $constitution * AbilityFactor::AbilityMultiplier[$type][2] + $dexterity * AbilityFactor::AbilityMultiplier[$type][3])
+
+         * ($levelMultiplier * AbilityFactor::XValues[$playerBaseInfo->strengthType])
+          
+         + ($strength * AbilityFactor::AbilityMultiplier[$type][4] + $agility * AbilityFactor::AbilityMultiplier[$type][5]
+         + $constitution * AbilityFactor::AbilityMultiplier[$type][6] + $dexterity * AbilityFactor::AbilityMultiplier[$type][7])
+
+         + $levelMultiplier * AbilityFactor::Delta;
+         return number_format($rt, AbilityFactor::Decimals);
+    }
+
 }
