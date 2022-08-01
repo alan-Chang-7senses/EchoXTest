@@ -118,26 +118,21 @@ class PlayerAbility {
     /**
      * 計算數值
      * @param int $type 數值的種類
-     * @param int $level 等級
-     * @param int $strengthType 數值標記，強度級別
-     * @param int $strength 力量
-     * @param int $agility 敏捷
-     * @param int $constitution 體力
-     * @param int $dexterity 技巧
+     * @param PlayerBaseInfoHolder 基礎數值的結構類
      */
-    public static function GetAbilityValue(int $type,int $level,int $strengthType, int $strength, int $agility, int $constitution, int $dexterity) : float{
+    public static function GetAbilityValue(int $type,PlayerBaseInfoHolder $playerBaseInfo) : float{
         
-        $levelMultiplier = ceil(($level + $type) / AbilityFactor::LevelDivisor);
 
-        $strength /= AbilityFactor::NFTDivisor;
-        $agility /= AbilityFactor::NFTDivisor;
-        $constitution /= AbilityFactor::NFTDivisor;
-        $dexterity /= AbilityFactor::NFTDivisor;
+        $levelMultiplier = ceil(($playerBaseInfo->level + $type) / AbilityFactor::LevelDivisor);
+        $strength = $playerBaseInfo->strength / AbilityFactor::NFTDivisor;
+        $agility = $playerBaseInfo->agility /  AbilityFactor::NFTDivisor;
+        $constitution = $playerBaseInfo->constitution /  AbilityFactor::NFTDivisor;
+        $dexterity = $playerBaseInfo->dexterity / AbilityFactor::NFTDivisor;
 
         $rt = ($strength * AbilityFactor::AbilityMultiplier[$type][0] + $agility * AbilityFactor::AbilityMultiplier[$type][1]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][2] + $dexterity * AbilityFactor::AbilityMultiplier[$type][3])
 
-         * ($levelMultiplier * AbilityFactor::XValues[$strengthType])
+         * ($levelMultiplier * AbilityFactor::XValues[$playerBaseInfo->strengthType])
           
          + ($strength * AbilityFactor::AbilityMultiplier[$type][4] + $agility * AbilityFactor::AbilityMultiplier[$type][5]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][6] + $dexterity * AbilityFactor::AbilityMultiplier[$type][7])
