@@ -29,6 +29,11 @@ class DataGenerator {
     public static function TodaySecondByTimezone(int $timezone) : int {
         return time() - (new DateTime('today midnight', self::DateTimeZone($timezone)))->getTimestamp();
     }
+
+    public static function SetTodaySecondsToTimezone(int $seconds, int $timezone) : int {
+        return $seconds + (new DateTime('today midnight', self::DateTimeZone($timezone)))->getTimestamp();
+    }
+
     
     public static function TodayHourByTimezone(int $timezone) : int{
         return (new DateTime('now', self::DateTimeZone($timezone)))->format('H');

@@ -5,8 +5,10 @@ namespace Games\PVP;
 use DateTime;
 use stdClass;
 use Exception;
+use Consts\EnvVar;
 use Consts\Globals;
 use Consts\ErrorCode;
+use Generators\DataGenerator;
 use Games\Pools\TicketInfoPool;
 use Generators\ConfigGenerator;
 use Games\Pools\QualifyingSeasonPool;
@@ -220,41 +222,43 @@ class QualifyingHandler
     public function SetNextTokenTime(int $userID, int $lobby): bool
     {
         $keyValue = "";
-        $updateColumn = "";        
+        $updateColumn = "";
         switch ($lobby) {
             case 1:
                 $keyValue = 'Ticket_Coin';
-                $updateColumn = "CoinTime";        
+                $updateColumn = "CoinTime";
                 break;
             case 2:
                 $keyValue = 'Ticket_PT';
-                $updateColumn = "PTTime";                        
+                $updateColumn = "PTTime";
                 break;
         }
 
         $range = $this->pdoAccessor->GetRange($keyValue);
         if ($range != false) {
-
-            $nowday = (new DateTime(date("Y/m/d")))->format('U');
-            $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN]; //utc
-            $diff = $nowtime - $nowday;
-            $setTime = 0;
+            $nowSeconds = DataGenerator::TodaySecondByTimezone(getenv(EnvVar::TimezoneDefault));
+            $setSeconds = -1;
             for ($i = 0; $i < count($range); $i++) {
-                if ($range[$i] < $diff) {
+                if ($range[$i] < $nowSeconds) {
                     continue;
                 }
 
-                $setTime = $nowday + $range[$i];
+                $setSeconds = $range[$i];
                 break;
             }
 
-            if ($setTime == 0) {
-                $setTime = $nowday + 86400 + $range[0];
+            if ($setSeconds == -1) {
+                $setSeconds = 86400 + $range[0];
             }
-        }
 
-        $this->ticketPool->Delete($userID);
-        return $this->pdoAccessor->UpdateTicketInfo($userID, [$updateColumn => $setTime]);
+            $setTime = DataGenerator::SetTodaySecondsToTimezone($setSeconds, getenv(EnvVar::TimezoneDefault));
+            $this->ticketPool->Delete($userID);
+            return $this->pdoAccessor->UpdateTicketInfo($userID, [$updateColumn => $setTime]);
+
+        }
+        else {
+            return false;
+        }
     }
 
     public function GetRemainTicketTime(int $userID, int $lobby): int
