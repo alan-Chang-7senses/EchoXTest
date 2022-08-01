@@ -51,4 +51,25 @@ class AbilityFactor {
     const IntelligentAgilityMultiplier = 0.4;
     const IntelligentLevelMultiplier = 0.009;
     const IntelligentLevelAdditional = 1.4;
+
+    /** NFT 數值換算 X值*/
+    const XValues = [0.007,0.0065,0.006,0.0055,0.005,0.0045,0.004,0.0035,0.003,0.0025];
+
+    const Delta = 1.25;
+
+    const LevelDivisor = 5;
+
+    const Velocity = 0;
+    const Stamina = 1;
+    const BreakOut = 2;
+    const Will = 3;
+    const Intelligent = 4;
+    const AbilityMultiplier = [
+            AbilityFactor::Velocity => [0.2,0.6,0,0,0.28,0.84,0,0],
+            AbilityFactor::Stamina => [0,0,0.5,0.3,0,0,0.7,0.42],
+            AbilityFactor::BreakOut => [0.5,0,0,0.3,0.7,0,0,0.42],
+            AbilityFactor::Will => [0.3,0,0.5,0,0.42,0,0.7,0],
+            AbilityFactor::Intelligent => [0,0.4,0,0.4,0,0.56,0,0.56]
+    ];
+
 }

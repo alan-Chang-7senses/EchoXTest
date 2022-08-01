@@ -51,6 +51,8 @@ class PlayerPool extends PoolAccessor {
         $holder->exp = $player->Exp;
         $holder->maxExp = null; //還沒有資料
         $holder->rank = $player->Rank;
+        $holder->strengthLevel = $player->StrengthLevel;
+        $holder->skeletonType = $player->SkeletonType;
         $holder->velocity = PlayerAbility::Velocity($player->Agility, $player->Strength, $player->Level);
         $holder->stamina = PlayerAbility::Stamina($player->Constitution, $player->Dexterity, $player->Level);
         $holder->intelligent = PlayerAbility::Intelligent($player->Dexterity, $player->Agility, $player->Level);
