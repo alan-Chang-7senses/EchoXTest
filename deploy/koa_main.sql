@@ -35,7 +35,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
 	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
-	('PvP_B_SeasonStartTime ', '2022-07-24 02:00:00', '賽季開始時間'),
+	('PvP_B_SeasonStartTime ', '2022-06-24 00:00:00+8:00', '賽季開始時間'),
 	('PvP_B_TicketId_1', '1', '金幣賽入場券的道具Id'),
 	('PvP_B_TicketId_2', '2', 'PT賽入場券的道具Id'),
 	('PvP_B_WeeksPerSeacon', '2', '每個賽季有幾週'),
