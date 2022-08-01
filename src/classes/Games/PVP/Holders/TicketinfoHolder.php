@@ -1,13 +1,7 @@
 <?php
 namespace Games\PVP\Holders;
 
-use stdClass;
-/**
- * Description of RaceInfoHolder
- *
- * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
- */
-class TicketinfoHolder {
+class TicketInfoHolder {
     /** @var int 入場卷物品編號 */
     public int $ticketID;
     /** @var int 入場卷物品數量 */

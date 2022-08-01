@@ -41,7 +41,7 @@ Content Type: `application/json`
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [ticket](#ticket) | object | 入場卷資訊 |
 | [rank](#rank) | object | 排行榜資訊 |
-| [scene](#scene) | object | 場景資訊 |
+| [scene](#scene) | object | [場景資訊](../User/CurrentScene.md#scene) |
 <br>
 
 #### <span id="ticket">ticket 入場卷資訊 </span>
@@ -60,19 +60,9 @@ Content Type: `application/json`
 | aveRank| string | 平均排名 |
 | rank | int | 排行嗙名次 |
 |
-<br>
 
-#### <span id="scene">scene 內容</span>
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| id | int | 場景編號 |
-| name | string | 場景名稱 |
-| env | int | [環境](../codes/scene.md#env) |
-| weather | int | [天氣](../codes/scene.md#weather) |
-| windDirection | int | [風向](../codes/scene.md#windDirection) |
-| windSpeed | int | 風速 |
-| lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
-<br>
+
+
 
 ### Example
     {

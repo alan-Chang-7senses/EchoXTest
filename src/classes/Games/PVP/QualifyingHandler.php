@@ -7,15 +7,20 @@ use stdClass;
 use Exception;
 use Consts\Globals;
 use Consts\ErrorCode;
+use Games\Pools\TicketInfoPool;
 use Generators\ConfigGenerator;
 use Games\Pools\QualifyingSeasonPool;
-use Games\PVP\Holders\TicketinfoHolder;
+use Games\PVP\Holders\TicketInfoHolder;
 use Games\Accessors\QualifyingSeasonAccessor;
 
 class QualifyingHandler
 {
+    //1:金幣賽 2:PT賽
     public const Lobbies = [1, 2];
+
+    public int $NowSeasonID;
     private QualifyingSeasonPool $pool;
+    private TicketInfoPool $ticketPool;
     private QualifyingSeasonAccessor $pdoAccessor;
 
     public stdClass $info;
@@ -23,6 +28,7 @@ class QualifyingHandler
     public function __construct()
     {
         $this->pool = QualifyingSeasonPool::Instance();
+        $this->ticketPool = TicketInfoPool::Instance();
         $this->pdoAccessor = new QualifyingSeasonAccessor();
         $this->ResetInfo();
     }
@@ -39,6 +45,7 @@ class QualifyingHandler
             $this->info = new stdClass;
             $this->info->QualifyingSeasonID = -1;
         }
+        $this->NowSeasonID = $this->info->QualifyingSeasonID;
     }
 
     public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow): int
@@ -138,10 +145,6 @@ class QualifyingHandler
         }
     }
 
-    public function NoSeasonData(): bool
-    {
-        return ($this->info->QualifyingSeasonID == -1);
-    }
 
     public function FindItemAmount(int $userID, int $itemID): int
     {
@@ -160,18 +163,18 @@ class QualifyingHandler
         return (int)$remainTime;
     }
 
-    public function GetTokenInfo(int $userID, int $lobby): TicketinfoHolder
+    public function GetTicketInfo(int $userID, int $lobby): TicketInfoHolder
     {
         $this->CheckLobbyID($lobby);
-        $ticketInfo = new TicketinfoHolder();
-        $ticketInfo->ticketID = $this->GetTokenID($lobby);
+        $ticketInfo = new TicketInfoHolder();
+        $ticketInfo->ticketID = $this->GetTicketID($lobby);
         $ticketInfo->amount = $this->FindItemAmount($userID, $ticketInfo->ticketID);
-        $ticketInfo->maxReceive = $this->GetMaxTokens($lobby);
-        $ticketInfo->receiveRemainTime = $this->GetRemainTokenTime($lobby);
+        $ticketInfo->maxReceive = $this->GetMaxTickets($lobby);
+        $ticketInfo->receiveRemainTime = $this->GetRemainTicketTime($userID, $lobby);
         return $ticketInfo;
     }
 
-    public function GetTokenID(int $lobby): int
+    public function GetTicketID(int $lobby): int
     {
         switch ($lobby) {
             case 1:
@@ -179,10 +182,10 @@ class QualifyingHandler
             case 2:
                 return ConfigGenerator::Instance()->PvP_B_TicketId_2;
         }
-        return -1;
+        return 0;
     }
 
-    public function GetMaxTokens(int $lobby): int
+    public function GetMaxTickets(int $lobby): int
     {
         switch ($lobby) {
             case 1:
@@ -190,7 +193,7 @@ class QualifyingHandler
             case 2:
                 return ConfigGenerator::Instance()->PvP_B_MaxTickets_2;
         }
-        return -1;
+        return 0;
     }
 
     public function GetSceneID(int $lobby): int
@@ -201,7 +204,7 @@ class QualifyingHandler
             case 2:
                 return $this->info->PTScene;
         }
-        return -1;
+        return 0;
     }
 
     public function GetPetaLimitLevel(int $lobby): int
@@ -209,35 +212,75 @@ class QualifyingHandler
         switch ($lobby) {
             case 1:
                 return ConfigGenerator::Instance()->PvP_B_PetaLvLimit_1;
-            case 2:
-                return 0;
         }
-        return -1;
+        return 0;
     }
 
 
-    public function SetNextTokenTime(int $lobby): bool
+    public function SetNextTokenTime(int $userID, int $lobby): bool
     {
-        //todo
+        $keyValue = "";
+        $updateColumn = "";        
         switch ($lobby) {
             case 1:
-                return false;
+                $keyValue = 'Ticket_Coin';
+                $updateColumn = "CoinTime";        
+                break;
             case 2:
-                return false;
+                $keyValue = 'Ticket_PT';
+                $updateColumn = "PTTime";                        
+                break;
         }
-        return false;
+
+        $range = $this->pdoAccessor->GetRange($keyValue);
+        if ($range != false) {
+
+            $nowday = (new DateTime(date("Y/m/d")))->format('U');
+            $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN]; //utc
+            $diff = $nowtime - $nowday;
+            $setTime = 0;
+            for ($i = 0; $i < count($range); $i++) {
+                if ($range[$i] < $diff) {
+                    continue;
+                }
+
+                $setTime = $nowday + $range[$i];
+                break;
+            }
+
+            if ($setTime == 0) {
+                $setTime = $nowday + 86400 + $range[0];
+            }
+        }
+
+        $this->ticketPool->Delete($userID);
+        return $this->pdoAccessor->UpdateTicketInfo($userID, [$updateColumn => $setTime]);
     }
 
-    public function GetRemainTokenTime(int $lobby): int
+    public function GetRemainTicketTime(int $userID, int $lobby): int
     {
-        //todo        
-        switch ($lobby) {
-            case 1:
-                return 0;
-            case 2:
-                return 0;
+        $userRewardTimes = $this->ticketPool->{ $userID};
+
+        if ($userRewardTimes != false) {
+            $resultTime = 0;
+            $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];
+            switch ($lobby) {
+                case 1:
+                    $resultTime = $userRewardTimes->CoinTime - $nowtime;
+                    break;
+                case 2:
+                    $resultTime = $userRewardTimes->PTTime - $nowtime;
+                    ;
+                    break;
+            }
+            if ($resultTime < 0) {
+                $resultTime = 0;
+            }
+            return $resultTime;
         }
-        return -1;
+        else {
+            return 0;
+        }
     }
 
     public function GetRank(int $lobby): stdclass

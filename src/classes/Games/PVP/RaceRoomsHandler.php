@@ -4,7 +4,6 @@ namespace Games\PVP;
 
 use Generators\ConfigGenerator;
 use Games\Accessors\RaceRoomsAccessor;
-use Games\PVP\Holders\TicketinfoHolder;
 
 class RaceRoomsHandler
 {
@@ -26,7 +25,6 @@ class RaceRoomsHandler
             case 2: //2. UCG晉級賽
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
         }
-
         return 0;
     }
 

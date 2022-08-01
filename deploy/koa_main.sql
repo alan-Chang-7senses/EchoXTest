@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~27 rows (近似值)
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
 	(-37, -37, 'aichar0037', 0),
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
--- 正在傾印表格  koa_main.PlayerLevel 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerLevel 的資料：~73 rows (近似值)
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(-38, 1, 1, 0),
 	(-37, 1, 1, 0),
@@ -271,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
--- 正在傾印表格  koa_main.PlayerNFT 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerNFT 的資料：~42 rows (近似值)
 INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`) VALUES
 	(-38, 3494, 3669, 3086, 3654, 1, '140303701101047031020170', '110211702103017011010370', '140206701102053021030170', '140204701203017011010270', '110109703102017011010370', '170201701101027012030170', '0000000000000000', 00, 00),
 	(-37, 4492, 4308, 4178, 4153, 1, '140105701101037021030170', '170302701203017011010470', '130302703102017012030170', '110208701101027011010470', '110211702103017011010170', '110109701101017011010470', '0000000000000000', 00, 00),
@@ -375,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~522 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~78 rows (近似值)
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 3, 1, 0),
 	(-38, 4, 1, 0),
@@ -1139,6 +1139,20 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
 
 -- 正在傾印表格  koa_main.UserMails 的資料：~0 rows (近似值)
 
+-- 傾印  資料表 koa_main.UserRewardTimes 結構
+CREATE TABLE IF NOT EXISTS `UserRewardTimes` (
+  `UserRewardTimeID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者領獎時間ID',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `CoinTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取金幣賽入場卷時間',
+  `PTTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取PT賽入場卷時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserRewardTimeID`),
+  UNIQUE KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者領獎時間標記';
+
+-- 正在傾印表格  koa_main.UserRewardTimes 的資料：~0 rows (近似值)
+
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
   `UserID` int(10) NOT NULL AUTO_INCREMENT,
@@ -1164,7 +1178,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   KEY `Race` (`Race`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_main.Users 的資料：~48 rows (近似值)
+-- 正在傾印表格  koa_main.Users 的資料：~24 rows (近似值)
 INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`) VALUES
 	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, 0, 0, -38, 1, 1, 0, 0, 0, 0),
 	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, 0, 0, -37, 1, 0, 0, 0, 0, 0),

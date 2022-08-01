@@ -23,31 +23,27 @@ class PVPMatch extends BaseRace
     {
         $lobby = InputHelper::post('lobby');
 
-
-        if (in_array($lobby, QualifyingHandler::Lobbies) == false) {
-            throw new RaceException(RaceException::UserMatchError);
-        }
-
-
         if ($this->userInfo->room != 0) {
             throw new RaceException(RaceException::UserInMatch);
         }
+        
+        $qualifyingHandler = new QualifyingHandler();
+        $qualifyingHandler->CheckLobbyID($lobby);
 
-        $raceroomHandler = new RaceRoomsHandler($lobby);
-
-        $useTokenId = $raceroomHandler->GetTokenID();
-        if ($raceroomHandler->FindItemAmount($this->userInfo->id, $useTokenId) <= 0) {
-            throw new RaceException(RaceException::UserTokenNotEnough);
+        $useTicketId = $qualifyingHandler->GetTicketID($lobby);
+        if ($qualifyingHandler->FindItemAmount($this->userInfo->id, $useTicketId) <= 0) {
+            throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
         $raceRoomID = 0;
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($raceroomHandler, $lobby, &$raceRoomID) {
+        $accessor->Transaction(function () use ($lobby, &$raceRoomID) {
 
             //todo
             $lowbound = 0;
             $upbound = 0;
             //
+            $raceroomHandler = new RaceRoomsHandler($lobby);            
             $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->TakeSeat();

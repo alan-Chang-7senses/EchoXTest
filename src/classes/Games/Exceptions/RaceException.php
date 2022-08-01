@@ -27,6 +27,8 @@ class RaceException extends NormalException{
     const UserInMatch = 4016;
     const UserNotInMatch = 4017;
     const UserMatchError = 4018;    
-    const UserTokenNotEnough = 4019; 
-    const NoSeasonData = 4020;     
+    const UserTicketNotEnough = 4019; 
+    const UserTicketUpperLimit = 4020;
+    const UserTicketNotYet = 4021;
+    const NoSeasonData = 4022;
 }

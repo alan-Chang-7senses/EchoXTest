@@ -18,7 +18,7 @@ class LobbyInfo extends BaseRace
     public function Process(): ResultData
     {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NoSeasonData()) {
+        if ($qualifyingHandler->NowSeasonID == -1) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 
@@ -28,7 +28,7 @@ class LobbyInfo extends BaseRace
             $lobbyinfo->lobby = $lobby;
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
 
-            $ticketInfo = $qualifyingHandler->GetTokenInfo($this->userInfo->id, $lobby);
+            $ticketInfo = $qualifyingHandler->GetTicketInfo($this->userInfo->id, $lobby);
 
             $scendID = $qualifyingHandler->GetSceneID($lobby);
             $sceneHandler = new SceneHandler($scendID);
