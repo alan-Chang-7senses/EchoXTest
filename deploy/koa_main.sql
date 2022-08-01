@@ -266,7 +266,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
   `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
   `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
-  `Source` tinyint(1)  NOT NULL DEFAULT 0 COMMENT '來源標記',
+  `Source` tinyint(1) NOT NULL DEFAULT 0 COMMENT '來源標記',
   `StrengthLevel` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0 COMMENT '數值標記、強度級別',
   `SkeletonType` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '骨架類別',
   PRIMARY KEY (`PlayerID`) USING BTREE
@@ -365,8 +365,6 @@ CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
   `TeamWin` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰優勝次數',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
-
--- 正在傾印表格  koa_main.PlayerrCounts 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.PlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `PlayerSkill` (
@@ -1083,6 +1081,13 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   KEY `SessionExpires` (`SessionExpires`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 傾印  資料表 koa_main.UserFreePeta 結構
+CREATE TABLE IF NOT EXISTS `UserFreePeta` (
+  `UserID` int(10) NOT NULL DEFAULT 0,
+  `FreePetaInfo` text NOT NULL COMMENT '隨機免費Peta暫存',
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='隨機免費Peta暫存';
+
 -- 傾印  資料表 koa_main.UserItems 結構
 CREATE TABLE IF NOT EXISTS `UserItems` (
   `UserItemID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者物品編號',
@@ -1187,12 +1192,6 @@ INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Le
 	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000015, 1, 0, 0, 0, 0, 0),
 	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000017, 1, 0, 0, 0, 0, 0),
 	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000019, 1, 0, 0, 0, 0, 0);
-
-CREATE TABLE IF NOT EXISTS `UserFreePeta` (
-  `UserID` int(10) NOT NULL DEFAULT -1,
-  `FreePetaInfo` varchar(2000) NOT NULL COMMENT '隨機免費Peta暫存',
-   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='隨機免費Peta暫存';	
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
