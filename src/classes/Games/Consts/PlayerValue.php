@@ -33,4 +33,14 @@ class PlayerValue {
     const Priority = 3;
     /** 比賽習慣 蓄力 */
     const Accumulate = 4;
+
+    /** 來源標記 機器人 */
+    const AISource = -1;
+
+    /** 免費Peta的PlayerID的最大值，用來與其他Peta進行區分 */
+    const freePetaMaxPlayerID = 999999999999999;
+
+    /** 免費Peta的PlayerID產生的倍率 */
+    const freePetaPlayerIDMultiplier = 100;
+
 }
