@@ -198,7 +198,7 @@ class RaceHandler {
             SkillValue::MaxConditionNone => true,
             SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
             // SkillValue::MaxConditionTop => $racePlayerInfo->ranking >= $skillInfo->maxConditionValue,
-            // SkillValue::MaxConditionBotton => $racePlayerInfo->ranking >=  $skillInfo->maxConditionValue,
+            // SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
             SkillValue::MaxConditionOffside => $racePlayerInfo->offside >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionHit => $racePlayerInfo->hit >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
