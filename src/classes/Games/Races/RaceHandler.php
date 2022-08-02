@@ -267,10 +267,14 @@ class RaceHandler {
      * 獲得角色排名比例(0~1)的值，並非二位數。
      * @return float
      */
-    public function GetRankingPercentage(int $currentRanking) : float
+    private function IsRankingLead(int $currentRanking) : bool
     {
-        $playerCount = count((array)$this->info->racePlayers);
-        return $currentRanking / $playerCount;
+        return $currentRanking >= $this->GetTotalPlayCount() - $currentRanking;
+    }
+
+    private function GetTotalPlayCount():int
+    {
+        return count((array)$this->info->racePlayers);
     }
 
 }
