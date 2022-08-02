@@ -119,4 +119,6 @@ class RaceValue {
         SkillValue::EffectWindCrosswind => SceneValue::Crosswind,
         SkillValue::EffectWindHeadwind => SceneValue::Headwind,
     ];
+
+    const RankingHalf = 0.5;
 }

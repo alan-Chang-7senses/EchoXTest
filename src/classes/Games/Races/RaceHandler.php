@@ -195,8 +195,8 @@ class RaceHandler {
         return match ($skillInfo->maxCondition){
             SkillValue::MaxConditionNone => true,
             SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
-            SkillValue::MaxConditionTop => $racePlayerInfo->ranking <= $skillInfo->maxConditionValue,
-            SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
+            SkillValue::MaxConditionTop => $this->GetRankingPercentage($racePlayerInfo->ranking) <= RaceValue::RankingHalf,
+            SkillValue::MaxConditionBotton =>$this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankingHalf,
             SkillValue::MaxConditionOffside => $racePlayerInfo->offside >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionHit => $racePlayerInfo->hit >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
@@ -253,4 +253,11 @@ class RaceHandler {
             default => 1,
         };
     }
+
+    public function GetRankingPercentage(int $currentRanking) : float
+    {
+        $playerCount = count((array)$this->info->racePlayers);
+        return $currentRanking / $playerCount;
+    }
+
 }
