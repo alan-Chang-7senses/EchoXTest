@@ -51,8 +51,14 @@ abstract class BasePlayerValues extends BaseRace{
         DataGenerator::ValidProperties($values, $this->validValues);
         
         if(isset($values->ranking)){
-            $offside = $racePlayerInfo->ranking - $values->ranking;
+            $offside = $racePlayerInfo->ranking - $values->ranking;            
             if($offside > 0) $values->offside = $racePlayerInfo->offside + $offside;
+
+            if($offside < 0)
+            {
+                $takenOver = -$offside;
+                $values->takenOver = $racePlayerInfo->takenOver + $takenOver;
+            }
         }
         
         $values->hp = $hp * RaceValue::DivisorHP;

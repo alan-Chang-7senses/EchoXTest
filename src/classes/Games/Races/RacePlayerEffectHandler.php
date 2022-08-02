@@ -82,4 +82,14 @@ class RacePlayerEffectHandler {
         $energy[$type] += $value;
         $racePlayerHandler->SaveData(['energy' => $energy]);
     }
+
+    public function IsPlayerInEffect(int $effectType, $campareFunc) : bool
+    {
+        foreach($this->info->list as $effect)
+        {
+            if($effect->EffectType == $effectType && $campareFunc($effect->EffectValue,0))return true;            
+        }
+        return false;
+    }
+
 }

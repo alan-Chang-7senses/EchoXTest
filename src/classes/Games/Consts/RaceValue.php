@@ -121,4 +121,7 @@ class RaceValue {
     ];
 
     const RankingHalf = 0.5;
+    const RankLast = 1;
+    const HitConditionCount = 1;
+    const TakenOverConditionCount = 1;
 }

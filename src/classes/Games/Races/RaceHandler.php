@@ -191,12 +191,14 @@ class RaceHandler {
         $config = ConfigGenerator::Instance();
         $racePlayerInfo = $this->racePlayerHandler->GetInfo();
         $skillInfo = $skill->GetInfo();
-        
+
+        $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerInfo->id);
+                
         return match ($skillInfo->maxCondition){
             SkillValue::MaxConditionNone => true,
             SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
-            SkillValue::MaxConditionTop => $this->GetRankingPercentage($racePlayerInfo->ranking) <= RaceValue::RankingHalf,
-            SkillValue::MaxConditionBotton =>$this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankingHalf,
+            // SkillValue::MaxConditionTop => $racePlayerInfo->ranking >= $skillInfo->maxConditionValue,
+            // SkillValue::MaxConditionBotton => $racePlayerInfo->ranking >=  $skillInfo->maxConditionValue,
             SkillValue::MaxConditionOffside => $racePlayerInfo->offside >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionHit => $racePlayerInfo->hit >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
@@ -213,6 +215,13 @@ class RaceHandler {
             SkillValue::MaxConditionDune => $this->sceneHandler->GetInfo()->env == SceneValue::Dune,
             SkillValue::MaxConditionCraterLake => $this->sceneHandler->GetInfo()->env == SceneValue::CraterLake,
             SkillValue::MaxConditionVolcano => $this->sceneHandler->GetInfo()->env == SceneValue::Volcano,
+
+            SkillValue::MaxConditionLead => $this->GetRankingPercentage($racePlayerInfo->ranking) <= RaceValue::RankingHalf,
+            SkillValue::MaxConditionBehind =>$this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankingHalf,
+            SkillValue::MaxConditionLastRank => $this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankLast,
+            SkillValue::MaxConditionTakenOver =>$racePlayerInfo->takenOver >= RaceValue::TakenOverConditionCount,
+            SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectS,function($value,$zero){return $value > $zero;}),
+            SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectH,function($value,$zero){return $value < $zero;}),
             default => false
         };
     }
