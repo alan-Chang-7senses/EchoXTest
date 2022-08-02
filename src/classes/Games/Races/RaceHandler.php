@@ -216,9 +216,9 @@ class RaceHandler {
             SkillValue::MaxConditionCraterLake => $this->sceneHandler->GetInfo()->env == SceneValue::CraterLake,
             SkillValue::MaxConditionVolcano => $this->sceneHandler->GetInfo()->env == SceneValue::Volcano,
 
-            SkillValue::MaxConditionLead => $this->GetRankingPercentage($racePlayerInfo->ranking) <= RaceValue::RankingHalf,
-            SkillValue::MaxConditionBehind =>$this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankingHalf,
-            SkillValue::MaxConditionLastRank => $this->GetRankingPercentage($racePlayerInfo->ranking) >= RaceValue::RankLast,
+            SkillValue::MaxConditionLead => $this->IsRankingLead($racePlayerInfo->ranking),
+            SkillValue::MaxConditionBehind => $this->IsRankingLead($racePlayerInfo->ranking) == false,
+            SkillValue::MaxConditionLastRank => $this->GetTotalPlayCount() == $racePlayerInfo->ranking,
             SkillValue::MaxConditionTakenOver =>$racePlayerInfo->takenOver >= RaceValue::TakenOverConditionCount,
             SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectS,function($value,$zero){return $value > $zero;}),
             SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectH,function($value,$zero){return $value < $zero;}),
