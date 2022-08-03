@@ -75,6 +75,26 @@ class RaceValue {
     const NormalSpeed = 2;
     /* 比賽節奏 保留體力 */
     const RetainStrength = 3;
+
+    /**直線x體力充沛 前係數 */
+    const PositiveHPStraightFront = 0.86;
+    /**直線x體力充沛 後係數 */
+    const PositiveHPStraightBack = 0.25;
+    /**直線x體力耗盡 前係數 */
+    const MinusHPStraightFront = 0.3;
+    /**直線x體力耗盡 後係數 */
+    const MinusHPStraightBack = 0.25;
+    /**彎道x體力充沛 前係數 */
+    const PositiveHPCurveFront = 0.86;
+    /**彎道x體力充沛 後係數 */
+    const PositiveHPCurveBack = 0.25;
+    /**彎道x體力耗盡 前係數 */
+    const MinusHPCurveFront = 0.3;
+    /**彎道x體力耗盡 後係數 */
+    const MinusHPCurveBack = 0.25;
+
+
+
     
     const PlayerEffectTypes = [
         SkillValue::EffectH,
