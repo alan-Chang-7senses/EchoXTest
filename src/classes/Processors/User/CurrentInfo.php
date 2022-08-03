@@ -32,6 +32,8 @@ class CurrentInfo extends BaseProcessor{
             'player' => $userInfo->player,
             'scene' => $userInfo->scene,
             'race' => $userInfo->race,
+            'lobby' => $userInfo->lobby,
+            'room' => $userInfo->room,
         ];
         
         return $result;
