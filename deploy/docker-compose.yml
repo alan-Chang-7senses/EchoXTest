@@ -44,6 +44,12 @@ services:
             
             MEMCACHED_HOST: memcached
             MEMCACHED_PORT: 11211
+            
+            SSO_URI: https://passport.gamma.metasens.io/v1
+            SSO_CLIEND_ID: 95e7029a-b391-43d8-a77b-f23992906397
+            SSO_CLIEND_SECRET: msrqEmF7Wk4shu2c5kI7y35UawpOyJz8rEx8uuSc
+            APP_URI: http://localhost:37001
+            
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
 #            XDEBUG_CLIENT_PORT: 9003
     memcached:

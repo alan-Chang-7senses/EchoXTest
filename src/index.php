@@ -73,9 +73,48 @@ try{
     LogHelper::Save($ex);
 }
 
-header('Content-Type: application/json');
 
 if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->processTime = microtime(true) - $t;
+
 $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
 $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
-echo $resultData;
+
+if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
+
+    header('Content-Type: application/json');
+    echo $resultData;
+    
+}else{
+    
+    $script = empty($result->script) ? '' : '';
+    
+    $script = '';
+    
+    if(!empty($result->script)){
+        $script = $result->script;
+    }else if($result->error->code != ErrorCode::Success){
+        $script = 'location.href = "uniwebview://Error?code='.$result->error->code.'&message='. urlencode($result->error->message).'";';
+    }
+    
+    $content = $result->content ?? 'Code: '.$result->error->code.'<br>Message: '.$result->error->message;
+    
+    echo <<<content
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> - {$result->error->message} - </title>
+        <meta charset="UTF-8">
+        <script>
+        window.onload = function(){
+            {$script}
+        }
+        </script>
+    </head>
+    <body>
+        <div>
+        {$content}
+        </div>
+    </body>
+</html>
+content;
+}

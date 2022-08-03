@@ -15,4 +15,5 @@ class Globals {
     const RESULT_PROCESS = 'processResult';
     const RESULT_PROCESS_MESSAGE = 'processResultMessage';
     const RESULT_PROCESS_DATA = 'processResultData';
+    const RESULT_RESPOSE_JSON = 'resposeResultJSON';
 }

@@ -1099,7 +1099,8 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   `SessionData` text DEFAULT NULL,
   `UserID` int(11) NOT NULL,
   PRIMARY KEY (`SessionID`),
-  KEY `SessionExpires` (`SessionExpires`)
+  KEY `SessionExpires` (`SessionExpires`),
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_main.UserFreePeta 結構

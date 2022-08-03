@@ -62,28 +62,32 @@
 	- developement：系統處於開發環境。
 - PROCESS_TIMING：是否回傳處理計時，無此環境變數或變數值不為「字串 true」，代表不回傳。
 - MAINTAIN：是否維護中，無此環境變數或變數值不為「字串 true」，代表非維護中。
-- DB_MAIN_HOST：「主遊戲」資料庫主機位址。
-- DB_MAIN_PORT：「主遊戲」資料庫主機 Port。
-- DB_MAIN_USERNAME：「主遊戲」資料庫使用者名稱。
-- DB_MAIN_PASSWORD：「主遊戲」資料庫使用者密碼。
-- DB_MAIN_NAME：「主遊戲」資料庫名稱。
-- DB_STATIC_HOST：「遊戲設定數據」資料庫主機位址。
-- DB_STATIC_PORT：「遊戲設定數據」資料庫主機 Port。
-- DB_STATIC_USERNAME：「遊戲設定數據」資料庫使用者名稱。
-- DB_STATIC_PASSWORD：「遊戲設定數據」資料庫使用者密碼。
-- DB_STATIC_NAME：「遊戲設定數據」資料庫名稱。
-- DB_LOG_HOST：「遊戲 Log」資料庫主機位址。
-- DB_LOG_PORT：「遊戲 Log」資料庫主機 Port。
-- DB_LOG_USERNAME：「遊戲 Log」資料庫使用者名稱。
-- DB_LOG_PASSWORD：「遊戲 Log」資料庫使用者密碼。
-- DB_LOG_NAME：「遊戲 Log」資料庫名稱。
-- DB_ELITE_HOST：「菁英測試」資料庫主機位址。
-- DB_ELITE_PORT：「菁英測試」資料庫主機 Port。
-- DB_ELITE_USERNAME：「菁英測試」資料庫使用者名稱。
-- DB_ELITE_PASSWORD：「菁英測試」資料庫使用者密碼。
-- DB_ELITE_NAME：「菁英測試」資料庫名稱。
-- MEMCACHED_HOST：Memcache Server 位址。
-- MEMCACHED_PORT：Memcache Server Port。
+- DB\_MAIN\_HOST：「主遊戲」資料庫主機位址。
+- DB\_MAIN\_PORT：「主遊戲」資料庫主機 Port。
+- DB\_MAIN\_USERNAME：「主遊戲」資料庫使用者名稱。
+- DB\_MAIN\_PASSWORD：「主遊戲」資料庫使用者密碼。
+- DB\_MAIN\_NAME：「主遊戲」資料庫名稱。
+- DB\_STATIC\_HOST：「遊戲設定數據」資料庫主機位址。
+- DB\_STATIC\_PORT：「遊戲設定數據」資料庫主機 Port。
+- DB\_STATIC\_USERNAME：「遊戲設定數據」資料庫使用者名稱。
+- DB\_STATIC\_PASSWORD：「遊戲設定數據」資料庫使用者密碼。
+- DB\_STATIC\_NAME：「遊戲設定數據」資料庫名稱。
+- DB\_LOG\_HOST：「遊戲 Log」資料庫主機位址。
+- DB\_LOG\_PORT：「遊戲 Log」資料庫主機 Port。
+- DB\_LOG\_USERNAME：「遊戲 Log」資料庫使用者名稱。
+- DB\_LOG\_PASSWORD：「遊戲 Log」資料庫使用者密碼。
+- DB\_LOG\_NAME：「遊戲 Log」資料庫名稱。
+- DB\_ELITE\_HOST：「菁英測試」資料庫主機位址。
+- DB\_ELITE\_PORT：「菁英測試」資料庫主機 Port。
+- DB\_ELITE\_USERNAME：「菁英測試」資料庫使用者名稱。
+- DB\_ELITE\_PASSWORD：「菁英測試」資料庫使用者密碼。
+- DB\_ELITE\_NAME：「菁英測試」資料庫名稱。
+- MEMCACHED\_HOST：Memcache Server 位址。
+- MEMCACHED\_PORT：Memcache Server Port。
+- SSO\_URI：SSO 登入的環境網址。
+- SSO\_CLIEND\_ID：SSO 登入的環境 Client ID。
+- SSO\_CLIEND\_SECRET：SSO 登入的註冊安全碼。
+- APP\_URI：API 本身的環境網址。
 
 ## XDebug for Visual Studio Code
 
