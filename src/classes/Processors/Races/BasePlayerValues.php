@@ -2,10 +2,13 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Scenes\SceneHandler;
@@ -60,10 +63,21 @@ abstract class BasePlayerValues extends BaseRace{
                 $values->takenOver = $racePlayerInfo->takenOver + $takenOver;
             }
         }
-        
         $values->hp = $hp * RaceValue::DivisorHP;
-        $raceHandler->SaveRacePlayer((array)$values);
-        
+
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+
+        $accessor->Transaction(function() use($accessor,$values,$racePlayerInfo){
+            $accessor->FromTable("RacePlayer")
+                     ->WhereEqual("RacePlayerID",$racePlayerInfo->id)
+                     ->ForUpdate()
+                     ->Modify((array)$values);
+        });
+
+        // $raceHandler->SaveRacePlayer((array)$values);
+        $racePlayerPool = RacePlayerPool::Instance();
+        $racePlayerPool->Delete($racePlayerInfo->id);
+
         $raceHandler->SetSecne(new SceneHandler($this->userInfo->scene));
         
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
