@@ -192,6 +192,47 @@ INSERT INTO `QualifyingArena` (`QualifyingArenaID`, `PTScene`, `CoinScene`) VALU
 	(1, 1, 1),
 	(2, 2, 0);
 
+-- 傾印  資料表 koa_static.RewardContent 結構
+CREATE TABLE IF NOT EXISTS `RewardContent` (
+  `ContentGroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '群組編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵內容',
+  `Amount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵數量',
+  `Proportion` smallint(4) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵權重或機率(千分比)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='獎勵內容';
+
+-- 正在傾印表格  koa_static.RewardContent 的資料：~7 rows (近似值)
+/*!40000 ALTER TABLE `RewardContent` DISABLE KEYS */;
+INSERT INTO `RewardContent` (`ContentGroupID`, `ItemID`, `Amount`, `Proportion`) VALUES
+	(1, 1, 1, 100),
+	(1, 2, 2, 200),
+	(1, 3, 3, 300),
+	(2, 1, 1, 100),
+	(2, 2, 2, 200),
+	(2, 3, 3, 300),
+	(3, -1, 100, 300);
+/*!40000 ALTER TABLE `RewardContent` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.RewardInfo 結構
+CREATE TABLE IF NOT EXISTS `RewardInfo` (
+  `RewardID` int(11) NOT NULL COMMENT '獎勵編號',
+  `Modes` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵模式',
+  `Times` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '發放次數',
+  `ContentGroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵內容群組',
+  PRIMARY KEY (`RewardID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='獎勵資訊';
+
+-- 正在傾印表格  koa_static.RewardInfo 的資料：~7 rows (近似值)
+/*!40000 ALTER TABLE `RewardInfo` DISABLE KEYS */;
+INSERT INTO `RewardInfo` (`RewardID`, `Modes`, `Times`, `ContentGroupID`) VALUES
+	(1, 1, 1, 1),
+	(2, 2, 1, 1),
+	(3, 3, 1, 1),
+	(4, 5, 1, 1),
+	(5, 1, 1, 2),
+	(6, 1, 100, 2),
+	(7, 1, 100, 3);
+/*!40000 ALTER TABLE `RewardInfo` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.SceneClimate 結構
 CREATE TABLE IF NOT EXISTS `SceneClimate` (
   `SceneClimateID` int(10) unsigned NOT NULL AUTO_INCREMENT,
