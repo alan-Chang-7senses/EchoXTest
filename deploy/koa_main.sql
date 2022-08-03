@@ -29,8 +29,15 @@ CREATE TABLE IF NOT EXISTS `Configs` (
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
+	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
+	('PvP_B_SeasonStartTime ', '2022-06-24 00:00:00+8:00', '賽季開始時間'),
+	('PvP_B_TicketId_1', '1', '金幣賽入場券的道具Id'),
+	('PvP_B_TicketId_2', '2', 'PT賽入場券的道具Id'),
+	('PvP_B_WeeksPerSeacon', '2', '每個賽季有幾週'),
 	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
 	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
@@ -903,6 +910,20 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000038, 31, 1, 0);
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.QualifyingSeason 結構
+CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
+  `QualifyingSeasonID` int(11) NOT NULL AUTO_INCREMENT COMMENT '晉級賽賽季編號',
+  `ArenaID` int(11) NOT NULL DEFAULT 0 COMMENT '賽場編號',
+  `PTScene` int(10) DEFAULT 0 COMMENT 'PT場地',
+  `CoinScene` int(10) DEFAULT 0 COMMENT '金幣場地',
+  `StartTime` int(11) NOT NULL DEFAULT 0 COMMENT '起始時間',
+  `EndTime` int(11) NOT NULL DEFAULT 0 COMMENT '結束時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  PRIMARY KEY (`QualifyingSeasonID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
+
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~0 rows (近似值)
+
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
@@ -929,7 +950,7 @@ BEGIN
         UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
         SET step = 1;
 
-        UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+        UPDATE `Users` SET `Race` = 0, `Lobby` = 0, `Room` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
         SET step = 2;
 
         UPDATE `Races` SET `Status` = inStatus, `UpdateTime` = inTime, `FinishTime` = inTime WHERE `RaceID` = inRaceID;
@@ -1002,6 +1023,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
+  `QualifyingSeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽賽季編號',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
@@ -1012,11 +1034,11 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
 -- 傾印  資料表 koa_main.RaceRoomSeat 結構
 CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
   `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
-  `RaceRoomID` int(10) unsigned NOT NULL COMMENT '競賽房間編號',
+  `RaceRoomID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
   `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
-  `UserID` int(10) NOT NULL COMMENT '使用者編號',
-  `CreateTime` int(11) NOT NULL COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`RaceRoomSeatID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
 
@@ -1114,6 +1136,19 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `UserID` (`UserID`) USING BTREE,
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.UserRewardTimes 結構
+CREATE TABLE IF NOT EXISTS `UserRewardTimes` (
+  `UserRewardTimeID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者領獎時間ID',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `CoinTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取金幣賽入場卷時間',
+  `PTTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取PT賽入場卷時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserRewardTimeID`),
+  UNIQUE KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者領獎時間標記';
+-- 正在傾印表格  koa_main.UserRewardTimes 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
