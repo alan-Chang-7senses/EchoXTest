@@ -76,6 +76,11 @@ class RaceValue {
     /* 比賽節奏 保留體力 */
     const RetainStrength = 3;
     
+    const LobbyNone = 0;
+    const LobbyCoin = 1;
+    const LobbyPT = 2;
+    const LobbyStudy = 3;
+    
     const PlayerEffectTypes = [
         SkillValue::EffectH,
         SkillValue::EffectS,

@@ -3,11 +3,12 @@
 namespace Games\Pools;
 
 use Accessors\PoolAccessor;
+use Consts\Globals;
+use Games\Accessors\ItemAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Users\Holders\UserInfoHolder;
 use stdClass;
-use Games\Accessors\ItemAccessor;
 /**
  * Description of UserPool
  *
@@ -63,6 +64,8 @@ class UserPool extends PoolAccessor{
             $bind[ucfirst($key)] = $value;
             $data->$key = $value;
         }
+        
+        if(!isset($bind['updateTime'])) $bind['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
         
         (new UserAccessor())->ModifyUserValuesByID($data->id, $bind);
         
