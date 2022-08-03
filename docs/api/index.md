@@ -24,6 +24,7 @@
 		- [儲存技能](Player/SetSkill.md)。
 		- [設定暱稱](Player/SetNickname.md)。
 	- 競賽：
+		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
 		- [PVP配對](Races/PVPMatch.md)。
