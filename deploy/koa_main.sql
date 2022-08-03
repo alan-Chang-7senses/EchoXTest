@@ -1040,7 +1040,7 @@ CREATE TABLE IF NOT EXISTS `RecoveryData` (
   `RaceID` int(10) unsigned NOT NULL,
   `CountDown` float unsigned NOT NULL,
   `RunTime` float unsigned NOT NULL,
-  `PlayerID` bigint(20) unsigned NOT NULL,
+  `PlayerID` bigint(20) NOT NULL,
   `MoveDistance` float unsigned NOT NULL DEFAULT 0,
   `SkillID1` int(10) unsigned NOT NULL DEFAULT 0,
   `SkillCoolTime1` float unsigned NOT NULL DEFAULT 0,
