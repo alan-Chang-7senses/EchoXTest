@@ -30,6 +30,7 @@
 		- [PVP配對](PVP/PVPMatch.md)。
 		- [PVP配對離開](PVP/PVPMatchQuit.md)。		
 	- 競賽：
+		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
 		- [開局](Races/Ready.md)。

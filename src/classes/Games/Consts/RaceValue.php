@@ -96,6 +96,11 @@ class RaceValue {
 
 
     
+    const LobbyNone = 0;
+    const LobbyCoin = 1;
+    const LobbyPT = 2;
+    const LobbyStudy = 3;
+    
     const PlayerEffectTypes = [
         SkillValue::EffectH,
         SkillValue::EffectS,
