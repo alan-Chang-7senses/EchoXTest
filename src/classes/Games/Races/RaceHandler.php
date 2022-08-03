@@ -220,8 +220,8 @@ class RaceHandler {
             SkillValue::MaxConditionBehind => $this->IsRankingLead($racePlayerInfo->ranking) == false,
             SkillValue::MaxConditionLastRank => $this->GetTotalPlayCount() == $racePlayerInfo->ranking,
             SkillValue::MaxConditionTakenOver =>$racePlayerInfo->takenOver >= RaceValue::TakenOverConditionCount,
-            SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectS,function($value,$zero){return $value > $zero;}),
-            SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::EffectH,function($value,$zero){return $value < $zero;}),
+            SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect([SkillValue::EffectS],function($value,$zero){return $value > $zero;}),
+            SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect([SkillValue::EffectH],function($value,$zero){return $value < $zero;}),
             default => false
         };
     }
@@ -263,10 +263,6 @@ class RaceHandler {
         };
     }
 
-     /**
-     * 獲得角色排名比例(0~1)的值，並非二位數。
-     * @return float
-     */
     private function IsRankingLead(int $currentRanking) : bool
     {
         return $currentRanking >= $this->GetTotalPlayCount() - $currentRanking;

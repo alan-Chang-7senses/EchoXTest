@@ -83,11 +83,16 @@ class RacePlayerEffectHandler {
         $racePlayerHandler->SaveData(['energy' => $energy]);
     }
 
-    public function IsPlayerInEffect(int $effectType, $campareFunc) : bool
+    public function IsPlayerInEffect(array $effectTypes, $campareFunc) : bool
     {
         foreach($this->info->list as $effect)
         {
-            if($effect->EffectType == $effectType && $campareFunc($effect->EffectValue,0))return true;            
+            foreach($effectTypes as $type)
+            {
+                if($effect->EndTime >= microtime(true)
+                   && $effect->EffectType == $type
+                   && $campareFunc($effect->EffectValue,0))return true;            
+            }
         }
         return false;
     }

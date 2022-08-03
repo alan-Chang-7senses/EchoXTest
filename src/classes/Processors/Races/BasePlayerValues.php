@@ -53,28 +53,11 @@ abstract class BasePlayerValues extends BaseRace{
         if($values === null) $values = new stdClass();
         DataGenerator::ValidProperties($values, $this->validValues);
         
-        if(isset($values->ranking)){
-            $offside = $racePlayerInfo->ranking - $values->ranking;            
-            if($offside > 0) $values->offside = $racePlayerInfo->offside + $offside;
-
-            if($offside < 0)
-            {
-                $takenOver = -$offside;
-                $values->takenOver = $racePlayerInfo->takenOver + $takenOver;
-            }
-        }
+        if(isset($values->ranking))unset($values->ranking);            
+        
         $values->hp = $hp * RaceValue::DivisorHP;
 
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-
-        $accessor->Transaction(function() use($accessor,$values,$racePlayerInfo){
-            $accessor->FromTable("RacePlayer")
-                     ->WhereEqual("RacePlayerID",$racePlayerInfo->id)
-                     ->ForUpdate()
-                     ->Modify((array)$values);
-        });
-
-        // $raceHandler->SaveRacePlayer((array)$values);
+        $raceHandler->SaveRacePlayer((array)$values);
         $racePlayerPool = RacePlayerPool::Instance();
         $racePlayerPool->Delete($racePlayerInfo->id);
 
