@@ -8,24 +8,26 @@ use Accessors\PDOAccessor;
 class RaceRoomsAccessor extends BaseAccessor
 {
 
-    private function useTable():PDOAccessor
+    private function useTable(): PDOAccessor
     {
-        return $this->MainAccessor()->FromTable('RaceRooms');        
+        return $this->MainAccessor()->FromTable('RaceRooms');
     }
 
-    public function GetMatchRooms(int $lobby, int $lowBound, int $upBound): array
+    public function GetMatchRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
     {
         return $this->useTable()->WhereEqual('Status', 1)->WhereEqual('Lobby', $lobby)
-            ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->ForUpdate()->FetchAll();
+            ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
+            ->ForUpdate()->FetchAll();
     }
 
-    public function AddNewRoom(int $lobby, int $lowBound, int $upBound): int
+    public function AddNewRoom(int $lobby, int $lowBound, int $upBound,int $qualifyingSeasonID): int
     {
         $this->useTable()->Add([
             'Status' => 1,
             'Lobby' => $lobby,
             'LowBound' => $lowBound,
             'UpBound' => $upBound,
+            'QualifyingSeasonID' => $qualifyingSeasonID,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'RaceID' => 0,
@@ -41,6 +43,8 @@ class RaceRoomsAccessor extends BaseAccessor
     {
         $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
 
-        return  $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Modify($bind);      
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Modify($bind);
     }
+
+
 }

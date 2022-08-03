@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\Races;
+namespace Processors\PVP;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
@@ -9,10 +9,11 @@ use Helpers\InputHelper;
 use Accessors\PDOAccessor;
 use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
+use Games\PVP\RaceRoomsHandler;
 use Generators\ConfigGenerator;
-use Games\Races\RaceRoomsHandler;
+use Games\PVP\QualifyingHandler;
+use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
-use Games\Races\RaceRoomSeatHandler;
 
 class PVPMatch extends BaseRace
 {
@@ -20,35 +21,41 @@ class PVPMatch extends BaseRace
     protected bool|null $mustInRace = false;
     public function Process(): ResultData
     {
-        $lobby = InputHelper::post('lobby');
-
-        if (($lobby == 0) || ($lobby > 2)) {
-            throw new RaceException(RaceException::UserMatchError);
-        }
+        $lobby = InputHelper::post('lobby');       
 
         if ($this->userInfo->room != 0) {
             throw new RaceException(RaceException::UserInMatch);
+        }       
+        
+        $qualifyingHandler = new QualifyingHandler();
+        $qualifyingHandler->CheckLobbyID($lobby);
+        if ($qualifyingHandler->NowSeasonID == -1) {
+            throw new RaceException(RaceException::NoSeasonData);
+        }
+
+        $useTicketId = $qualifyingHandler->GetTicketID($lobby);
+        if ($qualifyingHandler->FindItemAmount($this->userInfo->id, $useTicketId) <= 0) {
+            throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
         $raceRoomID = 0;
-
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($lobby, &$raceRoomID) {
+        $accessor->Transaction(function () use ($lobby, &$raceRoomID, $qualifyingHandler) {
 
-            $raceroomHandler = new RaceRoomsHandler();
             //todo
             $lowbound = 0;
             $upbound = 0;
             //
-            $raceRoomID = $raceroomHandler->GetMatchRoomID($lobby, $lowbound, $upbound);
+            $raceroomHandler = new RaceRoomsHandler($lobby);            
+            $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound, $qualifyingHandler->NowSeasonID);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
             $raceroomSeatHandler->TakeSeat();
-            $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();     
+            $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();
             $raceroomHandler->UpdateUsers($raceRoomID, $seatUserIDs);
         });
 
         $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['room' => $raceRoomID]);
+        $userHandler->SaveData(['lobby' => $lobby, 'room' => $raceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
         $result->raceRoomID = $raceRoomID;

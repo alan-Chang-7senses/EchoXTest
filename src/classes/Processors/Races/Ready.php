@@ -10,7 +10,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\RaceHandler;
-use Games\Races\RaceRoomsHandler;
+use Games\PVP\RaceRoomsHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
@@ -77,8 +77,7 @@ class Ready extends BaseRace{
             'WindDirection' => $climate->windDirection,
         ]);
 
-        $raceRoomsHandler = new RaceRoomsHandler();
-        $raceRoomsHandler->StartRace($userInfo->room, $raceID);
+        RaceRoomsHandler::StartRace($userInfo->room, $raceID);
         
         $racePlayerIDs = [];
         $playerSkills = [];
@@ -172,7 +171,7 @@ class Ready extends BaseRace{
                 'skills' => $playerSkills[$racePlayerInfo->player],
             ];
             
-            $userHandler->SaveData(['race' => $raceID, 'room'=>0]);
+            $userHandler->SaveData(['race' => $raceID]);
 
         }
         

@@ -6,7 +6,7 @@
 
 ## URL
 
-http(s)://`域名`/Races/PVPMatch/
+http(s)://`域名`/PVP/PVPMatch/
 
 ## Method
 
@@ -20,7 +20,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| lobby | int | [大廳](../codes/race.md#trackType) |
+| lobby | int | [大廳](../codes/race.md#lobby) |
 
 ## Response
 

@@ -4,6 +4,7 @@ namespace Processors;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Consts\Predefined;
 use Consts\Sessions;
 use Exception;
@@ -22,8 +23,11 @@ abstract class BaseProcessor {
     
     protected bool $mustSigned = true;
     protected bool $maintainMode = true;
+    protected bool $resposeJson = true;
 
     public function __construct() {
+        
+        $GLOBALS[Globals::RESULT_RESPOSE_JSON] = $this->resposeJson;
         
         if(getenv(EnvVar::Maintain) === Predefined::Maintaining && $this->maintainMode) throw new NormalException (ErrorCode::Maintain);
         

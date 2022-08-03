@@ -6,7 +6,7 @@
 
 ## URL
 
-http(s)://`域名`/Races/PVPMatchQuit/
+http(s)://`域名`/PVP/PVPMatchQuit/
 
 ## Method
 

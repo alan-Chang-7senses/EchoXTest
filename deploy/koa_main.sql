@@ -25,12 +25,19 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~8 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
+	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
+	('PvP_B_SeasonStartTime ', '2022-06-24 00:00:00+8:00', '賽季開始時間'),
+	('PvP_B_TicketId_1', '1', '金幣賽入場券的道具Id'),
+	('PvP_B_TicketId_2', '2', 'PT賽入場券的道具Id'),
+	('PvP_B_WeeksPerSeacon', '2', '每個賽季有幾週'),
 	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
 	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
@@ -903,6 +910,18 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(1010000000000038, 31, 1, 0);
 /*!40000 ALTER TABLE `PlayerSkill` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.QualifyingSeason 結構
+CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
+  `QualifyingSeasonID` int(11) NOT NULL AUTO_INCREMENT COMMENT '晉級賽賽季編號',
+  `ArenaID` int(11) NOT NULL DEFAULT 0 COMMENT '賽場編號',
+  `PTScene` int(10) DEFAULT 0 COMMENT 'PT場地',
+  `CoinScene` int(10) DEFAULT 0 COMMENT '金幣場地',
+  `StartTime` int(11) NOT NULL DEFAULT 0 COMMENT '起始時間',
+  `EndTime` int(11) NOT NULL DEFAULT 0 COMMENT '結束時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  PRIMARY KEY (`QualifyingSeasonID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
+
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
@@ -929,7 +948,7 @@ BEGIN
         UPDATE `RacePlayer` SET `Status`= inStatus, `UpdateTime` = inTime WHERE `RaceID` = inRaceID;
         SET step = 1;
 
-        UPDATE `Users` SET `Race` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
+        UPDATE `Users` SET `Race` = 0, `Lobby` = 0, `Room` = 0, `UpdateTime` = inTime WHERE `UserID` IN (SELECT `UserID` FROM `RacePlayer` WHERE `RaceID` = inRaceID);
         SET step = 2;
 
         UPDATE `Races` SET `Status` = inStatus, `UpdateTime` = inTime, `FinishTime` = inTime WHERE `RaceID` = inRaceID;
@@ -1002,6 +1021,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
+  `QualifyingSeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽賽季編號',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
@@ -1012,11 +1032,11 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
 -- 傾印  資料表 koa_main.RaceRoomSeat 結構
 CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
   `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
-  `RaceRoomID` int(10) unsigned NOT NULL COMMENT '競賽房間編號',
+  `RaceRoomID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
   `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
-  `UserID` int(10) NOT NULL COMMENT '使用者編號',
-  `CreateTime` int(11) NOT NULL COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`RaceRoomSeatID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
 
@@ -1040,7 +1060,7 @@ CREATE TABLE IF NOT EXISTS `RecoveryData` (
   `RaceID` int(10) unsigned NOT NULL,
   `CountDown` float unsigned NOT NULL,
   `RunTime` float unsigned NOT NULL,
-  `PlayerID` bigint(20) unsigned NOT NULL,
+  `PlayerID` bigint(20) NOT NULL,
   `MoveDistance` float unsigned NOT NULL DEFAULT 0,
   `SkillID1` int(10) unsigned NOT NULL DEFAULT 0,
   `SkillCoolTime1` float unsigned NOT NULL DEFAULT 0,
@@ -1077,7 +1097,8 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   `SessionData` text DEFAULT NULL,
   `UserID` int(11) NOT NULL,
   PRIMARY KEY (`SessionID`),
-  KEY `SessionExpires` (`SessionExpires`)
+  KEY `SessionExpires` (`SessionExpires`),
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_main.UserFreePeta 結構
@@ -1115,13 +1136,26 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 傾印  資料表 koa_main.UserRewardTimes 結構
+CREATE TABLE IF NOT EXISTS `UserRewardTimes` (
+  `UserRewardTimeID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者領獎時間ID',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `CoinTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取金幣賽入場卷時間',
+  `PTTime` int(11) NOT NULL DEFAULT 0 COMMENT '領取PT賽入場卷時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserRewardTimeID`),
+  UNIQUE KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者領獎時間標記';
+
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
   `UserID` int(10) NOT NULL AUTO_INCREMENT,
   `Status` tinyint(4) DEFAULT 1 COMMENT '狀態(1=啟用)',
   `Username` varchar(255) NOT NULL COMMENT '帳號',
-  `Nickname` varchar(255) NOT NULL COMMENT '暱稱',
-  `Password` varchar(255) NOT NULL COMMENT '密碼',
+  `Nickname` varchar(255) DEFAULT NULL COMMENT '暱稱',
+  `Password` varchar(255) DEFAULT NULL COMMENT '密碼',
+  `Email` varchar(255) DEFAULT NULL COMMENT '電子信箱',
   `Level` smallint(5) unsigned NOT NULL DEFAULT 1 COMMENT '等級',
   `Exp` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '經驗值',
   `PetaToken` int(11) NOT NULL DEFAULT 0 COMMENT 'Peta虛擬幣',
@@ -1142,55 +1176,55 @@ CREATE TABLE IF NOT EXISTS `Users` (
 
 -- 正在傾印表格  koa_main.Users 的資料：~48 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`) VALUES
-	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', 1, 0, 0, 0, 0, 0, -38, 1, 1, 0, 0, 0, 0),
-	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', 1, 0, 0, 0, 0, 0, -37, 1, 0, 0, 0, 0, 0),
-	(-36, 1, 'ai0036', 'aiacc0036', 'pass0036', 1, 0, 0, 0, 0, 0, -36, 1, 0, 0, 0, 0, 0),
-	(-35, 1, 'ai0035', 'aiacc0035', 'pass0035', 1, 0, 0, 0, 0, 0, -35, 1, 0, 0, 0, 0, 0),
-	(-34, 1, 'ai0034', 'aiacc0034', 'pass0034', 1, 0, 0, 0, 0, 0, -34, 1, 0, 0, 0, 0, 0),
-	(-33, 1, 'ai0033', 'aiacc0033', 'pass0033', 1, 0, 0, 0, 0, 0, -33, 1, 0, 0, 0, 0, 0),
-	(-32, 1, 'ai0032', 'aiacc0032', 'pass0032', 1, 0, 0, 0, 0, 0, -32, 1, 0, 0, 0, 0, 0),
-	(-31, 1, 'ai0031', 'aiacc0031', 'pass0031', 1, 0, 0, 0, 0, 0, -31, 1, 0, 0, 0, 0, 0),
-	(-30, 1, 'ai0030', 'aiacc0030', 'pass0030', 1, 0, 0, 0, 0, 0, -30, 1, 0, 0, 0, 0, 0),
-	(-29, 1, 'ai0029', 'aiacc0029', 'pass0029', 1, 0, 0, 0, 0, 0, -29, 1, 0, 0, 0, 0, 0),
-	(-28, 1, 'ai0028', 'aiacc0028', 'pass0028', 1, 0, 0, 0, 0, 0, -28, 1, 0, 0, 0, 0, 0),
-	(-27, 1, 'ai0027', 'aiacc0027', 'pass0027', 1, 0, 0, 0, 0, 0, -27, 1, 0, 0, 0, 0, 0),
-	(-26, 1, 'ai0026', 'aiacc0026', 'pass0026', 1, 0, 0, 0, 0, 0, -26, 1, 0, 0, 0, 0, 0),
-	(-25, 1, 'ai0025', 'aiacc0025', 'pass0025', 1, 0, 0, 0, 0, 0, -25, 1, 0, 0, 0, 0, 0),
-	(-24, 1, 'ai0024', 'aiacc0024', 'pass0024', 1, 0, 0, 0, 0, 0, -24, 1, 0, 0, 0, 0, 0),
-	(-23, 1, 'ai0023', 'aiacc0023', 'pass0023', 1, 0, 0, 0, 0, 0, -23, 1, 0, 0, 0, 0, 0),
-	(-22, 1, 'ai0022', 'aiacc0022', 'pass0022', 1, 0, 0, 0, 0, 0, -22, 1, 0, 0, 0, 0, 0),
-	(-21, 1, 'ai0021', 'aiacc0021', 'pass0021', 1, 0, 0, 0, 0, 0, -21, 1, 0, 0, 0, 0, 0),
-	(-20, 1, 'ai0020', 'aiacc0020', 'pass0020', 1, 0, 0, 0, 0, 0, -20, 1, 0, 0, 0, 0, 0),
-	(-19, 1, 'ai0019', 'aiacc0019', 'pass0019', 1, 0, 0, 0, 0, 0, -19, 1, 0, 0, 0, 0, 0),
-	(-18, 1, 'ai0018', 'aiacc0018', 'pass0018', 1, 0, 0, 0, 0, 0, -18, 1, 0, 0, 0, 0, 0),
-	(-17, 1, 'ai0017', 'aiacc0017', 'pass0017', 1, 0, 0, 0, 0, 0, -17, 1, 0, 0, 0, 0, 0),
-	(-16, 1, 'ai0016', 'aiacc0016', 'pass0016', 1, 0, 0, 0, 0, 0, -16, 1, 0, 0, 0, 0, 0),
-	(-15, 1, 'ai0015', 'aiacc0015', 'pass0015', 1, 0, 0, 0, 0, 0, -15, 1, 0, 0, 0, 0, 0),
-	(-14, 1, 'ai0014', 'aiacc0014', 'pass0014', 1, 0, 0, 0, 0, 0, -14, 1, 0, 0, 0, 0, 0),
-	(-13, 1, 'ai0013', 'aiacc0013', 'pass0013', 1, 0, 0, 0, 0, 0, -13, 1, 0, 0, 0, 0, 0),
-	(-12, 1, 'ai0012', 'aiacc0012', 'pass0012', 1, 0, 0, 0, 0, 0, -12, 1, 0, 0, 0, 0, 0),
-	(-11, 1, 'ai0011', 'aiacc0011', 'pass0011', 1, 0, 0, 0, 0, 0, -11, 1, 0, 0, 0, 0, 0),
-	(-10, 1, 'ai0010', 'aiacc0010', 'pass0010', 1, 0, 0, 0, 0, 0, -10, 1, 0, 0, 0, 0, 0),
-	(-9, 1, 'ai0009', 'aiacc0009', 'pass0009', 1, 0, 0, 0, 0, 0, -9, 1, 0, 0, 0, 0, 0),
-	(-8, 1, 'ai0008', 'aiacc0008', 'pass0008', 1, 0, 0, 0, 0, 0, -8, 1, 0, 0, 0, 0, 0),
-	(-7, 1, 'ai0007', 'aiacc0007', 'pass0007', 1, 0, 0, 0, 0, 0, -7, 1, 0, 0, 0, 0, 0),
-	(-6, 1, 'ai0006', 'aiacc0006', 'pass0006', 1, 0, 0, 0, 0, 0, -6, 1, 0, 0, 0, 0, 0),
-	(-5, 1, 'ai0005', 'aiacc0005', 'pass0005', 1, 0, 0, 0, 0, 0, -5, 1, 0, 0, 0, 0, 0),
-	(-4, 1, 'ai0004', 'aiacc0004', 'pass0004', 1, 0, 0, 0, 0, 0, -4, 1, 0, 0, 0, 0, 0),
-	(-3, 1, 'ai0003', 'aiacc0003', 'pass0003', 1, 0, 0, 0, 0, 0, -3, 1, 0, 0, 0, 0, 0),
-	(-2, 1, 'ai0002', 'aiacc0002', 'pass0002', 1, 0, 0, 0, 0, 0, -2, 1, 0, 0, 0, 0, 0),
-	(-1, 1, 'ai0001', 'aiacc0001', 'pass0001', 1, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0),
-	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000001, 1, 0, 0, 0, 0, 0),
-	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000003, 1, 0, 0, 0, 0, 0),
-	(3, 1, 'test003', 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000005, 1, 0, 0, 0, 0, 0),
-	(4, 1, 'test004', 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000007, 1, 0, 0, 0, 0, 0),
-	(5, 1, 'test005', 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000009, 1, 0, 0, 0, 0, 0),
-	(6, 1, 'test006', 'test006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000011, 1, 0, 0, 0, 0, 0),
-	(7, 1, 'test007', 'test007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000013, 1, 0, 0, 0, 0, 0),
-	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000015, 1, 0, 0, 0, 0, 0),
-	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000017, 1, 0, 0, 0, 0, 0),
-	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', 1, 0, 0, 0, 0, 0, 1010000000000019, 1, 0, 0, 0, 0, 0);
+INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Email`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`) VALUES
+	(-38, 1, 'ai0038', 'aiacc0038', 'pass0038', '', 1, 0, 0, 0, 0, 0, -38, 1, 0, 0, 0, 0, 0),
+	(-37, 1, 'ai0037', 'aiacc0037', 'pass0037', '', 1, 0, 0, 0, 0, 0, -37, 1, 0, 0, 0, 0, 0),
+	(-36, 1, 'ai0036', 'aiacc0036', 'pass0036', '', 1, 0, 0, 0, 0, 0, -36, 1, 0, 0, 0, 0, 0),
+	(-35, 1, 'ai0035', 'aiacc0035', 'pass0035', '', 1, 0, 0, 0, 0, 0, -35, 1, 0, 0, 0, 0, 0),
+	(-34, 1, 'ai0034', 'aiacc0034', 'pass0034', '', 1, 0, 0, 0, 0, 0, -34, 1, 0, 0, 0, 0, 0),
+	(-33, 1, 'ai0033', 'aiacc0033', 'pass0033', '', 1, 0, 0, 0, 0, 0, -33, 1, 0, 0, 0, 0, 0),
+	(-32, 1, 'ai0032', 'aiacc0032', 'pass0032', '', 1, 0, 0, 0, 0, 0, -32, 1, 0, 0, 0, 0, 0),
+	(-31, 1, 'ai0031', 'aiacc0031', 'pass0031', '', 1, 0, 0, 0, 0, 0, -31, 1, 0, 0, 0, 0, 0),
+	(-30, 1, 'ai0030', 'aiacc0030', 'pass0030', '', 1, 0, 0, 0, 0, 0, -30, 1, 0, 0, 0, 0, 0),
+	(-29, 1, 'ai0029', 'aiacc0029', 'pass0029', '', 1, 0, 0, 0, 0, 0, -29, 1, 0, 0, 0, 0, 0),
+	(-28, 1, 'ai0028', 'aiacc0028', 'pass0028', '', 1, 0, 0, 0, 0, 0, -28, 1, 0, 0, 0, 0, 0),
+	(-27, 1, 'ai0027', 'aiacc0027', 'pass0027', '', 1, 0, 0, 0, 0, 0, -27, 1, 0, 0, 0, 0, 0),
+	(-26, 1, 'ai0026', 'aiacc0026', 'pass0026', '', 1, 0, 0, 0, 0, 0, -26, 1, 0, 0, 0, 0, 0),
+	(-25, 1, 'ai0025', 'aiacc0025', 'pass0025', '', 1, 0, 0, 0, 0, 0, -25, 1, 0, 0, 0, 0, 0),
+	(-24, 1, 'ai0024', 'aiacc0024', 'pass0024', '', 1, 0, 0, 0, 0, 0, -24, 1, 0, 0, 0, 0, 0),
+	(-23, 1, 'ai0023', 'aiacc0023', 'pass0023', '', 1, 0, 0, 0, 0, 0, -23, 1, 0, 0, 0, 0, 0),
+	(-22, 1, 'ai0022', 'aiacc0022', 'pass0022', '', 1, 0, 0, 0, 0, 0, -22, 1, 0, 0, 0, 0, 0),
+	(-21, 1, 'ai0021', 'aiacc0021', 'pass0021', '', 1, 0, 0, 0, 0, 0, -21, 1, 0, 0, 0, 0, 0),
+	(-20, 1, 'ai0020', 'aiacc0020', 'pass0020', '', 1, 0, 0, 0, 0, 0, -20, 1, 0, 0, 0, 0, 0),
+	(-19, 1, 'ai0019', 'aiacc0019', 'pass0019', '', 1, 0, 0, 0, 0, 0, -19, 1, 0, 0, 0, 0, 0),
+	(-18, 1, 'ai0018', 'aiacc0018', 'pass0018', '', 1, 0, 0, 0, 0, 0, -18, 1, 0, 0, 0, 0, 0),
+	(-17, 1, 'ai0017', 'aiacc0017', 'pass0017', '', 1, 0, 0, 0, 0, 0, -17, 1, 0, 0, 0, 0, 0),
+	(-16, 1, 'ai0016', 'aiacc0016', 'pass0016', '', 1, 0, 0, 0, 0, 0, -16, 1, 0, 0, 0, 0, 0),
+	(-15, 1, 'ai0015', 'aiacc0015', 'pass0015', '', 1, 0, 0, 0, 0, 0, -15, 1, 0, 0, 0, 0, 0),
+	(-14, 1, 'ai0014', 'aiacc0014', 'pass0014', '', 1, 0, 0, 0, 0, 0, -14, 1, 0, 0, 0, 0, 0),
+	(-13, 1, 'ai0013', 'aiacc0013', 'pass0013', '', 1, 0, 0, 0, 0, 0, -13, 1, 0, 0, 0, 0, 0),
+	(-12, 1, 'ai0012', 'aiacc0012', 'pass0012', '', 1, 0, 0, 0, 0, 0, -12, 1, 0, 0, 0, 0, 0),
+	(-11, 1, 'ai0011', 'aiacc0011', 'pass0011', '', 1, 0, 0, 0, 0, 0, -11, 1, 0, 0, 0, 0, 0),
+	(-10, 1, 'ai0010', 'aiacc0010', 'pass0010', '', 1, 0, 0, 0, 0, 0, -10, 1, 0, 0, 0, 0, 0),
+	(-9, 1, 'ai0009', 'aiacc0009', 'pass0009', '', 1, 0, 0, 0, 0, 0, -9, 1, 0, 0, 0, 0, 0),
+	(-8, 1, 'ai0008', 'aiacc0008', 'pass0008', '', 1, 0, 0, 0, 0, 0, -8, 1, 0, 0, 0, 0, 0),
+	(-7, 1, 'ai0007', 'aiacc0007', 'pass0007', '', 1, 0, 0, 0, 0, 0, -7, 1, 0, 0, 0, 0, 0),
+	(-6, 1, 'ai0006', 'aiacc0006', 'pass0006', '', 1, 0, 0, 0, 0, 0, -6, 1, 0, 0, 0, 0, 0),
+	(-5, 1, 'ai0005', 'aiacc0005', 'pass0005', '', 1, 0, 0, 0, 0, 0, -5, 1, 0, 0, 0, 0, 0),
+	(-4, 1, 'ai0004', 'aiacc0004', 'pass0004', '', 1, 0, 0, 0, 0, 0, -4, 1, 0, 0, 0, 0, 0),
+	(-3, 1, 'ai0003', 'aiacc0003', 'pass0003', '', 1, 0, 0, 0, 0, 0, -3, 1, 0, 0, 0, 0, 0),
+	(-2, 1, 'ai0002', 'aiacc0002', 'pass0002', '', 1, 0, 0, 0, 0, 0, -2, 1, 0, 0, 0, 0, 0),
+	(-1, 1, 'ai0001', 'aiacc0001', 'pass0001', '', 1, 0, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, 0),
+	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000001, 1, 0, 0, 0, 0, 0),
+	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000003, 1, 0, 0, 0, 0, 0),
+	(3, 1, 'test003', 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000005, 1, 0, 0, 0, 0, 0),
+	(4, 1, 'test004', 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000007, 1, 0, 0, 0, 0, 0),
+	(5, 1, 'test005', 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000009, 1, 0, 0, 0, 0, 0),
+	(6, 1, 'test006', 'test006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000022, 1, 0, 0, 0, 0, 0),
+	(7, 1, 'test007', 'test007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000013, 1, 0, 0, 0, 0, 0),
+	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000015, 1, 0, 0, 0, 0, 0),
+	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000017, 1, 0, 0, 0, 0, 0),
+	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1010000000000019, 1, 0, 0, 0, 0, 0);
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

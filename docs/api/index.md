@@ -9,6 +9,7 @@
 - [API 回應規格](response.md)。
 - API 功能：
 	- 使用者（玩家）：
+		- [SSO 授權登入網址](User/SSOAuthURL.md)。
 		- [登入](User/Login.md)。
 		- [登出](User/Logout.md)。
 		- [當前場景](User/CurrentScene.md)。
@@ -23,11 +24,15 @@
 		- [技能](Player/Skills.md)。
 		- [儲存技能](Player/SetSkill.md)。
 		- [設定暱稱](Player/SetNickname.md)。
+	- PVP：
+		- [大廳資訊](PVP/LobbyInfo.md)。
+		- [領取免費招待卷](PVP/ReceiveTicket.md)。
+		- [PVP配對](PVP/PVPMatch.md)。
+		- [PVP配對離開](PVP/PVPMatchQuit.md)。		
 	- 競賽：
+		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
-		- [PVP配對](Races/PVPMatch.md)。
-		- [PVP配對離開](Races/PVPMatchQuit.md)。		
 		- [開局](Races/Ready.md)。
 		- [紀錄位置](Races/RecordPositions.md)。
 		- [斷線恢復](Races/OfflineRecovery.md)。

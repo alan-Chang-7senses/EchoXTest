@@ -58,4 +58,9 @@ class EnvVar {
     
     const MemcahcedHost = 'MEMCACHED_HOST';
     const MemcachedPort = 'MEMCACHED_PORT';
+    
+    const SSOUri = 'SSO_URI';
+    const SSOClientID = 'SSO_CLIEND_ID';
+    const SSOClientSecret = 'SSO_CLIEND_SECRET';
+    const APPUri = 'APP_URI';
 }

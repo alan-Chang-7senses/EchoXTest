@@ -20,5 +20,9 @@ $lang[RaceException::EnergyAgainOver] = 'The player energy reacquired more than.
 $lang[RaceException::UserInMatch] = 'The player is matching.';
 $lang[RaceException::UserNotInMatch] = 'The player is not in match.';
 $lang[RaceException::UserMatchError] = 'Match params have errors.';
+$lang[RaceException::UserTicketNotEnough] = 'User have not enough tickets.';
+$lang[RaceException::UserTicketUpperLimit] = 'User`s tickets exceed the upper limit.';
+$lang[RaceException::UserTicketNotYet] = 'The time for the user to collect the ticket has not arrived yet.';
+$lang[RaceException::NoSeasonData] = 'No season data.';
 
 return $lang;
