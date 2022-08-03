@@ -13,6 +13,8 @@ use Holders\ResultData;
  */
 class StudyRoom extends BaseRace{
     
+    protected bool|null $mustInRace = false;
+    
     public function Process(): ResultData {
         
         $room = InputHelper::post('room');
