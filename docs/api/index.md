@@ -9,6 +9,7 @@
 - [API 回應規格](response.md)。
 - API 功能：
 	- 使用者（玩家）：
+		- [SSO 授權登入網址](User/SSOAuthURL.md)。
 		- [登入](User/Login.md)。
 		- [登出](User/Logout.md)。
 		- [當前場景](User/CurrentScene.md)。
