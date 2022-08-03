@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~8 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
@@ -922,8 +922,6 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~0 rows (近似值)
-
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
 CREATE PROCEDURE `RaceFinish`(
@@ -1149,7 +1147,6 @@ CREATE TABLE IF NOT EXISTS `UserRewardTimes` (
   PRIMARY KEY (`UserRewardTimeID`),
   UNIQUE KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者領獎時間標記';
--- 正在傾印表格  koa_main.UserRewardTimes 的資料：~0 rows (近似值)
 
 -- 傾印  資料表 koa_main.Users 結構
 CREATE TABLE IF NOT EXISTS `Users` (
