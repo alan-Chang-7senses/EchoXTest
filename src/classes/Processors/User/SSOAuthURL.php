@@ -11,7 +11,7 @@ use Processors\BaseProcessor;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class Auth extends BaseProcessor{
+class SSOAuthURL extends BaseProcessor{
     
     protected bool $mustSigned = false;
     
@@ -25,7 +25,7 @@ class Auth extends BaseProcessor{
         $params['state'] = session_id();
 
         $result = new ResultData(ErrorCode::Success);
-        $result->uri = urldecode(getenv(EnvVar::SSOUri).'/oauth/authorize?'.http_build_query($params));
+        $result->url = urldecode(getenv(EnvVar::SSOUri).'/oauth/authorize?'.http_build_query($params));
 
         return $result;
     }
