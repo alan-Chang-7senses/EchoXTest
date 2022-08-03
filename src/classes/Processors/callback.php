@@ -66,7 +66,7 @@ class callback extends BaseProcessor{
         $row = $accessor->FromTable('Users')->WhereEqual('Username', $userProfile->data->id)->Fetch();
         $accessor->ClearCondition();
         
-        $uniwebviewMessage = 'LoginFinsh';
+        $uniwebviewMessage = 'LoginFinish';
         if($row === false){
             
             $accessor->FromTable('Users')->Add([
@@ -88,6 +88,19 @@ class callback extends BaseProcessor{
             'SessionData' => 'Signed|b:1;UserID|i:'.$userID.';',
             'UserID' => $userID
         ]);
+        
+        session_gc();
+        
+        $accessor->ClearCondition();
+        $rows = $accessor->FromTable('Sessions')->WhereEqual('UserID', $userID)->FetchAll();
+        $sessionIDs = [];
+        foreach($rows as $row){
+            if($row->SessionID == $state) continue;
+            $sessionIDs[] = $row->SessionID;
+        }
+        
+        $accessor->ClearCondition();
+        $accessor->FromTable('Sessions')->WhereIn('SessionID', $sessionIDs)->Delete();
         
         $result = new ResultData(ErrorCode::Success);
         $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';
