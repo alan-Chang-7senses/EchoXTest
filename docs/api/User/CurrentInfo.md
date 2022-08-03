@@ -47,6 +47,8 @@ Content Type: `application/json`
 | player | int | 當前角色 ID |
 | scene | int | 當前場景 ID |
 | race | int | 當前競賽 ID，0 = 非競賽中 |
+| lobby | int | [當前競賽所在大廳](../codes/race.md#lobby) |
+| room | int | 當前競賽房號 |
 
 ### Example
 
@@ -68,6 +70,8 @@ Content Type: `application/json`
 	        "diamond": 0,
 	        "player": 1010000000000007,
 	        "scene": 1,
-	        "race": 0
+	        "race": 0,
+	        "lobby": 0,
+	        "room": 0
 	    }
 	}
