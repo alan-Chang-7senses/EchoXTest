@@ -33,25 +33,31 @@ class QualifyingHandler
         $this->pool = QualifyingSeasonPool::Instance();
         $this->ticketPool = TicketInfoPool::Instance();
         $this->pdoAccessor = new QualifyingSeasonAccessor();
-        $this->ResetInfo();
+        $this->SetInfo();
     }
 
-    private function ResetInfo()
+    private function SetInfo()
     {
-        $this->pool->Delete("LastID");
 
         $result = $this->pool->{ "LastID"};
         if ($result != false) {
             $this->info = $result;
+            $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];
+            if (($nowtime > $this->info->StartTime) && ($nowtime < $this->info->EndTime)) {
+                $this->NowSeasonID = $this->info->QualifyingSeasonID;
+            }
+            else {
+                $this->NowSeasonID = -1;
+            }
+
         }
         else {
             $this->info = new stdClass;
             $this->info->QualifyingSeasonID = -1;
+            $this->NowSeasonID = -1;            
         }
-        $this->NowSeasonID = $this->info->QualifyingSeasonID;
     }
     public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = false): int
-
     {
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {
@@ -92,8 +98,9 @@ class QualifyingHandler
             $endTime = $newSeason->EndTime;
         }
 
+        $this->pool->Delete("LastID");        
         $this->pdoAccessor->AddNewSeason($arenaID, $startTime, $endTime);
-        $this->ResetInfo();
+        $this->SetInfo();
         return $lastQualifyingSeasonID;
     }
 
