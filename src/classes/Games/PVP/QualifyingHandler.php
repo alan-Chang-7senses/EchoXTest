@@ -177,6 +177,7 @@ class QualifyingHandler
     {
         $this->CheckLobbyID($lobby);
         $ticketInfo = new TicketInfoHolder();
+        $ticketInfo->lobby = $lobby;
         $ticketInfo->ticketID = $this->GetTicketID($lobby);
         $ticketInfo->amount = $this->FindItemAmount($userID, $ticketInfo->ticketID);
         $ticketInfo->maxReceive = $this->GetMaxTickets($lobby);
