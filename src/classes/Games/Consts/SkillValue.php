@@ -73,7 +73,7 @@ class SkillValue {
     const MaxConditionNone = 0;
     const MaxConditionRank = 1;
     const MaxConditionTop = 2;
-    const MaxConditionBotton = 3;
+    const MaxConditionBotton = 3;    
     const MaxConditionOffside = 4;
     const MaxConditionHit = 5;
     const MaxConditionStraight = 11;
@@ -90,4 +90,52 @@ class SkillValue {
     const MaxConditionDune = 51;
     const MaxConditionCraterLake = 52;
     const MaxConditionVolcano = 53;
+
+    const MaxConditionLead = 61;
+    const MaxConditionBehind = 62;
+    const MaxConditionLastRank = 63;
+    const MaxConditionTakenOver = 64;
+    const MaxConditionSpeedUp = 65;
+    const MaxConditionMinusH = 66;
+
+
+    const SpeedUpEffects = [
+        self::EffectS,
+        self::EffectSPD,
+        self::EffectPOW,
+        self::EffectAdaptDune,
+        self::EffectAdaptCraterLake,
+        self::EffectAdaptVolcano,
+        self::EffectAdaptTailwind,
+        self:: EffectAdaptHeadwind,
+        self::EffectAdaptCrosswind,
+        self::EffectAdaptSunny,
+        self::EffectAdaptAurora,
+        self::EffectAdaptSandDust,
+        self::EffectAdaptFlat,
+        self::EffectAdaptUpslope,
+        self::EffectAdaptDownslope,
+        self::EffectAdaptSun,
+    ];
+
+    const ReduceCostHEffects = [
+        self::EffectH,
+        self::EffectFIG,
+        self::EffectINT,
+        self::EffectAdaptDune,
+        self::EffectAdaptCraterLake,
+        self::EffectAdaptVolcano,
+        self::EffectAdaptTailwind,
+        self:: EffectAdaptHeadwind,
+        self::EffectAdaptCrosswind,
+        self::EffectAdaptSunny,
+        self::EffectAdaptAurora,
+        self::EffectAdaptSandDust,
+        self::EffectAdaptFlat,
+        self::EffectAdaptUpslope,
+        self::EffectAdaptDownslope,
+        self::EffectAdaptSun,
+    ];
+
+
 }

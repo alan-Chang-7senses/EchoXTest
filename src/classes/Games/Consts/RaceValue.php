@@ -144,4 +144,8 @@ class RaceValue {
         SkillValue::EffectWindCrosswind => SceneValue::Crosswind,
         SkillValue::EffectWindHeadwind => SceneValue::Headwind,
     ];
+
+
+    const HitConditionCount = 1;
+    const TakenOverConditionCount = 1;
 }
