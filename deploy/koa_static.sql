@@ -83,21 +83,50 @@ INSERT INTO `FreePetaInfo` (`ID`, `Type`, `Constitution`, `Strength`, `Dexterity
 
 -- 傾印  資料表 koa_static.ItemDrop 結構
 CREATE TABLE IF NOT EXISTS `ItemDrop` (
+  `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ItemDropID` int(11) NOT NULL DEFAULT 0 COMMENT '掉落物編號',
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
   `Proportion` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '比例權重',
-  PRIMARY KEY (`ItemDropID`)
+  PRIMARY KEY (`Serial`),
+  KEY `ItemDropID` (`ItemDropID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
 
--- 正在傾印表格  koa_static.ItemDrop 的資料：~5 rows (近似值)
+-- 正在傾印表格  koa_static.ItemDrop 的資料：~32 rows (近似值)
 /*!40000 ALTER TABLE `ItemDrop` DISABLE KEYS */;
-INSERT INTO `ItemDrop` (`ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
-	(1, 1, 2, 100),
-	(2, 2, 5, 50),
-	(3, 1, 4, 75),
-	(4, 2, 10, 200),
-	(5, 3, 1, 10);
+INSERT INTO `ItemDrop` (`Serial`, `ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
+	(1, 1, 1111, 1, 100),
+	(2, 1, 1121, 1, 100),
+	(3, 1, 1131, 1, 100),
+	(4, 2, 1112, 1, 100),
+	(5, 2, 1122, 1, 100),
+	(6, 2, 1132, 1, 100),
+	(7, 3, 2011, 1, 100),
+	(8, 3, 2013, 1, 100),
+	(9, 3, 2014, 1, 100),
+	(10, 3, 2015, 1, 100),
+	(11, 3, 2016, 1, 100),
+	(12, 3, 2017, 1, 100),
+	(13, 4, 2000, 1, 30),
+	(14, 4, 2011, 1, 10),
+	(15, 4, 2013, 1, 10),
+	(16, 4, 2014, 1, 10),
+	(17, 4, 2015, 1, 10),
+	(18, 4, 2016, 1, 10),
+	(19, 4, 2017, 1, 10),
+	(20, 4, 2000, 2, 20),
+	(21, 4, 2000, 3, 10),
+	(22, 5, 1001, 10, 100),
+	(23, 5, 1002, 5, 100),
+	(24, 6, 1002, 10, 100),
+	(25, 6, 1003, 5, 100),
+	(26, 6, 1111, 1, 100),
+	(27, 6, 1121, 1, 100),
+	(28, 6, 1131, 1, 100),
+	(29, 7, 1003, 10, 100),
+	(30, 7, 1112, 1, 100),
+	(31, 7, 1122, 1, 100),
+	(32, 7, 1132, 1, 100);
 /*!40000 ALTER TABLE `ItemDrop` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ItemInfo 結構
@@ -118,14 +147,40 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
   PRIMARY KEY (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
 
--- 正在傾印表格  koa_static.ItemInfo 的資料：~5 rows (近似值)
+-- 正在傾印表格  koa_static.ItemInfo 的資料：~31 rows (近似值)
 /*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
 INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `ItemDropIDs`, `DropType`, `DropCount`, `Source`) VALUES
-	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, NULL, 0, 0, 's001,s002,s003'),
-	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, NULL, 0, 0, 's002'),
-	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, '1,2', 1, 1, 's003'),
-	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, '1,2', 2, 1, 's004'),
-	(5, 'n0005', 'd0005', 3, '5', 555, 1, 0, 0, '1,2,3,4,5', 3, 2, 's003,s005');
+	(1001, '8101', '8601', 1, 'ItemIcon_1001', 99999, 0, 101, 150, NULL, 0, 1, 'pve,store,s101'),
+	(1002, '8102', '8602', 1, 'ItemIcon_1002', 99999, 0, 101, 750, NULL, 0, 1, 'pvp1,store,s102'),
+	(1003, '8103', '8603', 1, 'ItemIcon_1003', 99999, 0, 101, 2100, NULL, 0, 1, 'pvp2,store,s103'),
+	(1111, '8104', '8604', 1, 'ItemIcon_0004', 99999, 0, 201, 0, NULL, 0, 1, 'pvp3'),
+	(1112, '8105', '8605', 1, 'ItemIcon_0005', 99999, 0, 202, 0, NULL, 0, 1, 's008'),
+	(1121, '8106', '8606', 1, 'ItemIcon_0006', 99999, 0, 203, 0, NULL, 0, 1, 's012'),
+	(1122, '8107', '8607', 1, 'ItemIcon_0007', 99999, 0, 204, 0, NULL, 0, 1, 's009'),
+	(1131, '8108', '8608', 1, 'ItemIcon_0008', 99999, 0, 205, 0, NULL, 0, 1, 's010'),
+	(1132, '8109', '8609', 1, 'ItemIcon_0009', 99999, 0, 206, 0, NULL, 0, 1, 's011'),
+	(2000, '8110', '8610', 2, 'ItemIcon_0010', 99999, 0, 0, 0, NULL, 0, 1, 's001'),
+	(2001, '8118', '8618', 2, 'ItemIcon_0039_2', 99999, 0, 0, 0, NULL, 0, 1, ''),
+	(2002, '8117', '8617', 2, 'ItemIcon_0039_1', 99999, 0, 0, 0, NULL, 0, 1, ''),
+	(2011, '8111', '8611', 2, 'ItemIcon_0011', 99999, 0, 0, 0, NULL, 0, 1, 's002'),
+	(2013, '8113', '8613', 2, 'ItemIcon_0012', 99999, 0, 0, 0, NULL, 0, 1, 's004'),
+	(2014, '8112', '8612', 2, 'ItemIcon_0013', 99999, 0, 0, 0, NULL, 0, 1, 's003'),
+	(2015, '8116', '8616', 2, 'ItemIcon_0014', 99999, 0, 0, 0, NULL, 0, 1, 's007'),
+	(2016, '8115', '8615', 2, 'ItemIcon_0015', 99999, 0, 0, 0, NULL, 0, 1, 's006'),
+	(2017, '8114', '8614', 2, 'ItemIcon_0016', 99999, 0, 0, 0, NULL, 0, 1, 's005'),
+	(3001, '8119', '8619', 3, 'ItemIcon_0017_2', 999, 1, 0, 0, '1', 3, 1, '0'),
+	(3002, '8120', '8620', 3, 'ItemIcon_0018_2', 999, 1, 0, 0, '2', 3, 1, '0'),
+	(3003, '8124', '8624', 3, 'ItemIcon_0019_2', 999, 1, 0, 0, '3', 1, 1, '0'),
+	(4001, '8121', '8621', 4, 'ItemIcon_0020_1', 999, 1, 0, 0, '1', 4, 1, '0'),
+	(4002, '8122', '8622', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, '2', 4, 1, '0'),
+	(4003, '8123', '8623', 4, 'ItemIcon_0020_3', 999, 1, 0, 0, '4', 3, 1, '0'),
+	(4004, '8125', '8625', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, '3', 4, 1, '0'),
+	(4005, '8126', '8626', 4, 'ItemIcon_0025_1', 999, 1, 0, 0, '5', 4, 1, '0'),
+	(4006, '8127', '8627', 4, 'ItemIcon_0025_2', 999, 1, 0, 0, '6', 4, 1, '0'),
+	(4007, '8128', '8628', 4, 'ItemIcon_0025_3', 999, 1, 0, 0, '7', 4, 1, '0'),
+	(5100, '8129', '8629', 5, 'ItemIcon_0032', 999, 0, 0, 0, NULL, 0, 0, '0'),
+	(5201, '8130', '8630', 5, 'ItemIcon_0031', 999, 0, 0, 0, NULL, 0, 0, '0'),
+	(5202, '8131', '8631', 5, 'ItemIcon_0030', 999, 0, 0, 0, NULL, 0, 0, '0');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構
@@ -150,19 +205,19 @@ CREATE TABLE IF NOT EXISTS `MailsInfo` (
 -- 正在傾印表格  koa_static.MailsInfo 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `MailsInfo` DISABLE KEYS */;
 INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`, `RewardID`, `CreateTime`, `UpdateTime`, `FinishTime`) VALUES
-	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', '', 0, 1655797800, 1655797800, 1659110400),
-	(2, 2, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', '', 0, 1655797800, 1655797800, 1659110400),
-	(3, 3, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', '', 0, 1655797800, 1655797800, 1659110400),
-	(4, 4, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', '', 0, 1655797800, 1655797800, 1659110400),
-	(5, 5, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', '', 0, 1655797800, 1655797800, 1659110400),
-	(6, 6, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', '', 0, 1655797800, 1655797800, 1659110400),
-	(7, 7, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', '', 0, 1655797800, 1655797800, 1659110400),
-	(8, 8, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', '', 0, 1655797800, 1655797800, 1659110400),
-	(9, 9, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', '', 0, 1655797800, 1655797800, 1659110400),
-	(10, 10, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', '', 0, 1655797800, 1655797800, 1659110400),
-	(11, 11, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', '', 0, 1655797800, 1655797800, 1659110400),
-	(12, 12, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
-	(13, 13, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
+	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
+	(2, 1, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
+	(3, 1, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', '', 0, 1655797800, 1655797800, 1659110400),
+	(4, 1, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', '', 0, 1655797800, 1655797800, 1659110400),
+	(5, 1, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', '', 0, 1655797800, 1655797800, 1659110400),
+	(6, 1, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', '', 0, 1655797800, 1655797800, 1659110400),
+	(7, 1, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', '', 0, 1655797800, 1655797800, 1659110400),
+	(8, 1, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', '', 0, 1655797800, 1655797800, 1659110400),
+	(9, 1, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', '', 0, 1655797800, 1655797800, 1659110400),
+	(10, 1, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', '', 0, 1655797800, 1655797800, 1659110400),
+	(11, 1, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', '', 0, 1655797800, 1655797800, 1659110400),
+	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
+	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsRewards 結構
