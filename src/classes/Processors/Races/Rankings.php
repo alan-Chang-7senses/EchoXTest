@@ -10,6 +10,7 @@ use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
+use Games\Races\RacePlayerHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -33,24 +34,39 @@ class Rankings extends BaseRace{
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
         $rankings = [];
+        $offsides = [];
+        $takenOvers = [];
         foreach ($players as $player){
             if(!property_exists($raceInfo->racePlayers, $player->id)) throw new RaceException (RaceException::PlayerNotInThisRace);
             $rankings[$raceInfo->racePlayers->{$player->id}] = $player->ranking;
+
+            $racePlayerID = $raceInfo->racePlayers->{$player->id};
+            $rph = new RacePlayerHandler($racePlayerID);
+            $rpInfo = $rph->GetInfo();
+            $offside = $rpInfo->ranking - $player->ranking;                        
+            if($offside > 0) $offsides[$racePlayerID] = $rpInfo->offside + $offside;
+            elseif($offside < 0) $takenOvers[$racePlayerID] = $rpInfo->takenOver + (-$offside);                         
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function() use ($accessor, $rankings){
-            
+        $accessor->Transaction(function() use ($accessor, $rankings, $offsides, $takenOvers){            
+
             $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($rankings))->ForUpdate()->FetchAll();
             foreach($rows as $row){
                 
                 if($row->Status == RaceValue::StatusReach) continue;
-                $accessor->ClearCondition();
-                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify([
-                    'Ranking' => $rankings[$row->RacePlayerID],
+                $binds = 
+                [
+                    'Ranking' =>$rankings[$row->RacePlayerID],
                     'Status' => RaceValue::StatusUpdate,
                     'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
-                ]);
+                ];
+                if(array_key_exists($row->RacePlayerID,$offsides))$binds['Offside'] = $offsides[$row->RacePlayerID];
+                elseif(array_key_exists($row->RacePlayerID,$takenOvers))$binds['TakenOver'] = $takenOvers[$row->RacePlayerID];
+
+                $accessor->ClearCondition();
+                $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify($binds);
+                
             }
         });
         

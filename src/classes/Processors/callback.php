@@ -9,6 +9,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Exception;
+use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -69,14 +70,28 @@ class callback extends BaseProcessor{
         $uniwebviewMessage = 'LoginFinish';
         if($row === false){
             
-            $accessor->FromTable('Users')->Add([
+            $res = $accessor->FromTable('Users')->Add([
                 'Username' => $userProfile->data->id,
                 'Email' => $userProfile->data->email,
                 'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
-        
+            
             $userID = $accessor->LastInsertID();
             $uniwebviewMessage = 'LoginFirst';
+            
+            // CB1.5 專用，創帳號送 1000 金幣賽入場卷。
+            if($res){
+                
+                $config = ConfigGenerator::Instance();
+                
+                $accessor->FromTable('UserItems')->Add([
+                    'UserID' => $userID,
+                    'ItemID' => $config->PvP_B_TicketId_1,
+                    'Amount' => 1000,
+                    'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                ]);
+            }
             
         }else{
             

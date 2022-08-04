@@ -207,12 +207,14 @@ class RaceHandler {
         $config = ConfigGenerator::Instance();
         $racePlayerInfo = $this->racePlayerHandler->GetInfo();
         $skillInfo = $skill->GetInfo();
-        
+
+        $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerInfo->id);
+                
         return match ($skillInfo->maxCondition){
             SkillValue::MaxConditionNone => true,
             SkillValue::MaxConditionRank => $racePlayerInfo->ranking == $skillInfo->maxConditionValue,
-            SkillValue::MaxConditionTop => $racePlayerInfo->ranking <= $skillInfo->maxConditionValue,
-            SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
+            // SkillValue::MaxConditionTop => $racePlayerInfo->ranking >= $skillInfo->maxConditionValue,
+            // SkillValue::MaxConditionBotton => $racePlayerInfo->ranking <= $config->AmountRacePlayerMax -  $skillInfo->maxConditionValue,
             SkillValue::MaxConditionOffside => $racePlayerInfo->offside >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionHit => $racePlayerInfo->hit >= $skillInfo->maxConditionValue,
             SkillValue::MaxConditionStraight => $racePlayerInfo->trackShape == SceneValue::Straight,
@@ -229,6 +231,13 @@ class RaceHandler {
             SkillValue::MaxConditionDune => $this->sceneHandler->GetInfo()->env == SceneValue::Dune,
             SkillValue::MaxConditionCraterLake => $this->sceneHandler->GetInfo()->env == SceneValue::CraterLake,
             SkillValue::MaxConditionVolcano => $this->sceneHandler->GetInfo()->env == SceneValue::Volcano,
+
+            SkillValue::MaxConditionLead => $this->IsRankingLead($racePlayerInfo->ranking),
+            SkillValue::MaxConditionBehind => $this->IsRankingLead($racePlayerInfo->ranking) == false,
+            SkillValue::MaxConditionLastRank => $this->GetTotalPlayCount() == $racePlayerInfo->ranking,
+            SkillValue::MaxConditionTakenOver =>$racePlayerInfo->takenOver >= RaceValue::TakenOverConditionCount,
+            SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::SpeedUpEffects,function($value,$zero){return $value > $zero;}),
+            SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::ReduceCostHEffects,function($value,$zero){return $value > $zero;}),
             default => false
         };
     }
@@ -269,4 +278,15 @@ class RaceHandler {
             default => 1,
         };
     }
+
+    private function IsRankingLead(int $currentRanking) : bool
+    {
+        return $currentRanking >= $this->GetTotalPlayCount() - $currentRanking;
+    }
+
+    private function GetTotalPlayCount():int
+    {
+        return count((array)$this->info->racePlayers);
+    }
+
 }

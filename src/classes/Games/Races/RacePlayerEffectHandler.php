@@ -82,4 +82,24 @@ class RacePlayerEffectHandler {
         $energy[$type] += $value;
         $racePlayerHandler->SaveData(['energy' => $energy]);
     }
+
+    public function IsPlayerInEffect(array $effectTypes, $campareFunc) : bool
+    {
+        foreach($this->info->list as $effect)
+        {
+            foreach($effectTypes as $type)
+            {
+                $now = microtime(true);
+                if($effect->EndTime > $now && $effect->StartTime <= $now && $effect->EffectType == $type)                   
+                {
+                    $val = $effect->EffectValue;
+                    $reverseGroup = [SkillValue::EffectH];
+                    foreach($reverseGroup as $reverseType)if($reverseType === $type)$val = -$val;
+                    if($campareFunc($val,0))return true;
+                }            
+            }
+        }
+        return false;
+    }
+
 }
