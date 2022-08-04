@@ -382,6 +382,7 @@ CREATE TABLE IF NOT EXISTS `SkillInfo` (
   `SkillID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `AliasCode` varchar(50) DEFAULT NULL COMMENT '識別碼(企劃用)',
   `SkillName` varchar(50) DEFAULT NULL COMMENT '技能名稱標籤',
+  `Icon` smallint(6) NOT NULL DEFAULT 0 COMMENT '技能Icon編號',
   `Description` varchar(50) DEFAULT NULL COMMENT '技能描述標籤',
   `Energy` varchar(50) DEFAULT NULL COMMENT '能量條件 紅,黃,藍,綠',
   `Effect` varchar(50) DEFAULT NULL COMMENT '效果',

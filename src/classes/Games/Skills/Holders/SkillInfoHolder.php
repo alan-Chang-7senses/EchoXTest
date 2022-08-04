@@ -9,7 +9,8 @@ use stdClass;
  */
 class SkillInfoHolder extends stdClass{
     public int $id;
-    public string $name;
+    public string $name;    
+    public int $icon;
     public string $description;
     public float $cooldown;
     public array $energy;

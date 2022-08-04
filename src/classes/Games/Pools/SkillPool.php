@@ -32,6 +32,7 @@ class SkillPool extends PoolAccessor{
         $skill = new SkillInfoHolder();
         $skill->id = $skillInfo->SkillID;
         $skill->name = $skillInfo->SkillName;
+        $skill->icon = $skillInfo->Icon;
         $skill->description = $skillInfo->Description;
         $skill->cooldown = $skillInfo->Cooldown / SkillValue::DivisorCooldown;
         
