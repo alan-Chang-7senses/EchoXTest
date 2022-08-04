@@ -49,8 +49,8 @@ class QualifyingHandler
         }
         $this->NowSeasonID = $this->info->QualifyingSeasonID;
     }
+    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = false): int
 
-    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow): int
     {
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {

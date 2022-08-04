@@ -4,9 +4,11 @@ if($argc <= 1) exit('No argv, must use command format: php Games.php commandName
 
 require str_replace('/', DIRECTORY_SEPARATOR, __DIR__. '/../autoload.php');
 
+use Consts\Globals;
+
 $class = 'Games\\CommandWorkers\\'.$argv[1];
 
-
+$GLOBALS[Globals::TIME_BEGIN] = $t;
 try{
     
     $reflectionClass = new ReflectionClass($class);
