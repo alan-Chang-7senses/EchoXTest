@@ -8,6 +8,7 @@ use Exception;
 use Consts\EnvVar;
 use Consts\Globals;
 use Consts\ErrorCode;
+use Games\Consts\RaceValue;
 use Generators\DataGenerator;
 use Games\Pools\TicketInfoPool;
 use Generators\ConfigGenerator;
@@ -18,7 +19,7 @@ use Games\Accessors\QualifyingSeasonAccessor;
 class QualifyingHandler
 {
     //1:金幣賽 2:PT賽
-    public const Lobbies = [1, 2];
+    public const Lobbies = [RaceValue::LobbyCoin, RaceValue::LobbyPT];
 
     public int $NowSeasonID;
     private QualifyingSeasonPool $pool;
@@ -32,25 +33,31 @@ class QualifyingHandler
         $this->pool = QualifyingSeasonPool::Instance();
         $this->ticketPool = TicketInfoPool::Instance();
         $this->pdoAccessor = new QualifyingSeasonAccessor();
-        $this->ResetInfo();
+        $this->SetInfo();
     }
 
-    private function ResetInfo()
+    private function SetInfo()
     {
-        $this->pool->Delete("LastID");
 
         $result = $this->pool->{ "LastID"};
         if ($result != false) {
             $this->info = $result;
+            $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];
+            if (($nowtime > $this->info->StartTime) && ($nowtime < $this->info->EndTime)) {
+                $this->NowSeasonID = $this->info->QualifyingSeasonID;
+            }
+            else {
+                $this->NowSeasonID = -1;
+            }
+
         }
         else {
             $this->info = new stdClass;
             $this->info->QualifyingSeasonID = -1;
+            $this->NowSeasonID = -1;            
         }
-        $this->NowSeasonID = $this->info->QualifyingSeasonID;
     }
-
-    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow): int
+    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = false): int
     {
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {
@@ -91,8 +98,9 @@ class QualifyingHandler
             $endTime = $newSeason->EndTime;
         }
 
+        $this->pool->Delete("LastID");        
         $this->pdoAccessor->AddNewSeason($arenaID, $startTime, $endTime);
-        $this->ResetInfo();
+        $this->SetInfo();
         return $lastQualifyingSeasonID;
     }
 
@@ -169,6 +177,7 @@ class QualifyingHandler
     {
         $this->CheckLobbyID($lobby);
         $ticketInfo = new TicketInfoHolder();
+        $ticketInfo->lobby = $lobby;
         $ticketInfo->ticketID = $this->GetTicketID($lobby);
         $ticketInfo->amount = $this->FindItemAmount($userID, $ticketInfo->ticketID);
         $ticketInfo->maxReceive = $this->GetMaxTickets($lobby);
