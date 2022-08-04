@@ -90,10 +90,13 @@ class RacePlayerEffectHandler {
             foreach($effectTypes as $type)
             {
                 $now = microtime(true);
-                if($effect->EndTime > $now
-                   && $effect->StartTime <= $now
-                   && $effect->EffectType == $type
-                   && $campareFunc($effect->EffectValue,0))return true;            
+                if($effect->EndTime > $now && $effect->StartTime <= $now && $effect->EffectType == $type)                   
+                {
+                    $val = $effect->EffectValue;
+                    $reverseGroup = [SkillValue::EffectH];
+                    foreach($reverseGroup as $reverseType)if($reverseType === $type)$val = -$val;
+                    if($campareFunc($val,0))return true;
+                }            
             }
         }
         return false;

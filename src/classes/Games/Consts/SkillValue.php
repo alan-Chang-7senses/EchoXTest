@@ -97,4 +97,45 @@ class SkillValue {
     const MaxConditionTakenOver = 64;
     const MaxConditionSpeedUp = 65;
     const MaxConditionMinusH = 66;
+
+
+    const SpeedUpEffects = [
+        self::EffectS,
+        self::EffectSPD,
+        self::EffectPOW,
+        self::EffectAdaptDune,
+        self::EffectAdaptCraterLake,
+        self::EffectAdaptVolcano,
+        self::EffectAdaptTailwind,
+        self:: EffectAdaptHeadwind,
+        self::EffectAdaptCrosswind,
+        self::EffectAdaptSunny,
+        self::EffectAdaptAurora,
+        self::EffectAdaptSandDust,
+        self::EffectAdaptFlat,
+        self::EffectAdaptUpslope,
+        self::EffectAdaptDownslope,
+        self::EffectAdaptSun,
+    ];
+
+    const ReduceCostHEffects = [
+        self::EffectH,
+        self::EffectFIG,
+        self::EffectINT,
+        self::EffectAdaptDune,
+        self::EffectAdaptCraterLake,
+        self::EffectAdaptVolcano,
+        self::EffectAdaptTailwind,
+        self:: EffectAdaptHeadwind,
+        self::EffectAdaptCrosswind,
+        self::EffectAdaptSunny,
+        self::EffectAdaptAurora,
+        self::EffectAdaptSandDust,
+        self::EffectAdaptFlat,
+        self::EffectAdaptUpslope,
+        self::EffectAdaptDownslope,
+        self::EffectAdaptSun,
+    ];
+
+
 }

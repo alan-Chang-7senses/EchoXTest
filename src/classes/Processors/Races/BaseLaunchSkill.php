@@ -77,7 +77,7 @@ abstract class BaseLaunchSkill extends BaseRace{
         $otherBinds = [];
         $racePlayerHandlerOthers = [];
         $launchMaxResult = RaceValue::LaunchMaxFail;
-        if($launchMax == RaceValue::LaunchMaxYes && $playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax && $raceHandler->LaunchMaxEffect($skillHandler)){
+        if($launchMax == RaceValue::LaunchMaxYes && /*$playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax &&*/ $raceHandler->LaunchMaxEffect($skillHandler)){
             
             $racePlayerHandlers = [];
             $racePlayerhandlerAll = [];
