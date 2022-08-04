@@ -8,6 +8,7 @@ use Exception;
 use Consts\EnvVar;
 use Consts\Globals;
 use Consts\ErrorCode;
+use Games\Consts\RaceValue;
 use Generators\DataGenerator;
 use Games\Pools\TicketInfoPool;
 use Generators\ConfigGenerator;
@@ -18,7 +19,7 @@ use Games\Accessors\QualifyingSeasonAccessor;
 class QualifyingHandler
 {
     //1:金幣賽 2:PT賽
-    public const Lobbies = [1, 2];
+    public const Lobbies = [RaceValue::LobbyCoin, RaceValue::LobbyPT];
 
     public int $NowSeasonID;
     private QualifyingSeasonPool $pool;
