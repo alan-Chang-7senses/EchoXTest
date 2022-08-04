@@ -89,7 +89,9 @@ class RacePlayerEffectHandler {
         {
             foreach($effectTypes as $type)
             {
-                if($effect->EndTime >= microtime(true)
+                $now = microtime(true);
+                if($effect->EndTime > $now
+                   && $effect->StartTime <= $now
                    && $effect->EffectType == $type
                    && $campareFunc($effect->EffectValue,0))return true;            
             }
