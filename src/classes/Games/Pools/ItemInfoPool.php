@@ -27,7 +27,6 @@ class ItemInfoPool extends PoolAccessor {
         $row = $itemAccessor->rowItemByID($id);
         if($row === false) return false;
         
-        $row->ItemDropIDs = $row->ItemDropIDs === null ? [] : explode(',', $row->ItemDropIDs);
         $row->Source = empty($row->Source) ? [] : explode(',', $row->Source);
         
         return $row;

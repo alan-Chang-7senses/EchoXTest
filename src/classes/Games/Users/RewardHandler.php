@@ -71,15 +71,14 @@ class RewardHandler
         return $itemsArray;
     }
 
-    public function AddReward(int $userid, int $rewardID)
+    public function AddReward(int $userid, int $rewardID): array
     {
-
         $addItems = $this->GetItems($rewardID);
+        $userBagHandler = new UserBagHandler($userid);
+
         foreach ($addItems as $addItem) {
             if ($addItem->ItemID > 0) {
-                $userBagHandler = new UserBagHandler($userid);
-                //todo refactor AddItem
-                $userBagHandler->AddItem($userid, $addItem->ItemID, $addItem->Amount);
+                $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
             }
             else if ($addItem->ItemID < 0) {
                 $userHandler = new UserHandler($userid);
@@ -104,5 +103,6 @@ class RewardHandler
                 }
             }
         }
+        return $addItems;
     }
 }

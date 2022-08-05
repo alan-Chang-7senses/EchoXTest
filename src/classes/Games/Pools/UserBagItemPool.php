@@ -3,9 +3,6 @@
 namespace Games\Pools;
 
 use Accessors\PoolAccessor;
-use Games\Accessors\PlayerAccessor;
-use Games\Accessors\UserAccessor;
-use Games\Users\Holders\UserInfoHolder;
 use stdClass;
 use Games\Accessors\ItemAccessor;
 
@@ -20,18 +17,18 @@ class UserBagItemPool extends PoolAccessor{
     
     protected string $keyPrefix = 'UserBagItem_';
 
-    public function FromDB(int|string $id): stdClass|false {
-        
-        $userAccessor = new UserAccessor();
-        $row = $userAccessor->rowUserByID($id);
-        if(empty($row)) return false;
-        
-        $holder = new UserInfoHolder();
-
+    public function FromDB(int|string $id): stdClass|false
+    {
+        $holder = new stdClass();
         $itemAccessor = new ItemAccessor();
         $rows = $itemAccessor->rowsUserItemByUserAssoc($id);
-        $holder->items = array_column($rows, 'UserItemID');
-        
+        $items = array();
+        $itemIDs = array_column($rows, 'ItemID');
+        $userItemID = array_column($rows, 'UserItemID');
+        for($i = 0; $i< count($itemIDs); $i++){                 
+            $items[$itemIDs[$i]][] = $userItemID[$i];
+        }
+        $holder->items = $items;
         return $holder;
     }
 }
