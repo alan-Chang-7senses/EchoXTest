@@ -6,25 +6,17 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Consts\SetUserNicknameValue;
-use Exception;
-use Exceptions\NormalException;
 use Games\Accessors\SkillAccessor;
+use Games\Consts\FreePlayerValue;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
-use Games\Consts\SkillValue;
-use Games\Exceptions\UserException;
-use Games\Players\Adaptability\SlotNumber;
 use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\PlayerUtility;
 use Games\Skills\SkillHandler;
 use Games\Users\FreePeta\FreePetaUtility;
-use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use Processors\User\FreePlayer\Const\FreePetaValue;
-use Processors\User\SetUserNickname;
 use stdClass;
 
 class Get3FreePlayer extends BaseProcessor
@@ -32,11 +24,7 @@ class Get3FreePlayer extends BaseProcessor
     public function Process(): ResultData
     {
         $userID = $_SESSION[Sessions::UserID];
-        $userHandler = new UserHandler($userID);
-        $userInfo = $userHandler->GetInfo();
         
-        // if(!empty($userInfo->nickname))
-        // throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
 
         //分類所有免費peta
         $pdo = new PDOAccessor(EnvVar::DBStatic);
@@ -48,7 +36,7 @@ class Get3FreePlayer extends BaseProcessor
         }
         //選出三隻屬性不一樣的
         $free3Players = [];
-        for($i = 0; $i < FreePetaValue::FreePetaTypeCount; ++$i)
+        for($i = 0; $i < FreePlayerValue::FreePlayerTypeCount; ++$i)
         {
             $free3Players[] = FreePetaUtility::GetRandomElementInArray($freePlayers[$i]);
             // $free3Players[$i]->dnaHolder = new PlayerDnaHolder();

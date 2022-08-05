@@ -6,7 +6,6 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
-use Error;
 use Games\Accessors\UserAccessor;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
@@ -14,9 +13,7 @@ use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
-use LDAP\Result;
 use Processors\BaseProcessor;
-use Processors\EliteTest\UserInfo;
 
 class FinishFreePlayer extends BaseProcessor{
     
@@ -85,7 +82,7 @@ class FinishFreePlayer extends BaseProcessor{
             "SkeletonType" => $chosenPeta->SkeletonType,
         ];
         //開始存檔
-        $userHandler->SaveData(["nickname" => $nickname]);
+        $userHandler->SaveData(["nickname" => $nickname, "player" => $playerID]);
         $pdo->ClearAll();
         $pdo->FromTable("PlayerNFT")
             ->Add($bind,true);
