@@ -2,43 +2,63 @@
 
 namespace Processors\User;
 
-use Processors\BaseProcessor;
-use Holders\ResultData;
-use Consts\ErrorCode;
-use Helpers\InputHelper;
+use stdClass;
 use Consts\Sessions;
+use Consts\ErrorCode;
+use Holders\ResultData;
+use Helpers\InputHelper;
+use Generators\DataGenerator;
+use Processors\BaseProcessor;
+use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
-use Games\Users\UserItemHandler;
+use Games\Exceptions\UserException;
 
-class UseItems extends BaseProcessor{
-    public function Process(): ResultData {
-    
-        $userItemsID = InputHelper::post('userItemsID');
-        $amount = InputHelper::post('amount');
+class UseItems extends BaseProcessor
+{
+    public function Process(): ResultData
+    {
+        $items = json_decode(InputHelper::post('items'));
+        DataGenerator::ExistProperties($items[0], ['userItemID', 'amount']);
+        $userid = $_SESSION[Sessions::UserID];
+        $bagHandler = new UserBagHandler($userid);
+        $rewardHandler = new RewardHandler();
+        $totalAddItems = [];
+        foreach ($items as $useItem) {
 
-        $bagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
-        $bagInfo = $bagHandler->GetInfo($_SESSION[Sessions::UserID]);
-        
-        $items = [];
-        foreach($bagInfo->items as $userItemID){
-                
-            $userItemHandler = new UserItemHandler($userItemID);
-            $userItemHandler->DeleteCache();
-            $userItemHandler->GetItemInfo($userItemID);
+            if ($useItem->amount <= 0) {
+                continue;
+            }
 
-            if($userItemID == null)
-            continue;
-            if($userItemHandler->info->id == $userItemsID)
-            {
-                $items = $userItemHandler->UseItem($amount);
+            $itemInfo = $bagHandler->GetUserItemInfo($useItem->userItemID);
+            if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
+                throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            }
+
+            if ($bagHandler->DecItem($useItem->userItemID, $useItem->amount) == false) {
+                throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            }
+
+            for ($i = 0; $i < $useItem->amount; $i++) {
+                $addItems = $rewardHandler->AddReward($userid, $itemInfo->rewardID);
+                foreach ($addItems as $addItem) {
+                    $totalAddItems[$addItem->ItemID] += $addItem->Amount;
+                }
             }
         }
-    
-    
+
+        $itemsArray = [];
+        foreach ($totalAddItems as $key => $value) {
+            $item = new stdClass();
+            $item->ItemID = $key;
+            $item->Amount = $value;
+            $itemsArray[] = $item;
+        }
+
         $result = new ResultData(ErrorCode::Success);
-        $result->items = $items;
+        $result->addItems = $itemsArray;
+
         return $result;
-    
+
     }
 
 
