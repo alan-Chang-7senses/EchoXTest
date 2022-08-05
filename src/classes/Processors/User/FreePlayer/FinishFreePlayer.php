@@ -6,7 +6,6 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
-use Games\Accessors\UserAccessor;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
 use Games\Users\NamingUtility;
