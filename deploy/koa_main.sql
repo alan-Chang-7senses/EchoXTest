@@ -1168,7 +1168,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `UserID` int(10) NOT NULL AUTO_INCREMENT,
   `Status` tinyint(4) DEFAULT 1 COMMENT '狀態(1=啟用)',
   `Username` varchar(255) NOT NULL COMMENT '帳號',
-  `Nickname` varchar(255) DEFAULT NULL COMMENT '暱稱',
+  `Nickname` varchar(255) NOT NULL DEFAULT '' COMMENT '暱稱',
   `Password` varchar(255) DEFAULT NULL COMMENT '密碼',
   `Email` varchar(255) DEFAULT NULL COMMENT '電子信箱',
   `Level` smallint(5) unsigned NOT NULL DEFAULT 1 COMMENT '等級',
