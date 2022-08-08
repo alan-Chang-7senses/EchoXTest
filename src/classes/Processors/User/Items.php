@@ -28,7 +28,7 @@ class Items extends BaseProcessor
                        
         
             $items[] = [
-                'itemid' => $itemInfo->itemID,
+                'itemID' => $itemInfo->itemID,
                 'userItemsID' =>$itemInfo->userItemsID,
                 'amount' => $itemInfo->amount,
                 'itemType' => $itemInfo->itemType,

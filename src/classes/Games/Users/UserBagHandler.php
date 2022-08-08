@@ -144,25 +144,5 @@ class UserBagHandler
     }
 
 
-    public static function GetItemInfo(int $itemID): stdClass|false
-    {
-        $itemInfoPool = ItemInfoPool::Instance();
-        $itemInfo = $itemInfoPool->{ $itemID};
-
-        if ($itemInfo == false) {
-            throw new UserException(UserException::ItemNotExists, ['[itemID]' => $itemID]);
-        }
-
-
-        $result = new stdClass();
-        $result->name = $itemInfo->ItemName;
-        $result->description = $itemInfo->Description;
-        $result->stackLimit = $itemInfo->StackLimit;
-        $result->itemType = $itemInfo->ItemType;
-        $result->useType = $itemInfo->UseType;
-        $result->source = $itemInfo->Source;
-        return $result;
-    }
-
 
 }

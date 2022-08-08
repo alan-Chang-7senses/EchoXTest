@@ -7,6 +7,7 @@ use Consts\Sessions;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
+use Games\Pools\ItemInfoPool;
 use Generators\DataGenerator;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
@@ -51,11 +52,14 @@ class UseItems extends BaseProcessor
         }
 
         $itemsArray = [];
-        foreach ($totalAddItems as $key => $value) {
-            $item = new stdClass();
-            $item->ItemID = $key;
-            $item->Amount = $value;
-            $itemsArray[] = $item;
+        $itemInfoPool = ItemInfoPool::Instance();      
+        foreach ($totalAddItems as $itemID => $amount) {
+            $itemInfo = $itemInfoPool->{ $itemID};
+            $itemsArray[] = [
+                'itemID' => $itemID,
+                'amount' => $amount,
+                'icon' => $itemInfo->Icon,
+            ];   
         }
 
         $result = new ResultData(ErrorCode::Success);
