@@ -5,7 +5,6 @@ namespace Games\Pools;
 use stdClass;
 use Consts\Globals;
 use Accessors\PoolAccessor;
-use Games\Pools\ItemDropPool;
 use Games\Pools\ItemInfoPool;
 use Games\Accessors\ItemAccessor;
 use Games\Exceptions\UserException;

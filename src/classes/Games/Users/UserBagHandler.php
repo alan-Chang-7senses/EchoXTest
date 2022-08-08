@@ -49,6 +49,18 @@ class UserBagHandler
         return $result;
     }
 
+    public function GetItemAmount(int $itemID): int
+    {
+        $amount = 0;
+        if (isset($this->bagInfo->items->{$itemID})) {
+            foreach ($this->bagInfo->items->{$itemID} as $userItemID) {
+                $userItemHandler = new UserItemHandler($userItemID);
+                $amount += $userItemHandler->GetInfo()->amount ;
+            }
+        }        
+        return $amount;
+    }    
+
     public function AddItem(int $itemID, int $amount)
     {
         $info = $this->itemInfoPool->{ $itemID};
