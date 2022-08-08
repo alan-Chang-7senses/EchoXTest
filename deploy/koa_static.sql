@@ -2,7 +2,7 @@
 -- 主機:                           127.0.0.1
 -- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
--- HeidiSQL 版本:                  12.0.0.6468
+-- HeidiSQL 版本:                  11.3.0.6295
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -111,21 +111,19 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `UseType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用類型',
   `EffectType` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果類型',
   `EffectValue` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果值',
-  `ItemDropIDs` text DEFAULT NULL COMMENT '掉落物編號',
-  `DropType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落類型',
-  `DropCount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落次數',
+  `RewardID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵編號',
   `Source` varchar(255) NOT NULL DEFAULT '' COMMENT '來源代號',
   PRIMARY KEY (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
 
 -- 正在傾印表格  koa_static.ItemInfo 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
-INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `ItemDropIDs`, `DropType`, `DropCount`, `Source`) VALUES
-	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, NULL, 0, 0, 's001,s002,s003'),
-	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, NULL, 0, 0, 's002'),
-	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, '1,2', 1, 1, 's003'),
-	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, '1,2', 2, 1, 's004'),
-	(5, 'n0005', 'd0005', 3, '5', 555, 1, 0, 0, '1,2,3,4,5', 3, 2, 's003,s005');
+INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `RewardID`, `Source`) VALUES
+	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, 1, 's001,s002,s003'),
+	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, 0, 's002'),
+	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, 0, 's003'),
+	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, 0, 's004'),
+	(5, 'n0005', 'd0005', 3, '5', 10, 1, 0, 0, 2, 's003,s005');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構
