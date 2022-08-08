@@ -6,6 +6,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
+use Games\Accessors\UserAccessor;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
@@ -97,8 +98,8 @@ class FinishFreePlayer extends BaseProcessor{
             }
             $pdo->ClearAll();
         if(count($ids) > 0)$pdo->FromTable("PlayerSkill")->AddAll($ids);
-            
-        $userHandler->SaveData(["nickname" => $nickname, "player" => $playerID]);
+        $ua = new UserAccessor();
+        $ua->ModifyUserValuesByID($userInfo->id,["Nickname" => $nickname, "Player" => $playerID]);    
         UserPool::Instance()->Delete($userInfo->id);           
         $results = new ResultData(ErrorCode::Success);
         return $results;
