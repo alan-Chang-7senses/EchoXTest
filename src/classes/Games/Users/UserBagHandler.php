@@ -53,10 +53,8 @@ class UserBagHandler
     {
         $info = $this->itemInfoPool->{ $itemID};
         if ($info->StackLimit != 0) { //can stack
-            $itemIndexs = $this->bagInfo->items->{ $itemID};
-
-            if ($itemIndexs) {
-                foreach ($itemIndexs as $userItemID) {
+            if (isset($this->bagInfo->items->{$itemID})) {
+                foreach ($this->bagInfo->items->{$itemID} as $userItemID) {
                     if ($amount <= 0) {
                         break;
                     }
@@ -130,7 +128,7 @@ class UserBagHandler
     public static function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass
     {
         $userItemHandler = new UserItemHandler($userItemID);
-        return $userItemHandler->GetInfo($userItemID);
+        return $userItemHandler->GetInfo();
     }
 
 

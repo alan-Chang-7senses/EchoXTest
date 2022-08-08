@@ -36,6 +36,7 @@ class UserItemPool extends PoolAccessor{
         $holder->id = $id;
         $holder->user = $row->UserID;
         $holder->itemID = $row->ItemID;
+        $holder->userItemsID = $row->UserItemID;        
         $holder->amount = $row->Amount;
         $holder->createTime = $row->CreateTime;
         $holder->updateTime = $row->UpdateTime;

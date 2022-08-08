@@ -78,11 +78,10 @@ class RewardHandler
         if ($this->info->Modes == 2) {
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
-
+        $userBagHandler = new UserBagHandler($userid);
         $addItems = $this->GetItems();
         foreach ($addItems as $addItem) {
             if ($addItem->ItemID > 0) {
-                $userBagHandler = new UserBagHandler($userid);                
                 $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
             }
             else if ($addItem->ItemID < 0) {

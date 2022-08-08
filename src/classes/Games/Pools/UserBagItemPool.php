@@ -26,11 +26,10 @@ class UserBagItemPool extends PoolAccessor
         $itemAccessor = new ItemAccessor();
         $rows = $itemAccessor->rowsUserItemByUserAssoc($id);
 
-        $items = [];
+        $items = new stdClass;
         foreach ($rows as $row) {
-            $items[$row['ItemID']][] = $row['UserItemID'];
+            $items->{$row['ItemID']}[] = $row['UserItemID'];
         }
-
 
         $holder->items = $items;
         return $holder;

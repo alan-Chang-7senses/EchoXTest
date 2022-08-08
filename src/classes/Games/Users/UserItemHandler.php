@@ -24,15 +24,20 @@ class UserItemHandler
     {
         $this->pool = UserItemPool::Instance();
         $this->userItemID = $userItemID;
-        $this->info = $this->pool->{ $this->userItemID};
+        $info = $this->pool->{ $this->userItemID};
+        if ($info == false) {
+            throw new UserException(UserException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
+        }
+
+        $this->info = $info;
     }
 
     public function GetInfo(): UserItemHolder|stdClass
-    {    
+    {
         return $this->info;
     }
 
-    public function AddItem(int $amount):int
+    public function AddItem(int $amount): int
     {
         if ($this->info->amount >= $this->info->stackLimit) {
             return $amount;
@@ -43,7 +48,7 @@ class UserItemHandler
             //在範圍內,修改道具數量
             //var_dump('在範圍內,修改道具數量' . $this->info->amount . '加上的數量' . $amount);
             $this->pool->Save($this->userItemID, 'Amount', $newAmount);
-            return 0;            
+            return 0;
         }
         else {
             //超出範圍,修改道具數量並增加道具
@@ -53,14 +58,15 @@ class UserItemHandler
         }
     }
 
-    public function DecItem(int $amount):bool
+    public function DecItem(int $amount): bool
     {
         if ($this->info->amount < $amount) {
             throw new UserException(UserException::ItemNotEnough, ['item' => $this->info->itemID]);
         }
-        
+
         $remainAmount = $this->info->amount - $amount;
-        $this->pool->Save($this->userItemID, 'Amount', $remainAmount);        
+        $this->pool->Save($this->userItemID, 'Amount', $remainAmount);
         return true;
-    }  
+    }
+
 }
