@@ -8,6 +8,7 @@ use Consts\Sessions;
 use Consts\SetUserNicknameValue;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
+use Games\Pools\UserPool;
 use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -81,24 +82,24 @@ class FinishFreePlayer extends BaseProcessor{
             "SkeletonType" => $chosenPeta->SkeletonType,
         ];
         //開始存檔
-        $userHandler->SaveData(["nickname" => $nickname, "player" => $playerID]);
         $pdo->ClearAll();
         $pdo->FromTable("PlayerNFT")
             ->Add($bind,true);
-        $pdo->ClearAll();
-        $pdo->FromTable("PlayerLevel")
+            $pdo->ClearAll();
+            $pdo->FromTable("PlayerLevel")
             ->Add(["PlayerID" => $playerID],true);    
-        $pdo->ClearAll();
-        $pdo->FromTable("PlayerHolder")
+            $pdo->ClearAll();
+            $pdo->FromTable("PlayerHolder")
             ->Add(["PlayerID" => $playerID, "UserID" => $userInfo->id],true);
-        
-        foreach($chosenPeta->skills as $skillID){
-            $ids[] = ["PlayerID" => $playerID, "SkillID" => $skillID->id];
-        }
-        $pdo->ClearAll();
+            
+            foreach($chosenPeta->skills as $skillID){
+                $ids[] = ["PlayerID" => $playerID, "SkillID" => $skillID->id];
+            }
+            $pdo->ClearAll();
         if(count($ids) > 0)$pdo->FromTable("PlayerSkill")->AddAll($ids);
-
-                      
+            
+        $userHandler->SaveData(["nickname" => $nickname, "player" => $playerID]);
+        UserPool::Instance()->Delete($userInfo->id);           
         $results = new ResultData(ErrorCode::Success);
         return $results;
     }
