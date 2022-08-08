@@ -21,14 +21,12 @@ class UseItems extends BaseProcessor
         DataGenerator::ExistProperties($items[0], ['userItemID', 'amount']);
         $userid = $_SESSION[Sessions::UserID];
         $bagHandler = new UserBagHandler($userid);
-        $rewardHandler = new RewardHandler();
         $totalAddItems = [];
         foreach ($items as $useItem) {
 
             if ($useItem->amount <= 0) {
                 continue;
             }
-
             $itemInfo = $bagHandler->GetUserItemInfo($useItem->userItemID);
             if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
                 throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
@@ -39,9 +37,15 @@ class UseItems extends BaseProcessor
             }
 
             for ($i = 0; $i < $useItem->amount; $i++) {
-                $addItems = $rewardHandler->AddReward($userid, $itemInfo->rewardID);
+                $rewardHandler = new RewardHandler($itemInfo->rewardID);
+                $addItems = $rewardHandler->AddReward($userid);
                 foreach ($addItems as $addItem) {
-                    $totalAddItems[$addItem->ItemID] += $addItem->Amount;
+                    if (isset($totalAddItems[$addItem->ItemID])) {
+                        $totalAddItems[$addItem->ItemID] += $addItem->Amount;
+                    }
+                    else {
+                        $totalAddItems[$addItem->ItemID] = $addItem->Amount;
+                    }
                 }
             }
         }

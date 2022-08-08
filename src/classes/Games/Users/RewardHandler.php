@@ -2,8 +2,11 @@
 
 namespace Games\Users;
 
+use Games\Exceptions\UserException;
 use stdClass;
 use Games\Pools\RewardPool;
+use Google\Service\Script\Content;
+use Google\Service\ShoppingContent\Amount;
 
 class RewardHandler
 {
@@ -12,23 +15,29 @@ class RewardHandler
     public stdClass|false $info;
 
 
-    public function __construct()
+    public function __construct(int $rewardID)
     {
         $this->pool = RewardPool::Instance();
-    }
-
-    private function GetInfo(int|string $rewardID)
-    {
         $this->info = $this->pool->{ $rewardID};
+        if ($this->info == false) {
+            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $rewardID]);
+        }
+
     }
 
-    public function GetItems(int|string $rewardID): array
+    private function AddTempItems(stdClass $content, array $tempItems): array
     {
-        $this->GetInfo($rewardID);
-
-        if ($this->info == false) {
-            return [];
+        if (isset($tempItems[$content->ItemID])) {
+            $tempItems[$content->ItemID]->Amount += $content->Amount;
         }
+        else {
+            $tempItems[$content->ItemID] = $content;
+        }
+        return $tempItems;
+    }
+
+    public function GetItems(): array
+    {
 
         $tempItems = [];
         for ($i = 0; $i < $this->info->Times; $i++) {
@@ -37,7 +46,7 @@ class RewardHandler
                 case 1: //1：發放所有獎勵                    
                 case 2: //2：玩家自選獎勵                    
                     foreach ($this->info->Contents as $content) {
-                        $tempItems[$content->ItemID] = $tempItems[$content->ItemID] + $content->Amount;
+                        $tempItems = $this->AddTempItems($content, $tempItems);
                     }
                     break;
                 case 3: //3：依權重隨機挑選獎勵
@@ -45,7 +54,7 @@ class RewardHandler
                     foreach ($this->info->Contents as $content) {
                         $rnd = $rnd - $content->Proportion;
                         if ($rnd <= 0) {
-                            $tempItems[$content->ItemID] = $tempItems[$content->ItemID] + $content->Amount;
+                            $tempItems = $this->AddTempItems($content, $tempItems);
                             break;
                         }
                     }
@@ -54,30 +63,26 @@ class RewardHandler
                     foreach ($this->info->Contents as $content) {
                         $rnd = rand(1, 1000);
                         if ($rnd <= $content->Proportion) {
-                            $tempItems[$content->ItemID] = $tempItems[$content->ItemID] + $content->Amount;
+                            $tempItems = $this->AddTempItems($content, $tempItems);
                         }
                     }
                     break;
             }
         }
 
-        $itemsArray = [];
-        foreach ($tempItems as $key => $value) {
-            $item = new stdClass();
-            $item->ItemID = $key;
-            $item->Amount = $value;
-            $itemsArray[] = $item;
-        }
-        return $itemsArray;
+        return $tempItems;
     }
 
-    public function AddReward(int $userid, int $rewardID): array
+    public function AddReward(int $userid): array
     {
-        $addItems = $this->GetItems($rewardID);
-        $userBagHandler = new UserBagHandler($userid);
+        if ($this->info->Modes == 2) {
+            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
+        }
 
+        $addItems = $this->GetItems();
         foreach ($addItems as $addItem) {
             if ($addItem->ItemID > 0) {
+                $userBagHandler = new UserBagHandler($userid);                
                 $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
             }
             else if ($addItem->ItemID < 0) {

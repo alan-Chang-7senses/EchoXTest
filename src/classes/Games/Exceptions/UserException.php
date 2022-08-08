@@ -24,4 +24,6 @@ class UserException extends NormalException
     const ItemNotExists = 2011;
     const UserNotItemOwner = 2012;
     const UseItemError = 2013;
+    const UseRewardIDError = 2014;
+
 }

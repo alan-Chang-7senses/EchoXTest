@@ -36,7 +36,6 @@ class UserBagHandler
         $this->bagInfo = $this->bagPool->{ $this->userID};
     }
 
-
     public function GetItemInfos(): array
     {
         $result = [];
@@ -69,8 +68,8 @@ class UserBagHandler
                     if ($this->multiItemID) {
                         $this->AddNewItem($itemID, $amount, $info->StackLimit);
                     }
-                    else {                       
-                        //todo add log to $amount, 物品未加完                        
+                    else {
+                    //todo add log to $amount, 物品未加完                        
                     }
                 }
 
@@ -86,7 +85,7 @@ class UserBagHandler
             }
         }
 
-      $this->ResetInfo();
+        $this->ResetInfo();
     }
 
     private function AddNewItem(int $itemID, int $amount, int $stackLimit)
@@ -135,14 +134,13 @@ class UserBagHandler
     }
 
 
-    public static function GetItemInfo(int $itemID): stdClass | false
+    public static function GetItemInfo(int $itemID): stdClass|false
     {
         $itemInfoPool = ItemInfoPool::Instance();
         $itemInfo = $itemInfoPool->{ $itemID};
 
-        if ($itemInfo == false)
-        {
-            throw new UserException(UserException::ItemNotExists, ['[itemID]' => $itemID]);            
+        if ($itemInfo == false) {
+            throw new UserException(UserException::ItemNotExists, ['[itemID]' => $itemID]);
         }
 
 
