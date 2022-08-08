@@ -73,40 +73,66 @@ class RewardHandler
         return $tempItems;
     }
 
+
+    public function AddSelectReward(int $userid,int $amount, $selectItemId): stdClass
+    {
+        if ($this->info->Modes != 2) {
+            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
+        }
+
+
+        if (isset($this->GetItems()[$selectItemId]) == false)
+        {
+            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);            
+        }
+
+        $addItem = $this->GetItems()[$selectItemId];            
+        $addItem->Amount = $addItem->Amount *  $amount;
+
+        $this->AddItem($userid, $addItem);
+        return $addItem;        
+    }
+
     public function AddReward(int $userid): array
     {
         if ($this->info->Modes == 2) {
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
-        $userBagHandler = new UserBagHandler($userid);
-        $addItems = $this->GetItems();
+
+        $addItems = $this->GetItems();        
         foreach ($addItems as $addItem) {
-            if ($addItem->ItemID > 0) {
-                $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
-            }
-            else if ($addItem->ItemID < 0) {
-                $userHandler = new UserHandler($userid);
-                $info = $userHandler->GetInfo();
-                switch ($addItem->ItemID) {
-                    case -1: //-1 電力
-                        $info->power += $addItem->Amount;
-                        $userHandler->SaveData(['Power' => $info->power]);
-                        break;
-                    case -2: //-2 金幣
-                        $info->coin += $addItem->Amount;
-                        $userHandler->SaveData(['Coin' => $info->power]);
-                        break;
-                    case -3: //-3 寶石
-                        $info->diamond += $addItem->Amount;
-                        $userHandler->SaveData(['Diamond' => $info->power]);
-                        break;
-                    case -4: //-4 PT
-                        $info->petaToken += $addItem->Amount;
-                        $userHandler->SaveData(['PetaToken' => $info->power]);
-                        break;
-                }
+            $this->AddItem($userid, $addItem);
+        }
+        return $addItems;        
+    }
+
+    private function AddItem(int $userid, stdclass $addItem)
+    {
+        if ($addItem->ItemID > 0) {
+            $userBagHandler = new UserBagHandler($userid);        
+            $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
+        }
+        else if ($addItem->ItemID < 0) {
+            $userHandler = new UserHandler($userid);
+            $info = $userHandler->GetInfo();
+            switch ($addItem->ItemID) {
+                case -1: //-1 電力
+                    $info->power += $addItem->Amount;
+                    $userHandler->SaveData(['Power' => $info->power]);
+                    break;
+                case -2: //-2 金幣
+                    $info->coin += $addItem->Amount;
+                    $userHandler->SaveData(['Coin' => $info->power]);
+                    break;
+                case -3: //-3 寶石
+                    $info->diamond += $addItem->Amount;
+                    $userHandler->SaveData(['Diamond' => $info->power]);
+                    break;
+                case -4: //-4 PT
+                    $info->petaToken += $addItem->Amount;
+                    $userHandler->SaveData(['PetaToken' => $info->power]);
+                    break;
             }
         }
-        return $addItems;
     }
 }

@@ -137,7 +137,7 @@ class UserBagHandler
         return $userItemHandler->DecItem($amount);
     }
 
-    public static function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass
+    public function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass
     {
         $userItemHandler = new UserItemHandler($userItemID);
         return $userItemHandler->GetInfo();
