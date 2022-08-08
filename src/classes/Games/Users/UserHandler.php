@@ -40,5 +40,7 @@ class UserHandler {
     
     public function LeaveRace(){
         $this->pool->Set($this->id, 'race', RaceValue::NotInRace);
+        $this->pool->Set($this->id, 'lobby', RaceValue::NotInRace);
+        $this->pool->Set($this->id, 'room', RaceValue::NotInRace);
     }
 }
