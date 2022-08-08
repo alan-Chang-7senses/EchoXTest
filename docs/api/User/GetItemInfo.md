@@ -2,11 +2,11 @@
 
 ## 介紹
 
-- 取得使用者持有物品資訊。
+- 根據物品ID，取得基本物品資訊。
 
 ## URL
 
-http(s)://`域名`/User/Items/
+http(s)://`域名`/User/GetItemInfo/
 
 ## Method
 
@@ -18,7 +18,10 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-無
+
+| 參數名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| itemID | int | 物品編號 |
 
 ## Response
 
@@ -37,11 +40,16 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| itemID | int | 物品編號 |
-| userItemsID | int | 使用者物品編號 |
-| amount | int | 物品數量 |
+| name | string | 名稱代號 |
+| description | string | 物品敘述代號 |
+| amount | int | 使用者擁有數量 |
+| stackLimit | int | 堆疊上限（0 = 無法堆疊） |
 | itemType | int | [物品種類](../codes/item.md#itemType) |
-| icon | string | Icon 圖號 |
+| useType | int | [使用種類](../codes/item.md#useType) |
+| source | array | 來源／出處 代號陣列 |
+|
+
+
 
 ### Example
 
@@ -51,27 +59,17 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			"code": 0,
 			"message": ""
 		},
-		"items": [
-			{
-				"itemID": 1,
-				"userItemsID": 12,
-				"amount": 9999,
-				"itemType": 1,
-				"icon": "1"
-			},
-			{
-				"itemID": 2,
-				"userItemsID": 13,
-				"amount": 240,
-				"itemType": 2,
-				"icon": "2"
-			},
-			{
-				"itemID": 3,
-				"userItemsID": 14,
-				"amount": 354,
-				"itemType": 3,
-				"icon": "3"
-			}
-		]
+		"item": {
+			"name": "n0001",
+			"description": "d0001",
+			"amount": 9999,
+			"stackLimit": 9999,
+			"itemType": 1,
+			"useType": 1,
+			"source": [
+				"s001",
+				"s002",
+				"s003"
+			]
+		}
 	}
