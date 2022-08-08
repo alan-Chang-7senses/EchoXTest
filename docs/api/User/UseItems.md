@@ -2,7 +2,7 @@
 
 ## 介紹
 
-- 使用使用者物品，需用使用者索引ID才可使用。
+- 使用物品，需用使用者索引ID才可使用。
 
 ## URL
 
@@ -21,29 +21,9 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| [items](#items) | string | 使用多個物品 JSON 陣列字串。 |
-
-#### <span id="items"> items 內容</span>
-
-_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
 | userItemID | int | 使用者物品編號 |
 | amount | int | 數量 |
 
-#### items 範例
-
-	[
-		{
-			"userItemID": 12 , 
-			"amount" : 2
-		},
-		{
-			"userItemID": 10 ,		 
-		  	"amount" : 1
-		}
-	]
 
 ## Response
 
