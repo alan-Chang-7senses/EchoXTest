@@ -1,7 +1,11 @@
 <?php
 namespace Games\Races;
 
+use Consts\Sessions;
 use Games\Consts\RaceValue;
+use Games\Scenes\SceneHandler;
+use Games\Users\UserHandler;
+
 /**
  * Description of RaceUtility
  *
@@ -56,5 +60,13 @@ class RaceUtility {
             'StartTime' => $start,
             'EndTime' => $end,
         ];
+    }
+
+    
+    public static function GetCurrentSceneSunValue():int
+    {
+        $userHolder =(new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
+        $climates = (new SceneHandler($userHolder->scene))->GetClimate();        
+        return $climates->lighting;
     }
 }
