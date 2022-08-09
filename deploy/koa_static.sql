@@ -140,9 +140,7 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `UseType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用類型',
   `EffectType` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果類型',
   `EffectValue` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果值',
-  `ItemDropIDs` text DEFAULT NULL COMMENT '掉落物編號',
-  `DropType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落類型',
-  `DropCount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落次數',
+  `RewardID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵編號',
   `Source` varchar(255) NOT NULL DEFAULT '' COMMENT '來源代號',
   PRIMARY KEY (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';

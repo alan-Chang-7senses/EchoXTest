@@ -58,6 +58,7 @@ class QualifyingHandler
         }
     }
     public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = false): int
+
     {
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {
@@ -188,9 +189,9 @@ class QualifyingHandler
     public function GetTicketID(int $lobby): int
     {
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 return ConfigGenerator::Instance()->PvP_B_TicketId_1;
-            case 2:
+            case RaceValue::LobbyPT:
                 return ConfigGenerator::Instance()->PvP_B_TicketId_2;
         }
         return 0;
@@ -199,9 +200,9 @@ class QualifyingHandler
     public function GetMaxTickets(int $lobby): int
     {
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 return ConfigGenerator::Instance()->PvP_B_MaxTickets_1;
-            case 2:
+            case RaceValue::LobbyPT:
                 return ConfigGenerator::Instance()->PvP_B_MaxTickets_2;
         }
         return 0;
@@ -210,9 +211,9 @@ class QualifyingHandler
     public function GetSceneID(int $lobby): int
     {
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 return $this->info->CoinScene;
-            case 2:
+            case RaceValue::LobbyPT:
                 return $this->info->PTScene;
         }
         return 0;
@@ -221,7 +222,7 @@ class QualifyingHandler
     public function GetPetaLimitLevel(int $lobby): int
     {
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 return ConfigGenerator::Instance()->PvP_B_PetaLvLimit_1;
         }
         return 0;
@@ -233,11 +234,11 @@ class QualifyingHandler
         $keyValue = "";
         $updateColumn = "";
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 $keyValue = 'Ticket_Coin';
                 $updateColumn = "CoinTime";
                 break;
-            case 2:
+            case RaceValue::LobbyPT:
                 $keyValue = 'Ticket_PT';
                 $updateColumn = "PTTime";
                 break;
@@ -278,10 +279,10 @@ class QualifyingHandler
             $resultTime = 0;
             $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];
             switch ($lobby) {
-                case 1:
+                case RaceValue::LobbyCoin:
                     $resultTime = $userRewardTimes->CoinTime - $nowtime;
                     break;
-                case 2:
+                case RaceValue::LobbyPT:
                     $resultTime = $userRewardTimes->PTTime - $nowtime;
                     ;
                     break;
@@ -301,12 +302,12 @@ class QualifyingHandler
         //todo
         $result = new stdclass;
         switch ($lobby) {
-            case 1:
+            case RaceValue::LobbyCoin:
                 $result->raceAmount = 12;
                 $result->aveRank = "1.11";
                 $result->rank = "5";
                 break;
-            case 2:
+            case RaceValue::LobbyPT:
                 $result->raceAmount = 34;
                 $result->aveRank = "3.21";
                 $result->rank = "15";
