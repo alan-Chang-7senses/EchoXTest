@@ -18,7 +18,7 @@ class UseItemSelect extends BaseProcessor
     {
         $userItemID = json_decode(InputHelper::post('userItemID'));
         $amount = json_decode(InputHelper::post('amount'));
-        $selectItemId = json_decode(InputHelper::post('selectItemId'));
+        $selectIndex = json_decode(InputHelper::post('selectIndex'));
 
         $userid = $_SESSION[Sessions::UserID];
         $bagHandler = new UserBagHandler($userid);
@@ -28,20 +28,24 @@ class UseItemSelect extends BaseProcessor
             throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
+        $rewardHandler = new RewardHandler($itemInfo->rewardID);
+        if (($rewardHandler->CheckSelectIndex($selectIndex) == false) || ($amount <= 0)) {
+            return new ResultData(ErrorCode::ParamError);
+        }
+
         if ($bagHandler->DecItem($userItemID, $amount) == false) {
             throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-        $rewardHandler = new RewardHandler($itemInfo->rewardID);
-        $addItem = $rewardHandler->AddSelectReward($userid, $amount, $selectItemId);
+
+        $addItem = $rewardHandler->AddSelectReward($userid, $amount, $selectIndex);
 
         $itemInfoPool = ItemInfoPool::Instance();
         $itemInfo = $itemInfoPool->{ $addItem->ItemID};
-
         $result = new ResultData(ErrorCode::Success);
-        $result->itemID =$addItem->ItemID;
-        $result->amount =$addItem->Amount;
-        $result->icon =$itemInfo->Icon;                
+        $result->itemID = $addItem->ItemID;
+        $result->amount = $addItem->Amount;
+        $result->icon = $itemInfo->Icon;
 
         return $result;
     }

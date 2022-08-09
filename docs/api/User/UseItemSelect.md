@@ -23,7 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 |:-:|:-:|:-:|
 | userItemID | int | 使用者物品編號 |
 | amount | int | 數量 |
-| selectItemId | int | 選擇的物品編號 |
+| selectIndex | int | 選擇序列，由0開始 |
 |
 
 ## Response
