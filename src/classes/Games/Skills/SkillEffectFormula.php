@@ -2,6 +2,8 @@
 
 namespace Games\Skills;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\Sessions;
 use Games\Consts\SkillValue;
 use Games\Players\Holders\PlayerInfoHolder;
@@ -22,7 +24,7 @@ class SkillEffectFormula {
     
     const OperandAll = [
         'CraterLake', 'Crosswind', 'Downslope', 'Headwind', 'SandDust', 'Tailwind', 'Upslope', 'Volcano', 'Aurora', 'Sunny', 'Dune', 'Flat',
-        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S'
+        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S', 'Red', 'Yellow', 'Blue', 'Green','Feature', 'Genesis',
     ];
 
     private SkillHandler $skillHandler;
@@ -89,6 +91,33 @@ class SkillEffectFormula {
         
         return $this->CreateRaceHandler()->ValueS();
     }
+    private function ValueGenesis() : int
+    {
+        $result = 0;
+        return $result;
+    }
+    private function ValueFeature() : int
+    {
+        $ele = $this->playerInfo->ele;
+        $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
+        $raceInfo = $raceHandler->GetInfo();
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $result = 0;
+        foreach($raceInfo->racePlayers as $id => $raceId)
+        {
+            $accessor->ClearCondition();
+            $accessor->FromTable('PlayerNFT')
+                     ->WhereEqual('PlayerID',$id)
+                     ->WhereEqual('Attribute', $ele)
+                     ->Fetch();
+            if($accessor !== false)$result++;
+        }
+        return $result;
+    }
+    private function ValueRed(){return 0;}
+    private function ValueYellow(){return 0;}
+    private function ValueBlue(){return 0;}
+    private function ValueGreen(){return 0;}
     
     private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }
     private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake); }
