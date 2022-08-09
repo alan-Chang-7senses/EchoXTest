@@ -5,14 +5,12 @@ namespace Games\Users;
 use Games\Exceptions\UserException;
 use stdClass;
 use Games\Pools\RewardPool;
-use Google\Service\Script\Content;
-use Google\Service\ShoppingContent\Amount;
 
 class RewardHandler
 {
 
     private RewardPool $pool;
-    public stdClass|false $info;
+    private stdClass|false $info;
 
 
     public function __construct(int $rewardID)
@@ -74,20 +72,19 @@ class RewardHandler
     }
 
 
-    public function AddSelectReward(int $userid,int $amount, $selectItemId): stdClass
+    public function CheckSelectIndex(int $selectIndex):bool
+    {
+        return  isset($this->info->Contents[ $selectIndex]);
+    }
+
+    public function AddSelectReward(int $userid,int $amount,int $selectIndex): stdClass
     {
         if ($this->info->Modes != 2) {
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
 
-
-        if (isset($this->GetItems()[$selectItemId]) == false)
-        {
-            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);            
-        }
-
-        $addItem = $this->GetItems()[$selectItemId];            
-        $addItem->Amount = $addItem->Amount *  $amount;
+        $addItem = $this->info->Contents[ $selectIndex];
+        $addItem->Amount = $addItem->Amount * $amount;
 
         $this->AddItem($userid, $addItem);
         return $addItem;        
@@ -122,15 +119,15 @@ class RewardHandler
                     break;
                 case -2: //-2 金幣
                     $info->coin += $addItem->Amount;
-                    $userHandler->SaveData(['Coin' => $info->power]);
+                    $userHandler->SaveData(['Coin' => $info->coin]);
                     break;
                 case -3: //-3 寶石
                     $info->diamond += $addItem->Amount;
-                    $userHandler->SaveData(['Diamond' => $info->power]);
+                    $userHandler->SaveData(['Diamond' => $info->diamond]);
                     break;
                 case -4: //-4 PT
                     $info->petaToken += $addItem->Amount;
-                    $userHandler->SaveData(['PetaToken' => $info->power]);
+                    $userHandler->SaveData(['PetaToken' => $info->petaToken]);
                     break;
             }
         }

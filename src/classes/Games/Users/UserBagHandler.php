@@ -2,6 +2,8 @@
 
 namespace Games\Users;
 use stdClass;
+use Exception;
+use Consts\ErrorCode;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\UserBagItemPool;
 use Games\Users\UserItemHandler;
@@ -63,6 +65,11 @@ class UserBagHandler
 
     public function AddItem(int $itemID, int $amount)
     {
+        if (($itemID <= 0) || ($amount <= 0))
+        {           
+            throw new Exception ('The itemID \''.$itemID.'\' or amount\''.$amount.'\'  can not <= 0', ErrorCode::ParamError);            
+        }
+
         $info = $this->itemInfoPool->{ $itemID};
         if ($info->StackLimit != 0) { //can stack
             if (isset($this->bagInfo->items->{$itemID})) {
@@ -127,6 +134,11 @@ class UserBagHandler
 
     public function DecItem(int $userItemID, int $amount): bool
     {
+        if (($userItemID <= 0) || ($amount  <= 0))
+        {           
+            throw new Exception ('The userItemID \''.$userItemID.'\' or amount\''.$amount.'\'  can not <= 0', ErrorCode::ParamError);
+        }
+
         $userItemHandler = new UserItemHandler($userItemID);
         $userItemInfo = $userItemHandler->GetInfo();
 
