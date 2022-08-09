@@ -57,8 +57,14 @@ class QualifyingHandler
             $this->NowSeasonID = -1;            
         }
     }
-    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = false): int
+    
+    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = null): int
     {
+        if ($startRightNow == null)
+        {
+            $startRightNow = false;
+        }
+        
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {
             //正常排程換季            
