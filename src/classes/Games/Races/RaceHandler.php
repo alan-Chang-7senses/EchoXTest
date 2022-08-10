@@ -238,6 +238,9 @@ class RaceHandler {
             SkillValue::MaxConditionTakenOver =>$racePlayerInfo->takenOver >= RaceValue::TakenOverConditionCount,
             SkillValue::MaxConditionSpeedUp => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::SpeedUpEffects,function($value,$zero){return $value > $zero;}),
             SkillValue::MaxConditionMinusH => $racePlayerEffectHandler->IsPlayerInEffect(SkillValue::ReduceCostHEffects,function($value,$zero){return $value > $zero;}),
+
+            SkillValue::MaxConditionSunshine => RaceUtility::GetCurrentSceneSunValue() == SceneValue::Sunshine,
+            SkillValue::MaxConditionBacklight => RaceUtility::GetCurrentSceneSunValue() == SceneValue::Backlight,
             default => false
         };
     }
@@ -288,5 +291,4 @@ class RaceHandler {
     {
         return count((array)$this->info->racePlayers);
     }
-
 }

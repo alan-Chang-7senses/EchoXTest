@@ -98,6 +98,9 @@ class SkillValue {
     const MaxConditionSpeedUp = 65;
     const MaxConditionMinusH = 66;
 
+    const MaxConditionSunshine = 71;
+    const MaxConditionBacklight = 72;
+
 
     const SpeedUpEffects = [
         self::EffectS,
