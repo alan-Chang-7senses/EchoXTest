@@ -24,7 +24,7 @@ class SkillEffectFormula {
     
     const OperandAll = [
         'CraterLake', 'Crosswind', 'Downslope', 'Headwind', 'SandDust', 'Tailwind', 'Upslope', 'Volcano', 'Aurora', 'Sunny', 'Dune', 'Flat',
-        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S', 'Red', 'Yellow', 'Blue', 'Green','Feature', 'Genesis',
+        'FIG', 'INT', 'POW', 'SPD', 'STA', 'Sun', 'HP', 'H', 'S', 'Red', 'Yellow', 'Blue', 'Green','Feature', 'Genesis','Featuer','Clear'
     ];
 
     private SkillHandler $skillHandler;
@@ -63,9 +63,10 @@ class SkillEffectFormula {
         return $rt;
     }
 
-    public function GetFormulaValueByLevel(int $level) : float
+    private function GetFormulaValueByLevel(int $level) : float
     {
-        if($this->formula === null) return 0;
+        // if($this->formula === null) return 0;
+        if(empty($this->formula))return 0;
         $matches = [];
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
@@ -107,31 +108,43 @@ class SkillEffectFormula {
     }
     private function ValueGenesis() : int
     {
-        $result = 0;
-        return $result;
+        if($this->racePlayerHandler == null)return 0;
+        $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
+        $raceInfo = $raceHandler->GetInfo();
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $ids = array_keys((array)$raceInfo->racePlayers);
+        $rows = $accessor->FromTable('PlayerNFT')
+                 ->WhereIn('PlayerID',$ids)
+                 ->FetchAll();
+        if($rows === false)return 0; 
+        $rt = 0;                
+        foreach($rows as $row)                                  
+        {
+            if($row->Native > 0)$rt++;
+        }
+        return $rt;
     }
-    private function ValueFeature() : int
+    private function ValueFeatuer() : int
     {
+        if($this->racePlayerHandler == null)return 0;
         $ele = $this->playerInfo->ele;
         $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
         $raceInfo = $raceHandler->GetInfo();
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $ids = [];
-        foreach($raceInfo->racePlayers as $id => $raceId)
-        {
-            $ids[] = $id;
-        }
+        $ids = array_keys((array)$raceInfo->racePlayers);
         $rows = $accessor->FromTable('PlayerNFT')
                  ->WhereIn('PlayerID',$ids)
                  ->WhereEqual('Attribute',$ele)
-                 ->FetchAll();
-        $rt = count((array)$rows);                         
-        return $rt !== false ? $rt : 0;
+                 ->FetchAll();                 
+        return $rows === false ? 0 : count((array)$rows) - 1;//把自己扣掉，不算自己。                         
     }
+    private function ValueFeature() : int{return $this->ValueFeatuer();}
     private function ValueRed(){return 0;}
     private function ValueYellow(){return 0;}
     private function ValueBlue(){return 0;}
     private function ValueGreen(){return 0;}
+    private function ValueClear(){return 0;}
+
     
     private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }
     private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake); }

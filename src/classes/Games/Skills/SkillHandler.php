@@ -48,7 +48,7 @@ class SkillHandler {
             
             if($this->playerHandler !== null){
                 $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
-                $effect['allRankFormulaValue'] = $handler->GetFormulaResults($this,$this->playerHandler,$this->racePlayerHandler);
+                // $effect['allRankFormulaValue'] = $handler->GetFormulaResults($this,$this->playerHandler,$this->racePlayerHandler);
             } 
 
             $this->effects[] = $effect;
