@@ -32,7 +32,6 @@ class CurrentScene extends BaseProcessor{
         $result->scene = [
             'id' => $sceneInfo->id,
             'name' => $sceneInfo->name,
-            'readySec' => $sceneInfo->readySec,
             'env' => $sceneInfo->env,
             'weather' => $climates->weather,
             'windDirection' => $climates->windDirection,
