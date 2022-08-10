@@ -32,6 +32,7 @@ class Skills extends BaseProcessor{
             $skills[] = [
                 'id' => $skillInfo->id,
                 'name' => $skillInfo->name,
+                'icon' => $skillInfo->icon,
                 'description' => $skillInfo->description,
                 'level' => $playerSkill->level,
                 'slot' => $playerSkill->slot,
