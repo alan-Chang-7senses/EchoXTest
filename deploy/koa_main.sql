@@ -272,10 +272,10 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   `BackDNA` varchar(50) NOT NULL COMMENT '背脊 DNA 編碼',
   `HatDNA` varchar(50) NOT NULL COMMENT '頭冠 DNA 編碼',
   `Achievement` varchar(50) NOT NULL DEFAULT '0000000000000000' COMMENT '成就標籤',
-  `Native` varchar(10) NOT NULL DEFAULT '00' COMMENT '原生種標記',
+  `Native` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
   `Source` tinyint(1) NOT NULL DEFAULT 0 COMMENT '來源標記',
   `StrengthLevel` tinyint(1) unsigned zerofill NOT NULL DEFAULT 0 COMMENT '數值標記、強度級別',
-  `SkeletonType` varchar(10) NOT NULL DEFAULT '00' COMMENT '骨架類別',
+  `SkeletonType` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '骨架類別',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
