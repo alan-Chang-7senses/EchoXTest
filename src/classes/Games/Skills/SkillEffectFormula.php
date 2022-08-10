@@ -43,21 +43,35 @@ class SkillEffectFormula {
     }
 
     public function Process() : float{
-        
+
+        $skillInfo = $this->skillHandler->GetInfo();
+        foreach($this->playerInfo->skills as $playerSkill){
+            if($playerSkill->id == $skillInfo->id){
+                return $this->GetFormulaValueByLevel($playerSkill->level);
+            }
+        }        
+        return 0;
+    }
+
+    public function GetAllLevelFormulaValue() : array
+    {
+        $rt = [];
+        for($i = SkillValue::LevelMin; $i <= SkillValue::LevelMax; $i++)
+        {
+            $rt[] = $this->GetFormulaValueByLevel($i);            
+        }
+        return $rt;
+    }
+
+    public function GetFormulaValueByLevel(int $level) : float
+    {
         if($this->formula === null) return 0;
-        
         $matches = [];
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
         $skillInfo = $this->skillHandler->GetInfo();
-        $valueN = $skillInfo->ranks[0];
-        foreach($this->playerInfo->skills as $playerSkill){
-            if($playerSkill->id == $skillInfo->id){
-                $valueN = $skillInfo->ranks[$playerSkill->level - 1];
-                break;
-            }
-        }
+        $valueN = $skillInfo->ranks[$level - 1];
         
         $values = ['%' => '/100', 'N' => $valueN];
         foreach ($operands as $operand){
@@ -102,17 +116,17 @@ class SkillEffectFormula {
         $raceHandler = new RaceHandler($this->racePlayerHandler->GetInfo()->race);
         $raceInfo = $raceHandler->GetInfo();
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $result = 0;
+        $ids = [];
         foreach($raceInfo->racePlayers as $id => $raceId)
         {
-            $accessor->ClearCondition();
-            $accessor->FromTable('PlayerNFT')
-                     ->WhereEqual('PlayerID',$id)
-                     ->WhereEqual('Attribute', $ele)
-                     ->Fetch();
-            if($accessor !== false)$result++;
+            $ids[] = $id;
         }
-        return $result;
+        $rows = $accessor->FromTable('PlayerNFT')
+                 ->WhereIn('PlayerID',$ids)
+                 ->WhereEqual('Attribute',$ele)
+                 ->FetchAll();
+        $rt = count((array)$rows);                         
+        return $rt !== false ? $rt : 0;
     }
     private function ValueRed(){return 0;}
     private function ValueYellow(){return 0;}

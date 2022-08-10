@@ -35,4 +35,11 @@ class SkillEffectHandler {
         $formula = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
         return $formula->Process();
     }
+    public function GetFormulaResults(SkillHandler $skill, PlayerHandler $player, RacePlayerHandler|null $racePlayer) : array{
+        
+        $formula = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
+        return $formula->GetAllLevelFormulaValue();
+    }
+
+
 }

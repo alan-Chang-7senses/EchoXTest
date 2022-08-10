@@ -46,12 +46,20 @@ class SkillHandler {
                 'type' => $info->type,
             ];
             
-            if($this->playerHandler !== null) $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
-            
+            if($this->playerHandler !== null){
+                $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
+                $effect['allRankFormulaValue'] = $handler->GetFormulaResults($this,$this->playerHandler,$this->racePlayerHandler);
+            } 
+
             $this->effects[] = $effect;
         }
         return $this->effects;
     }
+
+    // public function GetAllRandEffectValue() : array
+    // {
+
+    // }
     
     public function GetMaxEffects() : array{
         if(is_array($this->maxEffects)) return $this->maxEffects;
@@ -64,8 +72,10 @@ class SkillHandler {
                 'target' => $info->target,
             ];
             
-            if($this->playerHandler) $maxEffect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
-            
+            if($this->playerHandler){
+                $maxEffect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
+            } 
+
             $this->maxEffects[] = $maxEffect;
         }
         return $this->maxEffects;
