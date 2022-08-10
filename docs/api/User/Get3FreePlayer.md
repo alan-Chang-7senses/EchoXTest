@@ -63,6 +63,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | id | int | 技能編號 |
 | name | string | 技能名稱代號 |
+| icon | int | 技能Icon代號 |
 | description | string | 技能敘述代號 |
 | energy | array | 使用條件能量值，陣列元素依序為 紅、黃、藍、綠 |
 | cooldown | float | 冷卻時間（秒） |

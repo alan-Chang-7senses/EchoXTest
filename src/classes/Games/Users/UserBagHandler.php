@@ -1,55 +1,160 @@
 <?php
 
 namespace Games\Users;
-use Games\Pools\UserBagItemPool;
 use stdClass;
-use Games\Users\Holders\UserItemHolder;
+use Exception;
+use Consts\ErrorCode;
+use Games\Pools\ItemInfoPool;
+use Games\Pools\UserBagItemPool;
 use Games\Users\UserItemHandler;
+use Games\Accessors\ItemAccessor;
+use Games\Exceptions\UserException;
+use Games\Users\Holders\UserItemHolder;
 
-class UserBagHandler {
+class UserBagHandler
+{
 
-    private UserBagItemPool $pool;
-    private int|string $id;
-    
-    public UserItemHolder|stdClass $info;
-    
+    //背包是否可以有兩個相同物品ID
+    private bool $multiItemID = false;
 
-    public function __construct(int|string $id) {
-        $this->pool = UserBagItemPool::Instance();
-        $this->id = $id;
+    private UserBagItemPool $bagPool;
+    private ItemAccessor $itemAccessor;
+    private ItemInfoPool $itemInfoPool;
+    private int|string $userID;
+    private stdClass $bagInfo;
+
+    public function __construct(int|string $userID)
+    {
+        $this->bagPool = UserBagItemPool::Instance();
+        $this->itemAccessor = new ItemAccessor();
+        $this->itemInfoPool = ItemInfoPool::Instance();
+        $this->userID = $userID;
+        $this->bagInfo = $this->bagPool->{ $this->userID};
     }
-    
-    public function ResetInfo() : UserItemHolder|stdClass{
-        $this->info = $this->pool->{$this->id};
-        return $this->info;
+
+    private function ResetInfo()
+    {
+        $this->bagPool->Delete($this->userID);
+        $this->bagInfo = $this->bagPool->{ $this->userID};
     }
 
-    public function GetInfo(int|string $id) : UserItemHolder|stdClass{
-        $this->pool = UserBagItemPool::Instance();
-        $this->id = $id;
+    public function GetItemInfos(): array
+    {
+        $result = [];
+        foreach ($this->bagInfo->items as $userItemIDs) {
+
+            foreach ($userItemIDs as $userItemID) {
+                $userItemHandler = new UserItemHandler($userItemID);
+                $result[] = $userItemHandler->GetInfo();
+            }
+        }
+        return $result;
+    }
+
+    public function GetItemAmount(int $itemID): int
+    {
+        $amount = 0;
+        if (isset($this->bagInfo->items->{$itemID})) {
+            foreach ($this->bagInfo->items->{$itemID} as $userItemID) {
+                $userItemHandler = new UserItemHandler($userItemID);
+                $amount += $userItemHandler->GetInfo()->amount ;
+            }
+        }        
+        return $amount;
+    }    
+
+    public function AddItem(int $itemID, int $amount)
+    {
+        if (($itemID <= 0) || ($amount <= 0))
+        {           
+            throw new Exception ('The itemID \''.$itemID.'\' or amount\''.$amount.'\'  can not <= 0', ErrorCode::ParamError);            
+        }
+
+        $info = $this->itemInfoPool->{ $itemID};
+        if ($info->StackLimit != 0) { //can stack
+            if (isset($this->bagInfo->items->{$itemID})) {
+                foreach ($this->bagInfo->items->{$itemID} as $userItemID) {
+                    if ($amount <= 0) {
+                        break;
+                    }
+                    $userItemHandler = new UserItemHandler($userItemID);
+                    $amount = $userItemHandler->AddItem($amount);
+                }
+
+                if ($amount > 0) {
+                    if ($this->multiItemID) {
+                        $this->AddNewItem($itemID, $amount, $info->StackLimit);
+                    }
+                    else {
+                    //todo add log to $amount, 物品未加完                        
+                    }
+                }
+
+            }
+            else {
+                $this->AddNewItem($itemID, $amount, $info->StackLimit);
+            }
+        }
+        else //no stack
+        {
+            for ($i = 0; $i < $amount; $i++) {
+                $this->AddNewItem($itemID, 1, $info->StackLimit);
+            }
+        }
+
         $this->ResetInfo();
-        return $this->info;
-    }
-    
-    public function DeleteCache(){
-        $this->pool->Delete($this->id);
     }
 
-    public function SaveData(array $bind) : void{
-        $this->pool->Save($this->id, 'Data', $bind);
-        $this->ResetInfo();
+    private function AddNewItem(int $itemID, int $amount, int $stackLimit)
+    {
+
+        if ($stackLimit != 0) { //can stack
+            for ($i = 0; $i < 5; $i++) {
+
+                if ($amount <= $stackLimit) {
+                    $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                    break;
+                }
+                else {
+                    $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
+                    $amount -= $stackLimit;
+                    if ($this->multiItemID == false) {
+                        //todo add log to $amount, 物品未加完
+                        break;
+                    }
+                }
+            }
+        }
+        else //no stack
+        {
+            $this->itemAccessor->AddItemByItemID($this->userID, $itemID, 1);
+        }
     }
 
-    public function AddItem(int $id, int $itemID, int $amount){
-        $UserItemHandler = new UserItemHandler($id);
-        $UserItemHandler->AddItem($itemID,$amount);
+
+    public function DecItem(int $userItemID, int $amount): bool
+    {
+        if (($userItemID <= 0) || ($amount  <= 0))
+        {           
+            throw new Exception ('The userItemID \''.$userItemID.'\' or amount\''.$amount.'\'  can not <= 0', ErrorCode::ParamError);
+        }
+
+        $userItemHandler = new UserItemHandler($userItemID);
+        $userItemInfo = $userItemHandler->GetInfo();
+
+        if ($userItemInfo->user != $this->userID) {
+            throw new UserException(UserException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
+        }
+
+        return $userItemHandler->DecItem($amount);
+    }
+
+    public function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass
+    {
+        $userItemHandler = new UserItemHandler($userItemID);
+        return $userItemHandler->GetInfo();
     }
 
 
-    public function UseItem(int $userItemID, int $amount) : array{
-        $UserItemHandler = new UserItemHandler($userItemID);
-        return $UserItemHandler->UseItem($amount);
-
-    }
 
 }

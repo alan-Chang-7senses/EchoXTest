@@ -22,8 +22,6 @@ class UserItemHolder extends \stdClass{
     public int $useType;
     public int $effectType;
     public int $effectValue;
-    public array $itemDrops;
-    public int $dropType;
-    public int $dropCount;
+    public int $rewardID;
     public array $source;
 }

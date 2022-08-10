@@ -32,12 +32,21 @@ class RaceRoomsHandler
     {
         $rooms = $this->accessor->GetMatchRooms($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
         $roomNumber = count($rooms);
-        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->GetNewRomRate()) : true;
 
+
+        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->GetNewRomRate()) : true;
         if ($isAddNewroom) {
-            $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            $idleRooms = $this->accessor->GetIdleRooms($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+
+            if (count($idleRooms) > 0) {
+                $this->raceRoomID = $idleRooms[0]->RaceRoomID;
+            }
+            else {
+                $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            }
         }
         else {
+
             $rnd = rand(0, $roomNumber - 1);
             $this->raceRoomID = $rooms[$rnd]->RaceRoomID;
         }
@@ -52,6 +61,12 @@ class RaceRoomsHandler
 
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
             $bind['Status'] = 2;
+        }
+        else if ($seatCount == 0) {
+            $bind['Status'] = 0;
+        }
+        else {
+            $bind['Status'] = 1;
         }
 
         $bind["RaceRoomSeats"] = json_encode($users);

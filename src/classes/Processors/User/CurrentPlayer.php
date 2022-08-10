@@ -50,6 +50,7 @@ class CurrentPlayer extends BaseProcessor{
             $player->skills[] = [
                 'id' => $info->id,
                 'name' => $info->name,
+                'icon' => $info->icon,
                 'description' => $info->description,
                 'level' => $skill->level,
                 'slot' => $skill->slot,

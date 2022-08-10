@@ -20,6 +20,13 @@ class RaceRoomsAccessor extends BaseAccessor
             ->ForUpdate()->FetchAll();
     }
 
+    public function GetIdleRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
+    {
+        return $this->useTable()->WhereEqual('Status', 0)->WhereEqual('Lobby', $lobby)
+            ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
+            ->ForUpdate()->FetchAll();
+    }
+
     public function AddNewRoom(int $lobby, int $lowBound, int $upBound,int $qualifyingSeasonID): int
     {
         $this->useTable()->Add([

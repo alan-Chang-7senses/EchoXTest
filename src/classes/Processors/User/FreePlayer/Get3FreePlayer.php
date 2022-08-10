@@ -113,6 +113,7 @@ class Get3FreePlayer extends BaseProcessor
                 [
                     "id" => $info->id,
                     "name" => $info->name,
+                    "icon" => $info->icon,
                     "description" => $info->description,
                     "energy" => $info->energy,
                     "cooldowm" => $info->cooldown,

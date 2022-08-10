@@ -6,12 +6,13 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
+use Games\Pools\UserPool;
 use Accessors\PDOAccessor;
-use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
 use Games\PVP\RaceRoomsHandler;
 use Generators\ConfigGenerator;
 use Games\PVP\QualifyingHandler;
+use Games\Accessors\UserAccessor;
 use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
 
@@ -49,13 +50,18 @@ class PVPMatch extends BaseRace
             $raceroomHandler = new RaceRoomsHandler($lobby);            
             $raceRoomID = $raceroomHandler->GetMatchRoomID($lowbound, $upbound, $qualifyingHandler->NowSeasonID);
             $raceroomSeatHandler = new RaceRoomSeatHandler($raceRoomID);
-            $raceroomSeatHandler->TakeSeat();
+            $raceroomSeatHandler->TakeSeat($this->userInfo->id);
             $seatUserIDs = $raceroomSeatHandler->GetSeatUsers();
             $raceroomHandler->UpdateUsers($raceRoomID, $seatUserIDs);
+
+            
+            $userAccessor = new UserAccessor();
+            $userAccessor ->ModifyUserValuesByID($this->userInfo->id, ['Lobby' => $lobby, 'Room' => $raceRoomID, 'Scene' =>$qualifyingHandler->GetSceneID($lobby)]);
         });
 
-        $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['lobby' => $lobby, 'room' => $raceRoomID]);
+        UserPool::Instance()->delete($this->userInfo->id);
+        //$userHandler = new UserHandler($this->userInfo->id);
+        //$userHandler->SaveData(['lobby' => $lobby, 'room' => $raceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
         $result->raceRoomID = $raceRoomID;
