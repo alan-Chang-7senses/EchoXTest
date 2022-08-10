@@ -2,13 +2,13 @@
 
 namespace Games\Pools;
 
-use Accessors\PoolAccessor;
-use Consts\Globals;
-use Games\Accessors\ItemAccessor;
 use stdClass;
+use Consts\Globals;
+use Accessors\PoolAccessor;
 use Games\Pools\ItemInfoPool;
+use Games\Accessors\ItemAccessor;
+use Games\Exceptions\UserException;
 use Games\Users\Holders\UserItemHolder;
-use Games\Pools\ItemDropPool;
 /**
  * Description of UserItemsPool
  *
@@ -35,11 +35,19 @@ class UserItemPool extends PoolAccessor{
         $holder->id = $id;
         $holder->user = $row->UserID;
         $holder->itemID = $row->ItemID;
+        $holder->userItemsID = $row->UserItemID;        
         $holder->amount = $row->Amount;
         $holder->createTime = $row->CreateTime;
         $holder->updateTime = $row->UpdateTime;
         
         $itemInfo = ItemInfoPool::Instance()->{$holder->itemID};
+
+        if ($itemInfo == false)
+        {
+            throw new UserException(UserException::ItemNotExists,['itemID' => $holder->itemID]);
+        }
+
+
         $holder->itemName = $itemInfo->ItemName;
         $holder->description = $itemInfo->Description;
         $holder->itemType = $itemInfo->ItemType;
@@ -48,15 +56,8 @@ class UserItemPool extends PoolAccessor{
         $holder->useType = $itemInfo->UseType;
         $holder->effectType = $itemInfo->EffectType;
         $holder->effectValue = $itemInfo->EffectValue;
-        $holder->dropType = $itemInfo->DropType;
-        $holder->dropCount = $itemInfo->DropCount;
+        $holder->rewardID = $itemInfo->RewardID;        
         $holder->source = $itemInfo->Source;
-        
-        $holder->itemDrops = [];
-        $itemDropPool = ItemDropPool::Instance();
-        foreach($itemInfo->ItemDropIDs as $itemDropID){
-            $holder->itemDrops[] = $itemDropPool->$itemDropID;
-        }
         
         return $holder;
     }
@@ -74,7 +75,7 @@ class UserItemPool extends PoolAccessor{
         
         if($result === true){
             $data->amount = $value;
-            $data->updateTime = $GLOBALS[Globals::TIME_BEGIN];
+            $data->updateTime = (int)$GLOBALS[Globals::TIME_BEGIN];
         }
         
         return $data;

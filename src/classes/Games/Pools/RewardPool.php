@@ -28,6 +28,7 @@ class RewardPool extends PoolAccessor
         }
 
         $result = new stdClass();
+        $result->RewardID = $infos[0]->RewardID;
         $result->Modes = $infos[0]->Modes;
         $result->Times = $infos[0]->Times;
         $result->TotalProportion = 0;

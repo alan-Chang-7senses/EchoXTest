@@ -49,11 +49,7 @@ class UserPool extends PoolAccessor{
         $playerAccessor = new PlayerAccessor();
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
         $holder->players = array_column($rows, 'PlayerID');
-        
-        $itemAccessor = new ItemAccessor();
-        $rows = $itemAccessor->rowsUserItemByUserAssoc($id);
-        $holder->items = array_column($rows, 'UserItemID');
-        
+
         return $holder;
     }
     

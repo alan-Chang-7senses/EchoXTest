@@ -8,8 +8,8 @@ use Exceptions\NormalException;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class UserException extends NormalException{
-    
+class UserException extends NormalException
+{
     const UserNotExist = 2001;
     const NotHoldPlayer = 2002;
     const ItemNotEnough = 2003;
@@ -21,4 +21,9 @@ class UserException extends NormalException{
     const CanNotResetName = 2008;
     const UserNameNotSetYet = 2009;
     const AlreadyHadFreePeta = 2010;
+    const ItemNotExists = 2011;
+    const UserNotItemOwner = 2012;
+    const UseItemError = 2013;
+    const UseRewardIDError = 2014;
+
 }

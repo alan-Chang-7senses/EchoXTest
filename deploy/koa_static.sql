@@ -2,7 +2,7 @@
 -- 主機:                           127.0.0.1
 -- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
--- HeidiSQL 版本:                  12.0.0.6468
+-- HeidiSQL 版本:                  11.3.0.6295
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -140,47 +140,19 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `UseType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '使用類型',
   `EffectType` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果類型',
   `EffectValue` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '效果值',
-  `ItemDropIDs` text DEFAULT NULL COMMENT '掉落物編號',
-  `DropType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落類型',
-  `DropCount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '掉落次數',
+  `RewardID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵編號',
   `Source` varchar(255) NOT NULL DEFAULT '' COMMENT '來源代號',
   PRIMARY KEY (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
 
 -- 正在傾印表格  koa_static.ItemInfo 的資料：~31 rows (近似值)
 /*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
-INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `ItemDropIDs`, `DropType`, `DropCount`, `Source`) VALUES
-	(1001, '8101', '8601', 1, 'ItemIcon_1001', 99999, 0, 101, 150, NULL, 0, 1, 'pve,store,s101'),
-	(1002, '8102', '8602', 1, 'ItemIcon_1002', 99999, 0, 101, 750, NULL, 0, 1, 'pvp1,store,s102'),
-	(1003, '8103', '8603', 1, 'ItemIcon_1003', 99999, 0, 101, 2100, NULL, 0, 1, 'pvp2,store,s103'),
-	(1111, '8104', '8604', 1, 'ItemIcon_0004', 99999, 0, 201, 0, NULL, 0, 1, 'pvp3'),
-	(1112, '8105', '8605', 1, 'ItemIcon_0005', 99999, 0, 202, 0, NULL, 0, 1, 's008'),
-	(1121, '8106', '8606', 1, 'ItemIcon_0006', 99999, 0, 203, 0, NULL, 0, 1, 's012'),
-	(1122, '8107', '8607', 1, 'ItemIcon_0007', 99999, 0, 204, 0, NULL, 0, 1, 's009'),
-	(1131, '8108', '8608', 1, 'ItemIcon_0008', 99999, 0, 205, 0, NULL, 0, 1, 's010'),
-	(1132, '8109', '8609', 1, 'ItemIcon_0009', 99999, 0, 206, 0, NULL, 0, 1, 's011'),
-	(2000, '8110', '8610', 2, 'ItemIcon_0010', 99999, 0, 0, 0, NULL, 0, 1, 's001'),
-	(2001, '8118', '8618', 2, 'ItemIcon_0039_2', 99999, 0, 0, 0, NULL, 0, 1, ''),
-	(2002, '8117', '8617', 2, 'ItemIcon_0039_1', 99999, 0, 0, 0, NULL, 0, 1, ''),
-	(2011, '8111', '8611', 2, 'ItemIcon_0011', 99999, 0, 0, 0, NULL, 0, 1, 's002'),
-	(2013, '8113', '8613', 2, 'ItemIcon_0012', 99999, 0, 0, 0, NULL, 0, 1, 's004'),
-	(2014, '8112', '8612', 2, 'ItemIcon_0013', 99999, 0, 0, 0, NULL, 0, 1, 's003'),
-	(2015, '8116', '8616', 2, 'ItemIcon_0014', 99999, 0, 0, 0, NULL, 0, 1, 's007'),
-	(2016, '8115', '8615', 2, 'ItemIcon_0015', 99999, 0, 0, 0, NULL, 0, 1, 's006'),
-	(2017, '8114', '8614', 2, 'ItemIcon_0016', 99999, 0, 0, 0, NULL, 0, 1, 's005'),
-	(3001, '8119', '8619', 3, 'ItemIcon_0017_2', 999, 1, 0, 0, '1', 3, 1, '0'),
-	(3002, '8120', '8620', 3, 'ItemIcon_0018_2', 999, 1, 0, 0, '2', 3, 1, '0'),
-	(3003, '8124', '8624', 3, 'ItemIcon_0019_2', 999, 1, 0, 0, '3', 1, 1, '0'),
-	(4001, '8121', '8621', 4, 'ItemIcon_0020_1', 999, 1, 0, 0, '1', 4, 1, '0'),
-	(4002, '8122', '8622', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, '2', 4, 1, '0'),
-	(4003, '8123', '8623', 4, 'ItemIcon_0020_3', 999, 1, 0, 0, '4', 3, 1, '0'),
-	(4004, '8125', '8625', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, '3', 4, 1, '0'),
-	(4005, '8126', '8626', 4, 'ItemIcon_0025_1', 999, 1, 0, 0, '5', 4, 1, '0'),
-	(4006, '8127', '8627', 4, 'ItemIcon_0025_2', 999, 1, 0, 0, '6', 4, 1, '0'),
-	(4007, '8128', '8628', 4, 'ItemIcon_0025_3', 999, 1, 0, 0, '7', 4, 1, '0'),
-	(5100, '8129', '8629', 5, 'ItemIcon_0032', 999, 0, 0, 0, NULL, 0, 0, '0'),
-	(5201, '8130', '8630', 5, 'ItemIcon_0031', 999, 0, 0, 0, NULL, 0, 0, '0'),
-	(5202, '8131', '8631', 5, 'ItemIcon_0030', 999, 0, 0, 0, NULL, 0, 0, '0');
+INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `RewardID`, `Source`) VALUES
+	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, 1, 's001,s002,s003'),
+	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, 0, 's002'),
+	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, 0, 's003'),
+	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, 0, 's004'),
+	(5, 'n0005', 'd0005', 3, '5', 10, 1, 0, 0, 2, 's003,s005');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構

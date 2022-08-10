@@ -16,6 +16,10 @@
 		- [當前角色](User/CurrentPlayer.md)。
 		- [當前使用者資訊](User/CurrentInfo.md)。
 		- [持有物品](User/Items.md)。
+		- [獲取物品資訊](User/GetItemInfo.md)。
+		- [使用物品](User/UseItems.md)。
+		- [取得選擇物品資訊](User/GetItemSelectInfo.md)。
+		- [使用選擇物品](User/UseItemSelect.md)。				
 		- [隨機三隻免費Peta](User/Get3FreePlayer.md)。
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
 			
