@@ -5,10 +5,11 @@ namespace Processors\PVP;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Holders\ResultData;
+use Games\Pools\UserPool;
 use Accessors\PDOAccessor;
-use Games\Users\UserHandler;
 use Processors\Races\BaseRace;
 use Games\PVP\RaceRoomsHandler;
+use Games\Accessors\UserAccessor;
 use Games\PVP\RaceRoomSeatHandler;
 use Games\Exceptions\RaceException;
 
@@ -32,10 +33,14 @@ class PVPMatchQuit extends BaseRace
             $seatUsers = $raceroomSeatHandler->GetSeatUsers();                      
             $raceroomHandler = new RaceRoomsHandler($this->userInfo->lobby);
             $raceroomHandler->UpdateUsers($raceRoomID, $seatUsers);
-        });
+            
+            $userAccessor = new UserAccessor();
+            $userAccessor ->ModifyUserValuesByID($this->userInfo->id, ['Lobby' => 0, 'Room' => 0]);
 
-        $userHandler = new UserHandler($this->userInfo->id);
-        $userHandler->SaveData(['lobby' => 0, 'room' => 0]);
+        });
+        UserPool::Instance()->delete($this->userInfo->id);
+        // $userHandler = new UserHandler($this->userInfo->id);
+        // $userHandler->SaveData(['lobby' => 0, 'room' => 0]);
 
         $result = new ResultData(ErrorCode::Success);
         return $result;

@@ -22,26 +22,40 @@ class RaceRoomSeatHandler
     }
 
 
-    public function TakeSeat(): int
+    public function TakeSeat(int $userID): int
     {
         $allSeats = $this->accessor->GetSeats($this->raceRoomID);
         if (count($allSeats) == 0) {
             $allSeats = $this->accessor->CreateSeats($this->raceRoomID, ConfigGenerator::Instance()->AmountRacePlayerMax);
         }
 
+        $raceRoomSeatID = $this->FindSeatID($allSeats,  $userID);
+        if($raceRoomSeatID != false)
+        {
+            //to do remove RaceRoomSeat tble
+            //這裡也有問題不該有座位
+            return $raceRoomSeatID;
+        }
+
         $raceRoomSeatID = $this->FindSeatID($allSeats, 0);
+        if ($raceRoomSeatID  == false)
+        {
+            //RaceRoomSeat 標記有問題
+            throw new RaceException(RaceException::UserMatchError);
+        }
 
         $bind = [
             'UserID' => $this->userID
         ];
 
         $this->accessor->Update($raceRoomSeatID, $bind);
-
         return $raceRoomSeatID;
     }
 
     public function LeaveSeat()
     {
+
+
         $raceRoomSeatID = $this->FindSeatID($this->raceRoomID, $this->userID);
         $bind = [
             'UserID' => 0
@@ -50,7 +64,7 @@ class RaceRoomSeatHandler
     }
 
 
-    private function FindSeatID(array|int $allSeats, int $userID): int
+    private function FindSeatID(array|int $allSeats, int $userID): int|false
     {
         if (!is_array($allSeats)) {
             $allSeats = $this->accessor->GetSeats($allSeats);
@@ -61,9 +75,7 @@ class RaceRoomSeatHandler
                 return $seat->RaceRoomSeatID;
             }
         }
-
-        //RaceRoom 標記有問題
-        throw new RaceException(RaceException::UserMatchError);
+        return false;
     }
 
     public function GetSeatUsers(): array
