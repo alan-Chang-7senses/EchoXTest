@@ -31,15 +31,15 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
 	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
 	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
-	('PvP_B_NewRoomRate_1', '250', '金幣晉級賽創建房間千分比'),
-	('PvP_B_NewRoomRate_2', '250', 'UCG晉級賽創建房間千分比'),
+	('PvP_B_NewRoomRate_1', '1', '金幣晉級賽創建房間千分比'),
+	('PvP_B_NewRoomRate_2', '250', 'PT晉級賽創建房間千分比'),
 	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
-	('PvP_B_SeasonStartTime ', '2022-06-24 00:00:00+8:00', '賽季開始時間'),
+	('PvP_B_SeasonStartTime', '2022-06-24 00:00:00+8:00', '晉級賽賽季起始時間'),
 	('PvP_B_TicketId_1', '5100', '金幣賽入場券的道具Id'),
-	('PvP_B_TicketId_2', '2', 'PT賽入場券的道具Id'),
-	('PvP_B_WeeksPerSeacon', '2', '每個賽季有幾週'),
+	('PvP_B_TicketId_2', '5201', 'PT賽入場券的道具Id'),
+	('PvP_B_WeeksPerSeacon', '2', '晉級賽每賽季有幾週'),
 	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
-	('PvP_MaxMatchSeconds', '600', '開局配對基本等待秒數'),
+	('PvP_MaxMatchSeconds', '200', '開局配對基本等待秒數'),
 	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
@@ -922,10 +922,11 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
-	(1, 1, 1, 1, 1658419200, 1659628800, 1659589326);
+	(1, 1, 1, 1, 1658419200, 1659628800, 1659589326),
+	(2, 2, 1001, 1, 1659628800, 1660838400, 1659926242);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構

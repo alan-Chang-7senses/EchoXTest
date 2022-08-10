@@ -145,14 +145,44 @@ CREATE TABLE IF NOT EXISTS `ItemInfo` (
   PRIMARY KEY (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品資訊表';
 
--- 正在傾印表格  koa_static.ItemInfo 的資料：~31 rows (近似值)
+-- 正在傾印表格  koa_static.ItemInfo 的資料：~35 rows (近似值)
 /*!40000 ALTER TABLE `ItemInfo` DISABLE KEYS */;
 INSERT INTO `ItemInfo` (`ItemID`, `ItemName`, `Description`, `ItemType`, `Icon`, `StackLimit`, `UseType`, `EffectType`, `EffectValue`, `RewardID`, `Source`) VALUES
-	(1, 'n0001', 'd0001', 1, '1', 9999, 1, 101, 123, 1, 's001,s002,s003'),
-	(2, 'n0002', 'd0002', 2, '2', 8888, 0, 0, 0, 0, 's002'),
-	(3, 'n0003', 'd0003', 3, '3', 777, 1, 0, 0, 0, 's003'),
-	(4, 'n0004', 'd0004', 4, '4', 777, 1, 0, 0, 0, 's004'),
-	(5, 'n0005', 'd0005', 3, '5', 10, 1, 0, 0, 2, 's003,s005');
+	(-4, '8133', '8633', 1, 'ItemIcon_0040', 2147483647, 0, 0, 0, 0, ''),
+	(-3, '8134', '8634', 1, 'ItemIcon_0028', 2147483647, 0, 0, 0, 0, ''),
+	(-2, '8132', '8632', 1, 'ItemIcon_0026', 2147483647, 0, 0, 0, 0, ''),
+	(-1, '8135', '8635', 1, 'ItemIcon_0029', 2147483647, 0, 0, 0, 0, ''),
+	(1001, '8101', '8601', 1, 'ItemIcon_1001', 99999, 0, 101, 150, 0, 'pve,store,s101'),
+	(1002, '8102', '8602', 1, 'ItemIcon_1002', 99999, 0, 101, 750, 0, 'pvp1,store,s102'),
+	(1003, '8103', '8603', 1, 'ItemIcon_1003', 99999, 0, 101, 2100, 0, 'pvp2,store,s103'),
+	(1111, '8104', '8604', 1, 'ItemIcon_0004', 99999, 0, 201, 0, 0, 'pvp3'),
+	(1112, '8105', '8605', 1, 'ItemIcon_0005', 99999, 0, 202, 0, 0, 's008'),
+	(1121, '8106', '8606', 1, 'ItemIcon_0006', 99999, 0, 203, 0, 0, 's012'),
+	(1122, '8107', '8607', 1, 'ItemIcon_0007', 99999, 0, 204, 0, 0, 's009'),
+	(1131, '8108', '8608', 1, 'ItemIcon_0008', 99999, 0, 205, 0, 0, 's010'),
+	(1132, '8109', '8609', 1, 'ItemIcon_0009', 99999, 0, 206, 0, 0, 's011'),
+	(2000, '8110', '8610', 2, 'ItemIcon_0010', 99999, 0, 0, 0, 0, 's001'),
+	(2001, '8118', '8618', 2, 'ItemIcon_0039_2', 99999, 0, 0, 0, 0, ''),
+	(2002, '8117', '8617', 2, 'ItemIcon_0039_1', 99999, 0, 0, 0, 0, ''),
+	(2011, '8111', '8611', 2, 'ItemIcon_0011', 99999, 0, 0, 0, 0, 's002'),
+	(2013, '8113', '8613', 2, 'ItemIcon_0012', 99999, 0, 0, 0, 0, 's004'),
+	(2014, '8112', '8612', 2, 'ItemIcon_0013', 99999, 0, 0, 0, 0, 's003'),
+	(2015, '8116', '8616', 2, 'ItemIcon_0014', 99999, 0, 0, 0, 0, 's007'),
+	(2016, '8115', '8615', 2, 'ItemIcon_0015', 99999, 0, 0, 0, 0, 's006'),
+	(2017, '8114', '8614', 2, 'ItemIcon_0016', 99999, 0, 0, 0, 0, 's005'),
+	(3001, '8119', '8619', 3, 'ItemIcon_0017_2', 999, 1, 0, 0, 1, '0'),
+	(3002, '8120', '8620', 3, 'ItemIcon_0018_2', 999, 1, 0, 0, 2, '0'),
+	(3003, '8124', '8624', 3, 'ItemIcon_0019_2', 999, 1, 0, 0, 6, '0'),
+	(4001, '8121', '8621', 4, 'ItemIcon_0020_1', 999, 1, 0, 0, 3, '0'),
+	(4002, '8122', '8622', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, 4, '0'),
+	(4003, '8123', '8623', 4, 'ItemIcon_0020_3', 999, 1, 0, 0, 5, '0'),
+	(4004, '8125', '8625', 4, 'ItemIcon_0021_1', 999, 1, 0, 0, 7, '0'),
+	(4005, '8126', '8626', 4, 'ItemIcon_0025_1', 999, 1, 0, 0, 8, '0'),
+	(4006, '8127', '8627', 4, 'ItemIcon_0025_2', 999, 1, 0, 0, 9, '0'),
+	(4007, '8128', '8628', 4, 'ItemIcon_0025_3', 999, 1, 0, 0, 10, '0'),
+	(5100, '8129', '8629', 5, 'ItemIcon_0032', 999, 0, 0, 0, 0, '0'),
+	(5201, '8130', '8630', 5, 'ItemIcon_0031', 999, 0, 0, 0, 0, '0'),
+	(5202, '8131', '8631', 5, 'ItemIcon_0030', 999, 0, 0, 0, 0, '0');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構
@@ -228,22 +258,50 @@ INSERT INTO `QualifyingArena` (`QualifyingArenaID`, `PTScene`, `CoinScene`) VALU
 
 -- 傾印  資料表 koa_static.RewardContent 結構
 CREATE TABLE IF NOT EXISTS `RewardContent` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ContentGroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '群組編號',
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵內容',
   `Amount` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵數量',
-  `Proportion` smallint(4) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵權重或機率(千分比)'
+  `Proportion` smallint(4) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵權重或機率(千分比)',
+  PRIMARY KEY (`Serial`),
+  KEY `ContentGroupID` (`ContentGroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='獎勵內容';
 
--- 正在傾印表格  koa_static.RewardContent 的資料：~7 rows (近似值)
+-- 正在傾印表格  koa_static.RewardContent 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `RewardContent` DISABLE KEYS */;
-INSERT INTO `RewardContent` (`ContentGroupID`, `ItemID`, `Amount`, `Proportion`) VALUES
-	(1, 1, 1, 100),
-	(1, 2, 2, 200),
-	(1, 3, 3, 300),
-	(2, 1, 1, 100),
-	(2, 2, 2, 200),
-	(2, 3, 3, 300),
-	(3, -1, 100, 300);
+INSERT INTO `RewardContent` (`Serial`, `ContentGroupID`, `ItemID`, `Amount`, `Proportion`) VALUES
+	(1, 1, 1111, 1, 100),
+	(2, 1, 1121, 1, 100),
+	(3, 1, 1131, 1, 100),
+	(4, 2, 1112, 1, 100),
+	(5, 2, 1122, 1, 100),
+	(6, 2, 1132, 1, 100),
+	(7, 3, 2011, 1, 100),
+	(8, 3, 2013, 1, 100),
+	(9, 3, 2014, 1, 100),
+	(10, 3, 2015, 1, 100),
+	(11, 3, 2016, 1, 100),
+	(12, 3, 2017, 1, 100),
+	(13, 4, 2000, 1, 30),
+	(14, 4, 2011, 1, 10),
+	(15, 4, 2013, 1, 10),
+	(16, 4, 2014, 1, 10),
+	(17, 4, 2015, 1, 10),
+	(18, 4, 2016, 1, 10),
+	(19, 4, 2017, 1, 10),
+	(20, 4, 2000, 2, 20),
+	(21, 4, 2000, 3, 10),
+	(22, 5, 1001, 10, 100),
+	(23, 5, 1002, 5, 100),
+	(24, 6, 1002, 10, 100),
+	(25, 6, 1003, 5, 100),
+	(26, 6, 1111, 1, 100),
+	(27, 6, 1121, 1, 100),
+	(28, 6, 1131, 1, 100),
+	(29, 7, 1003, 10, 100),
+	(30, 7, 1112, 1, 100),
+	(31, 7, 1122, 1, 100),
+	(32, 7, 1132, 1, 100);
 /*!40000 ALTER TABLE `RewardContent` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.RewardInfo 結構
@@ -252,19 +310,23 @@ CREATE TABLE IF NOT EXISTS `RewardInfo` (
   `Modes` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵模式',
   `Times` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '發放次數',
   `ContentGroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '獎勵內容群組',
-  PRIMARY KEY (`RewardID`)
+  PRIMARY KEY (`RewardID`),
+  KEY `ContentGroupID` (`ContentGroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='獎勵資訊';
 
--- 正在傾印表格  koa_static.RewardInfo 的資料：~7 rows (近似值)
+-- 正在傾印表格  koa_static.RewardInfo 的資料：~10 rows (近似值)
 /*!40000 ALTER TABLE `RewardInfo` DISABLE KEYS */;
 INSERT INTO `RewardInfo` (`RewardID`, `Modes`, `Times`, `ContentGroupID`) VALUES
-	(1, 1, 1, 1),
-	(2, 2, 1, 1),
-	(3, 3, 1, 1),
-	(4, 5, 1, 1),
-	(5, 1, 1, 2),
-	(6, 1, 100, 2),
-	(7, 1, 100, 3);
+	(1, 3, 1, 1),
+	(2, 3, 1, 2),
+	(3, 2, 1, 1),
+	(4, 2, 1, 2),
+	(5, 3, 1, 4),
+	(6, 5, 1, 3),
+	(7, 2, 1, 3),
+	(8, 2, 1, 5),
+	(9, 2, 1, 6),
+	(10, 2, 1, 7);
 /*!40000 ALTER TABLE `RewardInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneClimate 結構
@@ -281,12 +343,33 @@ CREATE TABLE IF NOT EXISTS `SceneClimate` (
   KEY `StartTime` (`StartTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='場景氣候';
 
--- 正在傾印表格  koa_static.SceneClimate 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_static.SceneClimate 的資料：~24 rows (近似值)
 /*!40000 ALTER TABLE `SceneClimate` DISABLE KEYS */;
 INSERT INTO `SceneClimate` (`SceneClimateID`, `SceneID`, `Weather`, `WindDirection`, `WindSpeed`, `StartTime`, `Lighting`) VALUES
-	(1, 1, 1, 1, 50, 0, 2),
-	(2, 1, 1, 2, 50, 28800, 1),
-	(3, 1, 1, 3, 50, 64800, 2);
+	(1, 1001, 2, 1, 50, 0, 2),
+	(2, 1001, 1, 1, 50, 3600, 2),
+	(3, 1001, 1, 1, 50, 7200, 1),
+	(4, 1001, 1, 1, 50, 10800, 1),
+	(5, 1001, 3, 1, 50, 14400, 1),
+	(6, 1001, 3, 1, 50, 18000, 1),
+	(7, 1001, 3, 2, 50, 21600, 1),
+	(8, 1001, 3, 2, 50, 25200, 1),
+	(9, 1001, 3, 2, 50, 28800, 1),
+	(10, 1001, 3, 2, 50, 32400, 1),
+	(11, 1001, 1, 2, 50, 36000, 1),
+	(12, 1001, 1, 2, 50, 39600, 1),
+	(13, 1001, 1, 2, 50, 43200, 1),
+	(14, 1001, 2, 3, 50, 46800, 1),
+	(15, 1001, 2, 3, 50, 50400, 2),
+	(16, 1001, 2, 3, 50, 54000, 2),
+	(17, 1001, 3, 3, 50, 57600, 2),
+	(18, 1001, 3, 3, 50, 61200, 2),
+	(19, 1001, 3, 3, 50, 64800, 2),
+	(20, 1001, 3, 4, 50, 68400, 2),
+	(21, 1001, 3, 4, 50, 72000, 2),
+	(22, 1001, 3, 4, 50, 75600, 2),
+	(23, 1001, 2, 4, 50, 79200, 2),
+	(24, 1001, 2, 4, 50, 82800, 2);
 /*!40000 ALTER TABLE `SceneClimate` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SceneInfo 結構
@@ -300,7 +383,30 @@ CREATE TABLE IF NOT EXISTS `SceneInfo` (
 -- 正在傾印表格  koa_static.SceneInfo 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SceneInfo` DISABLE KEYS */;
 INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `SceneEnv`) VALUES
-	(1, 'CloseBeta', 1);
+	(1001, '9001', 1),
+	(1002, '9003', 1),
+	(1003, '9004', 1),
+	(1004, '9005', 1),
+	(1005, '9006', 1),
+	(1006, '9007', 1),
+	(1007, '9008', 1),
+	(1008, '9009', 1),
+	(2001, '9010', 2),
+	(2002, '9011', 2),
+	(2003, '9012', 2),
+	(2004, '9013', 2),
+	(2005, '9014', 2),
+	(2006, '9015', 2),
+	(2007, '9016', 2),
+	(2008, '9017', 2),
+	(3001, '9018', 3),
+	(3002, '9019', 3),
+	(3003, '9020', 3),
+	(3004, '9021', 3),
+	(3005, '9022', 3),
+	(3006, '9023', 3),
+	(3007, '9024', 3),
+	(3008, '9025', 3);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillAffixAlias 結構

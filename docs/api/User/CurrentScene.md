@@ -40,7 +40,6 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | id | int | 場景編號 |
 | name | string | 場景名稱 |
-| readySec | int | 起跑準備時間（秒） |
 | env | int | [環境](../codes/scene.md#env) |
 | weather | int | [天氣](../codes/scene.md#weather) |
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
@@ -57,7 +56,6 @@ Content Type: `application/json`
 	    "scene": {
 	        "id": 1,
 	        "name": "CloseBeta",
-	        "readySec": 7,
 	        "env": 1,
 	        "weather": 1,
 	        "windDirection": 2,
