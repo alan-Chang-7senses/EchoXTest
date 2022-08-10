@@ -2,9 +2,10 @@
 
 namespace Games\Users;
 
-use Games\Exceptions\UserException;
 use stdClass;
 use Games\Pools\RewardPool;
+use Games\Pools\ItemInfoPool;
+use Games\Exceptions\UserException;
 
 class RewardHandler
 {
@@ -71,6 +72,22 @@ class RewardHandler
         return $tempItems;
     }
 
+    public function GetClientItemsInfo(): array
+    {
+        $items = $this->GetItems();
+        $itemInfos = [];
+        $itemInfoPool = ItemInfoPool::Instance();      
+        foreach ($items as $item) {
+            $itemInfo = $itemInfoPool->{ $item->ItemID};
+            $itemInfos[] = [
+                'itemID' => $item->ItemID,
+                'amount' => $item->Amount,
+                'icon' => $itemInfo->Icon,
+            ];   
+        }
+
+        return $itemInfos;
+    }
 
     public function CheckSelectIndex(int $selectIndex):bool
     {
