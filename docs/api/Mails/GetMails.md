@@ -31,6 +31,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [Mails](#mails) | object | 信件資訊 |
+|
 
 #### <span id="mails">mails 內容</span>
 
@@ -44,13 +45,19 @@ Content Type: `application/json`
 | sender | string | 信件寄件人 |
 | url | string | 信件內容-網址 |
 | remainingTime | int | 剩餘時間 |
-| mailsRewards1 | int | 第一個獎項物品編號 |
-| mailsRewards1Number1 | int | 第一個獎項數量 |
-| mailsRewards1 | int | 第二個獎項物品編號 |
-| mailsRewards1Number1 | int | 第二個獎項數量 |
-| mailsRewards1 | int | 第三個獎項物品編號 |
-| mailsRewards1Number1 | int | 第三個獎項數量 |
+| [rewardItems](#rewardItems) | object| 獎勵物品|
+|
 
+#### <span id="rewardItems">rewardItems 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| itemID | int | 物品編號 |
+| amount | int | 物品數量 |
+| icon | string | Icon 圖號 |
+|
 ### Example
 
 	{
