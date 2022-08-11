@@ -81,54 +81,6 @@ INSERT INTO `FreePetaInfo` (`ID`, `Type`, `Constitution`, `Strength`, `Dexterity
 	(15, 2, 5500, 4400, 5200, 4500, 1);
 /*!40000 ALTER TABLE `FreePetaInfo` ENABLE KEYS */;
 
--- 傾印  資料表 koa_static.ItemDrop 結構
-CREATE TABLE IF NOT EXISTS `ItemDrop` (
-  `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ItemDropID` int(11) NOT NULL DEFAULT 0 COMMENT '掉落物編號',
-  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
-  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
-  `Proportion` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '比例權重',
-  PRIMARY KEY (`Serial`),
-  KEY `ItemDropID` (`ItemDropID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
-
--- 正在傾印表格  koa_static.ItemDrop 的資料：~32 rows (近似值)
-/*!40000 ALTER TABLE `ItemDrop` DISABLE KEYS */;
-INSERT INTO `ItemDrop` (`Serial`, `ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
-	(1, 1, 1111, 1, 100),
-	(2, 1, 1121, 1, 100),
-	(3, 1, 1131, 1, 100),
-	(4, 2, 1112, 1, 100),
-	(5, 2, 1122, 1, 100),
-	(6, 2, 1132, 1, 100),
-	(7, 3, 2011, 1, 100),
-	(8, 3, 2013, 1, 100),
-	(9, 3, 2014, 1, 100),
-	(10, 3, 2015, 1, 100),
-	(11, 3, 2016, 1, 100),
-	(12, 3, 2017, 1, 100),
-	(13, 4, 2000, 1, 30),
-	(14, 4, 2011, 1, 10),
-	(15, 4, 2013, 1, 10),
-	(16, 4, 2014, 1, 10),
-	(17, 4, 2015, 1, 10),
-	(18, 4, 2016, 1, 10),
-	(19, 4, 2017, 1, 10),
-	(20, 4, 2000, 2, 20),
-	(21, 4, 2000, 3, 10),
-	(22, 5, 1001, 10, 100),
-	(23, 5, 1002, 5, 100),
-	(24, 6, 1002, 10, 100),
-	(25, 6, 1003, 5, 100),
-	(26, 6, 1111, 1, 100),
-	(27, 6, 1121, 1, 100),
-	(28, 6, 1131, 1, 100),
-	(29, 7, 1003, 10, 100),
-	(30, 7, 1112, 1, 100),
-	(31, 7, 1122, 1, 100),
-	(32, 7, 1132, 1, 100);
-/*!40000 ALTER TABLE `ItemDrop` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
@@ -217,25 +169,6 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`,
 	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
 	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
-
--- 傾印  資料表 koa_static.MailsRewards 結構
-CREATE TABLE IF NOT EXISTS `MailsRewards` (
-  `RewardID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '獎勵編號',
-  `ItemID1` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號A',
-  `ItemNumber1` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量A',
-  `ItemID2` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號B',
-  `ItemNumber2` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量B',
-  `ItemID3` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號C',
-  `ItemNumber3` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量C',
-  PRIMARY KEY (`RewardID`) USING BTREE,
-  KEY `ItemID` (`ItemID1`,`ItemID2`,`ItemID3`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件獎勵表';
-
--- 正在傾印表格  koa_static.MailsRewards 的資料：~1 rows (近似值)
-/*!40000 ALTER TABLE `MailsRewards` DISABLE KEYS */;
-INSERT INTO `MailsRewards` (`RewardID`, `ItemID1`, `ItemNumber1`, `ItemID2`, `ItemNumber2`, `ItemID3`, `ItemNumber3`) VALUES
-	(1, 8129, 2, 8130, 2, 0, 0);
-/*!40000 ALTER TABLE `MailsRewards` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
 CREATE TABLE IF NOT EXISTS `QualifyingArena` (
