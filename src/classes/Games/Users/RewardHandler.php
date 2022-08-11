@@ -70,23 +70,6 @@ class RewardHandler
         return $tempItems;
     }
 
-    public function GetClientItemsInfo(): array
-    {
-        $items = $this->GetItems();
-        $itemInfos = [];
-        $itemInfoPool = ItemInfoPool::Instance();
-        foreach ($items as $item) {
-            $itemInfo = $itemInfoPool->{ $item->ItemID};
-            $itemInfos[] = [
-                'itemID' => $item->ItemID,
-                'amount' => $item->Amount,
-                'icon' => $itemInfo->Icon,
-            ];
-        }
-
-        return $itemInfos;
-    }
-
     public function CheckSelectIndex(int $selectIndex): bool
     {
         return isset($this->info->Contents[$selectIndex]);

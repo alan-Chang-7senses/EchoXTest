@@ -9,7 +9,7 @@ use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Mails\MailsHandler;
-use Games\Pools\ItemInfoPool;
+use Games\Users\ItemUtility;
 use Processors\BaseProcessor;
 
 class GetMails extends BaseProcessor
@@ -29,12 +29,13 @@ class GetMails extends BaseProcessor
                 continue;
             }
 
-            $items = $userMailsHandler->GetMailItems($userMailInfo->UserMailID);
-            for( $i = 0; $i < count($items); $i++)
+            $mailItems = $userMailsHandler->GetMailItems($userMailInfo->UserMailID);
+            $items = [];
+            foreach($mailItems as $mailItem)
             {
-                $itemifo = ItemInfoPool::Instance()->{$items[$i]->ItemID};
-                $items[$i]->icon = $itemifo->Icon;
+                $items[] = ItemUtility::GetClientSimpleInfo($mailItem->ItemID, $mailItem->Amount);
             }
+
 
             $mail = new stdClass();
             $mail = [

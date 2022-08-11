@@ -7,10 +7,10 @@ use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Mails\MailsHandler;
-use Games\Pools\ItemInfoPool;
 use Processors\BaseProcessor;
 use Games\Users\UserBagHandler;
 use Games\Exceptions\UserException;
+use Games\Users\ItemUtility;
 
 class ReceiveMailsRewards extends BaseProcessor
 {
@@ -26,9 +26,9 @@ class ReceiveMailsRewards extends BaseProcessor
         if ($mailInfo == false) {
             throw new UserException(UserException::MailNotExist);
         }
-
         if ($openStatus != 0)
             $openStatus = 1;
+
         $itemsArray = [];
         if ($receiveStatus == 1) {
             if ($mailInfo->ReceiveStatus == 1) {
@@ -42,13 +42,7 @@ class ReceiveMailsRewards extends BaseProcessor
             }
             foreach ($items as $item) {
                 $userBagHandler->AddItem($item->ItemID, $item->Amount);
-
-                $itemInfo = ItemInfoPool::Instance()->{ $item->ItemID};
-                $itemsArray[] = [
-                    'itemID' => $item->ItemID,
-                    'amount' => $item->Amount,
-                    'icon' => $itemInfo->Icon,
-                ];
+                $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
             $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);
         }
@@ -57,7 +51,7 @@ class ReceiveMailsRewards extends BaseProcessor
         }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->addItems = $itemsArray;
+        $result->rewardItems = $itemsArray;
         return $result;
     }
 
