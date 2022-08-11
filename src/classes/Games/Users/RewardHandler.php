@@ -13,7 +13,6 @@ class RewardHandler
     private RewardPool $pool;
     private stdClass|false $info;
 
-
     public function __construct(int $rewardID)
     {
         $this->pool = RewardPool::Instance();
@@ -21,7 +20,6 @@ class RewardHandler
         if ($this->info == false) {
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $rewardID]);
         }
-
     }
 
     private function AddTempItems(stdClass $content, array $tempItems): array
@@ -76,35 +74,35 @@ class RewardHandler
     {
         $items = $this->GetItems();
         $itemInfos = [];
-        $itemInfoPool = ItemInfoPool::Instance();      
+        $itemInfoPool = ItemInfoPool::Instance();
         foreach ($items as $item) {
             $itemInfo = $itemInfoPool->{ $item->ItemID};
             $itemInfos[] = [
                 'itemID' => $item->ItemID,
                 'amount' => $item->Amount,
                 'icon' => $itemInfo->Icon,
-            ];   
+            ];
         }
 
         return $itemInfos;
     }
 
-    public function CheckSelectIndex(int $selectIndex):bool
+    public function CheckSelectIndex(int $selectIndex): bool
     {
-        return  isset($this->info->Contents[ $selectIndex]);
+        return isset($this->info->Contents[$selectIndex]);
     }
 
-    public function AddSelectReward(int $userid,int $amount,int $selectIndex): stdClass
+    public function AddSelectReward(int $userid, int $amount, int $selectIndex): stdClass
     {
         if ($this->info->Modes != 2) {
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
 
-        $addItem = $this->info->Contents[ $selectIndex];
+        $addItem = $this->info->Contents[$selectIndex];
         $addItem->Amount = $addItem->Amount * $amount;
 
         $this->AddItem($userid, $addItem);
-        return $addItem;        
+        return $addItem;
     }
 
     public function AddReward(int $userid): array
@@ -113,40 +111,16 @@ class RewardHandler
             throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
 
-        $addItems = $this->GetItems();        
+        $addItems = $this->GetItems();
         foreach ($addItems as $addItem) {
             $this->AddItem($userid, $addItem);
         }
-        return $addItems;        
+        return $addItems;
     }
 
-    private function AddItem(int $userid, stdclass $addItem)
+    public function AddItem(int $userid, stdclass $addItem)
     {
-        if ($addItem->ItemID > 0) {
-            $userBagHandler = new UserBagHandler($userid);        
-            $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
-        }
-        else if ($addItem->ItemID < 0) {
-            $userHandler = new UserHandler($userid);
-            $info = $userHandler->GetInfo();
-            switch ($addItem->ItemID) {
-                case -1: //-1 電力
-                    $info->power += $addItem->Amount;
-                    $userHandler->SaveData(['Power' => $info->power]);
-                    break;
-                case -2: //-2 金幣
-                    $info->coin += $addItem->Amount;
-                    $userHandler->SaveData(['Coin' => $info->coin]);
-                    break;
-                case -3: //-3 寶石
-                    $info->diamond += $addItem->Amount;
-                    $userHandler->SaveData(['Diamond' => $info->diamond]);
-                    break;
-                case -4: //-4 PT
-                    $info->petaToken += $addItem->Amount;
-                    $userHandler->SaveData(['PetaToken' => $info->petaToken]);
-                    break;
-            }
-        }
+        $userBagHandler = new UserBagHandler($userid);
+        $userBagHandler->AddItem($addItem->ItemID, $addItem->Amount);
     }
 }

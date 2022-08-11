@@ -17,19 +17,14 @@ class MailsInfoPool extends PoolAccessor{
 
     protected string $keyPrefix = 'mailsInfo_';
 
-    public function FromDB(int|string $id): stdClass|false {
+    public function FromDB(int|string $mailsID): stdClass|false {
         $mailsAccessor = new MailsAccessor();
-        $rows = $mailsAccessor->rowsMailsInfo($id);
+        $rows = $mailsAccessor->GetMailsInfo($mailsID);
 
         $holder = new stdClass();
-        $holder->rows = $rows;
-
-        $holder->data = [];
-        foreach($rows as $row){
-            $holder->data[$row->Lang] = $row;
+        foreach($rows as $row){           
+            $holder->{$row->Lang} = $row;
         }
-
-
         return $holder;
     }
 }

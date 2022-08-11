@@ -20,8 +20,8 @@ class  UserMailsPool extends PoolAccessor{
     public function FromDB(int|string $userID): stdClass|false {
         
         $mailsAccessor = new MailsAccessor();
-        $rows = $mailsAccessor->rowsMails($userID);
-        
+        $rows = $mailsAccessor->GetUserMails($userID);
+      
         $holder = new stdClass();
         $holder->rows = $rows;
         return $holder;
