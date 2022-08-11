@@ -54,7 +54,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			"code": 0,
 			"message": ""
 		},
-		"itemInfos": [
+		"items": [
 			{
 				"itemID": 1,
 				"amount": 1,

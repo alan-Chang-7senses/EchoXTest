@@ -40,7 +40,6 @@ class GetMails extends BaseProcessor
             $mail = new stdClass();
             $mail = [
                 'userMailID' =>$userMailInfo->UserMailID,
-                'mailsID' => $userMailInfo->MailsID,
                 'openStatus' => $userMailInfo->OpenStatus,
                 'receiveStatus' => $userMailInfo->ReceiveStatus,
                 'title' => $mailInfo->Title,
