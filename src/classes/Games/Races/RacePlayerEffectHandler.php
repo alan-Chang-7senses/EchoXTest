@@ -94,7 +94,7 @@ class RacePlayerEffectHandler {
     {        
         $currentSence = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo()->scene;
         $currentLight = (new SceneHandler($currentSence))->GetClimate()->lighting;
-        if($currentLight != $requireLight && $playerHandler->GetInfo()->sun == $currentLight) $playerHandler->offsetSun += $value;
+        if($currentLight == $requireLight && $playerHandler->GetInfo()->sun == $currentLight) $playerHandler->offsetSun += $value;
     }
 
     public function IsPlayerInEffect(array $effectTypes, $campareFunc) : bool
