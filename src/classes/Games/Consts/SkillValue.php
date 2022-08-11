@@ -117,7 +117,6 @@ class SkillValue {
         self::EffectAdaptUpslope,
         self::EffectAdaptDownslope,
         self::EffectAdaptSun,
-        self::EffectAdaptSun,
         self::EffectAdaptNight,
     ];
 
@@ -138,6 +137,7 @@ class SkillValue {
         self::EffectAdaptUpslope,
         self::EffectAdaptDownslope,
         self::EffectAdaptSun,
+        self::EffectAdaptNight,
     ];
 
 
