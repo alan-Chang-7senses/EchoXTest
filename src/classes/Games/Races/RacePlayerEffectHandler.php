@@ -89,7 +89,7 @@ class RacePlayerEffectHandler {
         {
             foreach($effectTypes as $type)
             {
-                $now = microtime(true);
+                $now = $GLOBALS[Globals::TIME_BEGIN];
                 if($effect->EndTime > $now && $effect->StartTime <= $now && $effect->EffectType == $type)                   
                 {
                     $val = $effect->EffectValue;
