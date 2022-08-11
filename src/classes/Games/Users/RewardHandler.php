@@ -4,8 +4,7 @@ namespace Games\Users;
 
 use stdClass;
 use Games\Pools\RewardPool;
-use Games\Pools\ItemInfoPool;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class RewardHandler
 {
@@ -18,7 +17,7 @@ class RewardHandler
         $this->pool = RewardPool::Instance();
         $this->info = $this->pool->{ $rewardID};
         if ($this->info == false) {
-            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $rewardID]);
+            throw new ItemException(ItemException::UseRewardIDError, ['[rewardID]' => $rewardID]);
         }
     }
 
@@ -78,7 +77,7 @@ class RewardHandler
     public function AddSelectReward(int $userid, int $amount, int $selectIndex): stdClass
     {
         if ($this->info->Modes != 2) {
-            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
+            throw new ItemException(ItemException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
 
         $addItem = $this->info->Contents[$selectIndex];
@@ -91,7 +90,7 @@ class RewardHandler
     public function AddReward(int $userid): array
     {
         if ($this->info->Modes == 2) {
-            throw new UserException(UserException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
+            throw new ItemException(ItemException::UseRewardIDError, ['[rewardID]' => $this->info->RewardID]);
         }
 
         $addItems = $this->GetItems();

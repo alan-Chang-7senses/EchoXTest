@@ -10,7 +10,7 @@ use Helpers\InputHelper;
 use Games\Pools\ItemInfoPool;
 use Processors\BaseProcessor;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class GetItemInfo extends BaseProcessor
 {
@@ -23,7 +23,7 @@ class GetItemInfo extends BaseProcessor
         $itemInfoPool = ItemInfoPool::Instance();
         $itemInfo = $itemInfoPool->{ $itemID};
         if ($itemInfo == false) {
-            throw new UserException(UserException::ItemNotExists, ['itemID' => $itemID]);
+            throw new ItemException(ItemException::ItemNotExists, ['itemID' => $itemID]);
         }
 
         $userid = $_SESSION[Sessions::UserID];

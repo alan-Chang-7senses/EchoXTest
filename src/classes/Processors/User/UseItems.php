@@ -10,7 +10,7 @@ use Games\Users\ItemUtility;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class UseItems extends BaseProcessor
 {
@@ -20,7 +20,7 @@ class UseItems extends BaseProcessor
         $userItemID = json_decode(InputHelper::post('userItemID'));
         $amount = json_decode(InputHelper::post('amount'));
         if ($amount <= 0) {
-            throw new UserException(UserException::ItemNotEnough);
+            throw new ItemException(ItemException::ItemNotEnough);
         }
 
         $userid = $_SESSION[Sessions::UserID];
@@ -29,11 +29,11 @@ class UseItems extends BaseProcessor
 
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
         if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         if ($bagHandler->DecItem($userItemID, $amount) == false) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         for ($i = 0; $i < $amount; $i++) {

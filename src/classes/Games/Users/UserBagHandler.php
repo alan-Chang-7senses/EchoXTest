@@ -8,7 +8,7 @@ use Games\Pools\ItemInfoPool;
 use Games\Pools\UserBagItemPool;
 use Games\Users\UserItemHandler;
 use Games\Accessors\ItemAccessor;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 use Games\Users\Holders\UserItemHolder;
 
 class UserBagHandler
@@ -190,7 +190,7 @@ class UserBagHandler
         $userItemInfo = $userItemHandler->GetInfo();
 
         if ($userItemInfo->user != $this->userID) {
-            throw new UserException(UserException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
+            throw new ItemException(ItemException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
         }
 
         return $userItemHandler->DecItem($amount);
