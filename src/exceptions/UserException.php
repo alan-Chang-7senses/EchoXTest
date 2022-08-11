@@ -18,5 +18,8 @@ $lang[UserException::ItemNotExists] = 'ItemID:[itemID] does not in static table.
 $lang[UserException::UserNotItemOwner] = 'User does not have this userItemID:[userItemID]';
 $lang[UserException::UseItemError] = 'ItemID:[itemID] use error!!';
 $lang[UserException::UseRewardIDError] = 'RewardID:[rewardID] use error!!';
+$lang[UserException::UserItemStacklimitReached] = 'Item stack limit reached!!';
+$lang[UserException::MailNotExist] = 'Mail does not exist or has been deleted.';
+$lang[UserException::MailRewardsReceived] = 'Received mail reward';
 
 return $lang;

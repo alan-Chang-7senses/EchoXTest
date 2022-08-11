@@ -13,7 +13,6 @@ class UserException extends NormalException
     const UserNotExist = 2001;
     const NotHoldPlayer = 2002;
     const ItemNotEnough = 2003;
-
     const UsernameTooLong = 2004;
     const UsernameAlreadyExist = 2005;
     const UsernameDirty = 2006;
@@ -25,5 +24,7 @@ class UserException extends NormalException
     const UserNotItemOwner = 2012;
     const UseItemError = 2013;
     const UseRewardIDError = 2014;
-
+    const UserItemStacklimitReached  = 2015;    
+    const MailNotExist = 2016;
+    const MailRewardsReceived  = 2017; 
 }
