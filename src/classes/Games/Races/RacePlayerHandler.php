@@ -2,8 +2,10 @@
 
 namespace Games\Races;
 
+use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
+use Games\Scenes\SceneHandler;
 use stdClass;
 /**
  * Description of RacePlayerHandler
@@ -52,5 +54,13 @@ class RacePlayerHandler {
         return $this->SaveData(['energy' => array_map(function($original, $pay){
             return $original - $pay;
         }, $this->info->energy, $energy)]);
+    }
+
+    public function IsPlayerMatchLight(PlayerHandler $playerHandler)
+    {
+        $raceInfo = (new RaceHandler($this->info->race))->GetInfo();
+        $climate = (new SceneHandler($raceInfo->scene))->GetClimate();
+        $playerInfo = $playerHandler->GetInfo();
+        return  $climate->lighting === $playerInfo->sun;
     }
 }

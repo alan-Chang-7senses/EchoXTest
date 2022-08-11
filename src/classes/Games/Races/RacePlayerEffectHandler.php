@@ -63,7 +63,8 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptFlat => $playerHandler->offsetFlat += $value,
                 SkillValue::EffectAdaptUpslope => $playerHandler->offsetUpslope += $value,
                 SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
-                SkillValue::EffectAdaptSun => $playerHandler->offsetSun += $value,
+                SkillValue::EffectAdaptSun => self::DealWithSunValue($playerHandler,$racePlayerHandler,$value),
+                SkillValue::EffectAdaptNight => self::DealWithSunValue($playerHandler,$racePlayerHandler,$value),
                 SkillValue::EffectHP => $racePlayerHandler->SaveData(['hp' => $racePlayerInfo->hp + $value * RaceValue::DivisorHP]),
                 SkillValue::EffectEnergyAll => $racePlayerHandler->SaveData(['energy' => array_map(function($val) use ($value) { return $val + $value; }, $racePlayerInfo->energy)]),
                 SkillValue::EffectEnergyRed => self::AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
@@ -81,6 +82,11 @@ class RacePlayerEffectHandler {
         $energy = $racePlayerHandler->GetInfo()->energy;
         $energy[$type] += $value;
         $racePlayerHandler->SaveData(['energy' => $energy]);
+    }
+
+    private static function DealWithSunValue(PlayerHandler $playerHandler, RacePlayerHandler $racePlayerHandler, float $value)
+    {
+        if($racePlayerHandler->IsPlayerMatchLight($playerHandler)) $playerHandler->offsetSun += $value;
     }
 
     public function IsPlayerInEffect(array $effectTypes, $campareFunc) : bool
@@ -101,5 +107,6 @@ class RacePlayerEffectHandler {
         }
         return false;
     }
+
 
 }
