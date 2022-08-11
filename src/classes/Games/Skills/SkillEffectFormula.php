@@ -33,46 +33,37 @@ class SkillEffectFormula {
     private PlayerInfoHolder|stdClass $playerInfo;
     private RacePlayerHandler| null $racePlayerHandler;
 
-    public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null) {
+    private int $level;
+
+    public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null, int $level = 0) {
         
         $this->skillHandler = $skill;
         $this->formula = $formula;
         $this->playerHandler = $player;
         $this->playerInfo = $player->GetInfo();
         $this->racePlayerHandler = $racePlayer;
+        $this->level = $level;
     }
-
     public function Process() : float{
-
-        $skillInfo = $this->skillHandler->GetInfo();
-        foreach($this->playerInfo->skills as $playerSkill){
-            if($playerSkill->id == $skillInfo->id){
-                return $this->GetFormulaValueByLevel($playerSkill->level);
-            }
-        }        
-        return 0;
-    }
-
-    public function GetAllLevelFormulaValue() : array
-    {
-        $rt = [];
-        for($i = SkillValue::LevelMin; $i <= SkillValue::LevelMax; $i++)
-        {
-            $rt[] = $this->GetFormulaValueByLevel($i);            
-        }
-        return $rt;
-    }
-
-    private function GetFormulaValueByLevel(int $level) : float
-    {
-        // if($this->formula === null) return 0;
-        if(empty($this->formula))return 0;
+        
+        if($this->formula === null) return 0;
+        
         $matches = [];
         preg_match_all('/'.implode('|', self::OperandAll).'/', $this->formula, $matches);
         $operands = array_values(array_unique($matches[0]));
         
         $skillInfo = $this->skillHandler->GetInfo();
-        $valueN = $skillInfo->ranks[$level - 1];
+        if($this->level == 0){
+            $valueN = $skillInfo->ranks[0];
+            foreach($this->playerInfo->skills as $playerSkill){
+                if($playerSkill->id == $skillInfo->id){
+                    $valueN = $skillInfo->ranks[$playerSkill->level - 1];
+                    break;
+                }
+            }
+        }else{
+            $valueN = $skillInfo->ranks[$this->level - 1];
+        }
         
         $values = ['%' => '/100', 'N' => $valueN];
         foreach ($operands as $operand){
@@ -139,11 +130,23 @@ class SkillEffectFormula {
         return $rows === false ? 0 : count((array)$rows) - 1;//把自己扣掉，不算自己。                         
     }
     private function ValueFeature() : int{return $this->ValueFeatuer();}
-    private function ValueRed(){return 0;}
-    private function ValueYellow(){return 0;}
-    private function ValueBlue(){return 0;}
-    private function ValueGreen(){return 0;}
-    private function ValueClear(){return 0;}
+    private function ValueRed() : int{
+        if($this->racePlayerHandler == null)return 0;
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        return $racePlayerInfo->energy[SkillValue::EnergyRed];
+    }private function ValueYellow() : int{
+        if($this->racePlayerHandler == null)return 0;
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        return $racePlayerInfo->energy[SkillValue::EnergyYellow];
+    }private function ValueBlue() : int{
+        if($this->racePlayerHandler == null)return 0;
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        return $racePlayerInfo->energy[SkillValue::EnergyBlue];
+    }private function ValueGreen() : int{
+        if($this->racePlayerHandler == null)return 0;
+        $racePlayerInfo = $this->racePlayerHandler->GetInfo();
+        return $racePlayerInfo->energy[SkillValue::EnergyGreen];
+    }
 
     
     private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }

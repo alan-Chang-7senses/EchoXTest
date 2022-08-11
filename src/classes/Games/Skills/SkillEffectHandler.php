@@ -2,6 +2,7 @@
 
 namespace Games\Skills;
 
+use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\SkillEffectPool;
 use Games\Races\RacePlayerHandler;
@@ -35,6 +36,17 @@ class SkillEffectHandler {
         $formula = new SkillEffectFormula($skill, $this->info->formula, $player, $racePlayer);
         return $formula->Process();
     }
+
+    public function GetAllRankFormulaResults(SkillHandler $skill, PlayerHandler $player){
+        $rt = [];
+        for($i = SkillValue::LevelMin; $i <= SkillValue::LevelMax; $i++)
+        {
+            $formula = new SkillEffectFormula($skill,$this->info->formula,$player,null,$i);
+            $rt[] = $formula->Process();
+        }
+        return $rt;
+    }
+    
 
 
 }
