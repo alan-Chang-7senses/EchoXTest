@@ -25,12 +25,12 @@ class Items extends BaseProcessor
 
             if ($itemInfo->amount <= 0)
                 continue;
-                       
-        
+                              
             $items[] = [
                 'itemID' => $itemInfo->itemID,
                 'userItemsID' =>$itemInfo->userItemsID,
                 'amount' => $itemInfo->amount,
+                'useType' => $itemInfo->useType,                
                 'itemType' => $itemInfo->itemType,
                 'icon' => $itemInfo->icon,
             ];           

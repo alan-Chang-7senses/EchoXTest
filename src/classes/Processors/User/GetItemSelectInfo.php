@@ -6,7 +6,7 @@ use Consts\Sessions;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
-use Games\Pools\ItemInfoPool;
+use Games\Users\ItemUtility;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
@@ -29,20 +29,13 @@ class GetItemSelectInfo extends BaseProcessor
         $rewardHandler = new RewardHandler($itemInfo->rewardID);
         $itemsArray = $rewardHandler->GetItems();
 
-
         $itemInfos = [];
-        $itemInfoPool = ItemInfoPool::Instance();      
         foreach ($itemsArray as $item) {
-            $itemInfo = $itemInfoPool->{ $item->ItemID};
-            $itemInfos[] = [
-                'itemID' => $item->ItemID,
-                'amount' => $item->Amount,
-                'icon' => $itemInfo->Icon,
-            ];   
+            $itemInfos[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
         }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->itemInfos = $itemInfos;
+        $result->items = $itemInfos;
 
         return $result;
     }
