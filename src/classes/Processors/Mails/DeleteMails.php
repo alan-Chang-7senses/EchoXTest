@@ -8,7 +8,7 @@ use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Mails\MailsHandler;
 use Processors\BaseProcessor;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class DeleteMails extends BaseProcessor
 {
@@ -20,7 +20,7 @@ class DeleteMails extends BaseProcessor
         $userMailsHandler = new MailsHandler();
         $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($_SESSION[Sessions::UserID], $userMailID);
         if ($mailInfo == false) {
-            throw new UserException(UserException::MailNotExist);
+            throw new ItemException(ItemException::MailNotExist);
         }
         $userMailsHandler->DeleteMails($_SESSION[Sessions::UserID], $userMailID);
         $result = new ResultData(ErrorCode::Success);

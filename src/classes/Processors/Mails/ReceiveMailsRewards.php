@@ -6,11 +6,11 @@ use Consts\Sessions;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
+use Games\Users\ItemUtility;
 use Games\Mails\MailsHandler;
 use Processors\BaseProcessor;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\UserException;
-use Games\Users\ItemUtility;
+use Games\Exceptions\ItemException;
 
 class ReceiveMailsRewards extends BaseProcessor
 {
@@ -24,7 +24,7 @@ class ReceiveMailsRewards extends BaseProcessor
         $userMailsHandler = new MailsHandler();
         $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($_SESSION[Sessions::UserID], $userMailID);
         if ($mailInfo == false) {
-            throw new UserException(UserException::MailNotExist);
+            throw new ItemException(ItemException::MailNotExist);
         }
         if ($openStatus != 0)
             $openStatus = 1;
@@ -32,13 +32,13 @@ class ReceiveMailsRewards extends BaseProcessor
         $itemsArray = [];
         if ($receiveStatus == 1) {
             if ($mailInfo->ReceiveStatus == 1) {
-                throw new UserException(UserException::MailRewardsReceived);
+                throw new ItemException(ItemException::MailRewardsReceived);
             }
 
             $items = $userMailsHandler->GetMailItems($userMailID);
             $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
             if ($userBagHandler->CheckAddStacklimit($items) == false) {
-                throw new UserException(UserException::UserItemStacklimitReached);
+                throw new ItemException(ItemException::UserItemStacklimitReached);
             }
             foreach ($items as $item) {
                 $userBagHandler->AddItem($item->ItemID, $item->Amount);
