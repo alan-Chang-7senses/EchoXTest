@@ -56,11 +56,4 @@ class RacePlayerHandler {
         }, $this->info->energy, $energy)]);
     }
 
-    public function IsPlayerMatchLight(PlayerHandler $playerHandler)
-    {
-        $raceInfo = (new RaceHandler($this->info->race))->GetInfo();
-        $climate = (new SceneHandler($raceInfo->scene))->GetClimate();
-        $playerInfo = $playerHandler->GetInfo();
-        return  $climate->lighting === $playerInfo->sun;
-    }
 }

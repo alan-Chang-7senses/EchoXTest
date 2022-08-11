@@ -3,11 +3,17 @@
 namespace Games\Races;
 
 use Consts\Globals;
+use Consts\Sessions;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
 use stdClass;
 use Games\Consts\RaceValue;
+use Games\Consts\SceneValue;
+use Games\Players\PlayerUtility;
+use Games\Scenes\SceneHandler;
+use Games\Users\UserHandler;
+
 /**
  * Description of RacePlayerEffectHandler
  *
@@ -63,8 +69,8 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptFlat => $playerHandler->offsetFlat += $value,
                 SkillValue::EffectAdaptUpslope => $playerHandler->offsetUpslope += $value,
                 SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
-                SkillValue::EffectAdaptSun => self::DealWithSunValue($playerHandler,$racePlayerHandler,$value),
-                SkillValue::EffectAdaptNight => self::DealWithSunValue($playerHandler,$racePlayerHandler,$value),
+                SkillValue::EffectAdaptSun => self::DealWithSunValue($playerHandler,$racePlayerHandler,SceneValue::Sunshine,$value),
+                SkillValue::EffectAdaptNight => self::DealWithSunValue($playerHandler,$racePlayerHandler,SceneValue::Backlight,$value),
                 SkillValue::EffectHP => $racePlayerHandler->SaveData(['hp' => $racePlayerInfo->hp + $value * RaceValue::DivisorHP]),
                 SkillValue::EffectEnergyAll => $racePlayerHandler->SaveData(['energy' => array_map(function($val) use ($value) { return $val + $value; }, $racePlayerInfo->energy)]),
                 SkillValue::EffectEnergyRed => self::AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
@@ -84,9 +90,11 @@ class RacePlayerEffectHandler {
         $racePlayerHandler->SaveData(['energy' => $energy]);
     }
 
-    private static function DealWithSunValue(PlayerHandler $playerHandler, RacePlayerHandler $racePlayerHandler, float $value)
-    {
-        if($racePlayerHandler->IsPlayerMatchLight($playerHandler)) $playerHandler->offsetSun += $value;
+    private static function DealWithSunValue(PlayerHandler $playerHandler,int $requireLight, float $value) : void
+    {        
+        $currentSence = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo()->scene;
+        $currentLight = (new SceneHandler($currentSence))->GetClimate()->lighting;
+        if($currentLight != $requireLight && $playerHandler->GetInfo()->sun == $currentLight) $playerHandler->offsetSun += $value;
     }
 
     public function IsPlayerInEffect(array $effectTypes, $campareFunc) : bool
