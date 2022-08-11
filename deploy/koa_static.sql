@@ -144,30 +144,25 @@ CREATE TABLE IF NOT EXISTS `MailsInfo` (
   `Content` text NOT NULL COMMENT '信件內容',
   `Sender` varchar(50) NOT NULL DEFAULT '' COMMENT '寄件者',
   `URL` varchar(50) NOT NULL DEFAULT '' COMMENT '連結',
-  `RewardID` int(10) unsigned DEFAULT NULL COMMENT '信件獎勵',
-  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  `FinishTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '結束時間',
-  PRIMARY KEY (`Serial`) USING BTREE,
-  KEY `RewardID` (`RewardID`) USING BTREE
+  PRIMARY KEY (`Serial`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件資訊';
 
 -- 正在傾印表格  koa_static.MailsInfo 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `MailsInfo` DISABLE KEYS */;
-INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`, `RewardID`, `CreateTime`, `UpdateTime`, `FinishTime`) VALUES
-	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
-	(2, 1, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
-	(3, 1, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', '', 0, 1655797800, 1655797800, 1659110400),
-	(4, 1, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', '', 0, 1655797800, 1655797800, 1659110400),
-	(5, 1, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', '', 0, 1655797800, 1655797800, 1659110400),
-	(6, 1, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', '', 0, 1655797800, 1655797800, 1659110400),
-	(7, 1, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', '', 0, 1655797800, 1655797800, 1659110400),
-	(8, 1, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', '', 0, 1655797800, 1655797800, 1659110400),
-	(9, 1, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', '', 0, 1655797800, 1655797800, 1659110400),
-	(10, 1, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', '', 0, 1655797800, 1655797800, 1659110400),
-	(11, 1, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', '', 0, 1655797800, 1655797800, 1659110400),
-	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
-	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
+INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`) VALUES
+	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com'),
+	(2, 1, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com'),
+	(3, 1, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', ''),
+	(4, 1, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', ''),
+	(5, 1, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', ''),
+	(6, 1, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', ''),
+	(7, 1, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', ''),
+	(8, 1, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', ''),
+	(9, 1, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', ''),
+	(10, 1, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', ''),
+	(11, 1, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', ''),
+	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', ''),
+	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
