@@ -48,6 +48,7 @@ class SkillValue {
     const EffectAdaptUpslope = 152;
     const EffectAdaptDownslope = 153;
     const EffectAdaptSun = 161;
+    const EffectAdaptNight = 162;
     
     const EffectHP = 201;
     const EffectEnergyAll = 211;
@@ -119,6 +120,7 @@ class SkillValue {
         self::EffectAdaptUpslope,
         self::EffectAdaptDownslope,
         self::EffectAdaptSun,
+        self::EffectAdaptNight,
     ];
 
     const ReduceCostHEffects = [
@@ -138,6 +140,7 @@ class SkillValue {
         self::EffectAdaptUpslope,
         self::EffectAdaptDownslope,
         self::EffectAdaptSun,
+        self::EffectAdaptNight,
     ];
 
 

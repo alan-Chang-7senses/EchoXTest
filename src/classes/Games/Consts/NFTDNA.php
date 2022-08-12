@@ -42,7 +42,7 @@ class NFTDNA {
     const FreePetaSource = -2;
 
     /**骨架編碼 一般Peta */
-    const PetaSkeletonType = 0;
+    const PetaSkeletonType = '00';
     
     /** 骨架類別 杰倫熊模組 */
     const JayBearSkeletonType = 1;

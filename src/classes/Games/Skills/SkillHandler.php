@@ -46,12 +46,15 @@ class SkillHandler {
                 'type' => $info->type,
             ];
             
-            if($this->playerHandler !== null) $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
-            
+            if($this->playerHandler !== null){
+                $effect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
+                $effect['allRankFormulaValue'] = $handler->GetAllRankFormulaResults($this,$this->playerHandler);
+            } 
+
             $this->effects[] = $effect;
         }
         return $this->effects;
-    }
+    }    
     
     public function GetMaxEffects() : array{
         if(is_array($this->maxEffects)) return $this->maxEffects;
@@ -64,13 +67,17 @@ class SkillHandler {
                 'target' => $info->target,
             ];
             
-            if($this->playerHandler) $maxEffect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
-            
+            if($this->playerHandler){
+                $maxEffect['formulaValue'] = $handler->GetFormulaResult($this, $this->playerHandler, $this->racePlayerHandler);
+                $maxEffect['allRankFormulaValue'] = $handler->GetAllRankFormulaResults($this,$this->playerHandler);
+            } 
+
             $this->maxEffects[] = $maxEffect;
         }
         return $this->maxEffects;
     }
     
+
     public function SetSkillSlot(int $plyerID, int $skillID, int $slot) : mixed{
         $result = $this->pool->SetSkillSlot( $plyerID,  $skillID,  $slot);
         PlayerPool::Instance()->Delete($plyerID);

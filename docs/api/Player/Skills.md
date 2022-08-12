@@ -63,6 +63,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | type | int | [效果類型](../codes/skill.md#effectType) |
 | formulaValue | float | 公式計算結果的效果值 |
+| allRankFormulaValue | array | 各等級公式計算結果的效果值 |
 
 ##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
 
@@ -73,242 +74,378 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
 | target | int | [作用對象](../codes/skill.md#target) |
 | formulaValue | float | 公式計算結果的效果值 |
+| allRankFormulaValue | array | 各等級公式計算結果的效果值 |
 
 ### Example
-
-	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    },
-	    "skills": [
-	        {
-	            "id": 4,
-	            "name": "21004",
-	            "description": "22201",
-	            "level": 1,
-	            "slot": 1,
-	            "energy": [
-	                0,
-	                0,
-	                2,
-	                2
-	            ],
-	            "cooldown": 2,
-	            "duration": 9.8,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23012",
-	            "maxCondition": 41,
-	            "maxConditionValue": 0,
-	            "effects": [
-	                {
-	                    "type": 201,
-	                    "formulaValue": 37.086
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 402,
-	                    "target": 0,
-	                    "formulaValue": 1.32
-	                }
-	            ]
-	        },
-	        {
-	            "id": 5,
-	            "name": "21005",
-	            "description": "22203",
-	            "level": 1,
-	            "slot": 2,
-	            "energy": [
-	                2,
-	                0,
-	                1,
-	                0
-	            ],
-	            "cooldown": 2,
-	            "duration": 7.2,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23012",
-	            "maxCondition": 31,
-	            "maxConditionValue": 0,
-	            "effects": [
-	                {
-	                    "type": 203,
-	                    "formulaValue": 31.9725
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 402,
-	                    "target": 0,
-	                    "formulaValue": 1.32
-	                }
-	            ]
-	        },
-	        {
-	            "id": 6,
-	            "name": "21006",
-	            "description": "22202",
-	            "level": 1,
-	            "slot": 3,
-	            "energy": [
-	                1,
-	                3,
-	                0,
-	                0
-	            ],
-	            "cooldown": 2,
-	            "duration": 9.8,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23013",
-	            "maxCondition": 11,
-	            "maxConditionValue": 0,
-	            "effects": [
-	                {
-	                    "type": 202,
-	                    "formulaValue": 37.086
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 10,
-	                    "target": 0,
-	                    "formulaValue": 10
-	                }
-	            ]
-	        },
-	        {
-	            "id": 14,
-	            "name": "21014",
-	            "description": "22205",
-	            "level": 1,
-	            "slot": 4,
-	            "energy": [
-	                0,
-	                2,
-	                0,
-	                2
-	            ],
-	            "cooldown": 2,
-	            "duration": 9.8,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23010",
-	            "maxCondition": 1,
-	            "maxConditionValue": 1,
-	            "effects": [
-	                {
-	                    "type": 205,
-	                    "formulaValue": 30.177
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 2,
-	                    "target": 0,
-	                    "formulaValue": 0
-	                }
-	            ]
-	        },
-	        {
-	            "id": 19,
-	            "name": "21019",
-	            "description": "22204",
-	            "level": 1,
-	            "slot": 5,
-	            "energy": [
-	                0,
-	                0,
-	                6,
-	                0
-	            ],
-	            "cooldown": 2,
-	            "duration": 15.7,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23024",
-	            "maxCondition": 23,
-	            "maxConditionValue": 0,
-	            "effects": [
-	                {
-	                    "type": 204,
-	                    "formulaValue": 32.046
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 103,
-	                    "target": 1,
-	                    "formulaValue": 8.739999999999998
-	                }
-	            ]
-	        },
-	        {
-	            "id": 31,
-	            "name": "21031",
-	            "description": "22201",
-	            "level": 1,
-	            "slot": 0,
-	            "energy": [
-	                2,
-	                1,
-	                0,
-	                0
-	            ],
-	            "cooldown": 2,
-	            "duration": 7.2,
-	            "ranks": [
-	                5,
-	                10,
-	                15,
-	                20,
-	                25
-	            ],
-	            "maxDescription": "23030",
-	            "maxCondition": 41,
-	            "maxConditionValue": 0,
-	            "effects": [
-	                {
-	                    "type": 201,
-	                    "formulaValue": 37.086
-	                }
-	            ],
-	            "maxEffects": [
-	                {
-	                    "type": 402,
-	                    "target": 0,
-	                    "formulaValue": 0.99
-	                }
-	            ]
-	        }
-	    ]
-	}
+    {
+        "error": {
+            "code": 0,
+            "message": ""
+        },
+        "skills": [
+            {
+                "id": 1,
+                "name": "21001",
+                "description": "22204",
+                "level": 1,
+                "slot": 1,
+                "energy": [
+                    0,
+                    2,
+                    0,
+                    1
+                ],
+                "cooldown": 2,
+                "duration": 7.2,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23007",
+                "maxCondition": 2,
+                "maxConditionValue": 3,
+                "effects": [
+                    {
+                        "type": 115,
+                        "formulaValue": 0.5,
+                        "allRankFormulaValue": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 102,
+                        "target": 0,
+                        "formulaValue": 0.5,
+                        "allRankFormulaValue": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "21002",
+                "description": "22205",
+                "level": 1,
+                "slot": 2,
+                "energy": [
+                    2,
+                    0,
+                    2,
+                    0
+                ],
+                "cooldown": 2,
+                "duration": 9.8,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23008",
+                "maxCondition": 4,
+                "maxConditionValue": 1,
+                "effects": [
+                    {
+                        "type": 115,
+                        "formulaValue": 2.8835,
+                        "allRankFormulaValue": [
+                            2.8835,
+                            5.767,
+                            8.650500000000001,
+                            11.534,
+                            14.4175
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 504,
+                        "target": 0,
+                        "formulaValue": 0,
+                        "allRankFormulaValue": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "name": "21003",
+                "description": "22202",
+                "level": 1,
+                "slot": 3,
+                "energy": [
+                    0,
+                    0,
+                    0,
+                    3
+                ],
+                "cooldown": 2,
+                "duration": 7.2,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23011",
+                "maxCondition": 1,
+                "maxConditionValue": 1,
+                "effects": [
+                    {
+                        "type": 112,
+                        "formulaValue": 2.7329999999999997,
+                        "allRankFormulaValue": [
+                            2.7329999999999997,
+                            5.465999999999999,
+                            8.199,
+                            10.931999999999999,
+                            13.665
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 141,
+                        "target": 0,
+                        "formulaValue": 10,
+                        "allRankFormulaValue": [
+                            10,
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 4,
+                "name": "21004",
+                "description": "22201",
+                "level": 1,
+                "slot": 4,
+                "energy": [
+                    0,
+                    0,
+                    2,
+                    2
+                ],
+                "cooldown": 2,
+                "duration": 9.8,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23012",
+                "maxCondition": 41,
+                "maxConditionValue": 0,
+                "effects": [
+                    {
+                        "type": 111,
+                        "formulaValue": 2.7329999999999997,
+                        "allRankFormulaValue": [
+                            2.7329999999999997,
+                            5.465999999999999,
+                            8.199,
+                            10.931999999999999,
+                            13.665
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 102,
+                        "target": 0,
+                        "formulaValue": 1.32,
+                        "allRankFormulaValue": [
+                            1.32,
+                            1.32,
+                            1.32,
+                            1.32,
+                            1.32
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 5,
+                "name": "21005",
+                "description": "22203",
+                "level": 1,
+                "slot": 0,
+                "energy": [
+                    2,
+                    0,
+                    1,
+                    0
+                ],
+                "cooldown": 2,
+                "duration": 7.2,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23012",
+                "maxCondition": 31,
+                "maxConditionValue": 0,
+                "effects": [
+                    {
+                        "type": 113,
+                        "formulaValue": 2.639,
+                        "allRankFormulaValue": [
+                            2.639,
+                            5.278,
+                            7.917000000000001,
+                            10.556,
+                            13.195
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 102,
+                        "target": 0,
+                        "formulaValue": 1.32,
+                        "allRankFormulaValue": [
+                            1.32,
+                            1.32,
+                            1.32,
+                            1.32,
+                            1.32
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 6,
+                "name": "21006",
+                "description": "22202",
+                "level": 1,
+                "slot": 0,
+                "energy": [
+                    1,
+                    3,
+                    0,
+                    0
+                ],
+                "cooldown": 2,
+                "duration": 9.8,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23013",
+                "maxCondition": 11,
+                "maxConditionValue": 0,
+                "effects": [
+                    {
+                        "type": 112,
+                        "formulaValue": 2.7329999999999997,
+                        "allRankFormulaValue": [
+                            2.7329999999999997,
+                            5.465999999999999,
+                            8.199,
+                            10.931999999999999,
+                            13.665
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 121,
+                        "target": 0,
+                        "formulaValue": 10,
+                        "allRankFormulaValue": [
+                            10,
+                            10,
+                            10,
+                            10,
+                            10
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": 34,
+                "name": "21034",
+                "description": "22201",
+                "level": 1,
+                "slot": 0,
+                "energy": [
+                    2,
+                    2,
+                    2,
+                    0
+                ],
+                "cooldown": 2,
+                "duration": 15.7,
+                "ranks": [
+                    5,
+                    10,
+                    15,
+                    20,
+                    25
+                ],
+                "maxDescription": "23033",
+                "maxCondition": 41,
+                "maxConditionValue": 0,
+                "effects": [
+                    {
+                        "type": 111,
+                        "formulaValue": 2.7329999999999997,
+                        "allRankFormulaValue": [
+                            2.7329999999999997,
+                            5.465999999999999,
+                            8.199,
+                            10.931999999999999,
+                            13.665
+                        ]
+                    }
+                ],
+                "maxEffects": [
+                    {
+                        "type": 102,
+                        "target": 0,
+                        "formulaValue": 1.98,
+                        "allRankFormulaValue": [
+                            1.98,
+                            1.98,
+                            1.98,
+                            1.98,
+                            1.98
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
