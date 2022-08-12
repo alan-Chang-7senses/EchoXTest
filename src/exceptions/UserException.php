@@ -18,5 +18,6 @@ $lang[UserException::ItemNotExists] = 'ItemID:[itemID] does not in static table.
 $lang[UserException::UserNotItemOwner] = 'User does not have this userItemID:[userItemID]';
 $lang[UserException::UseItemError] = 'ItemID:[itemID] use error!!';
 $lang[UserException::UseRewardIDError] = 'RewardID:[rewardID] use error!!';
-
+$lang[UserException::UserFreePlayerListEmpty] = 'User:[userID] free player list is empty.';
+$lang[UserException::UserFreePlayerOverLimit] = 'User:[userID] free player count over limit.';
 return $lang;

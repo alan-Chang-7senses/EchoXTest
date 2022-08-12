@@ -25,5 +25,6 @@ class UserException extends NormalException
     const UserNotItemOwner = 2012;
     const UseItemError = 2013;
     const UseRewardIDError = 2014;
-
+    const UserFreePlayerListEmpty = 2015;
+    const UserFreePlayerOverLimit = 2016;
 }
