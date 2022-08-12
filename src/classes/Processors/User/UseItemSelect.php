@@ -10,7 +10,7 @@ use Games\Pools\ItemInfoPool;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class UseItemSelect extends BaseProcessor
 {
@@ -25,7 +25,7 @@ class UseItemSelect extends BaseProcessor
 
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
         if (($itemInfo->useType != 2) || ($itemInfo->rewardID == 0)) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         $rewardHandler = new RewardHandler($itemInfo->rewardID);
@@ -34,7 +34,7 @@ class UseItemSelect extends BaseProcessor
         }
 
         if ($bagHandler->DecItem($userItemID, $amount) == false) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
 

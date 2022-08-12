@@ -1137,17 +1137,26 @@ INSERT INTO `UserItems` (`UserItemID`, `UserID`, `ItemID`, `Amount`, `CreateTime
 	(3, 12, 5100, 1000, 0, 0);
 /*!40000 ALTER TABLE `UserItems` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.UserMailItems 結構
+CREATE TABLE IF NOT EXISTS `UserMailItems` (
+  `UserMailID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '玩家信件編號',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號',
+  `Amount` int(11) NOT NULL DEFAULT 0 COMMENT '道具數量',
+  KEY `UserMailID` (`UserMailID`),
+  CONSTRAINT `FK_UserMailItems_UserMails` FOREIGN KEY (`UserMailID`) REFERENCES `UserMails` (`UserMailID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='玩家信件物品';
+
 -- 傾印  資料表 koa_main.UserMails 結構
 CREATE TABLE IF NOT EXISTS `UserMails` (
-  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
-  `UserID` int(10) NOT NULL,
+  `UserMailID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
+  `UserID` int(10) NOT NULL COMMENT '玩家ID',
   `MailsID` int(10) NOT NULL COMMENT '信件編號',
   `OpenStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開啟狀態',
   `ReceiveStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '領取狀態',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `FinishTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '結束時間',
-  PRIMARY KEY (`Serial`) USING BTREE,
+  PRIMARY KEY (`UserMailID`) USING BTREE,
   KEY `UserID` (`UserID`) USING BTREE,
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

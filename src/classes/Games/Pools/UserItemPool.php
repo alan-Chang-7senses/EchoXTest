@@ -7,7 +7,7 @@ use Consts\Globals;
 use Accessors\PoolAccessor;
 use Games\Pools\ItemInfoPool;
 use Games\Accessors\ItemAccessor;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 use Games\Users\Holders\UserItemHolder;
 /**
  * Description of UserItemsPool
@@ -44,7 +44,7 @@ class UserItemPool extends PoolAccessor{
 
         if ($itemInfo == false)
         {
-            throw new UserException(UserException::ItemNotExists,['itemID' => $holder->itemID]);
+            throw new ItemException(ItemException::ItemNotExists,['itemID' => $holder->itemID]);
         }
 
 

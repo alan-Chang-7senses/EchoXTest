@@ -4,7 +4,7 @@ namespace Games\Users;
 
 use stdClass;
 use Games\Pools\UserItemPool;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 use Games\Users\Holders\UserItemHolder;
 
 /**
@@ -26,7 +26,7 @@ class UserItemHandler
         $this->userItemID = $userItemID;
         $info = $this->pool->{ $this->userItemID};
         if ($info == false) {
-            throw new UserException(UserException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
+            throw new ItemException(ItemException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
         }
 
         $this->info = $info;
@@ -61,7 +61,7 @@ class UserItemHandler
     public function DecItem(int $amount): bool
     {
         if ($this->info->amount < $amount) {
-            throw new UserException(UserException::ItemNotEnough, ['item' => $this->info->itemID]);
+            throw new ItemException(ItemException::ItemNotEnough, ['item' => $this->info->itemID]);
         }
 
         $remainAmount = $this->info->amount - $amount;

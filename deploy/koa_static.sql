@@ -81,54 +81,6 @@ INSERT INTO `FreePetaInfo` (`ID`, `Type`, `Constitution`, `Strength`, `Dexterity
 	(15, 2, 5500, 4400, 5200, 4500, 1);
 /*!40000 ALTER TABLE `FreePetaInfo` ENABLE KEYS */;
 
--- 傾印  資料表 koa_static.ItemDrop 結構
-CREATE TABLE IF NOT EXISTS `ItemDrop` (
-  `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ItemDropID` int(11) NOT NULL DEFAULT 0 COMMENT '掉落物編號',
-  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
-  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
-  `Proportion` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '比例權重',
-  PRIMARY KEY (`Serial`),
-  KEY `ItemDropID` (`ItemDropID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='物品掉落表';
-
--- 正在傾印表格  koa_static.ItemDrop 的資料：~32 rows (近似值)
-/*!40000 ALTER TABLE `ItemDrop` DISABLE KEYS */;
-INSERT INTO `ItemDrop` (`Serial`, `ItemDropID`, `ItemID`, `Amount`, `Proportion`) VALUES
-	(1, 1, 1111, 1, 100),
-	(2, 1, 1121, 1, 100),
-	(3, 1, 1131, 1, 100),
-	(4, 2, 1112, 1, 100),
-	(5, 2, 1122, 1, 100),
-	(6, 2, 1132, 1, 100),
-	(7, 3, 2011, 1, 100),
-	(8, 3, 2013, 1, 100),
-	(9, 3, 2014, 1, 100),
-	(10, 3, 2015, 1, 100),
-	(11, 3, 2016, 1, 100),
-	(12, 3, 2017, 1, 100),
-	(13, 4, 2000, 1, 30),
-	(14, 4, 2011, 1, 10),
-	(15, 4, 2013, 1, 10),
-	(16, 4, 2014, 1, 10),
-	(17, 4, 2015, 1, 10),
-	(18, 4, 2016, 1, 10),
-	(19, 4, 2017, 1, 10),
-	(20, 4, 2000, 2, 20),
-	(21, 4, 2000, 3, 10),
-	(22, 5, 1001, 10, 100),
-	(23, 5, 1002, 5, 100),
-	(24, 6, 1002, 10, 100),
-	(25, 6, 1003, 5, 100),
-	(26, 6, 1111, 1, 100),
-	(27, 6, 1121, 1, 100),
-	(28, 6, 1131, 1, 100),
-	(29, 7, 1003, 10, 100),
-	(30, 7, 1112, 1, 100),
-	(31, 7, 1122, 1, 100),
-	(32, 7, 1132, 1, 100);
-/*!40000 ALTER TABLE `ItemDrop` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
@@ -196,50 +148,26 @@ CREATE TABLE IF NOT EXISTS `MailsInfo` (
   `Content` text NOT NULL COMMENT '信件內容',
   `Sender` varchar(50) NOT NULL DEFAULT '' COMMENT '寄件者',
   `URL` varchar(50) NOT NULL DEFAULT '' COMMENT '連結',
-  `RewardID` int(10) unsigned DEFAULT NULL COMMENT '信件獎勵',
-  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  `FinishTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '結束時間',
-  PRIMARY KEY (`Serial`) USING BTREE,
-  KEY `RewardID` (`RewardID`) USING BTREE
+  PRIMARY KEY (`Serial`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件資訊';
 
 -- 正在傾印表格  koa_static.MailsInfo 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `MailsInfo` DISABLE KEYS */;
-INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`, `RewardID`, `CreateTime`, `UpdateTime`, `FinishTime`) VALUES
-	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
-	(2, 1, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com', 0, 1655797800, 1655797800, 1659110400),
-	(3, 1, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', '', 0, 1655797800, 1655797800, 1659110400),
-	(4, 1, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', '', 0, 1655797800, 1655797800, 1659110400),
-	(5, 1, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', '', 0, 1655797800, 1655797800, 1659110400),
-	(6, 1, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', '', 0, 1655797800, 1655797800, 1659110400),
-	(7, 1, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', '', 0, 1655797800, 1655797800, 1659110400),
-	(8, 1, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', '', 0, 1655797800, 1655797800, 1659110400),
-	(9, 1, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', '', 0, 1655797800, 1655797800, 1659110400),
-	(10, 1, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', '', 0, 1655797800, 1655797800, 1659110400),
-	(11, 1, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', '', 0, 1655797800, 1655797800, 1659110400),
-	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', '', 0, 1655797800, 1655797800, 1659110400),
-	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '', 0, 1655797800, 1655797800, 1659110400);
+INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Status`, `Type`, `Lang`, `Title`, `Content`, `Sender`, `URL`) VALUES
+	(1, 1, 1, 0, 0, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com'),
+	(2, 1, 1, 0, 2, 'Welcome to PetaRush,', 'So glad to have you in PetaRush. Come and join the festivity!', 'Sender: Direct Team', 'https://www.google.com'),
+	(3, 1, 1, 0, 6, '《PetaRush》へようこそ', '《PetaRush》へようこそ，一緒に《PetaRush》で盛り上がりましょう！', '送信者：研究開発チーム', ''),
+	(4, 1, 1, 0, 7, '<PetaRush>에 오신 걸 축하드립니다.', '<PetaRush>에 오신 걸 환영합니다. 당신을 <페타 러시> Peta의 대형 행사에 초대합니다!', '발신자: 개발팀', ''),
+	(5, 1, 1, 0, 11, 'ยินดีต้อนรับสู่PetaRush', 'ยินดีต้อนรับสู่ 《PetaRush》เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush ', 'ผู้ส่ง：ทีมผู้วิจัยและพัฒนา', ''),
+	(6, 1, 1, 0, 5, 'Selamat datang di PetaRush', 'Selamat datang di PetaRush. Dengan senang hati, kami mengundang Anda untuk bergabung dengan kami di acara akbar Peta, yaitu PetaRush!', 'Pengirim: Tim Pengembang', ''),
+	(7, 1, 1, 0, 4, 'Maligayang pagdating sa “PetaRush”', 'Maligayang pagdating sa “PetaRush”. Taos-puso kaming inaanyayahan na sumali sa amin sa malaking kaganapan ng Peta, “pagtakbo ng hayop” !', 'Nagpadala: pangkat ng R&D', ''),
+	(8, 1, 1, 0, 3, 'Bienvenido a PetaRush', '¡Bienvenido a PetaRush! ¡Venga y únase a la fiesta de Peta con nosotros!', 'Remitente: Equipo de desarrolladores', ''),
+	(9, 1, 1, 0, 1, 'Willkommen bei PetaRush', 'Willkommen bei PetaRush! Komm und feiere mit uns das Peta Fest!', 'Absender: Entwickler-Team', ''),
+	(10, 1, 1, 0, 9, 'Bem-vindo à PetaRush', 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 'Remetente: Equipe de desenvolvedores', ''),
+	(11, 1, 1, 0, 10, 'Добро пожаловать в PetaRush', 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 'Отправитель: команда разработчиков', ''),
+	(12, 1, 1, 0, 8, '"PetaRush" မွ လႈိက္လွဲစြာႀကိဳဆိုပါသည္။', '"PetaRush" မွ ႀကိဳဆိုပါသည္။ Peta ၏အဓိကပြဲျဖစ္သည့္ "PetaRush" တြင္ ပါဝင္ဆင္ႏႊဲရန္ ေလးစားစြာျဖင့္ ဖိတ္ၾကားအပ္ပါသည္။', 'ေပးပို႔သူ- R&D အဖဲြ႔', ''),
+	(13, 1, 1, 0, 12, '歡迎來到《PetaRush》', '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', '寄件人：研發團隊', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
-
--- 傾印  資料表 koa_static.MailsRewards 結構
-CREATE TABLE IF NOT EXISTS `MailsRewards` (
-  `RewardID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '獎勵編號',
-  `ItemID1` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號A',
-  `ItemNumber1` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量A',
-  `ItemID2` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號B',
-  `ItemNumber2` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量B',
-  `ItemID3` int(11) NOT NULL DEFAULT 0 COMMENT '道具編號C',
-  `ItemNumber3` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '道具數量C',
-  PRIMARY KEY (`RewardID`) USING BTREE,
-  KEY `ItemID` (`ItemID1`,`ItemID2`,`ItemID3`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='信件獎勵表';
-
--- 正在傾印表格  koa_static.MailsRewards 的資料：~1 rows (近似值)
-/*!40000 ALTER TABLE `MailsRewards` DISABLE KEYS */;
-INSERT INTO `MailsRewards` (`RewardID`, `ItemID1`, `ItemNumber1`, `ItemID2`, `ItemNumber2`, `ItemID3`, `ItemNumber3`) VALUES
-	(1, 8129, 2, 8130, 2, 0, 0);
-/*!40000 ALTER TABLE `MailsRewards` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
 CREATE TABLE IF NOT EXISTS `QualifyingArena` (
