@@ -80,7 +80,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | id | int | 技能編號 |
 | name | string | 技能名稱代號 |
-| icon | int | 技能Icon代號 |
+| icon | string | 技能Icon代號 |
 | level | int | 技能等級 |
 | slot | int | 技能所在插槽 |
 | energy | array | 使用條件能量值（int），陣列元素依序為 紅、黃、藍、綠 |
