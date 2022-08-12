@@ -21,8 +21,6 @@ class FinishFreePlayer extends BaseProcessor{
     public function Process(): ResultData
     {
         
-        // $bandedWords = NamingUtility::GetBandedWordEnglish();
-        // if(NamingUtility::HasBandedWord($nickname,$bandedWords))throw new UserException(UserException::UsernameDirty,['username' => $nickname]);
         $petaNumber = InputHelper::post("number");
         $nickname = InputHelper::post("nickname");
         if($petaNumber  < 1 || $petaNumber > 3)return new ResultData(ErrorCode::ParamError);
@@ -30,7 +28,6 @@ class FinishFreePlayer extends BaseProcessor{
         $userInfo = $userHandler->GetInfo();
         
 
-        // if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
         
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
         if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
