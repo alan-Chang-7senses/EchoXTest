@@ -24,7 +24,7 @@ class PlayerAbility {
     public static function Velocity(int $agility, int $strength, int $level) : float{
         $nftValue = $agility / AbilityFactor::NFTDivisor * AbilityFactor::VelocityAgilityMultiplier + $strength / AbilityFactor::NFTDivisor * AbilityFactor::VelocityStrengthMultiplier;
         $levelValue = $level * AbilityFactor::VelocityLevelMultiplier + AbilityFactor::VelocityLevelAdditional;//在此多乘上X值的樣子。
-        return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
+        return number_format($nftValue * $levelValue, AbilityFactor::Decimals);
     }
     
     /**
@@ -37,7 +37,7 @@ class PlayerAbility {
     public static function Stamina(int $constitution, int $dexterity, int $level) : float{
         $nftValue = $constitution / AbilityFactor::NFTDivisor * AbilityFactor::StaminaConstitutionMultiplier + $dexterity / AbilityFactor::NFTDivisor * AbilityFactor::StaminaDexterityMultiplier;
         $levelValue = $level * AbilityFactor::StaminaLevelMultiplier + AbilityFactor::StaminaLevelAdditional;
-        return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
+        return number_format($nftValue * $levelValue, AbilityFactor::Decimals);
     }
     
     /**
@@ -50,7 +50,7 @@ class PlayerAbility {
     public static function BreakOut(int $strength, int $dexterity, int $level) : float {
         $nftValue = $strength / AbilityFactor::NFTDivisor * AbilityFactor::BreakOutStrengthMultiplier + $dexterity / AbilityFactor::NFTDivisor * AbilityFactor::BreakOutDexterityMultiplier;
         $levelValue = $level * AbilityFactor::BreakOutLevelMultiplier + AbilityFactor::BreakOutLevelAdditional;
-        return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
+        return number_format($nftValue * $levelValue, AbilityFactor::Decimals);
     }
     
     /**
@@ -63,7 +63,7 @@ class PlayerAbility {
     public static function Will(int $contitution, int $strength, int $level) : float {
         $nftValue = $contitution / AbilityFactor::NFTDivisor * AbilityFactor::WillConstitutionMultiplier + $strength / AbilityFactor::NFTDivisor * AbilityFactor::WillStrengthMultiplier;
         $levelValue = $level * AbilityFactor::WillLevelMultiplier + AbilityFactor::WillLevelAdditional;
-        return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
+        return number_format($nftValue * $levelValue, AbilityFactor::Decimals);
     }
     
     /**
@@ -76,7 +76,7 @@ class PlayerAbility {
     public static function Intelligent(int $dexterity, int $agility, int $level) : float {
         $nftValue = $dexterity / AbilityFactor::NFTDivisor * AbilityFactor::IntelligentDexterityMultiplier + $agility / AbilityFactor::NFTDivisor * AbilityFactor::IntelligentAgilityMultiplier;
         $levelValue = $level * AbilityFactor::IntelligentLevelMultiplier + AbilityFactor::IntelligentLevelAdditional;
-        return number_format($nftValue + $levelValue, AbilityFactor::Decimals);
+        return number_format($nftValue * $levelValue, AbilityFactor::Decimals);
     }
     
     /**
