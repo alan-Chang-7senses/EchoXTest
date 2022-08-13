@@ -6,11 +6,11 @@ use Consts\Sessions;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
-use Games\Pools\ItemInfoPool;
+use Games\Users\ItemUtility;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\UserException;
+use Games\Exceptions\ItemException;
 
 class UseItems extends BaseProcessor
 {
@@ -20,7 +20,7 @@ class UseItems extends BaseProcessor
         $userItemID = json_decode(InputHelper::post('userItemID'));
         $amount = json_decode(InputHelper::post('amount'));
         if ($amount <= 0) {
-            throw new UserException(UserException::ItemNotEnough);
+            throw new ItemException(ItemException::ItemNotEnough);
         }
 
         $userid = $_SESSION[Sessions::UserID];
@@ -29,11 +29,11 @@ class UseItems extends BaseProcessor
 
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
         if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         if ($bagHandler->DecItem($userItemID, $amount) == false) {
-            throw new UserException(UserException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         for ($i = 0; $i < $amount; $i++) {
@@ -50,15 +50,9 @@ class UseItems extends BaseProcessor
         } 
 
         $itemsArray = [];
-        $itemInfoPool = ItemInfoPool::Instance();
-        foreach ($totalAddItems as $itemID => $amount) {
-            $itemInfo = $itemInfoPool->{ $itemID};
-            $itemsArray[] = [
-                'itemID' => $itemID,
-                'amount' => $amount,
-                'icon' => $itemInfo->Icon,
-            ];
-        }
+         foreach ($totalAddItems as $itemID => $amount) {
+            $itemsArray[] = ItemUtility::GetClientSimpleInfo($itemID, $amount);            
+         }
 
         $result = new ResultData(ErrorCode::Success);
         $result->addItems = $itemsArray;

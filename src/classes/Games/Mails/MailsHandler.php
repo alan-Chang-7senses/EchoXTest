@@ -3,68 +3,104 @@
 namespace Games\Mails;
 
 use stdClass;
-use Games\Mails\Holders\MailsHolder;
-use Games\Pools\UserMailsPool;
-use Games\Pools\MailsInfoPool;
-use Games\Pools\MailsRewardPool;
-use Games\Accessors\MailsAccessor;
 use Consts\Globals;
-use Consts\Sessions;
+use Games\Pools\MailsInfoPool;
+use Games\Pools\UserMailsPool;
+use Games\Accessors\MailsAccessor;
+use Games\Pools\UserMailItemsPool;
 
-class MailsHandler {
-
-    private MailsHolder|stdClass $userMailsinfo;
-    private MailsHolder|stdClass $mailsinfo;
-    private MailsHolder|stdClass $mailsRewards;
-
-    public function GetUserMailsInfo(int|string $id) : MailsHolder|stdClass{
-        $this->userMailsinfo = UserMailsPool::Instance()->$id;
-        return $this->userMailsinfo;
+class MailsHandler
+{
+    public function GetUserMails(int|string $userID): stdClass
+    {
+        return UserMailsPool::Instance()->{$userID};
     }
-    public function GetMailsInfo(int $mailID): MailsHolder|stdClass {
-        $mailsAccessor = new MailsAccessor();
-        $rows = $mailsAccessor->rowsMailsInfo($mailID);
 
-        $holder = new stdClass();
-        $holder->rows = $rows;
-        
-        $holder->data = [];
-        foreach($rows as $row){
-            $holder->data[$row->Lang] = $row;
+    public function GetUserMailByuUerMailID(int|string $userID, int|string $userMailID): stdClass |false
+    {
+        $userMailsInfo = UserMailsPool::Instance()->$userID;
+        foreach($userMailsInfo->rows as $info)
+        {
+            if ($info->UserMailID == $userMailID)
+            {
+                return $info;
+            }            
         }
-        $this->mailsinfo = $holder;
-        //$this->mailsinfo = MailsInfoPool::Instance()->$mailID;
-        return $this->mailsinfo;
+        return false;
     }
-    public function GetMailsRewards(int $RewardID): MailsHolder|stdClass{
-        $this->mailsRewards = MailsRewardPool::Instance()->$RewardID;
-        return $this->mailsRewards;
+
+    public function AddMail(int|string $userID, int $mailID, int $day): int
+    {
+        $mailsAccessor = new MailsAccessor();
+        $index = $mailsAccessor->AddMail($userID, $mailID, $day);
+        UserMailsPool::Instance()->Delete($userID);
+        return $index;
     }
-    public function ReceiveRewards(int $mailsID,int $openStatus, int $receiveStatus){ 
+
+    public function ReceiveRewards(int|string $userID, int $userMailID, int $openStatus, int $receiveStatus)
+    {
         $bind = [
             'OpenStatus' => $openStatus,
             'ReceiveStatus' => $receiveStatus,
-            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
         ];
         $mailsAccessor = new MailsAccessor();
-        $mailsAccessor->receiveMailsRewards($mailsID,$_SESSION[Sessions::UserID],$bind);
-        UserMailsPool::Instance()->Delete($mailsID);
-
+        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        UserMailsPool::Instance()->Delete($userID);
     }
-    public function DeleteMails(int $mailsID){
+
+    public function UpdateOpenStatus(int|string $userID, int $userMailID, int $openStatus)
+    {
+        $bind = [
+            'OpenStatus' => $openStatus
+        ];
+        $mailsAccessor = new MailsAccessor();
+        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        UserMailsPool::Instance()->Delete($userID);
+    }
+
+    public function DeleteMails(int|string $userID, int $userMailID)
+    {
         $bind = [
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
         ];
         $mailsAccessor = new MailsAccessor();
-        $mailsAccessor->deleteMails($mailsID,$_SESSION[Sessions::UserID],$bind);
-        UserMailsPool::Instance()->Delete($mailsID);
+        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        UserMailsPool::Instance()->Delete($userID);
     }
 
-    public function GetUnreadMails(): int {
-
+    public function GetUnreadMails(int|string $userID): int
+    {
         $mailsAccessor = new MailsAccessor();
-        return $mailsAccessor->getUnreadMails($_SESSION[Sessions::UserID]);
+        return $mailsAccessor->getUnreadMails($userID);
     }
+
+    public function AddMailItems(int $userMailID, array $items): bool
+    {
+        $mailsAccessor = new MailsAccessor();
+        foreach ($items as $item) {
+            $mailsAccessor->AddUserMailItems($userMailID, $item->ItemID, $item->Amount);
+        }
+
+        UserMailItemsPool::Instance()->Delete($userMailID);
+        return true;
+    }
+
+    public function GetMailItems(int $userMailID): array
+    {
+        $items = UserMailItemsPool::Instance()->{ $userMailID};
+        return $items->rows;
+    }
+
+
+    public function GetMailInfo(int $mailsID, $lang): stdClass|false
+    {
+        $mailsInfo = MailsInfoPool::Instance()->$mailsID;
+        if (isset($mailsInfo->{ $lang}) == false) {
+            return false;
+        }
+        return $mailsInfo->{ $lang};
+    }
+
 
 }

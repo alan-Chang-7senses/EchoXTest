@@ -122,6 +122,7 @@ class RaceValue {
         SkillValue::EffectAdaptUpslope,
         SkillValue::EffectAdaptDownslope,
         SkillValue::EffectAdaptSun,
+        SkillValue::EffectAdaptNight,
     ];
     
     const PlayerEffectOnceType = [

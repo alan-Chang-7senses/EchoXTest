@@ -2,24 +2,23 @@
 
 namespace Games\PVP;
 
-use Consts\EnvVar;
-use Consts\ErrorCode;
-use Consts\Globals;
 use DateTime;
-use Exception;
-use Games\Accessors\QualifyingSeasonAccessor;
-use Games\Consts\RaceValue;
-use Games\Pools\QualifyingSeasonPool;
-use Games\Pools\TicketInfoPool;
-use Games\PVP\Holders\TicketInfoHolder;
-use Generators\ConfigGenerator;
-use Generators\DataGenerator;
 use stdClass;
+use Exception;
+use Consts\EnvVar;
+use Consts\Globals;
+use Consts\ErrorCode;
+use Games\Consts\RaceValue;
+use Generators\DataGenerator;
+use Games\Pools\TicketInfoPool;
+use Generators\ConfigGenerator;
+use Games\Pools\QualifyingSeasonPool;
+use Games\PVP\Holders\TicketInfoHolder;
+use Games\Accessors\QualifyingSeasonAccessor;
 
 class QualifyingHandler
 {
     //1:金幣賽 2:PT賽
-    //1:金幣賽 2:PT賽 4:滿級賽
     public const Lobbies = [RaceValue::LobbyCoin, RaceValue::LobbyPT];
 
     public int $NowSeasonID;
@@ -58,13 +57,9 @@ class QualifyingHandler
             $this->NowSeasonID = -1;            
         }
     }
-
-    public function ChangeSeason(int $forceNewArenaID = null, bool|null $startRightNow = null): int
+    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = null): int
     {
-        if ($startRightNow == null)
-        {
-            $startRightNow = false;
-        }
+
         
         $lastQualifyingSeasonID = -1;
         if ($forceNewArenaID == null) {

@@ -40,6 +40,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | itemID | int | 物品編號 |
 | userItemsID | int | 使用者物品編號 |
 | amount | int | 物品數量 |
+| useType | int | [使用種類](../codes/item.md#useType) |
 | itemType | int | [物品種類](../codes/item.md#itemType) |
 | icon | string | Icon 圖號 |
 
@@ -53,25 +54,20 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 		},
 		"items": [
 			{
-				"itemID": 1,
-				"userItemsID": 12,
-				"amount": 9999,
+				"itemID": 5100,
+				"userItemsID": 4,
+				"amount": 1,
+				"useType": 0,
+				"itemType": 5,
+				"icon": "ItemIcon_0032"
+			},
+			{
+				"itemID": 1003,
+				"userItemsID": 8,
+				"amount": 9,
+				"useType": 1,
 				"itemType": 1,
-				"icon": "1"
-			},
-			{
-				"itemID": 2,
-				"userItemsID": 13,
-				"amount": 240,
-				"itemType": 2,
-				"icon": "2"
-			},
-			{
-				"itemID": 3,
-				"userItemsID": 14,
-				"amount": 354,
-				"itemType": 3,
-				"icon": "3"
+				"icon": "ItemIcon_1003"
 			}
 		]
 	}

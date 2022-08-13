@@ -2,78 +2,56 @@
 
 namespace Processors\Mails;
 
-use Processors\BaseProcessor;
+use Consts\Sessions;
 use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
-use Consts\Sessions;
+use Games\Users\ItemUtility;
 use Games\Mails\MailsHandler;
-use Consts\Globals;
+use Processors\BaseProcessor;
 use Games\Users\UserBagHandler;
+use Games\Exceptions\ItemException;
 
-class ReceiveMailsRewards extends BaseProcessor{
+class ReceiveMailsRewards extends BaseProcessor
+{
 
-    public function Process(): ResultData {
-    
-    
-        $mailsIDs = InputHelper::post('mailsID');
-        $lang = InputHelper::post('lang');
+    public function Process(): ResultData
+    {
+        $userMailID = InputHelper::post('userMailID');
         $openStatus = InputHelper::post('openStatus');
         $receiveStatus = InputHelper::post('receiveStatus');
 
-        //TODO 道具放進包包
-        if($receiveStatus  == 1)
-        {
-            $userMailsHandler = new MailsHandler();
-            $userMailsInfo = $userMailsHandler->GetUserMailsInfo($_SESSION[Sessions::UserID]);
-            $mailsID = [];
-            for($i = 0; $i < count($userMailsInfo->rows); $i++){
-                $mailsID[$i]=$userMailsInfo->rows[$i]->MailsID;
+        $userMailsHandler = new MailsHandler();
+        $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($_SESSION[Sessions::UserID], $userMailID);
+        if ($mailInfo == false) {
+            throw new ItemException(ItemException::MailNotExist);
+        }
+        if ($openStatus != 0)
+            $openStatus = 1;
+
+        $itemsArray = [];
+        if ($receiveStatus == 1) {
+            if ($mailInfo->ReceiveStatus == 1) {
+                throw new ItemException(ItemException::MailRewardsReceived);
             }
-    
-            $mailInfoData = [];
-            foreach($mailsID as $mailID){
-                $mailsInfo = $userMailsHandler->GetMailsInfo($mailID);
-                $mailInfoData[] = $mailsInfo->data[$lang];
+
+            $items = $userMailsHandler->GetMailItems($userMailID);
+            $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
+            if ($userBagHandler->CheckAddStacklimit($items) == false) {
+                throw new ItemException(ItemException::UserItemStacklimitReached);
             }
-    
-            $rewardsID = [];
-            for($i = 0; $i < count($mailInfoData); $i++){
-                if($mailInfoData[$i]->RewardID!=null)
-                    $rewardsID[$i]=$mailInfoData[$i]->RewardID;
+            foreach ($items as $item) {
+                $userBagHandler->AddItem($item->ItemID, $item->Amount);
+                $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
-            
-            foreach($rewardsID as $rewardID){
-                $mailsRewards = $userMailsHandler->GetMailsRewards($rewardID);
-            }
-    
-            $result = new ResultData(ErrorCode::Success);
-            for($i = 0; $i < count($userMailsInfo->rows); $i++)
-            {
-                if($userMailsInfo->rows[$i]->FinishTime<=$GLOBALS[Globals::TIME_BEGIN] )
-                    continue;
-                for($j = 0; $j < count($mailInfoData); $j++)
-                {
-                    if($mailInfoData[$i]->RewardID == $mailsRewards->rows[$j]->RewardID && $userMailsInfo->rows[$i]->MailsID == $mailsIDs){
-                        $bagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
-                        $bagHandler->AddItem($_SESSION[Sessions::UserID],$mailsRewards->rows[$j]->ItemID1,$mailsRewards->rows[$j]->ItemNumber1);
-                        if($mailsRewards->rows[$j]->ItemID2==null || $mailsRewards->rows[$j]->ItemID2 == '')
-                            continue;
-                        $bagHandler->AddItem($_SESSION[Sessions::UserID],$mailsRewards->rows[$j]->ItemID2,$mailsRewards->rows[$j]->ItemNumber2);
-                        if($mailsRewards->rows[$j]->ItemID3==null || $mailsRewards->rows[$j]->ItemID3 == '')
-                            continue;
-                        $bagHandler->AddItem($_SESSION[Sessions::UserID],$mailsRewards->rows[$j]->ItemID3,$mailsRewards->rows[$j]->ItemNumber3);    
-                    }
-                }
-            }
+            $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);
+        }
+        else {
+            $userMailsHandler->UpdateOpenStatus($_SESSION[Sessions::UserID], $userMailID, $openStatus);
         }
 
-
-        $userMailsHandler = new MailsHandler();
-        $userMailsHandler->ReceiveRewards($mailsIDs,$openStatus,$receiveStatus);
-
         $result = new ResultData(ErrorCode::Success);
-    
+        $result->rewardItems = $itemsArray;
         return $result;
     }
 

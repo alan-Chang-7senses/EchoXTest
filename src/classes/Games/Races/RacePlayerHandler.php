@@ -2,8 +2,10 @@
 
 namespace Games\Races;
 
+use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
+use Games\Scenes\SceneHandler;
 use stdClass;
 /**
  * Description of RacePlayerHandler
@@ -53,4 +55,5 @@ class RacePlayerHandler {
             return $original - $pay;
         }, $this->info->energy, $energy)]);
     }
+
 }

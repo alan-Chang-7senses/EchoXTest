@@ -20,7 +20,7 @@ Content Type: `application/x-www-form-urlencoded`
 ### 參數
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| mailsID | int | 信件編號 |
+| userMailID | int | 使用者信件編號 |
 
 ## Response
 

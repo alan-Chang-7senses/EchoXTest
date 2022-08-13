@@ -4,32 +4,62 @@ namespace Games\Accessors;
 
 use Consts\Globals;
 
-class MailsAccessor extends BaseAccessor{
-    
-    public function rowsMails(int $userID) : array {
-        return $this->MainAccessor()->FromTable('UserMails')
-                ->WhereEqual('UserID', $userID)->FetchAll();
-    }
-    public function rowsMailsInfo(int $mailID) : array {
-        return $this->StaticAccessor()->FromTable('MailsInfo')
-                ->WhereEqual('MailsID', $mailID)->FetchAll();
-    }
-    public function rowsMailsRewards(int $mailID) : array {
-        return $this->StaticAccessor()->FromTable('MailsRewards')
-                ->WhereEqual('RewardID', $mailID)->FetchAll();
-    }
-    public function receiveMailsRewards(int $mailsID,int|string $userID, array $bind) : bool{
-        return $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
-    }
-    public function deleteMails(int $mailsID,int|string $userID, array $bind) : bool{
-        return $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)->WhereEqual('MailsID', $mailsID)->Modify($bind);
-    }
-    public function getUnreadMails(string $userID): int
+class MailsAccessor extends BaseAccessor
+{
+
+    public function GetUserMails(int $userID): array
     {
-        return count($this->MainAccessor()->FromTable('UserMails')
-            ->WhereEqual('UserID', $userID)->WhereGreater('MailsID', 0)
+        return $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)
             ->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])
-            ->WhereEqual('OpenStatus', 0)
+            ->FetchAll();
+    }
+
+    public function AddMail(int|string $userID, int $mailID, int $days): int
+    {
+        $this->MainAccessor()->FromTable('UserMails')->Add([
+            'UserID' => $userID,
+            'MailsID' => $mailID,
+            'OpenStatus' => 0,
+            'ReceiveStatus' => 0,
+            'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
+            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+            'FinishTime' => $GLOBALS[Globals::TIME_BEGIN] + 86400 * $days,
+        ]);
+
+        return (int)$this->MainAccessor()->FromTable('UserMails')->LastInsertID();
+    }
+
+    public function UpdateUserMails(int $userMailID, array $bind): bool
+    {
+        $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+        return $this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserMailID', $userMailID)->Modify($bind);
+    }
+
+
+    public function GetUnreadMails(string $userID): int
+    {
+        return count($this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)
+            ->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])->WhereEqual('OpenStatus', 0)
             ->FetchAll());
     }
+
+    public function GetUserMailItems(int $userMailID): array
+    {
+        return $this->MainAccessor()->FromTable('UserMailItems')->WhereEqual('UserMailID', $userMailID)->FetchAll();
+    }
+
+    public function AddUserMailItems(int $userMailID, int $itemID, int $amount): bool
+    {
+        return $this->MainAccessor()->FromTable('UserMailItems')->Add([
+            'UserMailID' => $userMailID,
+            'ItemID' => $itemID,
+            'Amount' => $amount,
+        ]);
+    }
+
+    public function GetMailsInfo(int $mailID): array
+    {
+        return $this->StaticAccessor()->FromTable('MailsInfo')->WhereEqual('MailsID', $mailID)->FetchAll();
+    }
+
 }
