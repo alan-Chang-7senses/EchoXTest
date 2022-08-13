@@ -20,4 +20,10 @@ class UserException extends NormalException
     const CanNotResetName = 2008;
     const UserNameNotSetYet = 2009;
     const AlreadyHadFreePeta = 2010;
+    const ItemNotExists = 2011;
+    const UserNotItemOwner = 2012;
+    const UseItemError = 2013;
+    const UseRewardIDError = 2014;
+    const UserFreePlayerListEmpty = 2015;
+    const UserFreePlayerOverLimit = 2016;
 }
