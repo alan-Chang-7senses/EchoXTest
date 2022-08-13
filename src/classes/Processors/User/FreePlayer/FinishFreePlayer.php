@@ -21,8 +21,6 @@ class FinishFreePlayer extends BaseProcessor{
     public function Process(): ResultData
     {
         
-        // $bandedWords = NamingUtility::GetBandedWordEnglish();
-        // if(NamingUtility::HasBandedWord($nickname,$bandedWords))throw new UserException(UserException::UsernameDirty,['username' => $nickname]);
         $petaNumber = InputHelper::post("number");
         $nickname = InputHelper::post("nickname");
         if($petaNumber  < 1 || $petaNumber > 3)return new ResultData(ErrorCode::ParamError);
@@ -30,7 +28,6 @@ class FinishFreePlayer extends BaseProcessor{
         $userInfo = $userHandler->GetInfo();
         
 
-        // if(!empty($userInfo->nickname))throw new UserException(UserException::AlreadyHadFreePeta,["user" => $userInfo->id]);
         
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
         if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
@@ -41,14 +38,14 @@ class FinishFreePlayer extends BaseProcessor{
         $row = $pdo->FromTable("UserFreePeta")
             ->WhereEqual("UserID",$userInfo->id)
             ->Fetch();
-        if($row === false)return new ResultData(ErrorCode::Unknown);
+        if($row === false)throw new UserException(UserException::UserFreePlayerListEmpty,['userID' => $_SESSION[Sessions::UserID]]);
         $freePetas = json_decode($row->FreePetaInfo);
         $chosenPeta = "";
         foreach($freePetas as $peta)
         {
             if($peta->number == $petaNumber) $chosenPeta = $peta; 
         }        
-        if(empty($chosenPeta))return new ResultData(ErrorCode::Unknown);
+        if(empty($chosenPeta))throw new UserException(UserException::UserFreePlayerListEmpty,['userID' => $_SESSION[Sessions::UserID]]);
         $pdo->ClearAll();
         $freePetaRows = $pdo->FromTable("PlayerHolder")
             ->WhereEqual("UserID",$userInfo->id)
@@ -59,7 +56,7 @@ class FinishFreePlayer extends BaseProcessor{
         {
             //免費Peta超過免費peta的持有限制
             if(count($freePetaRows) > PlayerValue::freePetaPlayerIDMultiplier - 1)
-            return new ResultData(ErrorCode::Unknown);
+            throw new UserException(UserException::UserFreePlayerOverLimit,['userID' => $_SESSION[Sessions::UserID]]);
             $playerID += count($freePetaRows);
         }
 
