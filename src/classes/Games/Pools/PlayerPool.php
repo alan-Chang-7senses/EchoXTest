@@ -128,6 +128,7 @@ class PlayerPool extends PoolAccessor {
         if(array_unique($holder->skillHole) != [0]) return;
         
         for($i = 0; $i < $holder->slotNumber; ++$i){
+            if(!isset($holder->skills[$i])) return;
             $holder->skillHole[$i] = $holder->skills[$i]->id;
             $holder->skills[$i]->slot = $i + 1;
         }
