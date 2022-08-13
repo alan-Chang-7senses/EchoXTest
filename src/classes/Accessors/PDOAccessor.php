@@ -166,15 +166,15 @@ class PDOAccessor {
         return $this;
     }
     
-    public function WhereEqual(string $column, string|int $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereEqual(string $column, mixed $value, string|null $bindName = null) : PDOAccessor{
         return $this->WhereCondition($column, '=', $value, $bindName);
     }
     
-    public function WhereGreater(string $column, int $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereGreater(string $column, mixed $value, string|null $bindName = null) : PDOAccessor{
         return $this->WhereCondition($column, '>', $value, $bindName);
     }
     
-    public function WhereLess(string $column, int|float $value, string|null $bindName = null) : PDOAccessor{
+    public function WhereLess(string $column, mixed $value, string|null $bindName = null) : PDOAccessor{
         return $this->WhereCondition($column, '<', $value, $bindName);
     }
     
