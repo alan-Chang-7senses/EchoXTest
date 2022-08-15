@@ -81,6 +81,22 @@ INSERT INTO `FreePetaInfo` (`ID`, `Type`, `Constitution`, `Strength`, `Dexterity
 	(15, 2, 5500, 4400, 5200, 4500, 1);
 /*!40000 ALTER TABLE `FreePetaInfo` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_static.FreeTicket 結構
+CREATE TABLE IF NOT EXISTS `FreeTicket` (
+  `Serial` int(10) NOT NULL AUTO_INCREMENT COMMENT '門票編號',
+  `Ticket_Coin` varchar(10) DEFAULT NULL COMMENT '金幣賽單人',
+  `Ticket_PT` varchar(50) DEFAULT NULL COMMENT 'PT賽單人',
+  `Ticket_Group` varchar(50) DEFAULT NULL COMMENT 'PT賽群體',
+  PRIMARY KEY (`Serial`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='免費門票發放時間表(日) ';
+
+-- 正在傾印表格  koa_static.FreeTicket 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `FreeTicket` DISABLE KEYS */;
+INSERT INTO `FreeTicket` (`Serial`, `Ticket_Coin`, `Ticket_PT`, `Ticket_Group`) VALUES
+	(1, '00:00:00', '00:00:00', NULL),
+	(2, '12:00:00', NULL, NULL);
+/*!40000 ALTER TABLE `FreeTicket` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
