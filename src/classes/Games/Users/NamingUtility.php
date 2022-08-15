@@ -2,6 +2,8 @@
 namespace Games\Users;
 
 use Accessors\PDOAccessor;
+use Consts\EnvVar;
+use Games\Consts\BandedWordValue;
 use PDO;
 
 class NamingUtility
@@ -30,29 +32,27 @@ class NamingUtility
         return !$alreadyExist === false;     
     }
 
-    public static function GetBandedWordEnglish() : string
+    public static function HasSymbols(string $checkWord) : bool
     {
-        //TODO：取得禁字庫
-        return '/fuck|shit/i';
+        return preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $checkWord) == 1;
     }
 
-    public static function GetRandomName(): string
-    {
-        //TODO：取得自動取名規則
-        //測試用
-        $adjectives = 
-        [
-            "beautiful", "clear", "cautious",
-            "vivid", "fortunately", "surprisingly",
-            "reliable", "simply", "plain","lucky",
-            "calm",
-        ];
-        $nouns = 
-        [
-            "man" , "woman", "guy", "day",
-            "buddy", "kitty", "dinner", "weather",
-        ];
-        return $adjectives[rand(0,count($adjectives) - 1)].
-                $nouns[rand(0,count($nouns) - 1)];        
-    }
+    // public static function HasBandedWords(string $checkWord, int $bandedWordType) : bool
+    // {
+    //     $pdo = new PDOAccessor(EnvVar::DBStatic);
+    //     $rows = $pdo->FromTable('BandedWord')
+    //         ->WhereEqual('Type',BandedWordValue::BandWordName)
+    //         ->SelectExpr('Word')
+    //         ->FetchAll();
+    //     $bandedWords = [];
+    //     foreach($rows as $row)
+    //     {
+    //         $bandedWords[] = $row->Word;
+    //     }
+    //     $a = ['a','bdgf','gfd','g'];
+    //     $t = '/'.implode('|', $a).'/';
+    //     $
+    //     return preg_match('/'.implode('|', $bandedWords).'/',$checkWord) == 1;
+    // }
+
 }
