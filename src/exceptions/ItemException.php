@@ -10,5 +10,7 @@ $lang[ItemException::UseRewardIDError] = 'RewardID:[rewardID] use error!!';
 $lang[ItemException::UserItemStacklimitReached] = 'Item stack limit reached!!';
 $lang[ItemException::MailNotExist] = 'Mail does not exist or has been deleted.';
 $lang[ItemException::MailRewardsReceived] = 'Received mail reward';
+$lang[ItemException::AddItemError] = 'ItemID:[itemID] add error!!';
+$lang[ItemException::DecItemError] = 'ItemID:[itemID] dec error!!';
 
 return $lang;

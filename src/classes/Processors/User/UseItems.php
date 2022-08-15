@@ -7,9 +7,11 @@ use Consts\ErrorCode;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Users\ItemUtility;
+use Games\Mails\MailsHandler;
 use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
+use Generators\ConfigGenerator;
 use Games\Exceptions\ItemException;
 
 class UseItems extends BaseProcessor
@@ -23,9 +25,9 @@ class UseItems extends BaseProcessor
             throw new ItemException(ItemException::ItemNotEnough);
         }
 
-        $userid = $_SESSION[Sessions::UserID];
-        $bagHandler = new UserBagHandler($userid);
-        $totalAddItems = []; 
+        $userID = $_SESSION[Sessions::UserID];
+        $bagHandler = new UserBagHandler($userID);
+        $totalAddItems = [];
 
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
         if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
@@ -36,26 +38,42 @@ class UseItems extends BaseProcessor
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
+        $itemsResponse = [];
+        $rewardHandler = new RewardHandler($itemInfo->rewardID);
         for ($i = 0; $i < $amount; $i++) {
-            $rewardHandler = new RewardHandler($itemInfo->rewardID);
-            $addItems = $rewardHandler->AddReward($userid);
+            $addItems = $rewardHandler->GetItems();
             foreach ($addItems as $addItem) {
                 if (isset($totalAddItems[$addItem->ItemID])) {
-                    $totalAddItems[$addItem->ItemID] += $addItem->Amount;
+                    $totalAddItems[$addItem->ItemID]->Amount += $addItem->Amount;
                 }
                 else {
-                    $totalAddItems[$addItem->ItemID] = $addItem->Amount;
+                    $totalAddItems[$addItem->ItemID] = $addItem;
                 }
             }
-        } 
+            $rewardHandler->ReSetItems();
+        }
 
-        $itemsArray = [];
-         foreach ($totalAddItems as $itemID => $amount) {
-            $itemsArray[] = ItemUtility::GetClientSimpleInfo($itemID, $amount);            
-         }
+        $addMailItems = [];
+        $mailsResponse = [];
+        foreach ($totalAddItems as $addItem) {
+            if ($bagHandler->AddItems($addItem) == false) {
+                $mailsResponse[] = ItemUtility::GetClientSimpleInfo($addItem->ItemID, $addItem->Amount);
+                $addMailItems[] = $addItem;
+            }
+            else {
+                $itemsResponse[] = ItemUtility::GetClientSimpleInfo($addItem->ItemID, $addItem->Amount);
+            }
+        }
+
+        if (count($addMailItems) > 0) {
+            $mailsHandler = new MailsHandler();
+            $userMailID = $mailsHandler->AddMail($userID, ConfigGenerator::Instance()->ItemFullAddMailID, ConfigGenerator::Instance()->ItemFullAddMailIDay);
+            $mailsHandler->AddMailItems($userMailID, $addMailItems);
+        }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->addItems = $itemsArray;
+        $result->addItems = $itemsResponse;
+        $result->addMailItems = $mailsResponse;
 
         return $result;
 

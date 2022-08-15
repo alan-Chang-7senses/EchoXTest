@@ -13,18 +13,16 @@ class MailsHandler
 {
     public function GetUserMails(int|string $userID): stdClass
     {
-        return UserMailsPool::Instance()->{$userID};
+        return UserMailsPool::Instance()->{ $userID};
     }
 
-    public function GetUserMailByuUerMailID(int|string $userID, int|string $userMailID): stdClass |false
+    public function GetUserMailByuUerMailID(int|string $userID, int|string $userMailID): stdClass|false
     {
         $userMailsInfo = UserMailsPool::Instance()->$userID;
-        foreach($userMailsInfo->rows as $info)
-        {
-            if ($info->UserMailID == $userMailID)
-            {
+        foreach ($userMailsInfo->rows as $info) {
+            if ($info->UserMailID == $userMailID) {
                 return $info;
-            }            
+            }
         }
         return false;
     }
@@ -75,11 +73,16 @@ class MailsHandler
         return $mailsAccessor->getUnreadMails($userID);
     }
 
-    public function AddMailItems(int $userMailID, array $items): bool
+    public function AddMailItems(int $userMailID, array |stdclass $items): bool
     {
         $mailsAccessor = new MailsAccessor();
-        foreach ($items as $item) {
-            $mailsAccessor->AddUserMailItems($userMailID, $item->ItemID, $item->Amount);
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                $mailsAccessor->AddUserMailItems($userMailID, $item->ItemID, $item->Amount);
+            }
+        }
+        else {
+            $mailsAccessor->AddUserMailItems($userMailID, $items->ItemID, $items->Amount);
         }
 
         UserMailItemsPool::Instance()->Delete($userMailID);

@@ -22,23 +22,31 @@ class UseItemSelect extends BaseProcessor
 
         $userid = $_SESSION[Sessions::UserID];
         $bagHandler = new UserBagHandler($userid);
-
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
         if (($itemInfo->useType != 2) || ($itemInfo->rewardID == 0)) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         $rewardHandler = new RewardHandler($itemInfo->rewardID);
-        if (($rewardHandler->CheckSelectIndex($selectIndex) == false) || ($amount <= 0)) {
-            return new ResultData(ErrorCode::ParamError);
+        $addItem = $rewardHandler->GetSelectReward($selectIndex);
+        if (($addItem == false) || ($amount <= 0)) {
+            throw new ItemException(ItemException::UseItemError);
+        }
+
+        $addItem->Amount = $addItem->Amount*$amount;
+        if ($bagHandler->CheckAddStacklimit($addItem)== false)
+        {
+            throw new ItemException(ItemException::UserItemStacklimitReached, ['[itemID]' => $addItem->ItemID]);
         }
 
         if ($bagHandler->DecItem($userItemID, $amount) == false) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-
-        $addItem = $rewardHandler->AddSelectReward($userid, $amount, $selectIndex);
+        if ($bagHandler->AddItems($addItem) == false)
+        {
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+        }
 
         $itemInfoPool = ItemInfoPool::Instance();
         $itemInfo = $itemInfoPool->{ $addItem->ItemID};

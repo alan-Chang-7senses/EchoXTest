@@ -61,33 +61,63 @@ class UserBagHandler
         return $amount;
     }
 
-    public function CheckAddStacklimit(array $items): bool
+    public function CheckAddStacklimit(array |stdclass $items): bool
     {
         if ($this->multiItemID) {
             return true;
         }
 
-        foreach ($items as $item) {
-            if (($item->ItemID <= 0) || ($item->Amount <= 0)) {
-                continue;
-            }
-
-            $info = $this->itemInfoPool->{ $item->ItemID};
-            if ($info->StackLimit == 0) {
-                continue;
-            }
-
-            if (isset($this->bagInfo->items->{ $item->ItemID})) {
-
-                $userItemHandler = new UserItemHandler($this->bagInfo->items->{ $item->ItemID}[0]);
-                if ($item->Amount + $userItemHandler->GetInfo()->amount > $info->StackLimit) {
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                if ($this->CheckItemStack($item->ItemID, $item->Amount) == false) {
                     return false;
                 }
             }
+            return true;
         }
+        else {
+            return $this->CheckItemStack($items->ItemID, $items->Amount);
+        }
+    }
+
+    private function CheckItemStack(int $itemID, int $amount): bool
+    {
+        if ($amount <= 0) {
+            throw new ItemException(ItemException::AddItemError, ['[itemID]' => $itemID]);
+        }
+
+        $info = $this->itemInfoPool->{ $itemID};
+        if ($info->StackLimit == 0) {
+            return true;
+        }
+
+        if (isset($this->bagInfo->items->{ $itemID})) {
+            $userItemHandler = new UserItemHandler($this->bagInfo->items->{ $itemID}[0]);
+            if (($amount + $userItemHandler->GetInfo()->amount) > $info->StackLimit) {
+                return false;
+            }
+        }
+
         return true;
     }
 
+    public function AddItems(array |stdClass $items): bool
+    {
+        if ($this->CheckAddStacklimit($items) == false) {
+            return false;
+        }
+
+        if (is_array($items)) {
+            foreach ($items as $item) {
+                $this->AddItem($item->ItemID, $item->Amount);
+            }
+        }
+        else {
+            $this->AddItem($items->ItemID, $items->Amount);
+        }
+
+        return true;
+    }
 
     public function AddItem(int $itemID, int $amount)
     {
@@ -134,10 +164,9 @@ class UserBagHandler
                             $this->AddNewItem($itemID, $amount, $info->StackLimit);
                         }
                         else {
-                        //todo add log to $amount, 物品未加完                        
+                        //todo add log to $amount, 物品未加完
                         }
                     }
-
                 }
                 else {
                     $this->AddNewItem($itemID, $amount, $info->StackLimit);
@@ -158,25 +187,98 @@ class UserBagHandler
     {
 
         if ($stackLimit != 0) { //can stack
-            for ($i = 0; $i < 5; $i++) {
 
-                if ($amount <= $stackLimit) {
-                    $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
-                    break;
-                }
-                else {
-                    $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
-                    $amount -= $stackLimit;
-                    if ($this->multiItemID == false) {
-                        //todo add log to $amount, 物品未加完
-                        break;
+            if ($amount <= $stackLimit) {
+
+                $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+            }
+            else {
+                if ($this->multiItemID) {
+                    for ($i = 0; $i < 5; $i++) {
+                        $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
+                        $amount -= $stackLimit;
+                        if ($amount <= $stackLimit) {
+                            $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                            break;
+                        }
                     }
                 }
+                else {
+                    throw new Exception('Add new item too much over the stack limit, ItemID: ' . $itemID . ' amount:' . $amount, ErrorCode::ParamError);
+                }
+
             }
         }
         else //no stack
         {
             $this->itemAccessor->AddItemByItemID($this->userID, $itemID, 1);
+        }
+    }
+
+    public function DecItems(array |stdclass $items): bool
+    {
+        if (is_array($items)) {
+            $decItems = [];
+            foreach ($items as $item) {
+                $tempItem = $this->DecItemByItemID($item->ItemID, $item->Amount, true);
+                if ($tempItem == false) {
+                    return false;
+                }
+                $decItems = array_merge($decItems, $tempItem);
+            }
+
+            foreach ($decItems as $decItem) {
+                $this->DecItem($decItem->userItemID, $decItem->amount);
+            }
+            return true;
+        }else
+        {
+            return $this->DecItemByItemID($items->ItemID, $items->Amount);
+        }
+    }
+
+    public function DecItemByItemID(int $itemID, int $amount, bool $forcheck = false): bool|array
+    {
+        $decItems = [];
+        if (isset($this->bagInfo->items->{ $itemID})) {
+            foreach ($this->bagInfo->items->{ $itemID} as $userItemID) {
+
+                $userItemHandler = new UserItemHandler($userItemID);
+                $userItemInfo = $userItemHandler->GetInfo();
+                $decItem = new stdClass();
+                $decItem->userItemID = $userItemID;
+
+                if ($amount > $userItemInfo->amount) {
+                    $decItem->amount = $userItemInfo->amount;
+                    $amount -= $userItemInfo->amount;
+                }
+                else {
+                    $decItem->amount = $amount;
+                    $amount = 0;
+                }
+
+                $decItems[] = $decItem;
+                if ($amount == 0) {
+                    break;
+                }
+            }
+
+            if ($amount > 0) {
+                return false;
+            }
+
+            if ($forcheck) {
+                return $decItems;
+            }
+            else {
+                foreach ($decItems as $decItem) {
+                    $this->DecItem($decItem->userItemID, $decItem->amount);
+                }
+                return true;
+            }
+        }
+        else {
+            return false;
         }
     }
 
