@@ -9,9 +9,8 @@ use Holders\ResultData;
 use Helpers\InputHelper;
 use Processors\BaseProcessor;
 use Games\PVP\QualifyingHandler;
-use Games\Users\UserItemHandler;
 use Games\Exceptions\RaceException;
-
+use Games\Users\UserBagHandler;
 
 class ReceiveTicket extends BaseProcessor
 {
@@ -37,12 +36,11 @@ class ReceiveTicket extends BaseProcessor
         }
 
         if ($qualifyingHandler->SetNextTokenTime($userID, $lobby) == false) {
-            $result = new ResultData(ErrorCode::Unknown);
+            throw new RaceException(RaceException::UserTicketError);
         }
 
-        $userItemHandler = new UserItemHandler($ticketId);
-        $userItemHandler->AddItem($ticketId, 1);
-
+        $userBagHandler  = new UserBagHandler($userID);
+        $userBagHandler->AddItem($ticketId, 1);
         $result = new ResultData(ErrorCode::Success);
         $result->ticket = $qualifyingHandler->GetTicketInfo($userID, $lobby);
 

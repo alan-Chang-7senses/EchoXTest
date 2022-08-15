@@ -30,10 +30,11 @@
 		- [設定暱稱](Player/SetNickname.md)。
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
-		- [PVP賽場資訊](PVP/PVPInfo.md)。		
-		- [領取免費招待卷](PVP/ReceiveTicket.md)。
+		- [PVP賽場資訊](PVP/PVPInfo.md)。
+		- [獲取入場卷資訊](PVP/GetTicketsInfo.md)。
+		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
-		- [PVP配對離開](PVP/PVPMatchQuit.md)。		
+		- [PVP配對離開](PVP/PVPMatchQuit.md)。
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。

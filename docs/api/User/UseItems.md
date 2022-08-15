@@ -35,6 +35,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [addItems](#addItems) | array | 獲得物品陣列 |
+| [addMailItems](#addItems) | array | 獲得信件物品陣列 |
 
 #### <span id="addItems">addItems 內容</span>
 
@@ -48,27 +49,27 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 ### Example
 
 #### 成功
-
 	{
 		"error": {
 			"code": 0,
 			"message": ""
 		},
-		"addItems": [
+		"addItems": [],
+		"addMailItems": [
 			{
-				"itemID": 1,
-				"amount": 2,
-				"icon": "1"
+				"itemID": 1111,
+				"amount": 26487,
+				"icon": "ItemIcon_0004"
 			},
 			{
-				"itemID": 2,
-				"amount": 4,
-				"icon": "2"
+				"itemID": 1121,
+				"amount": 26828,
+				"icon": "ItemIcon_0006"
 			},
 			{
-				"itemID": 3,
-				"amount": 6,
-				"icon": "3"
+				"itemID": 1131,
+				"amount": 26685,
+				"icon": "ItemIcon_0008"
 			}
 		]
 	}

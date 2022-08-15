@@ -14,5 +14,6 @@ class ItemException extends NormalException
     const UserItemStacklimitReached = 5006;
     const MailNotExist = 5007;
     const MailRewardsReceived = 5008;
-
+    const AddItemError = 5009;
+    const DecItemError = 5010;
 }

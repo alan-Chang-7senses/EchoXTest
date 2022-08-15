@@ -25,10 +25,12 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~15 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
+	('ItemFullAddMailID', '1', '物品超過堆疊上限加入信件的MailID'),
+	('ItemFullAddMailIDay', '365', '物品超過堆疊上限加入信件的過期時間(日)'),
 	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
 	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '1', '金幣晉級賽創建房間千分比'),
