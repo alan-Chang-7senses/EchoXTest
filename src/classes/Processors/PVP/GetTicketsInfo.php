@@ -8,7 +8,7 @@ use Processors\Races\BaseRace;
 use Games\PVP\QualifyingHandler;
 use Games\Exceptions\RaceException;
 
-class LobbyInfo extends BaseRace
+class GetTicketsInfo extends BaseRace
 {
     protected bool|null $mustInRace = false;
 
@@ -19,12 +19,12 @@ class LobbyInfo extends BaseRace
             throw new RaceException(RaceException::NoSeasonData);
         }
 
+        $ticketsinfo = [];
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+            $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, $lobby);
+        }
         $result = new ResultData(ErrorCode::Success);
-        $result->petaToken = $this->userInfo->petaToken;
-        $result->coin = $this->userInfo->coin;
-        $result->diamond = $this->userInfo->diamond;
+        $result->tickets = $ticketsinfo;
         return $result;
     }
-
-
 }

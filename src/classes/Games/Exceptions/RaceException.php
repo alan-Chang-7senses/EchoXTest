@@ -8,7 +8,7 @@ use Exceptions\NormalException;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class RaceException extends NormalException{
-    
+
     const UserInRace = 4001;
     const UserNotInRace = 4002;
     const IncorrectPlayerNumber = 4003;
@@ -26,9 +26,10 @@ class RaceException extends NormalException{
     const EnergyAgainOver = 4015;
     const UserInMatch = 4016;
     const UserNotInMatch = 4017;
-    const UserMatchError = 4018;    
-    const UserTicketNotEnough = 4019; 
+    const UserMatchError = 4018;
+    const UserTicketNotEnough = 4019;
     const UserTicketUpperLimit = 4020;
     const UserTicketNotYet = 4021;
     const NoSeasonData = 4022;
+    const UserTicketError = 4023;
 }

@@ -1,8 +1,9 @@
-# 競賽 - PVP配對
+# 競賽 - 取得晉級賽各賽場資訊
 
 ## 介紹
 
-- 當玩家進入遊戲大廳時，取得大廳相關資訊
+- 取得晉級賽相關資訊。
+- 需要完成登入驗證才可正常使用此 API。
 
 ## URL
 
@@ -40,7 +41,7 @@ Content Type: `application/json`
 | lobby | int | [大廳種類](../codes/race.md#lobby) |
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [rank](#rank) | object | 排行榜資訊 |
-| [scene](#scene) | object | [場景資訊](../User/CurrentScene.md#scene) |
+| [scene](#scene) | object | 場景資訊 |
 <br>
 
 #### <span id="rank">rank 排行榜資訊</span>
@@ -49,6 +50,19 @@ Content Type: `application/json`
 | raceAmount | int | 上場次數 |
 | aveRank| string | 平均排名 |
 | rank | int | 排行嗙名次 |
+|
+
+#### <span id="scene">scene 內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| id | int | 場景編號 |
+| name | string | 場景名稱 |
+| env | int | [環境](../codes/scene.md#env) |
+| weather | int | [天氣](../codes/scene.md#weather) |
+| windDirection | int | [風向](../codes/scene.md#windDirection) |
+| windSpeed | int | 風速 |
+| lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
 |
 
 

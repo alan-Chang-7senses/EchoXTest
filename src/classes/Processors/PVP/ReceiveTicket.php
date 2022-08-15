@@ -36,7 +36,7 @@ class ReceiveTicket extends BaseProcessor
         }
 
         if ($qualifyingHandler->SetNextTokenTime($userID, $lobby) == false) {
-            $result = new ResultData(ErrorCode::Unknown);
+            throw new RaceException(RaceException::UserTicketError);
         }
 
         $userBagHandler  = new UserBagHandler($userID);
