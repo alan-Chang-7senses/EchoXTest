@@ -1,8 +1,10 @@
-# 競賽 - 領取招待卷
+# 競賽 - 領取入場卷
 
 ## 介紹
 
-- 每個賽季都可以領免費招待卷，讓玩家可以進行競賽，此API可以取得競技賽免費召待卷。
+- 領取晉級賽入場卷，讓玩家可以進行競賽。
+- 領取有時間限制。
+- 需要完成登入驗證才可正常使用此 API。
 
 ## URL
 
@@ -43,6 +45,6 @@ Content Type: `application/json`
             "ticketID": 1,
             "amount": 2,
             "maxReceive": 5,
-            "receiveRemainTime": 41692            
+            "receiveRemainTime": 41692
         }
     }

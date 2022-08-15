@@ -2,7 +2,9 @@
 
 ## 介紹
 
-- 當玩家進入遊戲大廳時，透過此功能來建立配對房間。
+- 當玩家進入晉級賽，可透過此功能來建立配對房間。
+- 需要完成登入驗證才可正常使用此 API。
+- 當玩家未在配對狀態下，才可以進行配對。
 
 ## URL
 
@@ -34,7 +36,6 @@ Content Type: `application/json`
 | raceRoomID | int | 房間編號 |
 | extraMatchSeconds | int | 開局配對延長等待秒數 |
 | maxMatchSeconds | int | 開局配對基本等待秒數 |
-
 
 
 ### Example
