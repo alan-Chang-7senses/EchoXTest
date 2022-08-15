@@ -42,8 +42,8 @@ class MainData extends BaseProcessor{
         $result->diamond = $userInfo->diamond;
         $result->player = $player;
 
-        $userMailsHandler = new MailsHandler();               
-        $result->unreadmail = $userMailsHandler->GetUnreadMails();
+        $userMailsHandler = new MailsHandler();
+        $result->unreadmail = $userMailsHandler->GetUnreadMails($_SESSION[Sessions::UserID]);
         
         return $result;
     }
