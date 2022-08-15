@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `FreeTicket` (
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='免費門票發放時間表(日) ';
 
--- 正在傾印表格  koa_static.FreeTicket 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.FreeTicket 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `FreeTicket` DISABLE KEYS */;
 INSERT INTO `FreeTicket` (`Serial`, `Ticket_Coin`, `Ticket_PT`, `Ticket_Group`) VALUES
 	(1, '00:00:00', '00:00:00', NULL),
