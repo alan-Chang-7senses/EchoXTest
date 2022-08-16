@@ -2,10 +2,8 @@
 
 namespace Games\Races;
 
-use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
-use Games\Scenes\SceneHandler;
 use stdClass;
 /**
  * Description of RacePlayerHandler
@@ -36,11 +34,6 @@ class RacePlayerHandler {
     public function SaveData(array $bind) : RacePlayerHolder|stdClass{
         $this->pool->Save($this->id, 'Data', $bind);
         return $this->ResetInfo();
-    }
-    
-    public function Delete() : void{
-        $this->pool->Delete($this->id);
-        unset($this->info);
     }
     
     public function EnoughEnergy(array $energy) : bool{

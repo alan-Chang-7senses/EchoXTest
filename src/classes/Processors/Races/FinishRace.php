@@ -2,11 +2,15 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
-use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
+use Games\Pools\RacePlayerPool;
+use Games\Pools\RacePool;
+use Games\Pools\UserPool;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -21,7 +25,8 @@ class FinishRace extends BaseRace{
     public function Process(): ResultData {
         
         $players = json_decode(InputHelper::post('players'));
-        if(!is_array($players) || count($players) > ConfigGenerator::Instance()->AmountRacePlayerMax) throw new RaceException(RaceException::IncorrectPlayerNumber);
+        $playerCount = count($players);
+        if(!is_array($players) || $playerCount <= 0 || $playerCount > ConfigGenerator::Instance()->AmountRacePlayerMax) throw new RaceException(RaceException::IncorrectPlayerNumber);
         DataGenerator::ExistProperties($players[0], ['id', 'ranking']);
         
         $rankings = [];
@@ -29,14 +34,17 @@ class FinishRace extends BaseRace{
             $rankings[$player->id] = $player->ranking;
         }
         
-        $raceHandler = new RaceHandler($this->userInfo->race);
-        $raceInfo = $raceHandler->GetInfo();
+        $raceID = $this->userInfo->race;
+        $racePool = RacePool::Instance();
+        $raceInfo = $racePool->$raceID;
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
+        $racePlayerPool = RacePlayerPool::Instance();
         $users = [];
+        $userIDs = [];
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
-            $racePlayerInfo = (new RacePlayerHandler($racePlayerID))->GetInfo();
+            $racePlayerInfo = $racePlayerPool->$racePlayerID;
             if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
             
             if(!isset($rankings[$racePlayerInfo->player]) || $rankings[$racePlayerInfo->player] != $racePlayerInfo->ranking){
@@ -53,9 +61,42 @@ class FinishRace extends BaseRace{
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
             ];
+            
+            $userIDs[] = $racePlayerInfo->user;
         }
         
-        $raceHandler->Finish();
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function() use ($accessor, $raceID, $userIDs){
+            
+            $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+            
+            $accessor->FromTable('RacePlayer')->WhereEqual('RaceID', $raceID)->Modify([
+                'Status' => RaceValue::StatusFinish,
+                'UpdateTime' => $currentTime,
+            ]);
+            
+            $accessor->ClearCondition()
+                    ->FromTable('Users')->WhereIn('UserID', $userIDs)
+                    ->Modify([
+                        'Race' => RaceValue::NotInRace,
+                        'Lobby' => RaceValue::NotInLobby,
+                        'Room' => RaceValue::NotInRoom,
+                        'UpdateTime' => $currentTime,
+                    ]);
+            
+            $accessor->ClearCondition()
+                    ->FromTable('Races')->WhereEqual('RaceID', $raceID)
+                    ->Modify([
+                        'Status' => RaceValue::StatusFinish,
+                        'UpdateTime' => $currentTime,
+                        'FinishTime' => $currentTime,
+                    ]);
+        });
+        
+        $userPool = UserPool::Instance();
+        foreach ($userIDs as $userID) $userPool->Delete($userID);
+        foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
+        $racePool->Delete($raceID);
         
         $result = new ResultData(ErrorCode::Success);
         $result->users = $users;

@@ -9,6 +9,8 @@ namespace Games\Consts;
 class RaceValue {
     
     const NotInRace = 0;
+    const NotInLobby = 0;
+    const NotInRoom = 0;
     const BotMatch = -1;
     
     const ForeverAdditiveSec = 1000000000;
