@@ -58,4 +58,7 @@ class NFTDNA {
     const StrengthPlusC = 7;
     const StrengthNormalC = 8;
     const StrengthMinusC = 9;
+
+    /**原生種標記 */
+    const NativeNone = 0;
 }
