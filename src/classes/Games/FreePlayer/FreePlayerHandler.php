@@ -2,7 +2,6 @@
 
 namespace Games\FreePlayer;
 
-use Games\Exceptions\PlayerException;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\PlayerHandler;
 use Games\Pools\FreePlayerPool;
