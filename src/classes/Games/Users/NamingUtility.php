@@ -2,18 +2,15 @@
 namespace Games\Users;
 
 use Accessors\PDOAccessor;
-use PDO;
+use Consts\EnvVar;
 
 class NamingUtility
 {
+    const Garbled = '?';
+    const FindDirty = 1;
     public static function ValidateLength(string $name, int $maxLength) : bool
     {
         return !(strlen($name) <= $maxLength && strlen($name) > 0); 
-    }
-
-    public static function HasBandedWord(string $name, string $bandedWords) : bool
-    {
-        return preg_match($bandedWords,$name);
     }
 
     public static function IsOnlyEnglishAndNumber(string $name) : bool
@@ -30,29 +27,29 @@ class NamingUtility
         return !$alreadyExist === false;     
     }
 
-    public static function GetBandedWordEnglish() : string
+    public static function HasSymbols(string $checkWord) : bool
     {
-        //TODO：取得禁字庫
-        return '/fuck|shit/i';
+        return preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $checkWord) == self::FindDirty;
     }
 
-    public static function GetRandomName(): string
+    public static function HasDirtyWords(string $checkWord, int $bandedWordType)
     {
-        //TODO：取得自動取名規則
-        //測試用
-        $adjectives = 
-        [
-            "beautiful", "clear", "cautious",
-            "vivid", "fortunately", "surprisingly",
-            "reliable", "simply", "plain","lucky",
-            "calm",
-        ];
-        $nouns = 
-        [
-            "man" , "woman", "guy", "day",
-            "buddy", "kitty", "dinner", "weather",
-        ];
-        return $adjectives[rand(0,count($adjectives) - 1)].
-                $nouns[rand(0,count($nouns) - 1)];        
+        $checkWord = strtolower($checkWord);        
+        $pdo = new PDOAccessor(EnvVar::DBStatic);
+        $rows = $pdo->FromTable('DirtyWord')
+            ->WhereEqual('Type',$bandedWordType)
+            ->SelectExpr('Word')
+            ->FetchAll();
+        $bandedWords = [];
+        foreach($rows as $row)
+        {
+            //字變成亂碼
+            if($row->Word == '?')continue;
+            $bandedWords[] = $row->Word;
+        }
+        $pattern = '/'.implode('|', $bandedWords).'/';
+        return  preg_match($pattern,$checkWord) === self::FindDirty ;
+        
     }
+
 }
