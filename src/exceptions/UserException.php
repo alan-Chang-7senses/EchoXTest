@@ -7,7 +7,7 @@ $lang[UserException::NotHoldPlayer] = 'User does not hold this player.(Player ID
 
 $lang[UserException::UsernameAlreadyExist] = 'Username [username] is already exist.';
 $lang[UserException::UsernameTooLong] = 'Username must under 16 characters.';
-$lang[UserException::UsernameDirty] = 'Username [username] has banded word.';
+$lang[UserException::UsernameDirty] = 'Username dirty.';
 $lang[UserException::UsernameNotEnglishOrNumber] = 'Username can only be English or number.';
 $lang[UserException::CanNotResetName] = 'Can not set name.';
 $lang[UserException::UserNameNotSetYet] = 'User:[user] nickname have not set yet';
