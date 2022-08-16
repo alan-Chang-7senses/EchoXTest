@@ -16,7 +16,7 @@ class RaceRoomsAccessor extends BaseAccessor
 
     public function GetRoom(int $raceRoomID): stdClass|false
     {
-        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Fetch();
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->Fetch();
     }
 
     public function GetMatchRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
@@ -26,11 +26,11 @@ class RaceRoomsAccessor extends BaseAccessor
             ->ForUpdate()->FetchAll();
     }
 
-    public function GetIdleRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
+    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdClass|false
     {
         return $this->useTable()->WhereEqual('Status', 0)->WhereEqual('Lobby', $lobby)
             ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
-            ->ForUpdate()->FetchAll();
+            ->ForUpdate()->Fetch();
     }
 
     public function AddNewRoom(int $lobby, int $lowBound, int $upBound, int $qualifyingSeasonID): stdClass|false
