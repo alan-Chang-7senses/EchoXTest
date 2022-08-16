@@ -7,6 +7,7 @@ use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
 use Games\Accessors\UserAccessor;
+use Games\Consts\DirtyWordValue;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
@@ -34,6 +35,7 @@ class FinishFreePlayer extends BaseProcessor{
         $pdo = new PDOAccessor(EnvVar::DBMain);
         $isAlreayExist = NamingUtility::IsNameAlreadyExist($nickname,EnvVar::DBMain,"Users","Nickname");
         if($isAlreayExist)throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);                 
+        if(NamingUtility::HasDirtyWords($nickname,DirtyWordValue::BandWordName))throw new UserException(UserException::UsernameDirty);
         
         $row = $pdo->FromTable("UserFreePeta")
             ->WhereEqual("UserID",$userInfo->id)

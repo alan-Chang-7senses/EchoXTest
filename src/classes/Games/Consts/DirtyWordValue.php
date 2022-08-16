@@ -1,7 +1,7 @@
 <?php
 namespace Games\Consts;
 
-class BandedWordValue
+class DirtyWordValue
 {
     const BandWordName = 0;
     const BandWordUnionName = 1;
