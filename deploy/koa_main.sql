@@ -848,20 +848,10 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
-  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '競賽席次房間編號',
+  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' COMMENT '競賽席次房間編號',
   PRIMARY KEY (`RaceRoomID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
 
--- 傾印  資料表 koa_main.RaceRoomSeat 結構
-CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
-  `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
-  `RaceRoomID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
-  `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
-  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
-  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`RaceRoomSeatID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
 
 -- 傾印  資料表 koa_main.Races 結構
 CREATE TABLE IF NOT EXISTS `Races` (
