@@ -2,6 +2,7 @@
 
 namespace Games\Accessors;
 
+use stdClass;
 use Consts\Globals;
 use Accessors\PDOAccessor;
 
@@ -11,6 +12,11 @@ class RaceRoomsAccessor extends BaseAccessor
     private function useTable(): PDOAccessor
     {
         return $this->MainAccessor()->FromTable('RaceRooms');
+    }
+
+    public function GetRoom(int $raceRoomID): stdClass|false
+    {
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->Fetch();
     }
 
     public function GetMatchRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
@@ -27,7 +33,7 @@ class RaceRoomsAccessor extends BaseAccessor
             ->ForUpdate()->FetchAll();
     }
 
-    public function AddNewRoom(int $lobby, int $lowBound, int $upBound,int $qualifyingSeasonID): int
+    public function AddNewRoom(int $lobby, int $lowBound, int $upBound, int $qualifyingSeasonID): stdClass|false
     {
         $this->useTable()->Add([
             'Status' => 1,
@@ -37,13 +43,10 @@ class RaceRoomsAccessor extends BaseAccessor
             'QualifyingSeasonID' => $qualifyingSeasonID,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
-            'RaceID' => 0,
-            'RaceRoomSeats' => ""
         ]);
 
         $raceRommID = (int)$this->useTable()->LastInsertID();
-        $this->useTable()->WhereEqual('RaceroomID', $raceRommID)->ForUpdate()->Fetch();
-        return $raceRommID;
+        return $this->useTable()->WhereEqual('RaceroomID', $raceRommID)->ForUpdate()->Fetch();
     }
 
     public function Update(int $raceRoomID, array $bind): bool
