@@ -34,6 +34,8 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| openStatus | int | 開啟狀態(0:關閉, 1:開啟) |
+| receiveStatus | int | 領獎狀態(0:未領取, 1:已領取) |
 | [rewardItems](#rewardItems) | object| 獎勵物品|
 |
 
@@ -54,6 +56,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			"code": 0,
 			"message": ""
 		},
+   		"openStatus": 1,
+	    "receiveStatus": "1",
 		"rewardItems": [
 			{
 				"itemID": 1001,
