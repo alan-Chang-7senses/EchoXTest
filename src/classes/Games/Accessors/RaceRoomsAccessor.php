@@ -2,6 +2,7 @@
 
 namespace Games\Accessors;
 
+use stdClass;
 use Consts\Globals;
 use Accessors\PDOAccessor;
 
@@ -13,6 +14,11 @@ class RaceRoomsAccessor extends BaseAccessor
         return $this->MainAccessor()->FromTable('RaceRooms');
     }
 
+    public function GetRoom(int $raceRoomID): stdClass|false
+    {
+        return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->Fetch();
+    }
+
     public function GetMatchRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
     {
         return $this->useTable()->WhereEqual('Status', 1)->WhereEqual('Lobby', $lobby)
@@ -20,14 +26,14 @@ class RaceRoomsAccessor extends BaseAccessor
             ->ForUpdate()->FetchAll();
     }
 
-    public function GetIdleRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array
+    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdClass|false
     {
         return $this->useTable()->WhereEqual('Status', 0)->WhereEqual('Lobby', $lobby)
             ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
-            ->ForUpdate()->FetchAll();
+            ->ForUpdate()->Fetch();
     }
 
-    public function AddNewRoom(int $lobby, int $lowBound, int $upBound,int $qualifyingSeasonID): int
+    public function AddNewRoom(int $lobby, int $lowBound, int $upBound, int $qualifyingSeasonID): stdClass|false
     {
         $this->useTable()->Add([
             'Status' => 1,
@@ -37,13 +43,10 @@ class RaceRoomsAccessor extends BaseAccessor
             'QualifyingSeasonID' => $qualifyingSeasonID,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
-            'RaceID' => 0,
-            'RaceRoomSeats' => ""
         ]);
 
         $raceRommID = (int)$this->useTable()->LastInsertID();
-        $this->useTable()->WhereEqual('RaceroomID', $raceRommID)->ForUpdate()->Fetch();
-        return $raceRommID;
+        return $this->useTable()->WhereEqual('RaceroomID', $raceRommID)->ForUpdate()->Fetch();
     }
 
     public function Update(int $raceRoomID, array $bind): bool
