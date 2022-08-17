@@ -51,7 +51,7 @@ class EnvVar {
             self::DBHost => 'DB_ELITE_HOST',
             self::DBPort => 'DB_ELITE_PORT',
             self::DBUsername => 'DB_ELITE_USERNAME',
-            self::DBPassword => 'DB_MAIELITE_PASSWORD',
+            self::DBPassword => 'DB_ELITE_PASSWORD',
             self::DBName => 'DB_ELITE_NAME',
         ],
     ];

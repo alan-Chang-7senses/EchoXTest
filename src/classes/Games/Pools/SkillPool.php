@@ -45,6 +45,7 @@ class SkillPool extends PoolAccessor{
         $skill->maxDescription = $skillInfo->MaxDescription;
         $skill->maxCondition = $skillInfo->MaxCondition;
         $skill->maxConditionValue = $skillInfo->MaxConditionValue;
+        $skill->attackedDesc = $skillInfo->AttackedDesc;
         $skill->maxEffects = explode(',', $skillInfo->MaxEffect);
         return $skill;
     }

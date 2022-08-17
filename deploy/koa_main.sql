@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~15 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~73 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~72 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
--- 正在傾印表格  koa_main.PlayerLevel 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerLevel 的資料：~75 rows (近似值)
 /*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `Rank`, `Exp`) VALUES
 	(-38, 1, 1, 0),
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='來自 NFT 角色資訊';
 
--- 正在傾印表格  koa_main.PlayerNFT 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerNFT 的資料：~75 rows (近似值)
 /*!40000 ALTER TABLE `PlayerNFT` DISABLE KEYS */;
 INSERT INTO `PlayerNFT` (`PlayerID`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`, `StrengthLevel`, `SkeletonType`) VALUES
 	(-38, 7409, 5872, 6813, 6868, 1, '110208701101047031020170', '110208702103017011010370', '110110701102053021030170', '140105701203017011010270', '130303703102017011010370', '110113701101027012030170', '0000000000000000', 00, 0, 0, 00),
@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~343 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~336 rows (近似值)
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 13, 1, 0),
@@ -848,20 +848,9 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
-  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '競賽席次房間編號',
+  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' COMMENT '競賽席次房間編號',
   PRIMARY KEY (`RaceRoomID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
-
--- 傾印  資料表 koa_main.RaceRoomSeat 結構
-CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
-  `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
-  `RaceRoomID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
-  `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
-  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
-  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`RaceRoomSeatID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
 
 -- 傾印  資料表 koa_main.Races 結構
 CREATE TABLE IF NOT EXISTS `Races` (
