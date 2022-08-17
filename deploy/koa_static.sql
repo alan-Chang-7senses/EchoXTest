@@ -19,7 +19,7 @@ USE `koa_static`;
 
 -- 傾印  資料表 koa_static.DirtyWord 結構
 CREATE TABLE IF NOT EXISTS `DirtyWord` (
-  `Serial` int(10) unsigned NOT NULL,
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `Word` varchar(50) DEFAULT NULL,
   `Type` tinyint(2) NOT NULL DEFAULT 0 COMMENT '禁字分類',
   PRIMARY KEY (`Serial`),
@@ -65,8 +65,8 @@ INSERT INTO `DirtyWord` (`Serial`, `Word`, `Type`) VALUES
 	(34, 'arsehole', 0),
 	(35, '2 girls 1 cup', 0),
 	(36, '2g1c', 0),
-	(37, 'a\$\$', 0),
-	(38, 'a\$\$hole', 0),
+	(37, 'a\\$\\$', 0),
+	(38, 'a\\$\\$hole', 0),
 	(39, 'a55hole', 0),
 	(40, 'acrotomophilia', 0),
 	(41, 'anus', 0),
@@ -734,8 +734,8 @@ INSERT INTO `DirtyWord` (`Serial`, `Word`, `Type`) VALUES
 	(739, 'arsehole', 2),
 	(740, '2 girls 1 cup', 2),
 	(741, '2g1c', 2),
-	(742, 'a\$\$', 2),
-	(743, 'a\$\$hole', 2),
+	(742, 'a\\$\\$', 2),
+	(743, 'a\\$\\$hole', 2),
 	(744, 'a55hole', 2),
 	(745, 'acrotomophilia', 2),
 	(746, 'apeshit', 2),
