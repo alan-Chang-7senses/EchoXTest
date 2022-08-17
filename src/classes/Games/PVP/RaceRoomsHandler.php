@@ -2,60 +2,56 @@
 
 namespace Games\PVP;
 
+use stdClass;
+use Games\Consts\RaceValue;
 use Generators\ConfigGenerator;
+use Games\Exceptions\RaceException;
 use Games\Accessors\RaceRoomsAccessor;
 
 class RaceRoomsHandler
 {
-
     private RaceRoomsAccessor $accessor;
 
-    private int $lobby;
-    public function __construct(int $lobby)
+    public function __construct()
     {
         $this->accessor = new RaceRoomsAccessor();
-        $this->lobby = $lobby;
     }
 
-    private function GetNewRomRate(): int
+    private function GetNewRomRate(int $lobby): int
     {
-        switch ($this->lobby) {
-            case 1: //1. 金幣晉級賽
+        switch ($lobby) {
+            case RaceValue::LobbyCoin:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
-            case 2: //2. UCG晉級賽
+            case RaceValue::LobbyPT:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
         }
         return 0;
     }
 
-    public function GetMatchRoomID(int $lowBound, int $upBound, $qualifyingSeasonID): int
+    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false
     {
-        $rooms = $this->accessor->GetMatchRooms($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+        $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound, $qualifyingSeasonID);
         $roomNumber = count($rooms);
 
-
-        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->GetNewRomRate()) : true;
+        $isAddNewroom = ($roomNumber > 0) ? (rand(1, 1000) < $this->GetNewRomRate($lobby)) : true;
         if ($isAddNewroom) {
-            $idleRooms = $this->accessor->GetIdleRooms($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
 
-            if (count($idleRooms) > 0) {
-                $this->raceRoomID = $idleRooms[0]->RaceRoomID;
+            if ($idleRoom !== false) {
+                return $idleRoom;
             }
             else {
-                $this->raceRoomID = $this->accessor->AddNewRoom($this->lobby, $lowBound, $upBound, $qualifyingSeasonID);
+                return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
             }
         }
         else {
-
             $rnd = rand(0, $roomNumber - 1);
-            $this->raceRoomID = $rooms[$rnd]->RaceRoomID;
+            return $rooms[$rnd];
         }
-
-        return $this->raceRoomID;
     }
 
 
-    public function UpdateUsers(int $raceRoomID, array $users)
+    public function UpdateUsers(int $raceRoomID, array $users): bool
     {
         $seatCount = count($users);
 
@@ -73,7 +69,6 @@ class RaceRoomsHandler
         return $this->accessor->Update($raceRoomID, $bind);
     }
 
-
     public static function StartRace(int $raceRoomID, $raceID)
     {
         $bind = [
@@ -85,5 +80,43 @@ class RaceRoomsHandler
         return $accessor->Update($raceRoomID, $bind);
     }
 
+    public function TakeSeat(int $userID, stdClass $roomInfo): bool
+    {
+        $users = json_decode($roomInfo->RaceRoomSeats);
+        $seatCount = count($users);
 
+        if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax)
+        {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+
+        $key = array_search( $userID, $users);
+        if ($key !== false)
+        {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+        $users[] = $userID;
+        return $this->UpdateUsers($roomInfo->RaceRoomID, $users);
+    }
+
+    public function LeaveSeat(int $userID, int $raceRoomID): bool
+    {
+        $roomInfo = $this->accessor->GetRoom($raceRoomID);
+        if ($roomInfo == false) {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+
+        $users = json_decode($roomInfo->RaceRoomSeats);
+        $key = array_search( $userID, $users);
+        if ($key !== false)
+        {
+            unset($users[$key]);
+            return $this->UpdateUsers($raceRoomID, array_values($users));
+        }else
+        {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+
+
+    }
 }

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~15 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~343 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~336 rows (近似值)
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 13, 1, 0),
@@ -848,20 +848,9 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
-  `RaceRoomSeats` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '競賽席次房間編號',
+  `RaceRoomSeats` varchar(255) NOT NULL DEFAULT '[]' COMMENT '競賽席次房間編號',
   PRIMARY KEY (`RaceRoomID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
-
--- 傾印  資料表 koa_main.RaceRoomSeat 結構
-CREATE TABLE IF NOT EXISTS `RaceRoomSeat` (
-  `RaceRoomSeatID` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽席次房間編號',
-  `RaceRoomID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
-  `Seat` tinyint(4) NOT NULL DEFAULT 0 COMMENT '席次',
-  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
-  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`RaceRoomSeatID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間席次';
 
 -- 傾印  資料表 koa_main.Races 結構
 CREATE TABLE IF NOT EXISTS `Races` (

@@ -47,10 +47,13 @@ class ReceiveMailsRewards extends BaseProcessor
             $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);
         }
         else {
+            $receiveStatus = $mailInfo->ReceiveStatus;
             $userMailsHandler->UpdateOpenStatus($_SESSION[Sessions::UserID], $userMailID, $openStatus);
         }
 
         $result = new ResultData(ErrorCode::Success);
+        $result->openStatus = $openStatus;
+        $result->receiveStatus = $receiveStatus;
         $result->rewardItems = $itemsArray;
         return $result;
     }
