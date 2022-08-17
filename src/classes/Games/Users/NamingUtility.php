@@ -44,12 +44,11 @@ class NamingUtility
         foreach($rows as $row)
         {
             //字變成亂碼
-            if($row->Word == '?')continue;
+            if($row->Word == self::Garbled)continue;
             $bandedWords[] = $row->Word;
         }
         $pattern = '/'.implode('|', $bandedWords).'/';
         return  preg_match($pattern,$checkWord) === self::FindDirty ;
-        
     }
 
 }
