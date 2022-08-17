@@ -42,12 +42,4 @@ class PlayerUtility {
             default => PlayerValue::SunDiff,
         };
     }
-
-    
-    public static function ValidateName($nickName){
-        $pattern = "/幹|操/i";
-        $nickNameLength = strlen($nickName);
-        if($nickNameLength > 24) throw new PlayerException(PlayerException::NicknameLengthError);        
-        if(preg_match($pattern,$nickName,$match)) throw new PlayerException(PlayerException::NicknameInValid,['[nickname]' => $nickName]);
-    }
 }
