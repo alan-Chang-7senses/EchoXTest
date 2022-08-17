@@ -20,5 +20,6 @@ class SkillInfoHolder extends stdClass{
     public string $maxDescription;
     public int $maxCondition;
     public int $maxConditionValue;
+    public string $attackedDesc;
     public array $maxEffects;
 }

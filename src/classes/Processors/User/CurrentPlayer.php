@@ -61,6 +61,7 @@ class CurrentPlayer extends BaseProcessor{
                 'maxDescription' => $info->maxDescription,
                 'maxCondition' => $info->maxCondition,
                 'maxConditionValue' => $info->maxConditionValue,
+                'attackedDesc' => $info->attackedDesc,
                 'effects' => $handler->GetEffects(),
                 'maxEffects' => $handler->GetMaxEffects()
             ];
