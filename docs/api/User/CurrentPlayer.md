@@ -90,6 +90,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | maxDescription | string | 滿星效果敘述代號 |
 | maxCondition | int | [滿星效果條件](../codes/skill.md#maxCondition) |
 | maxConditionValue | int | 滿星效果條件值 |
+| attackedDesc | string | 被攻擊敘述代號 |
 | [effects](#effects) | array | 技能效果陣列 |
 | [maxEffects](#maxEffects) | array | 滿星技能效果陣列 |
 
@@ -227,6 +228,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23008",
                     "maxCondition": 4,
                     "maxConditionValue": 1,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 115,
@@ -279,6 +281,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23011",
                     "maxCondition": 1,
                     "maxConditionValue": 1,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 112,
@@ -331,6 +334,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23012",
                     "maxCondition": 41,
                     "maxConditionValue": 0,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 111,
@@ -383,6 +387,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23012",
                     "maxCondition": 31,
                     "maxConditionValue": 0,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 113,
@@ -435,6 +440,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23013",
                     "maxCondition": 11,
                     "maxConditionValue": 0,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 112,
@@ -487,6 +493,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
                     "maxDescription": "23033",
                     "maxCondition": 41,
                     "maxConditionValue": 0,
+                    "attackedDesc": "",
                     "effects": [
                         {
                             "type": 111,
