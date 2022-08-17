@@ -28,9 +28,9 @@ class SkillMaxEffectPool extends PoolAccessor{
         
         $holder = new SkillMaxEffectHolder();
         $holder->id = $id;
-        $holder->type = $row->EffectType;
-        $holder->target = $row->Target;
-        $holder->formula = $row->Formula;
+        $holder->type = $row->EffectType ?? 0;
+        $holder->target = $row->Target ?? 0;
+        $holder->formula = $row->Formula ?? '0';
         
         return $holder;
     }

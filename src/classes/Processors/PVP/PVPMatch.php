@@ -62,7 +62,7 @@ class PVPMatch extends BaseRace
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
         });
-        UserPool::Instance()->delete($userID);
+        UserPool::Instance()->Delete($userID);
 
         $result = new ResultData(ErrorCode::Success);
         $result->raceRoomID = $raceRoomID;

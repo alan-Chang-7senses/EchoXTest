@@ -26,79 +26,79 @@ use Holders\ResultData;
  */
 //class Ready extends BaseProcessor{
 class Ready extends BaseRace{
-    
+
     protected bool|null $mustInRace = false;
 
     public function Process(): ResultData {
-        
+
         $config = ConfigGenerator::Instance();
-        
+
         $users = json_decode(InputHelper::post('users'));
         $userCount = count($users);
         if(!is_array($users) || $userCount > $config->AmountRacePlayerMax || $userCount == 0) throw new RaceException(RaceException::IncorrectPlayerNumber);
         DataGenerator::ExistProperties($users[0], ['id', 'ranking', 'trackNumber', 'rhythm']);
-        
+
         $trackType = InputHelper::post('trackType');
         $trackShape = InputHelper::post('trackShape');
         $direction = InputHelper::post('direction');
-        
+
         $n = 1;
         $userHandlers = [];
         $readyRaceInfos = [];
         foreach($users as $user){
-            
+
             $handler = new UserHandler($user->id);
             $userInfo = $handler->GetInfo();
             if($userInfo->race != RaceValue::NotInRace && $userInfo->race != RaceValue::BotMatch) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
-            
+
             $readyRaceInfo = new ReadyRaceInfoHolder();
             $readyRaceInfo->raceNumber = $n;
             $readyRaceInfo->ranking = $user->ranking;
             $readyRaceInfo->trackNumber = $user->trackNumber;
             $readyRaceInfo->rhythm = $user->rhythm;
-            
+
             $userHandlers[] = $handler;
             $readyRaceInfos[$userInfo->id] = $readyRaceInfo;
-            
+
             ++$n;
         }
-        
+
         $sceneHandler = new SceneHandler($this->userInfo->scene);
         $sceneInfo = $sceneHandler->GetInfo();
         $climate = $sceneHandler->GetClimate();
-        
+
         $raceAccessor = new RaceAccessor();
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $raceID = $raceAccessor->AddRace([
             'SceneID' => $sceneInfo->id,
-            'Room' => $userInfo->room, 
+            'Room' => $this->userInfo->room,
             'CreateTime' => $currentTime,
             'UpdateTime' => $currentTime,
             'Weather' => $climate->weather,
             'WindDirection' => $climate->windDirection,
         ]);
 
-        RaceRoomsHandler::StartRace($userInfo->room, $raceID);
-        
+        RaceRoomsHandler::StartRace($this->userInfo->room, $raceID);
+
         $racePlayerIDs = [];
         $playerSkills = [];
         $ratioEnergy = [];
         $randomEnergy = [];
         foreach($userHandlers as $userHandler){
-            
+
             $userInfo = $userHandler->GetInfo();
             $readyRaceInfo = $readyRaceInfos[$userInfo->id];
-            
+
             $playerHandler = new PlayerHandler($userInfo->player);
             $playerInfo = $playerHandler->GetInfo();
-            
+
             $skills = [];
             $energyCounts = array_fill(0, RaceValue::EnergyTypeCount, 0);
             $energyTotal = 0;
             foreach($playerInfo->skills as $playerSkill){
-                
+
                 if($playerSkill->slot == SkillValue::NotInSlot) continue;
-                
+
                 $handler = new SkillHandler($playerSkill->id);
                 $skillInfo = $handler->GetInfo();
                 $skills[] = [
@@ -115,20 +115,20 @@ class Ready extends BaseRace{
                     'effects' => $handler->GetEffects(),
                     'maxEffects' => $handler->GetMaxEffects(),
                 ];
-                
+
                 for($i = 0; $i < RaceValue::EnergyTypeCount; ++$i){
                     $energyCounts[$i] += $skillInfo->energy[$i];
                     $energyTotal += $skillInfo->energy[$i];
                 }
             }
-            
+
             $ratioEnergy[$userInfo->player] = RaceUtility::RatioEnergy($energyCounts, $energyTotal);
             $randomEnergy[$userInfo->player] = RaceUtility::RandomEnergy($playerInfo->slotNumber);
             $energy = [];
             for($i = 0; $i < RaceValue::EnergyTypeCount; ++$i){
                 $energy[] = $ratioEnergy[$userInfo->player][$i] + $randomEnergy[$userInfo->player][$i];
             }
-            
+
             $racePlayerID = $raceAccessor->AddRacePlayer([
                 'RaceID' => $raceID,
                 'UserID' => $userInfo->id,
@@ -145,21 +145,21 @@ class Ready extends BaseRace{
                 'CreateTime' => $currentTime,
                 'UpdateTime' => $currentTime,
             ]);
-            
+
             $racePlayerIDs[$userInfo->player] = $racePlayerID;
             $playerSkills[$userInfo->player] = $skills;
         }
-        
+
         $raceHandler = new RaceHandler($raceID);
         $raceHandler->SaveData(['racePlayers' => $racePlayerIDs]);
-        
+
         $raceHandler->SetSecne($sceneHandler);
         $readyUserInfos = [];
         foreach ($userHandlers as $userHandler) {
-            
+
             $raceHandler->SetPlayer(new PlayerHandler($userHandler->GetInfo()->player));
             $racePlayerInfo = $raceHandler->GetRacePlayerInfo();
-            
+
             $readyUserInfos[] = [
                 'id' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
@@ -172,11 +172,11 @@ class Ready extends BaseRace{
                 'startSec' => $raceHandler->StartSecond(),
                 'skills' => $playerSkills[$racePlayerInfo->player],
             ];
-            
+
             $userHandler->SaveData(['race' => $raceID]);
 
         }
-        
+
         $scene = [
             'env' => $sceneInfo->env,
             'weather' => $climate->weather,
@@ -184,7 +184,7 @@ class Ready extends BaseRace{
             'windSpeed' => $climate->windSpeed,
             'lighting' => $climate->lighting,
         ];
-        
+
         $result = new ResultData(ErrorCode::Success);
         $result->scene = $scene;
         $result->users = $readyUserInfos;
