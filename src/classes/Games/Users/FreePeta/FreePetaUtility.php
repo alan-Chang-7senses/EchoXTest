@@ -3,6 +3,7 @@ namespace Games\Users\FreePeta;
 
 use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\PlayerUtility;
+use stdClass;
 
 class FreePetaUtility
 {    
@@ -23,7 +24,7 @@ class FreePetaUtility
         return empty($aliasCode) ? false : $aliasCode;
     }
 
-    public static function PartcodeAllDNA(PlayerDnaHolder $dna)
+    public static function PartcodeAllDNA(PlayerDnaHolder|stdClass $dna)
     {
         $dna->head = PlayerUtility::PartCodeByDNA($dna->head);
         $dna->body = PlayerUtility::PartCodeByDNA($dna->body);
