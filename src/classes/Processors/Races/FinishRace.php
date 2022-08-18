@@ -110,6 +110,14 @@ class FinishRace extends BaseRace{
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
         
+        foreach($users as $user){
+            $accessor->CallProcedure('UserRaceTimingRecord', [
+                'userID' => $user['id'],
+                'duration' => $user['duration'],
+                'updateTime' => $GLOBALS[Globals::TIME_BEGIN]
+            ]);
+        }
+        
         $result = new ResultData(ErrorCode::Success);
         $result->users = $users;
         return $result;
