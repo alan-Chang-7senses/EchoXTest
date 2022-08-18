@@ -11,6 +11,8 @@ use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\UserPool;
+use Games\Races\RaceUtility;
+use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -63,6 +65,16 @@ class FinishRace extends BaseRace{
             ];
             
             $userIDs[] = $racePlayerInfo->user;
+        }
+        
+        $ticket = RaceUtility::GetTicketID($this->userInfo->lobby);
+        if($ticket != RaceValue::NoTicketID) {
+            
+            foreach($userIDs as $userID) {
+                
+                $userBagHandler = new UserBagHandler($userID);
+                $userBagHandler->DecItemByItemID($ticket, 1);
+            }
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
