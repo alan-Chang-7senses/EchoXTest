@@ -1,5 +1,5 @@
 FROM php:8.1.0-apache AS base
-ENV APP_VERSION=0.23.3
+ENV APP_VERSION=0.24.0
 RUN a2enmod rewrite
 RUN apt-get update \
     && apt-get install -y libmemcached-dev zlib1g-dev libzip-dev zip
