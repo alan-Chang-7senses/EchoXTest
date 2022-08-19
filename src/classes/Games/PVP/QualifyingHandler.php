@@ -9,6 +9,7 @@ use Consts\EnvVar;
 use Consts\Globals;
 use Consts\ErrorCode;
 use Games\Consts\RaceValue;
+use Games\Pools\ItemInfoPool;
 use Generators\DataGenerator;
 use Games\Pools\TicketInfoPool;
 use Generators\ConfigGenerator;
@@ -180,7 +181,9 @@ class QualifyingHandler
         $this->CheckLobbyID($lobby);
         $ticketInfo = new TicketInfoHolder();
         $ticketInfo->lobby = $lobby;
-        $ticketInfo->ticketID = $this->GetTicketID($lobby);
+        $itemInfo = ItemInfoPool::Instance()->{ $this->GetTicketID($lobby)};
+        $ticketInfo->ticketID = $itemInfo->ItemID;
+        $ticketInfo->ticketIcon = $itemInfo->Icon;
         $ticketInfo->amount = $this->FindItemAmount($userID, $ticketInfo->ticketID);
         $ticketInfo->maxReceive = $this->GetMaxTickets($lobby);
         $ticketInfo->receiveRemainTime = $this->GetRemainTicketTime($userID, $lobby);
