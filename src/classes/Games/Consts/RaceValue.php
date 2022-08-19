@@ -9,7 +9,11 @@ namespace Games\Consts;
 class RaceValue {
     
     const NotInRace = 0;
+    const NotInLobby = 0;
+    const NotInRoom = 0;
     const BotMatch = -1;
+    
+    const NoTicketID = 0;
     
     const ForeverAdditiveSec = 1000000000;
     
@@ -93,9 +97,6 @@ class RaceValue {
     /**彎道x體力耗盡 後係數 */
     const MinusHPCurveBack = 0.25;
 
-
-
-    
     const LobbyNone = 0;
     const LobbyCoin = 1;
     const LobbyPT = 2;
