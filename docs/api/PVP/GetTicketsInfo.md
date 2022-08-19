@@ -38,6 +38,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | lobby | int | [大廳種類](../codes/race.md#lobby) |
 | ticketID | int | 入場卷物品編號 |
+| ticketIcon | string | 入場卷物品圖號 |
 | amount | int | 已有物品數量 |
 | maxReceive | int | 領取上限 |
 | receiveRemainTime | int | 剩餘可領領時間(秒) |
@@ -54,13 +55,15 @@ Content Type: `application/json`
             {
                 "lobby": 1,
                 "ticketID": 5100,
-                "amount": 0,
+                "ticketIcon": "ItemIcon_0032",
+                "amount": 111,
                 "maxReceive": 5,
                 "receiveRemainTime": 0
             },
             {
                 "lobby": 2,
                 "ticketID": 5201,
+                "ticketIcon": "ItemIcon_0031",
                 "amount": 0,
                 "maxReceive": 3,
                 "receiveRemainTime": 0
