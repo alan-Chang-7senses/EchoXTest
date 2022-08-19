@@ -111,6 +111,7 @@ class FinishRace extends BaseRace{
         $racePool->Delete($raceID);
         
         foreach($users as $user){
+            if($user['id'] <= 0) continue;
             $accessor->CallProcedure('UserRaceTimingRecord', [
                 'userID' => $user['id'],
                 'duration' => $user['duration'],

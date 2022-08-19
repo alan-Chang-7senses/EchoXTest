@@ -49,7 +49,7 @@ class PlayerPool extends PoolAccessor {
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
         $holder->level = $player->Level;
         $holder->exp = $player->Exp;
-        $holder->maxExp = null; //還沒有資料
+        $holder->maxExp = 0; //還沒有資料
         $holder->rank = $player->Rank;
         $holder->strengthLevel = $player->StrengthLevel;
         $holder->skeletonType = $player->SkeletonType;
