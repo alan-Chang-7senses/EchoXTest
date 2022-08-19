@@ -46,7 +46,7 @@ Content Type: `application/json`
 | sync | float | 同步率 |
 | level | int | 等級 |
 | exp | int | 經驗值 |
-| maxExp | int | 下次升級經驗值**（未實作，目前為 null）** |
+| maxExp | int | 下次升級經驗值**（未實作，目前為 0）** |
 | rank | int | 階級 |
 | velocity | float | 速度 |
 | stamina | float | 耐力 |
@@ -129,7 +129,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
             "sync": 0,
             "level": 1,
             "exp": 0,
-            "maxExp": null,
+            "maxExp": 0,
             "rank": 1,
             "velocity": 59.92,
             "stamina": 57.67,

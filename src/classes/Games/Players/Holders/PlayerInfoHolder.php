@@ -23,7 +23,7 @@ class PlayerInfoHolder extends stdClass {
     /** @var int 當見經驗值 */
     public int $exp;
     /** @var int 升級所需的最大經驗值 */
-    public int|null $maxExp; //暫時型別
+    public int $maxExp;
     /** @var int 生物階級 */
     public int $rank;
     /** @var float 速度 SPD */

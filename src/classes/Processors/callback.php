@@ -87,7 +87,7 @@ class callback extends BaseProcessor{
                 $accessor->FromTable('UserItems')->Add([
                     'UserID' => $userID,
                     'ItemID' => $config->PvP_B_TicketId_1,
-                    'Amount' => 1000,
+                    'Amount' => 50,
                     'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
                     'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
                 ]);
