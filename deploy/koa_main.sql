@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `Marquee` (
   KEY `Staus` (`Status`,`Lang`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
 
--- 正在傾印表格  koa_main.Marquee 的資料：~12 rows (近似值)
+-- 正在傾印表格  koa_main.Marquee 的資料：~13 rows (近似值)
 /*!40000 ALTER TABLE `Marquee` DISABLE KEYS */;
 INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `CreateTime`, `UpdateTime`) VALUES
 	(1, 1, 0, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~73 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
@@ -955,6 +955,34 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `UserID` (`UserID`) USING BTREE,
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.UserRaceTiming 結構
+CREATE TABLE IF NOT EXISTS `UserRaceTiming` (
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Fastest` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '最快時間',
+  `Slowest` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '最慢時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserID`),
+  KEY `Fastest` (`Fastest`),
+  KEY `Slowest` (`Slowest`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者競賽計時紀錄';
+
+-- 傾印  程序 koa_main.UserRaceTimingRecord 結構
+DELIMITER //
+CREATE PROCEDURE `UserRaceTimingRecord`(
+	IN `inUserID` INT,
+	IN `inDuration` DECIMAL(20,6),
+	IN `inUpdateTime` INT
+)
+    COMMENT '使用者競賽計時記錄'
+BEGIN
+
+INSERT INTO UserRaceTiming (`UserID`, `Fastest`, `Slowest`, `UpdateTime`)
+VALUES (inUserID, inDuration, inDuration, inUpdateTime)
+ON DUPLICATE KEY UPDATE `Fastest` = LEAST(`Fastest`, inDuration), `Slowest` = GREATEST(`Slowest`, inDuration), `UpdateTime` = inUpdateTime;
+
+END//
+DELIMITER ;
 
 -- 傾印  資料表 koa_main.UserRewardTimes 結構
 CREATE TABLE IF NOT EXISTS `UserRewardTimes` (

@@ -5,7 +5,7 @@ use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
-
+use Generators\ConfigGenerator;
 /**
  * Description of RaceUtility
  *
@@ -62,11 +62,20 @@ class RaceUtility {
         ];
     }
 
-    
     public static function GetCurrentSceneSunValue():int
     {
         $userHolder =(new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
         $climates = (new SceneHandler($userHolder->scene))->GetClimate();        
         return $climates->lighting;
+    }
+    
+    public static function GetTicketID(int $lobby) : int{
+        
+        $config = ConfigGenerator::Instance();
+        return match ($lobby) {
+            RaceValue::LobbyCoin => $config->PvP_B_TicketId_1,
+            RaceValue::LobbyPT => $config->PvP_B_TicketId_2,
+            default => RaceValue::NoTicketID,
+        };
     }
 }
