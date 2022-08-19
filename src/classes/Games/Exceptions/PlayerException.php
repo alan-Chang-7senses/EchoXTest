@@ -15,4 +15,5 @@ class PlayerException extends NormalException{
     const OverSlot = 3003;
     const NicknameInValid = 3004;
     const NicknameLengthError = 3005;
+    const NicknameNotEnglish = 3006;
 }

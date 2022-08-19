@@ -43,4 +43,7 @@ class PlayerValue {
     /** 免費Peta的PlayerID產生的倍率 */
     const freePetaPlayerIDMultiplier = 100;
 
+    /**角色暱稱最大長度 */
+    const PlayerNicknameMaxLength = 16;
+
 }

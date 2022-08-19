@@ -8,6 +8,7 @@ class NamingUtility
 {
     const Garbled = '?';
     const FindDirty = 1;
+    //true : nickname validate failed, false: success
     public static function ValidateLength(string $name, int $maxLength) : bool
     {
         return !(strlen($name) <= $maxLength && strlen($name) > 0); 
