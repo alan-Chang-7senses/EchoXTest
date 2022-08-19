@@ -1019,7 +1019,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`),
-  KEY `Race` (`Race`)
+  KEY `Race` (`Race`),
+  KEY `Coin` (`Coin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
 -- 正在傾印表格  koa_main.Users 的資料：~49 rows (近似值)
