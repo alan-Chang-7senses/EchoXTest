@@ -65,6 +65,7 @@
 	- 排行榜：
 		- CB 1.5
 			- [競賽最快速排行榜](Leaderboard/CB15/RaceFastest.md)。
+			- [最有錢使用者排行榜](leaderboard/CB15/UserRichest.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
 		- [使用者資料](EliteTest/UserInfo.md)。
