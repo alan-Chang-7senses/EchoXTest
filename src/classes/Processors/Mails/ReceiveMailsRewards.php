@@ -41,7 +41,7 @@ class ReceiveMailsRewards extends BaseProcessor
                 throw new ItemException(ItemException::UserItemStacklimitReached);
             }
             foreach ($items as $item) {
-                $userBagHandler->AddItem($item->ItemID, $item->Amount);
+                $userBagHandler->AddItems($item);
                 $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
             $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);

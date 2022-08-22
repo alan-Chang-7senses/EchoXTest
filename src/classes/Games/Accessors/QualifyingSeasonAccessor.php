@@ -45,13 +45,6 @@ class QualifyingSeasonAccessor extends BaseAccessor
         return $result;
     }
 
-    public function FindItemAmount($bind): int
-    {
-        $item = $this->MainAccessor()->executeBindFetch('SELECT * from UserItems WHERE UserID = :UserID AND ItemID = :ItemID', $bind);
-        return $item == null ? 0 : $item->Amount;
-    }
-
-
     public function GetUserTicketInfo(int $userId): mixed
     {
          $result = $this->MainAccessor()->FromTable('UserRewardTimes')->WhereEqual('UserID', $userId)->Fetch();
