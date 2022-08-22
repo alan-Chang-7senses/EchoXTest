@@ -51,6 +51,7 @@ class FinishRace extends BaseRace{
         $raceInfo = $racePool->$raceID;
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
+        $userPool = UserPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
         $users = [];
         foreach ($raceInfo->racePlayers as $racePlayerID) {
@@ -68,6 +69,7 @@ class FinishRace extends BaseRace{
             
             $users[] = [
                 'id' => $racePlayerInfo->user,
+                'nickname' => $userPool->{$racePlayerInfo->user}->nickname,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
@@ -127,7 +129,6 @@ class FinishRace extends BaseRace{
                     ]);
         });
         
-        $userPool = UserPool::Instance();
         foreach ($users as $user) $userPool->Delete($user['id']);
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
