@@ -127,7 +127,7 @@ class UserBagHandler
         }
 
         if ($itemID < 0) {
-            $userHandler = new UserHandler($this->userid);
+            $userHandler = new UserHandler($this->userID);
             $info = $userHandler->GetInfo();
             switch ($itemID) {
                 case -1: //-1 電力
