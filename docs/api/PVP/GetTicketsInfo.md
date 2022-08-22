@@ -41,9 +41,9 @@ Content Type: `application/json`
 | ticketIcon | string | 入場卷物品圖號 |
 | amount | int | 已有物品數量 |
 | maxReceive | int | 領取上限 |
-| receiveRemainTime | int | 剩餘可領領時間(秒) |
+| receiveCount | int | 一次領取數量 |
+| receiveRemainTime | int | 剩餘可領時間(秒) |
 <br>
-
 
 ### Example
     {
@@ -56,8 +56,9 @@ Content Type: `application/json`
                 "lobby": 1,
                 "ticketID": 5100,
                 "ticketIcon": "ItemIcon_0032",
-                "amount": 111,
-                "maxReceive": 5,
+                "amount": 0,
+                "maxReceive": 100,
+                "receiveCount": 15,
                 "receiveRemainTime": 0
             },
             {
@@ -66,6 +67,7 @@ Content Type: `application/json`
                 "ticketIcon": "ItemIcon_0031",
                 "amount": 0,
                 "maxReceive": 3,
+                "receiveCount": 0,
                 "receiveRemainTime": 0
             }
         ]

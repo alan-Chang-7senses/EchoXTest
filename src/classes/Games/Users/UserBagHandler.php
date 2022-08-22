@@ -119,7 +119,8 @@ class UserBagHandler
         return true;
     }
 
-    public function AddItem(int $itemID, int $amount)
+    //使用AddItems已確定加入物品沒問題
+    private function AddItem(int $itemID, int $amount)
     {
         if (($itemID == 0) || ($amount <= 0)) {
             throw new Exception('The itemID \'' . $itemID . '\' or amount\'' . $amount . '\'  can not <= 0', ErrorCode::ParamError);
