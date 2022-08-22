@@ -1506,6 +1506,7 @@ CREATE TABLE IF NOT EXISTS `RewardContent` (
 -- 正在傾印表格  koa_static.RewardContent 的資料：~32 rows (近似值)
 /*!40000 ALTER TABLE `RewardContent` DISABLE KEYS */;
 INSERT INTO `RewardContent` (`Serial`, `ContentGroupID`, `ItemID`, `Amount`, `Proportion`) VALUES
+	(0, 99999, -1, 10, 0),
 	(1, 1, 1111, 1, 100),
 	(2, 1, 1121, 1, 100),
 	(3, 1, 1131, 1, 100),
@@ -1550,9 +1551,10 @@ CREATE TABLE IF NOT EXISTS `RewardInfo` (
   KEY `ContentGroupID` (`ContentGroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='獎勵資訊';
 
--- 正在傾印表格  koa_static.RewardInfo 的資料：~10 rows (近似值)
+-- 正在傾印表格  koa_static.RewardInfo 的資料：~11 rows (近似值)
 /*!40000 ALTER TABLE `RewardInfo` DISABLE KEYS */;
 INSERT INTO `RewardInfo` (`RewardID`, `Modes`, `Times`, `ContentGroupID`) VALUES
+	(-1, 1, 1, 99999),
 	(1, 3, 1, 1),
 	(2, 3, 1, 2),
 	(3, 2, 1, 1),
@@ -1644,6 +1646,57 @@ INSERT INTO `SceneInfo` (`SceneID`, `SceneName`, `SceneEnv`) VALUES
 	(3007, '9024', 3),
 	(3008, '9025', 3);
 /*!40000 ALTER TABLE `SceneInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.SingleRankingReward 結構
+CREATE TABLE IF NOT EXISTS `SingleRankingReward` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `PlayerNumber` tinyint(4) NOT NULL DEFAULT 0 COMMENT '參賽人數',
+  `Ranking` tinyint(4) NOT NULL DEFAULT 0 COMMENT '排名',
+  `CoinReward` int(11) NOT NULL DEFAULT 0 COMMENT '金幣賽獎勵編號',
+  `PetaTokenReward` int(11) NOT NULL DEFAULT 0 COMMENT 'PT賽獎勵編號',
+  PRIMARY KEY (`Serial`),
+  UNIQUE KEY `PlayerNumber_Ranking` (`PlayerNumber`,`Ranking`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COMMENT='單局排名獎勵';
+
+-- 正在傾印表格  koa_static.SingleRankingReward 的資料：~35 rows (近似值)
+/*!40000 ALTER TABLE `SingleRankingReward` DISABLE KEYS */;
+INSERT INTO `SingleRankingReward` (`Serial`, `PlayerNumber`, `Ranking`, `CoinReward`, `PetaTokenReward`) VALUES
+	(1, 8, 1, -1, -1),
+	(2, 8, 2, -1, -1),
+	(3, 8, 3, -1, -1),
+	(4, 8, 4, -1, -1),
+	(5, 8, 5, -1, -1),
+	(6, 8, 6, -1, -1),
+	(7, 8, 7, -1, -1),
+	(8, 8, 8, -1, -1),
+	(9, 7, 1, -1, -1),
+	(10, 7, 2, -1, -1),
+	(11, 7, 3, -1, -1),
+	(12, 7, 4, -1, -1),
+	(13, 7, 5, -1, -1),
+	(14, 7, 6, -1, -1),
+	(15, 7, 7, -1, -1),
+	(16, 6, 1, -1, -1),
+	(17, 6, 2, -1, -1),
+	(18, 6, 3, -1, -1),
+	(19, 6, 4, -1, -1),
+	(20, 6, 5, -1, -1),
+	(21, 6, 6, -1, -1),
+	(22, 5, 1, -1, -1),
+	(23, 5, 2, -1, -1),
+	(24, 5, 3, -1, -1),
+	(25, 5, 4, -1, -1),
+	(26, 5, 5, -1, -1),
+	(27, 4, 1, -1, -1),
+	(28, 4, 2, -1, -1),
+	(29, 4, 3, -1, -1),
+	(30, 4, 4, -1, -1),
+	(31, 3, 1, -1, -1),
+	(32, 3, 2, -1, -1),
+	(33, 3, 3, -1, -1),
+	(34, 2, 1, -1, -1),
+	(35, 2, 2, -1, -1);
+/*!40000 ALTER TABLE `SingleRankingReward` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillAffixAlias 結構
 CREATE TABLE IF NOT EXISTS `SkillAffixAlias` (
@@ -2034,7 +2087,7 @@ CREATE TABLE IF NOT EXISTS `SkillPart` (
   UNIQUE KEY `PartCode_PartType` (`PartCode`,`PartType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部位技能對照表';
 
--- 正在傾印表格  koa_static.SkillPart 的資料：~28 rows (近似值)
+-- 正在傾印表格  koa_static.SkillPart 的資料：~114 rows (近似值)
 /*!40000 ALTER TABLE `SkillPart` DISABLE KEYS */;
 INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `AliasCode2`, `AliasCode3`, `SkillAffixID`) VALUES
 	(1, '110106', 1, 'Lion061', NULL, NULL, 7),
@@ -2126,7 +2179,31 @@ INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `A
 	(87, '140206', 3, 'Cat063', NULL, NULL, 9),
 	(88, '140206', 4, 'Cat064', NULL, NULL, 9),
 	(89, '140206', 5, 'Cat065', NULL, NULL, 9),
-	(90, '140206', 6, 'Cat066', NULL, NULL, 9);
+	(90, '140206', 6, 'Cat066', NULL, NULL, 9),
+	(91, '110214', 1, 'Lion061', NULL, NULL, 7),
+	(92, '110214', 2, 'Lion062', NULL, NULL, 7),
+	(93, '110214', 3, 'Lion063', NULL, NULL, 7),
+	(94, '110214', 4, 'Lion064', NULL, NULL, 7),
+	(95, '110214', 5, 'Lion065', NULL, NULL, 7),
+	(96, '110214', 6, 'Lion066', NULL, NULL, 7),
+	(97, '140209', 1, 'Cat051', NULL, NULL, 1),
+	(98, '140209', 2, 'Cat052', NULL, NULL, 1),
+	(99, '140209', 3, 'Cat053', NULL, NULL, 1),
+	(100, '140209', 4, 'Cat054', NULL, NULL, 1),
+	(101, '140209', 5, 'Cat055', NULL, NULL, 1),
+	(102, '140209', 6, 'Cat056', NULL, NULL, 1),
+	(103, '110215', 1, 'Lion091', NULL, NULL, 10),
+	(104, '110215', 2, 'Lion092', NULL, NULL, 10),
+	(105, '110215', 3, 'Lion093', NULL, NULL, 10),
+	(106, '110215', 4, 'Lion094', NULL, NULL, 10),
+	(107, '110215', 5, 'Lion095', NULL, NULL, 10),
+	(108, '110215', 6, 'Lion096', NULL, NULL, 10),
+	(109, '130204', 1, 'Fox011', NULL, NULL, 6),
+	(110, '130204', 2, 'Fox012', NULL, NULL, 6),
+	(111, '130204', 3, 'Fox013', NULL, NULL, 6),
+	(112, '130204', 4, 'Fox014', NULL, NULL, 6),
+	(113, '130204', 5, 'Fox015', NULL, NULL, 6),
+	(114, '130204', 6, 'Fox016', NULL, NULL, 6);
 /*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
