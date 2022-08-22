@@ -9,6 +9,7 @@ use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Consts\RewardValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\ItemInfoPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\SingleRankingRewardPool;
@@ -53,7 +54,10 @@ class FinishRace extends BaseRace{
         
         $userPool = UserPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
+        $singleRankingRewardPool = SingleRankingRewardPool::Instance();
         $users = [];
+        $rewards = [];
+        $items = [];
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
@@ -67,12 +71,24 @@ class FinishRace extends BaseRace{
                 ]);
             }
             
+            $rewardID = $singleRankingRewardPool->GetInfo($playerCount, $racePlayerInfo->ranking)->{$this->rewardField[$this->userInfo->lobby]};
+            $rewardHandler = new RewardHandler($rewardID);
+            $rewards[$racePlayerInfo->user] = $rewardHandler;
+            $items[$racePlayerInfo->user] = array_values($rewardHandler->GetItems());
+            
             $users[] = [
                 'id' => $racePlayerInfo->user,
                 'nickname' => $userPool->{$racePlayerInfo->user}->nickname,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
+                'items' => array_map(function($value){
+                    return [
+                        'id' => $value->ItemID,
+                        'icon' => ItemInfoPool::Instance()->{$value->ItemID}->Icon,
+                        'amount' => $value->Amount,
+                    ];
+                }, $items[$racePlayerInfo->user]),
             ];
         }
         
@@ -86,19 +102,14 @@ class FinishRace extends BaseRace{
             }
         }
         
-        $singleRankingRewardPool = SingleRankingRewardPool::Instance();
-        
         foreach ($users as $user) {
             
             if($user['id'] <= 0) continue;
             
-            $rewardID = $singleRankingRewardPool->GetInfo($playerCount, $user['ranking'])->{$this->rewardField[$this->userInfo->lobby]};
-            $rewardHandler = new RewardHandler($rewardID);
-            $rewardInfo = $rewardHandler->GetInfo();
+            $rewardInfo = $rewards[$user['id']]->GetInfo();
             if($rewardInfo->Modes == RewardValue::ModeSelfSelect) continue;
             
-            $items = $rewardHandler->GetItems();
-            UserUtility::AddItems($user['id'], $items);
+            UserUtility::AddItems($user['id'], $items[$user['id']]);
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
