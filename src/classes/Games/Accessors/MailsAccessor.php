@@ -37,10 +37,10 @@ class MailsAccessor extends BaseAccessor
 
 
     public function GetUnreadMails(string $userID): int
-    {
-        return count($this->MainAccessor()->FromTable('UserMails')->WhereEqual('UserID', $userID)
-            ->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])->WhereEqual('OpenStatus', 0)
-            ->FetchAll());
+    {   
+        return $this->MainAccessor()->SelectExpr('COUNT(*) AS cnt')->FromTable('UserMails')
+                ->WhereEqual('UserID', $userID)->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])->WhereEqual('OpenStatus', 0)
+                ->Fetch()->cnt;
     }
 
     public function GetUserMailItems(int $userMailID): array
