@@ -41,7 +41,6 @@ class ReceiveTicket extends BaseProcessor
             throw new RaceException(RaceException::UserTicketNotYet);
         }
 
-
         if ($userBagHandler->CheckAddStacklimit($ticket) == false) {
             throw new RaceException(RaceException::UserTicketNotYet);
         }
