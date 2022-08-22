@@ -45,26 +45,18 @@ class QualifyingSeasonAccessor extends BaseAccessor
         return $result;
     }
 
-    public function FindItemAmount($bind): int
-    {
-        $item = $this->MainAccessor()->executeBindFetch('SELECT * from UserItems WHERE UserID = :UserID AND ItemID = :ItemID', $bind);
-        return $item == null ? 0 : $item->Amount;
-    }
-
-
     public function GetUserTicketInfo(int $userId): mixed
     {
-         $result = $this->MainAccessor()->FromTable('UserRewardTimes')->WhereEqual('UserID', $userId)->Fetch();
-         if ($result == false)
-         {
+        $result = $this->MainAccessor()->FromTable('UserRewardTimes')->WhereEqual('UserID', $userId)->Fetch();
+        if ($result == false) {
             $this->MainAccessor()->FromTable('UserRewardTimes')->Add([
                 'UserID' => $userId,
                 'CoinTime' => 0,
                 'PTTime' => 0,
                 'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
-                'UpdateTime'  => 0
+                'UpdateTime' => 0
             ]);
-         }
+        }
         return $result;
     }
 
@@ -77,22 +69,23 @@ class QualifyingSeasonAccessor extends BaseAccessor
     public function GetRange(string $kind)
     {
         $statement = str_replace("[Kind]", $kind,
-        'SELECT UNIX_TIMESTAMP( STR_TO_DATE(CONCAT ("1970-1-1 ", [Kind]),  "%Y-%m-%d %H:%i:%s")) AS Ranges
+            'SELECT UNIX_TIMESTAMP( STR_TO_DATE(CONCAT ("1970-1-1 ", [Kind]),  "%Y-%m-%d %H:%i:%s")) AS Ranges
         From FreeTicket Where [Kind] is not null AND [Kind] != ""
         ORDER by Ranges');
 
         $items = $this->StaticAccessor()->executeBindFetchAll($statement, []);
-        if ($items == null)
-        {
+        if ($items == null) {
             return false;
-        }else {
+        }
+        else {
             $result = [];
-            foreach($items as $item)
-            {
-                $result[] = $item->Ranges;
-            };
+            foreach ($items as $item) {
+                if ($item->Ranges !== null)
+                    $result[] = $item->Ranges;
+            }
+            ;
 
-            return $result;
+            return (count($result) != 0) ? $result : false;
         }
     }
 

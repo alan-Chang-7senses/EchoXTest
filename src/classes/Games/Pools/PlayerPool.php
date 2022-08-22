@@ -4,6 +4,7 @@ namespace Games\Pools;
 
 use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
+use Games\Consts\AbilityFactor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
 use Games\Consts\SyncRate;
@@ -19,6 +20,8 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use stdClass;
 use Games\Consts\SkillValue;
+use Games\Players\PlayerBaseInfoHolder;
+
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -53,11 +56,13 @@ class PlayerPool extends PoolAccessor {
         $holder->rank = $player->Rank;
         $holder->strengthLevel = $player->StrengthLevel;
         $holder->skeletonType = $player->SkeletonType;
-        $holder->velocity = PlayerAbility::Velocity($player->Agility, $player->Strength, $player->Level);
-        $holder->stamina = PlayerAbility::Stamina($player->Constitution, $player->Dexterity, $player->Level);
-        $holder->intelligent = PlayerAbility::Intelligent($player->Dexterity, $player->Agility, $player->Level);
-        $holder->breakOut = PlayerAbility::BreakOut($player->Strength, $player->Dexterity, $player->Level);
-        $holder->will = PlayerAbility::Will($player->Constitution, $player->Strength, $player->Level);
+
+        $baseInfo = new PlayerBaseInfoHolder($holder->level,$holder->strengthLevel,$player->Strength,$player->Agility,$player->Constitution,$player->Dexterity);
+        $holder->velocity = PlayerAbility::GetAbilityValue(AbilityFactor::Velocity,$baseInfo);
+        $holder->stamina = PlayerAbility::GetAbilityValue(AbilityFactor::Stamina,$baseInfo);
+        $holder->intelligent = PlayerAbility::GetAbilityValue(AbilityFactor::Intelligent,$baseInfo);
+        $holder->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
+        $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
         
         $holder->dna = new PlayerDnaHolder();
         $holder->dna->head = $player->HeadDNA;

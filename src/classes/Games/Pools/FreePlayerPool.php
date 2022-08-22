@@ -5,6 +5,7 @@ namespace Games\Pools;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Games\Accessors\SkillAccessor;
+use Games\Consts\AbilityFactor;
 use Games\Consts\DNASun;
 use Games\Consts\FreePlayerValue;
 use Games\Consts\NFTDNA;
@@ -18,6 +19,7 @@ use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
+use Games\Players\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
 use Games\Users\FreePeta\FreePetaUtility;
 use stdClass;
@@ -118,11 +120,13 @@ class FreePlayerPool extends PlayerPool
         }
         $holder->type = $freePlayerBase->Type;
         $holder->ele = $freePlayerBase->Attribute;
-        $holder->velocity = PlayerAbility::Velocity($freePlayerBase->Agility, $freePlayerBase->Strength, 1);
-        $holder->stamina = PlayerAbility::Stamina($freePlayerBase->Constitution, $freePlayerBase->Dexterity, 1);
-        $holder->intelligent = PlayerAbility::Intelligent($freePlayerBase->Dexterity, $freePlayerBase->Agility, 1);
-        $holder->breakOut = PlayerAbility::BreakOut($freePlayerBase->Strength, $freePlayerBase->Dexterity, 1);
-        $holder->will = PlayerAbility::Will($freePlayerBase->Constitution, $freePlayerBase->Strength, 1);
+        $base = new PlayerBaseInfoHolder($holder->level,NFTDNA::StrengthNormalC,$freePlayerBase->Strength,$freePlayerBase->Agility,$freePlayerBase->Constitution,$freePlayerBase->Dexterity);
+        
+        $holder->velocity = PlayerAbility::GetAbilityValue(AbilityFactor::Velocity,$base);
+        $holder->stamina = PlayerAbility::GetAbilityValue(AbilityFactor::Stamina,$base);
+        $holder->intelligent = PlayerAbility::GetAbilityValue(AbilityFactor::Intelligent,$base);
+        $holder->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$base);
+        $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$base);
         $holder->habit = PlayerAbility::Habit($freePlayerBase->Constitution, $freePlayerBase->Strength, $freePlayerBase->Dexterity, $freePlayerBase->Agility);
 
         $holder->skills = [];

@@ -1,12 +1,23 @@
 <?php
 namespace Games\Players;
 
-class PlayerBaseInfoHolder
+use stdClass;
+
+class PlayerBaseInfoHolder extends stdClass
 {
+    public function __construct(int $level, int $strengthLevel, int $strength, int $agility, int $constitution, int $dexterity)
+    {
+        $this->level = $level;
+        $this->strengthLevel = $strengthLevel;
+        $this->strength = $strength;
+        $this->agility = $agility;
+        $this->constitution = $constitution;
+        $this->dexterity = $dexterity;
+    }
     /**角色等級 */
     public int $level;
     /**角色數值標記 */
-    public int $strengthType;
+    public int $strengthLevel;
     /**角色力量 */
     public int $strength;
     /**角色敏捷 */

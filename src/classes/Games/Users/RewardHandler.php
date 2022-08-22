@@ -5,6 +5,7 @@ namespace Games\Users;
 use stdClass;
 use Games\Pools\RewardPool;
 use Games\Exceptions\ItemException;
+use Games\Consts\RewardValue;
 
 class RewardHandler
 {
@@ -23,6 +24,10 @@ class RewardHandler
         if ($this->info == false) {
             throw new ItemException(ItemException::UseRewardIDError, ['[rewardID]' => $rewardID]);
         }
+    }
+    
+    public function GetInfo() : stdClass|false{
+        return $this->info;
     }
 
     private function AddTempItems(stdClass $content, array $tempItems): array
@@ -46,18 +51,18 @@ class RewardHandler
         if ($this->items == null) {
             $tempItems = [];
             switch ($this->info->Modes) {
-                case 1: //1：發放所有獎勵(物品ID累加)
+                case RewardValue::ModeAll: //1：發放所有獎勵(物品ID累加)
                     foreach ($this->info->Contents as $content) {
                         $content->Amount = $content->Amount * $this->info->Times;
                         $tempItems = $this->AddTempItems($content, $tempItems);
                     }
                     break;
-                case 2: //2：玩家自選獎勵(物品ID可重複)
+                case RewardValue::ModeSelfSelect: //2：玩家自選獎勵(物品ID可重複)
                     foreach ($this->info->Contents as $content) {
                         $content->Amount = $content->Amount * $this->info->Times;
                         $tempItems[] = $content;
                     }
-                case 3: //3：依權重隨機挑選獎勵(物品ID累加)
+                case RewardValue::ModeRandWeight: //3：依權重隨機挑選獎勵(物品ID累加)
                     for ($i = 0; $i < $this->info->Times; $i++) {
                         $rnd = rand(1, $this->info->TotalProportion);
                         foreach ($this->info->Contents as $content) {
@@ -71,7 +76,7 @@ class RewardHandler
                     break;
                 case 4://企劃表定功能後移除
                     break;
-                case 5: //5：依機率隨機挑選獎勵(物品ID累加)
+                case RewardValue::ModeRandProb: //5：依機率隨機挑選獎勵(物品ID累加)
                     for ($i = 0; $i < $this->info->Times; $i++) {
                         foreach ($this->info->Contents as $content) {
                             $rnd = rand(1, 1000);
