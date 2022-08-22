@@ -78,4 +78,26 @@ class RaceUtility {
             default => RaceValue::NoTicketID,
         };
     }
+
+    public static function GetMaxTickets(int $lobby): int
+    {
+        switch ($lobby) {
+            case RaceValue::LobbyCoin:
+                return ConfigGenerator::Instance()->PvP_B_MaxTickets_1;
+            case RaceValue::LobbyPT:
+                return ConfigGenerator::Instance()->PvP_B_MaxTickets_2;
+        }
+        return 0;
+    }
+
+    public static function GetTicketCount(int $lobby) : int{
+        
+        $config = ConfigGenerator::Instance();
+        return match ($lobby) {
+            RaceValue::LobbyCoin => $config->PvP_B_FreeTicketId_1_Count,
+            RaceValue::LobbyPT => $config->PvP_B_FreeTicketId_2_Count,
+            default => 0,
+        };
+    }
+
 }

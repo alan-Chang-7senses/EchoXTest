@@ -9,6 +9,7 @@ use Consts\EnvVar;
 use Consts\Globals;
 use Consts\ErrorCode;
 use Games\Consts\RaceValue;
+use Games\Races\RaceUtility;
 use Games\Pools\ItemInfoPool;
 use Generators\DataGenerator;
 use Games\Pools\TicketInfoPool;
@@ -181,35 +182,13 @@ class QualifyingHandler
         $this->CheckLobbyID($lobby);
         $ticketInfo = new TicketInfoHolder();
         $ticketInfo->lobby = $lobby;
-        $itemInfo = ItemInfoPool::Instance()->{ $this->GetTicketID($lobby)};
+        $itemInfo = ItemInfoPool::Instance()->{ RaceUtility::GetTicketID($lobby)};
         $ticketInfo->ticketID = $itemInfo->ItemID;
         $ticketInfo->ticketIcon = $itemInfo->Icon;
         $ticketInfo->amount = $this->FindItemAmount($userID, $ticketInfo->ticketID);
-        $ticketInfo->maxReceive = $this->GetMaxTickets($lobby);
+        $ticketInfo->maxReceive = RaceUtility::GetMaxTickets($lobby);
         $ticketInfo->receiveRemainTime = $this->GetRemainTicketTime($userID, $lobby);
         return $ticketInfo;
-    }
-
-    public function GetTicketID(int $lobby): int
-    {
-        switch ($lobby) {
-            case RaceValue::LobbyCoin:
-                return ConfigGenerator::Instance()->PvP_B_TicketId_1;
-            case RaceValue::LobbyPT:
-                return ConfigGenerator::Instance()->PvP_B_TicketId_2;
-        }
-        return 0;
-    }
-
-    public function GetMaxTickets(int $lobby): int
-    {
-        switch ($lobby) {
-            case RaceValue::LobbyCoin:
-                return ConfigGenerator::Instance()->PvP_B_MaxTickets_1;
-            case RaceValue::LobbyPT:
-                return ConfigGenerator::Instance()->PvP_B_MaxTickets_2;
-        }
-        return 0;
     }
 
     public function GetSceneID(int $lobby): int

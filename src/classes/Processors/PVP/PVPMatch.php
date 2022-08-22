@@ -10,6 +10,7 @@ use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Pools\UserPool;
 use Accessors\PDOAccessor;
+use Games\Races\RaceUtility;
 use Processors\Races\BaseRace;
 use Games\PVP\RaceRoomsHandler;
 use Generators\ConfigGenerator;
@@ -32,7 +33,7 @@ class PVPMatch extends BaseRace
             throw new RaceException(RaceException::NoSeasonData);
         }
 
-        $useTicketId = $qualifyingHandler->GetTicketID($lobby);
+        $useTicketId = RaceUtility::GetTicketID($lobby);
         if ($qualifyingHandler->FindItemAmount($userID, $useTicketId) <= 0) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }

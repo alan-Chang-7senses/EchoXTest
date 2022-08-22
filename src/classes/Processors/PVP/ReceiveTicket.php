@@ -7,10 +7,11 @@ use Consts\ErrorCode;
 
 use Holders\ResultData;
 use Helpers\InputHelper;
+use Games\Races\RaceUtility;
 use Processors\BaseProcessor;
+use Games\Users\UserBagHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Exceptions\RaceException;
-use Games\Users\UserBagHandler;
 
 class ReceiveTicket extends BaseProcessor
 {
@@ -25,8 +26,9 @@ class ReceiveTicket extends BaseProcessor
         }
 
         $userID = $_SESSION[Sessions::UserID];
-        $ticketId = $qualifyingHandler->GetTicketID($lobby);
-        $maxTickets = $qualifyingHandler->GetMaxTickets($lobby);
+        $ticketId = RaceUtility::GetTicketID($lobby);
+        $ticketCount = RaceUtility::GetTicketCount($lobby);        
+        $maxTickets =RaceUtility::GetMaxTickets($lobby);
         if ($qualifyingHandler->FindItemAmount($userID, $ticketId) >= $maxTickets) {
             throw new RaceException(RaceException::UserTicketUpperLimit);
         }
@@ -40,7 +42,7 @@ class ReceiveTicket extends BaseProcessor
         }
 
         $userBagHandler  = new UserBagHandler($userID);
-        $userBagHandler->AddItem($ticketId, 1);
+        $userBagHandler->AddItem($ticketId, $ticketCount);
         $result = new ResultData(ErrorCode::Success);
         $result->ticket = $qualifyingHandler->GetTicketInfo($userID, $lobby);
 
