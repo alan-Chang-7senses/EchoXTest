@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~17 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~73 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
@@ -740,10 +740,11 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
-	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242);
+	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242),
+	(2, 2, 1001, 1001, 1660838400, 1662048000, 1661157822);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構
