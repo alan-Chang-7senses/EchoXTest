@@ -32,19 +32,17 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| ticket | object | [入場卷資訊](LobbyInfo.md#ticket) |
+| lobby | int | [大廳種類](../codes/race.md#lobby) |
+| amount | int | 已有物品數量 |
+| receiveRemainTime | int | 剩餘可領時間(秒) |
 <br>
-
 ### Example
     {
         "error": {
             "code": 0,
             "message": ""
         },
-        "ticket": {
-            "ticketID": 1,
-            "amount": 2,
-            "maxReceive": 5,
-            "receiveRemainTime": 41692
-        }
+        "lobby": "1",
+        "amount": 75,
+        "receiveRemainTime": 42652
     }

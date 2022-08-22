@@ -50,13 +50,11 @@ class ReceiveTicket extends BaseProcessor
             throw new RaceException(RaceException::UserTicketError);
         }
 
-
         $userBagHandler->AddItems($ticket);
         $result = new ResultData(ErrorCode::Success);
         $result->lobby = $lobby;
         $result->amount = $userBagHandler->GetItemAmount($ticket->ItemID);
         $result->receiveRemainTime = $qualifyingHandler->GetRemainTicketTime($userID, $lobby);
-
         return $result;
     }
 
