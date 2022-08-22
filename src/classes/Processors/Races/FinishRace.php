@@ -7,12 +7,16 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
+use Games\Consts\RewardValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
+use Games\Pools\SingleRankingRewardPool;
 use Games\Pools\UserPool;
 use Games\Races\RaceUtility;
+use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
+use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -24,6 +28,12 @@ use Holders\ResultData;
  */
 class FinishRace extends BaseRace{
     
+    private array $rewardField = [
+        RaceValue::LobbyNone => 'coinReward',
+        RaceValue::LobbyCoin => 'coinReward',
+        RaceValue::LobbyPT => 'petaTokenReward',
+    ];
+
     public function Process(): ResultData {
         
         $players = json_decode(InputHelper::post('players'));
@@ -43,7 +53,6 @@ class FinishRace extends BaseRace{
         
         $racePlayerPool = RacePlayerPool::Instance();
         $users = [];
-        $userIDs = [];
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
@@ -63,22 +72,35 @@ class FinishRace extends BaseRace{
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
             ];
-            
-            $userIDs[] = $racePlayerInfo->user;
         }
         
         $ticket = RaceUtility::GetTicketID($this->userInfo->lobby);
         if($ticket != RaceValue::NoTicketID) {
             
-            foreach($userIDs as $userID) {
-                
-                $userBagHandler = new UserBagHandler($userID);
+            foreach($users as $user) {
+                if($user['id'] <= 0) continue;
+                $userBagHandler = new UserBagHandler($user['id']);
                 $userBagHandler->DecItemByItemID($ticket, 1);
             }
         }
         
+        $singleRankingRewardPool = SingleRankingRewardPool::Instance();
+        
+        foreach ($users as $user) {
+            
+            if($user['id'] <= 0) continue;
+            
+            $rewardID = $singleRankingRewardPool->GetInfo($playerCount, $user['ranking'])->{$this->rewardField[$this->userInfo->lobby]};
+            $rewardHandler = new RewardHandler($rewardID);
+            $rewardInfo = $rewardHandler->GetInfo();
+            if($rewardInfo->Modes == RewardValue::ModeSelfSelect) continue;
+            
+            $items = $rewardHandler->GetItems();
+            UserUtility::AddItems($user['id'], $items);
+        }
+        
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function() use ($accessor, $raceID, $userIDs){
+        $accessor->Transaction(function() use ($accessor, $raceID, $users){
             
             $currentTime = $GLOBALS[Globals::TIME_BEGIN];
             
@@ -88,7 +110,7 @@ class FinishRace extends BaseRace{
             ]);
             
             $accessor->ClearCondition()
-                    ->FromTable('Users')->WhereIn('UserID', $userIDs)
+                    ->FromTable('Users')->WhereIn('UserID', array_column($users, 'id'))
                     ->Modify([
                         'Race' => RaceValue::NotInRace,
                         'Lobby' => RaceValue::NotInLobby,
@@ -106,7 +128,7 @@ class FinishRace extends BaseRace{
         });
         
         $userPool = UserPool::Instance();
-        foreach ($userIDs as $userID) $userPool->Delete($userID);
+        foreach ($users as $user) $userPool->Delete($user['id']);
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
         
