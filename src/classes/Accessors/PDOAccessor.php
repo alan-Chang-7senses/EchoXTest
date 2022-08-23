@@ -306,7 +306,11 @@ class PDOAccessor {
         } catch (Exception $ex) {
 
             $this->ph->rollbackTransaction();
-            throw new Exception($ex->getMessage(), $ex->getCode(), $ex);
+            
+            if(is_subclass_of($ex, 'Exceptions\NormalException')){
+                $normalException = get_class($ex);
+                throw new $normalException($ex->getCode(), [], $ex);
+            }else throw new Exception($ex->getMessage(), $ex->getCode(), $ex);
         }
         
         return $result;
