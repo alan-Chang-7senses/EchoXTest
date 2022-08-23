@@ -93,7 +93,7 @@ class RaceRoomsHandler
         $key = array_search( $userID, $users);
         if ($key !== false)
         {
-            throw new RaceException(RaceException::UserMatchError);
+            throw new RaceException(RaceException::UserInRoom);
         }
         $users[] = $userID;
         return $this->UpdateUsers($roomInfo->RaceRoomID, $users);
@@ -114,7 +114,7 @@ class RaceRoomsHandler
             return $this->UpdateUsers($raceRoomID, array_values($users));
         }else
         {
-            throw new RaceException(RaceException::UserMatchError);
+            throw new RaceException(RaceException::UserNotInRoom);
         }
 
 

@@ -161,8 +161,8 @@ class QualifyingHandler
     }
 
     public function GetSeasonRemaintime(): int
-    {
-        $remainTime = $this->info->EndTime - $GLOBALS[Globals::TIME_BEGIN];
+    {       
+        $remainTime = $this->info->EndTime - $GLOBALS[Globals::TIME_BEGIN] - ConfigGenerator::Instance()->PvP_B_StopMatch;
         if ($remainTime < 0)
             $remainTime = 0;
         return (int)$remainTime;
