@@ -82,11 +82,15 @@ class UserBagHandler
 
     private function CheckItemStack(int $itemID, int $amount): bool
     {
-        if ($amount <= 0) {
+        if ($amount < 0) {
             throw new ItemException(ItemException::AddItemError, ['[itemID]' => $itemID]);
         }
 
         $info = $this->itemInfoPool->{ $itemID};
+        if ($info === false) {
+            throw new ItemException(ItemException::ItemNotExists, ['itemID' => $itemID]);
+        }
+
         if ($info->StackLimit == 0) {
             return true;
         }
@@ -122,7 +126,7 @@ class UserBagHandler
     //使用AddItems已確定加入物品沒問題
     private function AddItem(int $itemID, int $amount)
     {
-        if (($itemID == 0) || ($amount <= 0)) {
+        if (($itemID == 0) || ($amount < 0)) {
             throw new Exception('The itemID \'' . $itemID . '\' or amount\'' . $amount . '\'  can not <= 0', ErrorCode::ParamError);
         }
 
