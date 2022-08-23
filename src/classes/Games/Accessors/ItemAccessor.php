@@ -43,13 +43,8 @@ class ItemAccessor extends BaseAccessor{
         ]);
     }
 
-
-    public function UserItemByItemID(int $userID, int $itemID) : mixed{
-        return $this->MainAccessor()->FromTable('UserItems')->WhereEqual('UserItemID', $userID)->WhereEqual('UserItemID', $itemID)->Fetch();
-    }
-
-    public function AddItemByItemID(int $userID, int $itemID, int $amount) : bool{
-        return $this->MainAccessor()->FromTable('UserItems')->Add([
+    public function AddItemByItemID(int $userID, int $itemID, int $amount) : string{
+        $this->MainAccessor()->FromTable('UserItems')->Add([
             'UserItemID' => null,
             'UserID' => $userID,
             'ItemID' => $itemID,
@@ -57,5 +52,6 @@ class ItemAccessor extends BaseAccessor{
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);
+        return $this->MainAccessor()->LastInsertID();
     }
 }

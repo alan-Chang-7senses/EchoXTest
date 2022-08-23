@@ -162,6 +162,7 @@ class UserBagHandler
                         }
                         $userItemHandler = new UserItemHandler($userItemID);
                         $amount = $userItemHandler->AddItem($amount);
+                        $this->itemAccessor->AddLog($this->userID, $userItemID, $itemID, 1, $amount, $userItemHandler->info->amount);
                     }
 
                     if ($amount > 0) {
@@ -194,16 +195,19 @@ class UserBagHandler
         if ($stackLimit != 0) { //can stack
 
             if ($amount <= $stackLimit) {
-
-                $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                $this->AddNewItemToDB($itemID, $amount);
+                //$this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
             }
             else {
                 if ($this->multiItemID) {
                     for ($i = 0; $i < 5; $i++) {
-                        $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
+                        $this->AddNewItemToDB($itemID, $stackLimit);
+                        //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
+
                         $amount -= $stackLimit;
                         if ($amount <= $stackLimit) {
-                            $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                            $this->AddNewItemToDB($itemID, $amount);
+                            //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
                             break;
                         }
                     }
@@ -216,8 +220,15 @@ class UserBagHandler
         }
         else //no stack
         {
-            $this->itemAccessor->AddItemByItemID($this->userID, $itemID, 1);
+            $this->AddNewItemToDB($itemID, $amount);            
+            //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, 1);
         }
+    }
+
+    private function AddNewItemToDB(int $itemID, int $amount)
+    {
+        $userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+        $this->itemAccessor->AddLog($userItemID, $this->userID, $itemID,1, $amount,  $amount);
     }
 
     public function DecItems(array |stdclass $items): bool
@@ -300,7 +311,9 @@ class UserBagHandler
             throw new ItemException(ItemException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
         }
 
-        return $userItemHandler->DecItem($amount);
+        $result = $userItemHandler->DecItem($amount);
+        $this->itemAccessor->AddLog($userItemID, $this->userID, $userItemHandler->info->itemID, 2, $amount,  $userItemHandler->info->amount);
+        return $result ;
     }
 
     public function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass
