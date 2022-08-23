@@ -12,7 +12,7 @@ use Accessors\PDOAccessor;
 use Processors\Races\BaseRace;
 use Games\PVP\RaceRoomsHandler;
 use Games\Exceptions\RaceException;
-
+use Exception;
 class PVPMatchQuit extends BaseRace
 {
 
@@ -21,22 +21,26 @@ class PVPMatchQuit extends BaseRace
     {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $userID = $_SESSION[Sessions::UserID];
-        $accessor->Transaction(function () use ($accessor, $userID) {
-            $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
-            if ($userInfo->Room == 0) {
-                throw new RaceException(RaceException::UserNotInMatch);
-            }
+        try {
+            $accessor->Transaction(function () use ($accessor, $userID) {
+                $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
+                if ($userInfo->Room == 0) {
+                    throw new RaceException(RaceException::UserNotInMatch);
+                }
+                $raceroomHandler = new RaceRoomsHandler();
+                $raceroomHandler->LeaveSeat($userID, $userInfo->Room);
 
-            $raceroomHandler = new RaceRoomsHandler();
-            $raceroomHandler->LeaveSeat($userID, $userInfo->Room);
-
-            $accessor->ClearCondition();
-            $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
-                'Lobby' => 0,
-                'Room' => 0,
-                'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
-            ]);
-        });
+                $accessor->ClearCondition();
+                $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
+                    'Lobby' => 0,
+                    'Room' => 0,
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                ]);
+            });
+        }
+        catch (exception $ex) {
+            throw new RaceException($ex->getCode());
+        }
         UserPool::Instance()->Delete($userID);
         $result = new ResultData(ErrorCode::Success);
         return $result;

@@ -17,7 +17,7 @@ use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
 use Games\PVP\QualifyingHandler;
 use Games\Exceptions\RaceException;
-
+use Exception;
 class PVPMatch extends BaseRace
 {
 
@@ -31,8 +31,8 @@ class PVPMatch extends BaseRace
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
         $userBagHandler = new UserBagHandler($userID);
-                
-        if ($qualifyingHandler->NowSeasonID == -1) {
+
+        if ($qualifyingHandler->GetSeasonRemaintime() <= 0) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 
@@ -43,29 +43,37 @@ class PVPMatch extends BaseRace
 
         $raceRoomID = 0;
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID) {
-            $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
-            if ($userInfo->Room != 0) {
-                throw new RaceException(RaceException::UserInMatch);
-            }
-            //todo
-            $lowbound = 0;
-            $upbound = 0;
-            //
-            $raceroomHandler = new RaceRoomsHandler();
-            $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound, $qualifyingHandler->NowSeasonID);
-            $raceroomHandler->TakeSeat($userID, $raceRoom);
-            $raceRoomID = $raceRoom->RaceRoomID;
 
-            $accessor->ClearCondition();
-            $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
-                'Lobby' => $lobby,
-                'Room' => $raceRoom->RaceRoomID,
-                'Scene' => $qualifyingHandler->GetSceneID($lobby),
-                'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
-            ]);
-        });
+
+        try {
+            $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID) {
+                $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
+
+                if ($userInfo->Room != 0) {
+                    throw new RaceException(RaceException::UserInMatch);
+                }
+                //todo
+                $lowbound = 0;
+                $upbound = 0;
+                //
+                $raceroomHandler = new RaceRoomsHandler();
+                $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound, $qualifyingHandler->NowSeasonID);
+                $raceroomHandler->TakeSeat($userID, $raceRoom);
+                $raceRoomID = $raceRoom->RaceRoomID;
+
+                $accessor->ClearCondition();
+                $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
+                    'Lobby' => $lobby,
+                    'Room' => $raceRoom->RaceRoomID,
+                    'Scene' => $qualifyingHandler->GetSceneID($lobby),
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                ]);
+            });
+        }
+        catch (exception $ex) {
+            throw new RaceException($ex->getCode());           
+        }
         UserPool::Instance()->Delete($userID);
 
         $result = new ResultData(ErrorCode::Success);
