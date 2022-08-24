@@ -2,11 +2,11 @@
 
 namespace Games\Players;
 
-use Accessors\PDOAccessor;
-use Consts\EnvVar;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
+use Games\Players\Exp\ExpBonus;
+use Games\Players\Exp\ExpBonusCalculator;
 use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
@@ -144,9 +144,24 @@ class PlayerHandler {
         $this->ResetInfo();
     }
 
-    public function GainEXP(int $exp)
+    /**
+     * @param int $rawExp
+     * @param ExpBonus $bonuses 效果集合
+     */
+    public function GainExp(int|float $rawExp, ...$bonuses) : stdClass
     {
-        $t = $this->info;
+        $expCalculator = new ExpBonusCalculator($rawExp);                
+        foreach($bonuses as $bonus)
+        {
+            $expCalculator->AddBonus($bonus);
+        }
+        $rt = $expCalculator->Process();
+        $this->UpdateExp($rt->exp);
+        return $rt;
+    }
+
+    private function UpdateExp(int $exp)
+    {
         $currentExp = $this->info->exp;
         //限制不超過目前等階最大等級之經驗值
         $currentExpTemp = PlayerEXP::IsLevelMax($currentExp + $exp,$this->info->rank) ? 

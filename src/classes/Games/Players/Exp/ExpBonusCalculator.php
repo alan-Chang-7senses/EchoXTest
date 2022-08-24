@@ -5,11 +5,11 @@ use stdClass;
 
 class ExpBonusCalculator
 {
-    private int $rawExp;
-    private array $bonus;
+    private int|float $rawExp;
+    private array $bonus = [];
     private const MinPriority = 999999;
 
-    public function __construct(int $rawExp)
+    public function __construct(int|float $rawExp)
     {
         $this->rawExp = $rawExp;
     }
@@ -42,7 +42,7 @@ class ExpBonusCalculator
             foreach($bonus as $b) $this->rawExp *= $b->multiplier;
             $result->bonus = $bonus;
         }
-        $result->exp = $this->rawExp;
+        $result->exp = floor($this->rawExp);
         return $result;
     }
     
