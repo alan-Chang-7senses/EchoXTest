@@ -136,19 +136,19 @@ class UserBagHandler
             switch ($itemID) {
                 case -1: //-1 電力
                     $lastAmount = $info->power + $amount;
-                    $userHandler->SaveData(['Power' => $lastAmount]);
+                    $userHandler->SaveData(['power' => $lastAmount]);
                     break;
                 case -2: //-2 金幣
                     $lastAmount = $info->coin + $amount;
-                    $userHandler->SaveData(['Coin' => $lastAmount]);
+                    $userHandler->SaveData(['coin' => $lastAmount]);
                     break;
                 case -3: //-3 寶石
                     $lastAmount = $info->diamond + $amount;
-                    $userHandler->SaveData(['Diamond' => $lastAmount]);
+                    $userHandler->SaveData(['diamond' => $lastAmount]);
                     break;
                 case -4: //-4 PT
                     $lastAmount = $info->petaToken + $amount;
-                    $userHandler->SaveData(['PetaToken' => $lastAmount]);
+                    $userHandler->SaveData(['petaToken' => $lastAmount]);
                     break;
             }
 
