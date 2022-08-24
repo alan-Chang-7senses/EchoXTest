@@ -4,6 +4,7 @@ namespace Processors\User;
 
 use Consts\Sessions;
 use Consts\ErrorCode;
+use Games\Consts\ItemValue;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Users\ItemUtility;
@@ -34,7 +35,7 @@ class UseItems extends BaseProcessor
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-        if ($bagHandler->DecItem($userItemID, $amount) == false) {
+        if ($bagHandler->DecItem($userItemID, $amount, ItemValue::CauseUsed) == false) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
@@ -56,7 +57,7 @@ class UseItems extends BaseProcessor
         $addMailItems = [];
         $mailsResponse = [];
         foreach ($totalAddItems as $addItem) {
-            if ($bagHandler->AddItems($addItem) == false) {
+            if ($bagHandler->AddItems($addItem, ItemValue::CauseUsed) == false) {
                 $mailsResponse[] = ItemUtility::GetClientSimpleInfo($addItem->ItemID, $addItem->Amount);
                 $addMailItems[] = $addItem;
             }

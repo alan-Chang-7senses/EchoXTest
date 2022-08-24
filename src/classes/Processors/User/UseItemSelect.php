@@ -4,6 +4,7 @@ namespace Processors\User;
 
 use Consts\Sessions;
 use Consts\ErrorCode;
+use Games\Consts\ItemValue;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Pools\ItemInfoPool;
@@ -39,11 +40,11 @@ class UseItemSelect extends BaseProcessor
             throw new ItemException(ItemException::UserItemStacklimitReached, ['[itemID]' => $addItem->ItemID]);
         }
 
-        if ($bagHandler->DecItem($userItemID, $amount) == false) {
+        if ($bagHandler->DecItem($userItemID, $amount, ItemValue::CauseUsed) == false) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-        if ($bagHandler->AddItems($addItem) == false)
+        if ($bagHandler->AddItems($addItem, ItemValue::CauseUsed) == false)
         {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
