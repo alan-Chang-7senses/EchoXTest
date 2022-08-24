@@ -146,7 +146,7 @@ class PlayerHandler {
 
     /**
      * @param int $rawExp
-     * @param ExpBonus $bonuses 效果集合
+     * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
      */
     public function GainExp(int|float $rawExp, ...$bonuses) : stdClass
     {
