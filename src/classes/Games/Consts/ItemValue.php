@@ -7,8 +7,9 @@ namespace Games\Consts;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class ItemValue {
-    
+class ItemValue
+{
+
     const EffectExp = 101;
     const EffectFireUp = 201;
     const EffectFireUpHigh = 202;
@@ -16,13 +17,22 @@ class ItemValue {
     const EffectWaterUpHigh = 204;
     const EffectWoodUp = 205;
     const EffectWoodUpHigh = 206;
-    
+
+    const UseCannot = 0;
+    const UseDirectly = 1;
+    const UseChoose = 2;
+
+    const CurrencyPower = -1;
+    const CurrencyCoin = -2;
+    const CurrencyDiamond = -3;
+    const CurrencyPetaToken = -4;
+
     const ActionObtain = 1;
     const ActionUsed = 2;
 
     const CauseDefault = 0;
     const CauseUsed = 1;
-    const CauseMail = 2;    
+    const CauseMail = 2;
     const CauseRace = 3;
 
 }

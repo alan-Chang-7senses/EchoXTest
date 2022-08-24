@@ -2,16 +2,17 @@
 
 namespace Processors\User;
 
-use Consts\Sessions;
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Consts\ItemValue;
-use Holders\ResultData;
-use Helpers\InputHelper;
+use Games\Consts\RewardValue;
+use Games\Exceptions\ItemException;
 use Games\Pools\ItemInfoPool;
-use Processors\BaseProcessor;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
-use Games\Exceptions\ItemException;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
 
 class UseItemSelect extends BaseProcessor
 {
@@ -24,19 +25,22 @@ class UseItemSelect extends BaseProcessor
         $userid = $_SESSION[Sessions::UserID];
         $bagHandler = new UserBagHandler($userid);
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
-        if (($itemInfo->useType != 2) || ($itemInfo->rewardID == 0)) {
+        if (($itemInfo->useType != ItemValue::UseChoose) || ($itemInfo->rewardID == 0)) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         $rewardHandler = new RewardHandler($itemInfo->rewardID);
+        if (($rewardHandler->GetInfo()->Modes != RewardValue::ModeSelfSelect)) {
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
+        }
+
         $addItem = $rewardHandler->GetSelectReward($selectIndex);
         if (($addItem == false) || ($amount <= 0)) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-        $addItem->Amount = $addItem->Amount*$amount;
-        if ($bagHandler->CheckAddStacklimit($addItem)== false)
-        {
+        $addItem->Amount = $addItem->Amount * $amount;
+        if ($bagHandler->CheckAddStacklimit($addItem) == false) {
             throw new ItemException(ItemException::UserItemStacklimitReached, ['[itemID]' => $addItem->ItemID]);
         }
 
@@ -44,8 +48,7 @@ class UseItemSelect extends BaseProcessor
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
-        if ($bagHandler->AddItems($addItem, ItemValue::CauseUsed) == false)
-        {
+        if ($bagHandler->AddItems($addItem, ItemValue::CauseUsed) == false) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 

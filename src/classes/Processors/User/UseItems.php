@@ -31,7 +31,7 @@ class UseItems extends BaseProcessor
         $totalAddItems = [];
 
         $itemInfo = $bagHandler->GetUserItemInfo($userItemID);
-        if (($itemInfo->useType != 1) || ($itemInfo->rewardID == 0)) {
+        if (($itemInfo->useType != ItemValue::UseDirectly) || ($itemInfo->rewardID == 0)) {
             throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 

@@ -62,6 +62,7 @@ class RewardHandler
                         $content->Amount = $content->Amount * $this->info->Times;
                         $tempItems[] = $content;
                     }
+                    break;
                 case RewardValue::ModeRandWeight: //3：依權重隨機挑選獎勵(物品ID累加)
                     for ($i = 0; $i < $this->info->Times; $i++) {
                         $rnd = rand(1, $this->info->TotalProportion);
