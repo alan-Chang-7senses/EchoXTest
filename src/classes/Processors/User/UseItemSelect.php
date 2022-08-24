@@ -31,7 +31,7 @@ class UseItemSelect extends BaseProcessor
         $rewardHandler = new RewardHandler($itemInfo->rewardID);
         $addItem = $rewardHandler->GetSelectReward($selectIndex);
         if (($addItem == false) || ($amount <= 0)) {
-            throw new ItemException(ItemException::UseItemError);
+            throw new ItemException(ItemException::UseItemError, ['[itemID]' => $itemInfo->itemID]);
         }
 
         $addItem->Amount = $addItem->Amount*$amount;
