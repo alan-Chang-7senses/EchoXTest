@@ -90,10 +90,11 @@ class UserBagHandler
             throw new ItemException(ItemException::ItemNotExists, ['itemID' => $itemID]);
         }
 
-        if ($info->StackLimit == 0) {
+        if ($info->StackLimit === ItemValue::ItemCannotStack) {
             return true;
         }
 
+        //if multiItemID == true no need to check, so multiItemID == false only have "one" data
         if (isset($this->bagInfo->items->{ $itemID})) {
             $userItemHandler = new UserItemHandler($this->bagInfo->items->{ $itemID}[0]);
             if (($amount + $userItemHandler->GetInfo()->amount) > $info->StackLimit) {
@@ -157,7 +158,7 @@ class UserBagHandler
         }
         else {
             $info = $this->itemInfoPool->{ $itemID};
-            if ($info->StackLimit != 0) { //can stack
+            if ($info->StackLimit !== ItemValue::ItemCannotStack) { //can stack
                 if (isset($this->bagInfo->items->{ $itemID})) {
                     foreach ($this->bagInfo->items->{ $itemID} as $userItemID) {
                         if ($amount <= 0) {
@@ -191,7 +192,7 @@ class UserBagHandler
     private function AddNewItem(int $itemID, int $amount, int $stackLimit, int $cause)
     {
 
-        if ($stackLimit != 0) { //can stack
+        if ($stackLimit !== ItemValue::ItemCannotStack) { //can stack
             if ($amount <= $stackLimit) {
                 UserItemHandler::AddNewItem($this->userID, $itemID, $amount, $cause);
             }

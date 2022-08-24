@@ -18,6 +18,8 @@ class ItemValue
     const EffectWoodUp = 205;
     const EffectWoodUpHigh = 206;
 
+    Const ItemCannotStack = 0;
+
     const UseCannot = 0;
     const UseDirectly = 1;
     const UseChoose = 2;
@@ -27,12 +29,11 @@ class ItemValue
     const CurrencyDiamond = -3;
     const CurrencyPetaToken = -4;
 
-    const ActionObtain = 1;
-    const ActionUsed = 2;
-
     const CauseDefault = 0;
     const CauseUsed = 1;
     const CauseMail = 2;
     const CauseRace = 3;
 
+    const ActionObtain = 1;
+    const ActionUsed = 2;
 }
