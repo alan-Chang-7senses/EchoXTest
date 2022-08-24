@@ -122,7 +122,6 @@ class PlayerAbility {
      */
     public static function GetAbilityValue(int $type,PlayerBaseInfoHolder $playerBaseInfo) : float{
         
-
         $levelMultiplier = ceil(($playerBaseInfo->level + $type) / AbilityFactor::LevelDivisor);
         $strength = $playerBaseInfo->strength / AbilityFactor::NFTDivisor;
         $agility = $playerBaseInfo->agility /  AbilityFactor::NFTDivisor;
@@ -132,7 +131,7 @@ class PlayerAbility {
         $rt = ($strength * AbilityFactor::AbilityMultiplier[$type][0] + $agility * AbilityFactor::AbilityMultiplier[$type][1]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][2] + $dexterity * AbilityFactor::AbilityMultiplier[$type][3])
 
-         * ($levelMultiplier * AbilityFactor::XValues[$playerBaseInfo->strengthType])
+         * ($levelMultiplier * AbilityFactor::XValues[$playerBaseInfo->strengthLevel])
           
          + ($strength * AbilityFactor::AbilityMultiplier[$type][4] + $agility * AbilityFactor::AbilityMultiplier[$type][5]
          + $constitution * AbilityFactor::AbilityMultiplier[$type][6] + $dexterity * AbilityFactor::AbilityMultiplier[$type][7])

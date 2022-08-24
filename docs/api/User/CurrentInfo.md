@@ -49,6 +49,7 @@ Content Type: `application/json`
 | race | int | 當前競賽 ID，0 = 非競賽中 |
 | lobby | int | [當前競賽所在大廳](../codes/race.md#lobby) |
 | room | int | 當前競賽房號 |
+| unreadmail | int | 未讀郵件數量 |
 
 ### Example
 
@@ -72,6 +73,7 @@ Content Type: `application/json`
 	        "scene": 1,
 	        "race": 0,
 	        "lobby": 0,
-	        "room": 0
+	        "room": 0,
+	        "unreadmail": 0
 	    }
 	}

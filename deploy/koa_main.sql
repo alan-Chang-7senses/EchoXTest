@@ -25,13 +25,15 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~13 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~17 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AmountRacePlayerMax', '8', '開房最大人數'),
 	('ItemFullAddMailID', '1', '物品超過堆疊上限加入信件的MailID'),
 	('ItemFullAddMailIDay', '365', '物品超過堆疊上限加入信件的過期時間(日)'),
-	('PvP_B_MaxTickets_1', '5', '金幣賽入場券的儲存上限'),
+	('PvP_B_FreeTicketId_1_Count', '15', '金幣賽免費入場券(每次)發放數量'),
+	('PvP_B_FreeTicketId_2_Count', '0', 'PT幣賽免費入場券(每次)發放數量'),
+	('PvP_B_MaxTickets_1', '100', '金幣賽入場券的儲存上限'),
 	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '1', '金幣晉級賽創建房間千分比'),
 	('PvP_B_NewRoomRate_2', '250', 'PT晉級賽創建房間千分比'),
@@ -88,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~76 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~73 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
 	(-38, -38, 'aichar0038', 0),
@@ -738,10 +740,11 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
-	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242);
+	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242),
+	(2, 2, 1001, 1001, 1660838400, 1662048000, 1661157822);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構
