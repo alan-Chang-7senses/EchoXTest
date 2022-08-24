@@ -1,22 +1,22 @@
 <?php
 
 namespace Games\Users;
-use stdClass;
-use Exception;
 use Consts\ErrorCode;
+use Exception;
+use Games\Accessors\ItemAccessor;
+use Games\Consts\ItemValue;
+use Games\Exceptions\ItemException;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\UserBagItemPool;
-use Games\Users\UserItemHandler;
-use Games\Accessors\ItemAccessor;
-use Games\Exceptions\ItemException;
 use Games\Users\Holders\UserItemHolder;
+use Games\Users\UserItemHandler;
+use stdClass;
 
 class UserBagHandler
 {
     //背包是否可以有兩個相同物品ID
     private bool $multiItemID = false;
     private UserBagItemPool $bagPool;
-    private ItemAccessor $itemAccessor;
     private ItemInfoPool $itemInfoPool;
     private int|string $userID;
     private stdClass $bagInfo;
@@ -24,7 +24,6 @@ class UserBagHandler
     public function __construct(int|string $userID)
     {
         $this->bagPool = UserBagItemPool::Instance();
-        $this->itemAccessor = new ItemAccessor();
         $this->itemInfoPool = ItemInfoPool::Instance();
         $this->userID = $userID;
         $this->bagInfo = $this->bagPool->{ $this->userID};
@@ -105,7 +104,7 @@ class UserBagHandler
         return true;
     }
 
-    public function AddItems(array |stdClass $items): bool
+    public function AddItems(array |stdClass $items, int $cause = ItemValue::CauseDefault): bool
     {
         if ($this->CheckAddStacklimit($items) == false) {
             return false;
@@ -113,18 +112,18 @@ class UserBagHandler
 
         if (is_array($items)) {
             foreach ($items as $item) {
-                $this->AddItem($item->ItemID, $item->Amount);
+                $this->AddItem($item->ItemID, $item->Amount, $cause);
             }
         }
         else {
-            $this->AddItem($items->ItemID, $items->Amount);
+            $this->AddItem($items->ItemID, $items->Amount, $cause);
         }
 
         return true;
     }
 
     //使用AddItems已確定加入物品沒問題
-    private function AddItem(int $itemID, int $amount)
+    private function AddItem(int $itemID, int $amount, int $cause)
     {
         if (($itemID == 0) || ($amount < 0)) {
             throw new Exception('The itemID \'' . $itemID . '\' or amount\'' . $amount . '\'  can not <= 0', ErrorCode::ParamError);
@@ -133,24 +132,28 @@ class UserBagHandler
         if ($itemID < 0) {
             $userHandler = new UserHandler($this->userID);
             $info = $userHandler->GetInfo();
+            $lastAmount = 0;
             switch ($itemID) {
                 case -1: //-1 電力
-                    $info->power += $amount;
-                    $userHandler->SaveData(['Power' => $info->power]);
+                    $lastAmount = $info->power + $amount;
+                    $userHandler->SaveData(['Power' => $lastAmount]);
                     break;
                 case -2: //-2 金幣
-                    $info->coin += $amount;
-                    $userHandler->SaveData(['Coin' => $info->coin]);
+                    $lastAmount = $info->coin + $amount;
+                    $userHandler->SaveData(['Coin' => $lastAmount]);
                     break;
                 case -3: //-3 寶石
-                    $info->diamond += $amount;
-                    $userHandler->SaveData(['Diamond' => $info->diamond]);
+                    $lastAmount = $info->diamond + $amount;
+                    $userHandler->SaveData(['Diamond' => $lastAmount]);
                     break;
                 case -4: //-4 PT
-                    $info->petaToken += $amount;
-                    $userHandler->SaveData(['PetaToken' => $info->petaToken]);
+                    $lastAmount = $info->petaToken + $amount;
+                    $userHandler->SaveData(['PetaToken' => $lastAmount]);
                     break;
             }
+
+            $itemAccessor = new ItemAccessor();
+            $itemAccessor->AddLog(0, $this->userID, $itemID, $cause, ItemValue::ActionObtain, $amount, $lastAmount);
         }
         else {
             $info = $this->itemInfoPool->{ $itemID};
@@ -161,13 +164,12 @@ class UserBagHandler
                             break;
                         }
                         $userItemHandler = new UserItemHandler($userItemID);
-                        $amount = $userItemHandler->AddItem($amount);
-                        $this->itemAccessor->AddLog($this->userID, $userItemID, $itemID, 1, $amount, $userItemHandler->info->amount);
+                        $amount = $userItemHandler->AddItem($amount, $cause);
                     }
 
                     if ($amount > 0) {
                         if ($this->multiItemID) {
-                            $this->AddNewItem($itemID, $amount, $info->StackLimit);
+                            $this->AddNewItem($itemID, $amount, $info->StackLimit, $cause);
                         }
                         else {
                         //todo add log to $amount, 物品未加完
@@ -175,68 +177,56 @@ class UserBagHandler
                     }
                 }
                 else {
-                    $this->AddNewItem($itemID, $amount, $info->StackLimit);
+                    $this->AddNewItem($itemID, $amount, $info->StackLimit, $cause);
                 }
             }
             else //no stack
             {
-                for ($i = 0; $i < $amount; $i++) {
-                    $this->AddNewItem($itemID, 1, $info->StackLimit);
-                }
+                $this->AddNewItem($itemID, $amount, $info->StackLimit, $cause);
             }
-
             $this->ResetInfo();
         }
     }
 
-    private function AddNewItem(int $itemID, int $amount, int $stackLimit)
+    private function AddNewItem(int $itemID, int $amount, int $stackLimit, int $cause)
     {
 
         if ($stackLimit != 0) { //can stack
-
             if ($amount <= $stackLimit) {
-                $this->AddNewItemToDB($itemID, $amount);
-                //$this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                UserItemHandler::AddNewItem($this->userID, $itemID, $amount, $cause);
             }
             else {
                 if ($this->multiItemID) {
-                    for ($i = 0; $i < 5; $i++) {
-                        $this->AddNewItemToDB($itemID, $stackLimit);
-                        //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $stackLimit);
-
+                    for ($i = 0; $i < 5; $i++) { //test five times to add itemms
+                        UserItemHandler::AddNewItem($this->userID, $itemID, $stackLimit, $cause);
                         $amount -= $stackLimit;
                         if ($amount <= $stackLimit) {
-                            $this->AddNewItemToDB($itemID, $amount);
-                            //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
+                            UserItemHandler::AddNewItem($this->userID, $itemID, $amount, $cause);
                             break;
                         }
                     }
                 }
                 else {
+                    //why can add items over stack limit one time, design logic error
                     throw new Exception('Add new item too much over the stack limit, ItemID: ' . $itemID . ' amount:' . $amount, ErrorCode::ParamError);
                 }
 
             }
         }
-        else //no stack
+        else //can't stack
         {
-            $this->AddNewItemToDB($itemID, $amount);            
-            //$userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, 1);
+            for ($i = 0; $i < $amount; $i++) {
+                UserItemHandler::AddNewItem($this->userID, $itemID, 1, $cause);
+            }
         }
     }
 
-    private function AddNewItemToDB(int $itemID, int $amount)
-    {
-        $userItemID = $this->itemAccessor->AddItemByItemID($this->userID, $itemID, $amount);
-        $this->itemAccessor->AddLog($userItemID, $this->userID, $itemID,1, $amount,  $amount);
-    }
-
-    public function DecItems(array |stdclass $items): bool
+    public function DecItems(array |stdclass $items, int $cause = ItemValue::CauseDefault): bool
     {
         if (is_array($items)) {
             $decItems = [];
             foreach ($items as $item) {
-                $tempItem = $this->DecItemByItemID($item->ItemID, $item->Amount, true);
+                $tempItem = $this->DecItemByItemID($item->ItemID, $item->Amount, $cause, true);
                 if ($tempItem == false) {
                     return false;
                 }
@@ -244,16 +234,16 @@ class UserBagHandler
             }
 
             foreach ($decItems as $decItem) {
-                $this->DecItem($decItem->userItemID, $decItem->amount);
+                $this->DecItem($decItem->userItemID, $decItem->amount, $cause);
             }
             return true;
-        }else
-        {
-            return $this->DecItemByItemID($items->ItemID, $items->Amount);
+        }
+        else {
+            return $this->DecItemByItemID($items->ItemID, $items->Amount, $cause);
         }
     }
 
-    public function DecItemByItemID(int $itemID, int $amount, bool $forcheck = false): bool|array
+    public function DecItemByItemID(int $itemID, int $amount, int $cause = ItemValue::CauseDefault, bool $forcheck = false): bool|array
     {
         $decItems = [];
         if (isset($this->bagInfo->items->{ $itemID})) {
@@ -288,7 +278,7 @@ class UserBagHandler
             }
             else {
                 foreach ($decItems as $decItem) {
-                    $this->DecItem($decItem->userItemID, $decItem->amount);
+                    $this->DecItem($decItem->userItemID, $decItem->amount, $cause);
                 }
                 return true;
             }
@@ -298,7 +288,7 @@ class UserBagHandler
         }
     }
 
-    public function DecItem(int $userItemID, int $amount): bool
+    public function DecItem(int $userItemID, int $amount, int $cause = ItemValue::CauseDefault): bool
     {
         if (($userItemID <= 0) || ($amount <= 0)) {
             throw new Exception('The userItemID \'' . $userItemID . '\' or amount\'' . $amount . '\'  can not <= 0', ErrorCode::ParamError);
@@ -311,9 +301,7 @@ class UserBagHandler
             throw new ItemException(ItemException::UserNotItemOwner, ['[userItemID]' => $userItemID]);
         }
 
-        $result = $userItemHandler->DecItem($amount);
-        $this->itemAccessor->AddLog($userItemID, $this->userID, $userItemHandler->info->itemID, 2, $amount,  $userItemHandler->info->amount);
-        return $result ;
+        return $userItemHandler->DecItem($amount, $cause);
     }
 
     public function GetUserItemInfo(int $userItemID): UserItemHolder|stdClass

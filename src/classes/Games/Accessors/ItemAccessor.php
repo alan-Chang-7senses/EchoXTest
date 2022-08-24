@@ -31,11 +31,12 @@ class ItemAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('UserItems')->WhereEqual('UserItemID', $id)->Modify($bind);
     }
 
-    public function AddLog(int $userItemID, int $userID, int $itemID, int $action, int $amount, int $remain) : mixed{
+    public function AddLog(int $userItemID, int $userID, int $itemID, int $cause, int $action, int $amount, int $remain) : mixed{
         return $this->LogAccessor()->FromTable('UserItemsLog')->Add([
             'UserItemID' => $userItemID,
             'UserID' => $userID,
             'ItemID' => $itemID,
+            'Cause' => $cause,            
             'Action' => $action,
             'Amount' => $amount,
             'Remain' => $remain,
