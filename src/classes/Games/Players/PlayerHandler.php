@@ -2,9 +2,12 @@
 
 namespace Games\Players;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
+use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
 use stdClass;
@@ -129,5 +132,33 @@ class PlayerHandler {
     public function SkillLevel(int $id) : int{
         if(!isset($this->skills[$id])) return SkillValue::LevelMin;
         return $this->skills[$id]->level;
+    }
+
+    
+    private function ResetInfo() : void{
+        $this->info = $this->pool->{$this->info->id};
+    }
+
+    public function SaveData(array $bind) : void{    
+        $this->pool->Save($this->info->id, 'Data', $bind);
+        $this->ResetInfo();
+    }
+
+    public function GainEXP(int $exp)
+    {
+        $t = $this->info;
+        $currentExp = $this->info->exp;
+        //限制不超過目前等階最大等級之經驗值
+        $currentExpTemp = PlayerEXP::IsLevelMax($currentExp + $exp,$this->info->rank) ? 
+            PlayerEXP::GetMaxEXP($this->info->rank) :
+             $currentExp + $exp;             
+        $level = PlayerEXP::GetLevel($currentExpTemp,$this->info->rank,$this->info->level);
+        $bind = [];
+        $bind['exp'] = $currentExpTemp;
+        if($level != $this->info->level)
+        {
+            $bind['level'] = $level;
+        }
+        $this->SaveData($bind);
     }
 }

@@ -46,4 +46,17 @@ class PlayerValue {
     /**角色暱稱最大長度 */
     const PlayerNicknameMaxLength = 16;
 
+    /**最低等級 */
+    const LevelMin = 1;
+
+    /**最高等級 */
+    const LevelMax = 100;
+
+    /**每等階可提升最高等級 */
+    const RankMaxLevel = [
+        1 => 40,
+        2 => 70,
+        3 => 90,
+        4 => 100,
+    ];
 }

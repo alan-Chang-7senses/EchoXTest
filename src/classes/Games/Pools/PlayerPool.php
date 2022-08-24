@@ -133,4 +133,16 @@ class PlayerPool extends PoolAccessor {
             $holder->skills[$i]->slot = $i + 1;
         }
     }
+
+    
+    protected function SaveData(stdClass $data, array $values) : stdClass{
+        
+        $bind = [];
+        foreach($values as $key => $value){
+            $bind[ucfirst($key)] = $value;
+            $data->$key = $value;
+        }        
+        (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
+        return $data;
+    }
 }
