@@ -62,8 +62,8 @@ class LeadRate extends BaseGameLeaderboard {
             
             $list[] = [
                 'ranking' => $ranking,
-                'nickname' => $row->Nickname ?? $row->PlayerID,
-                'tokenName' => $row->TokenName ?? $row->PlayerID,
+                'nickname' => (string)($row->Nickname ?? $row->PlayerID),
+                'tokenName' => (string)($row->TokenName ?? $row->PlayerID),
                 'leadRate' => $row->LeadRate / RaceValue::DivisorPercent,
             ];
             
