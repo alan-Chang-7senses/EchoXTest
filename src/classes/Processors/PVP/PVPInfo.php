@@ -2,28 +2,27 @@
 
 namespace Processors\PVP;
 
-use stdClass;
 use Consts\ErrorCode;
-use Holders\ResultData;
+use Games\Exceptions\RaceException;
+use Games\PVP\QualifyingHandler;
 use Games\Scenes\SceneHandler;
 use Games\Scenes\SceneUtility;
+use Holders\ResultData;
 use Processors\Races\BaseRace;
-use Games\PVP\QualifyingHandler;
-use Games\Exceptions\RaceException;
+use stdClass;
 
-class PVPInfo extends BaseRace
-{
+class PVPInfo extends BaseRace {
+
     protected bool|null $mustInRace = false;
 
-    public function Process(): ResultData
-    {
+    public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
         if ($qualifyingHandler->NowSeasonID == -1) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 
         $infos = [];
-        foreach (QualifyingHandler::Lobbies as $lobby) {
+        foreach (QualifyingHandler::MatchLobbies as $lobby) {
             $lobbyinfo = new stdClass;
             $lobbyinfo->lobby = $lobby;
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
@@ -54,6 +53,5 @@ class PVPInfo extends BaseRace
         $result->infos = $infos;
         return $result;
     }
-
 
 }
