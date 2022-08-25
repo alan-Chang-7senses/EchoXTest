@@ -31,8 +31,8 @@ class PVPMatch extends BaseRace
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
         $userBagHandler = new UserBagHandler($userID);
-                
-        if ($qualifyingHandler->NowSeasonID == -1) {
+
+        if ($qualifyingHandler->GetSeasonRemaintime() <= 0) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 
@@ -43,6 +43,7 @@ class PVPMatch extends BaseRace
 
         $raceRoomID = 0;
         $accessor = new PDOAccessor(EnvVar::DBMain);
+
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID) {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
@@ -66,6 +67,7 @@ class PVPMatch extends BaseRace
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
         });
+
         UserPool::Instance()->Delete($userID);
 
         $result = new ResultData(ErrorCode::Success);
