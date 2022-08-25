@@ -12,6 +12,10 @@ use Generators\ConfigGenerator;
  */
 class UserUtility {
     
+    public static function IsNonUser(int $userID) : bool{
+        return $userID <= 0;
+    }
+    
     public static function AddItems(int $userID, array $items) : void {
         
         $userBagHandler = new UserBagHandler($userID);
