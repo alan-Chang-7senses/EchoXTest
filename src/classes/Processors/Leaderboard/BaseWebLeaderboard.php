@@ -8,7 +8,7 @@ use Processors\BaseProcessor;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-abstract class BaseLeaderboard extends BaseProcessor{
+abstract class BaseWebLeaderboard extends BaseProcessor{
     
     protected bool $mustSigned = false;
     protected bool $maintainMode = false;

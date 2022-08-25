@@ -6,13 +6,13 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Holders\ResultData;
-use Processors\Leaderboard\BaseLeaderboard;
+use Processors\Leaderboard\BaseWebLeaderboard;
 /**
  * Description of UserRichest
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class UserRichest extends BaseLeaderboard{
+class UserRichest extends BaseWebLeaderboard{
     
     public function Process(): ResultData {
         

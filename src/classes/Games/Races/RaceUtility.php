@@ -100,4 +100,7 @@ class RaceUtility {
         };
     }
 
+    public static function GetLeadRateForWriteDB(int $leadCount, int $playCount) : int{
+        return intval($leadCount / $playCount * RaceValue::DivisorLeadRate);
+    }
 }

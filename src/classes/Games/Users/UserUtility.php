@@ -12,6 +12,10 @@ use Generators\ConfigGenerator;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class UserUtility {
+        
+    public static function IsNonUser(int $userID) : bool{
+        return $userID <= 0;
+    }
     
     public static function AddItems(int $userID, array $items, $cause = ItemValue::CauseDefault) : void {
         

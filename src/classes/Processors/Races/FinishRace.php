@@ -18,9 +18,6 @@ use Games\Races\RaceUtility;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
 use Games\Users\UserUtility;
-use Generators\ConfigGenerator;
-use Generators\DataGenerator;
-use Helpers\InputHelper;
 use Holders\ResultData;
 /**
  * Description of FinishRace
@@ -30,27 +27,25 @@ use Holders\ResultData;
 class FinishRace extends BaseRace{
     
     private array $rewardField = [
-        RaceValue::LobbyNone => 'coinReward',
+        RaceValue::LobbyNone => 'coinReward', //Ready 檢驗房間後移除
         RaceValue::LobbyCoin => 'coinReward',
         RaceValue::LobbyPT => 'petaTokenReward',
     ];
+    
+    private array $leaderboardLeadFunc = [
+        RaceValue::LobbyNone => 'LeaderboardLeadCoin', //Ready 檢驗房間後移除
+        RaceValue::LobbyCoin => 'LeaderboardLeadCoin',
+        RaceValue::LobbyPT => 'RecordLeaderboardPT',
+    ];
 
     public function Process(): ResultData {
-        
-        $players = json_decode(InputHelper::post('players'));
-        $playerCount = count($players);
-        if(!is_array($players) || $playerCount <= 0 || $playerCount > ConfigGenerator::Instance()->AmountRacePlayerMax) throw new RaceException(RaceException::IncorrectPlayerNumber);
-        DataGenerator::ExistProperties($players[0], ['id', 'ranking']);
-        
-        $rankings = [];
-        foreach($players as $player){
-            $rankings[$player->id] = $player->ranking;
-        }
         
         $raceID = $this->userInfo->race;
         $racePool = RacePool::Instance();
         $raceInfo = $racePool->$raceID;
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
+        
+        $playerCount = count((array)$raceInfo->racePlayers);
         
         $userPool = UserPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
@@ -63,18 +58,12 @@ class FinishRace extends BaseRace{
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
             if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
             
-            if(!isset($rankings[$racePlayerInfo->player]) || $rankings[$racePlayerInfo->player] != $racePlayerInfo->ranking){
-                throw new RaceException(RaceException::RankingNoMatch, [
-                    '[player]' => $racePlayerInfo->player,
-                    '[front]' => $rankings[$racePlayerInfo->player] ?? 0,
-                    '[back]' => $racePlayerInfo->ranking,
-                ]);
-            }
-            
-            $rewardID = $singleRankingRewardPool->GetInfo($playerCount, $racePlayerInfo->ranking)->{$this->rewardField[$this->userInfo->lobby]};
-            $rewardHandler = new RewardHandler($rewardID);
-            $rewards[$racePlayerInfo->user] = $rewardHandler;
-            $items[$racePlayerInfo->user] = array_values($rewardHandler->GetItems());
+            if(isset($this->rewardField[$this->userInfo->lobby] )){
+                $rewardID = $singleRankingRewardPool->GetInfo($playerCount, $racePlayerInfo->ranking)->{$this->rewardField[$this->userInfo->lobby]};
+                $rewardHandler = new RewardHandler($rewardID);
+                $rewards[$racePlayerInfo->user] = $rewardHandler;
+                $items[$racePlayerInfo->user] = array_values($rewardHandler->GetItems());
+            }else $items[$racePlayerInfo->user] = [];
             
             $users[] = [
                 'id' => $racePlayerInfo->user,
@@ -96,20 +85,24 @@ class FinishRace extends BaseRace{
         if($ticket != RaceValue::NoTicketID) {
             
             foreach($users as $user) {
-                if($user['id'] <= 0) continue;
+                if(UserUtility::IsNonUser($user['id'])) continue;
                 $userBagHandler = new UserBagHandler($user['id']);
                 $userBagHandler->DecItemByItemID($ticket, 1);
             }
         }
         
-        foreach ($users as $user) {
+        if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
+        
+        foreach ($users as $idx => $user) {
             
-            if($user['id'] <= 0) continue;
+            if(UserUtility::IsNonUser($user['id'])) continue;
             
             $rewardInfo = $rewards[$user['id']]->GetInfo();
             if($rewardInfo->Modes == RewardValue::ModeSelfSelect) continue;
             
             UserUtility::AddItems($user['id'], $items[$user['id']]);
+            
+            $users[$idx]['leadRate'] = $leadRates[$user['player']] ?? 0;
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
@@ -145,7 +138,7 @@ class FinishRace extends BaseRace{
         $racePool->Delete($raceID);
         
         foreach($users as $user){
-            if($user['id'] <= 0) continue;
+            if(UserUtility::IsNonUser($user['id'])) continue;
             $accessor->CallProcedure('UserRaceTimingRecord', [
                 'userID' => $user['id'],
                 'duration' => $user['duration'],
@@ -156,5 +149,71 @@ class FinishRace extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->users = $users;
         return $result;
+    }
+    
+    private function LeaderboardLeadCoin() : array{
+        return $this->RecordLeaderboardLead('LeaderboardLeadCoin', [$this, 'GetQualifyingSeasonID']);
+    }
+    
+    private function LeaderboardLeadPT() : array{
+        return $this->RecordLeaderboardLead('LeaderboardLeadPT', [$this, 'GetQualifyingSeasonID']);
+    }
+    
+    private function GetQualifyingSeasonID() : int{
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
+    }
+    
+    private function RecordLeaderboardLead(string $table, $seasonIDFunc) : array{
+        
+        $racePlayerPool = RacePlayerPool::Instance();
+        $racePlayers = (array)RacePool::Instance()->{$this->userInfo->race}->racePlayers;
+        $leadRanking = RaceValue::LeadRanking[count($racePlayers)];
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $seasonID = call_user_func($seasonIDFunc);
+        $accessor->ClearOrderBy()->ClearLimt();
+        $rows = $accessor->FromTable($table)
+                ->WhereEqual('SeasonID', $seasonID)->WhereIn('PLayerID', array_keys($racePlayers))
+                ->FetchAll();
+        
+        $data = [];
+        foreach($rows as $row) $data[$row->PlayerID] = $row;
+        
+        $insert = [];
+        $leadRates = [];
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        foreach($racePlayers as $playerID => $racePlayerID){
+            $racePlayerInfo = $racePlayerPool->$racePlayerID;
+            if(isset($data[$playerID])){
+                $leadCount = $racePlayerInfo->ranking <= $leadRanking ? $data[$playerID]->LeadCount + 1 : $data[$playerID]->LeadCount ;
+                $playCount = $data[$playerID]->PlayCount + 1;
+                $leadRate = RaceUtility::GetLeadRateForWriteDB($leadCount, $playCount);
+                $accessor->ClearCondition();
+                $accessor->FromTable($table)->WhereEqual('Serial', $data[$playerID]->Serial)->Modify([
+                    'LeadCount' => $leadCount,
+                    'PlayCount' => $playCount,
+                    'LeadRate' => $leadRate,
+                    'UpdateTime' => $currentTime,
+                ]);
+            }else{
+                $leadCount = $racePlayerInfo->ranking <= $leadRanking ? 1 : 0;
+                $playCount = 1;
+                $leadRate = RaceUtility::GetLeadRateForWriteDB($leadCount, $playCount);
+                $insert[] = [
+                    'SeasonID' => $seasonID,
+                    'PlayerId' => $playerID,
+                    'LeadCount' => $leadCount,
+                    'PlayCount' => $playCount,
+                    'LeadRate' => $leadRate,
+                    'UpdateTime' => $currentTime,
+                ];
+            }
+            $leadRates[$playerID] = $leadRate / RaceValue::DivisorPercent;
+        }
+        
+        if(!empty($insert)) $accessor->FromTable($table)->AddAll($insert);
+        
+        return $leadRates;
     }
 }
