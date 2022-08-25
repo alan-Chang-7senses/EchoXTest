@@ -4,7 +4,7 @@ namespace Processors\PVP;
 
 use Consts\Sessions;
 use Consts\ErrorCode;
-
+use Games\Consts\ItemValue;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Races\RaceUtility;
@@ -49,7 +49,7 @@ class ReceiveTicket extends BaseProcessor
             throw new RaceException(RaceException::UserTicketError);
         }
 
-        $userBagHandler->AddItems($ticket);
+        $userBagHandler->AddItems($ticket, ItemValue::CauseRace);
         $result = new ResultData(ErrorCode::Success);
         $result->lobby = $lobby;
         $result->amount = $userBagHandler->GetItemAmount($ticket->ItemID);

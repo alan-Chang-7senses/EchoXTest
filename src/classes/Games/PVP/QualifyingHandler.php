@@ -178,6 +178,7 @@ class QualifyingHandler
         $ticketInfo->lobby = $lobby;
         $itemInfo = ItemInfoPool::Instance()->{ RaceUtility::GetTicketID($lobby)};
         $ticketInfo->ticketID = $itemInfo->ItemID;
+        $ticketInfo->ticketName = $itemInfo->ItemName;
         $ticketInfo->ticketIcon = $itemInfo->Icon;
         $ticketInfo->amount = $userBagHandler->GetItemAmount($ticketInfo->ticketID);
         $ticketInfo->maxReceive = RaceUtility::GetMaxTickets($lobby);
