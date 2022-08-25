@@ -23,7 +23,7 @@ class JoinRoom {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
-        $raceRoomID = InputHelper::post('room');
+        $raceRoomID = InputHelper::post('raceRoomID');
         $qualifyingHandler = new QualifyingHandler();
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, &$raceRoomID) {
