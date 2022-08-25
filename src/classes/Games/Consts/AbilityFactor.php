@@ -73,8 +73,6 @@ class AbilityFactor {
     ];
 
 
-    /**同步率加成 */
-    const SyncRateBonus = 1.1;
 
     /**同步率加成類型分類 */
     const SyncRateTypeMax = [1,1];

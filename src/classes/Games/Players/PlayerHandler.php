@@ -2,9 +2,12 @@
 
 namespace Games\Players;
 
+use Accessors\MemcacheAccessor;
+use Games\Accessors\PlayerAccessor;
 use Games\Consts\AbilityFactor;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
+use Games\Consts\SyncRate;
 use Games\Exceptions\PlayerException;
 use Games\Players\Exp\ExpBonus;
 use Games\Players\Exp\ExpBonusCalculator;
@@ -145,6 +148,8 @@ class PlayerHandler {
         $this->ResetInfo();
     }
 
+
+
     /**
      * @param int $rawExp
      * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
@@ -157,7 +162,7 @@ class PlayerHandler {
             $expCalculator->AddBonus($bonus);
         }
         $rt = $expCalculator->Process();
-        $this->UpdateExp($rt->exp);
+        $this->UpdateExp(floor($rt->exp));
         return $rt;
     }
 

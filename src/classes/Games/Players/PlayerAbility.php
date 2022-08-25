@@ -5,6 +5,7 @@ namespace Games\Players;
 use Games\Consts\AbilityFactor;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
+use Games\Consts\SyncRate;
 use Games\Players\Adaptability\BaseAdaptability;
 use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
@@ -179,19 +180,19 @@ class PlayerAbility {
         match(true)
         {
             self::IsBetween(AbilityFactor::SyncRateTypeMax[0],AbilityFactor::SyncRateTypeMax[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[0],$holder,AbilityFactor::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[0],$holder,SyncRate::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeSecond[0],AbilityFactor::SyncRateTypeSecond[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[1],$holder,AbilityFactor::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[1],$holder,SyncRate::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeThird[0],AbilityFactor::SyncRateTypeThird[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[2],$holder,AbilityFactor::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[2],$holder,SyncRate::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeFourth[0],AbilityFactor::SyncRateTypeFourth[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[3],$holder,AbilityFactor::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[3],$holder,SyncRate::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeFifth[0],AbilityFactor::SyncRateTypeFifth[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[4],$holder,AbilityFactor::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[4],$holder,SyncRate::SyncRateBonus),
 
             default => null,
         };
@@ -206,12 +207,13 @@ class PlayerAbility {
     {
         match($valueID)
         {
-            AbilityFactor::Velocity => $holder->velocity *= $modifyCoefficient,
-            AbilityFactor::Stamina => $holder->stamina *= $modifyCoefficient,
-            AbilityFactor::BreakOut => $holder->breakOut *= $modifyCoefficient,
-            AbilityFactor::Will => $holder->will *= $modifyCoefficient,
-            AbilityFactor::Intelligent => $holder->intelligent *= $modifyCoefficient,
+            AbilityFactor::Velocity => $holder->velocity = number_format($modifyCoefficient * $holder->velocity,AbilityFactor::Decimals),
+            AbilityFactor::Stamina => $holder->stamina = number_format($modifyCoefficient * $holder->stamina,AbilityFactor::Decimals),
+            AbilityFactor::BreakOut => $holder->breakOut = number_format($modifyCoefficient * $holder->breakOut,AbilityFactor::Decimals),
+            AbilityFactor::Will => $holder->will = number_format($modifyCoefficient * $holder->will,AbilityFactor::Decimals),
+            AbilityFactor::Intelligent => $holder->intelligent = number_format($modifyCoefficient * $holder->intelligent,AbilityFactor::Decimals),
         };
+        
     }
 
 }

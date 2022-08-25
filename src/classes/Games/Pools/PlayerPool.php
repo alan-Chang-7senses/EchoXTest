@@ -20,6 +20,8 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use stdClass;
 use Games\Consts\SkillValue;
+use Games\Exceptions\PlayerException;
+use Games\Players\Exp\PlayerEXP;
 use Games\Players\PlayerBaseInfoHolder;
 
 /**
@@ -52,8 +54,8 @@ class PlayerPool extends PoolAccessor {
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
         $holder->level = $player->Level;
         $holder->exp = $player->Exp;
-        $holder->maxExp = 0; //還沒有資料
         $holder->rank = $player->Rank;
+        $holder->maxExp = PlayerEXP::GetNextLevelRequireEXP($holder->level,$holder->rank,$holder->exp);
         $holder->strengthLevel = $player->StrengthLevel;
         $holder->skeletonType = $player->SkeletonType;
 

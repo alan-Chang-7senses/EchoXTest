@@ -42,7 +42,7 @@ class ExpBonusCalculator
             foreach($bonus as $b) $this->rawExp *= $b->multiplier;
             $result->bonus = $bonus;
         }
-        $result->exp = floor($this->rawExp);
+        $result->exp = $this->rawExp;
         return $result;
     }
     

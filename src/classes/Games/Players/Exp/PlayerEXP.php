@@ -63,4 +63,9 @@ class PlayerEXP
         return self::$allLevelMaxExp[$currentLevel] - $currentExp + self::ExpUnit;
     }
 
+    public static function Clamp(int|float $max, int|float $min, int|float $value)
+    {
+        return max($min, min($max, $value));
+    }
+
 }
