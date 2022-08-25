@@ -2,31 +2,29 @@
 
 namespace Processors\PVP;
 
+use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Sessions;
-use Consts\ErrorCode;
-use Holders\ResultData;
-use Helpers\InputHelper;
+use Games\Exceptions\RaceException;
 use Games\Pools\UserPool;
-use Accessors\PDOAccessor;
-use Games\Races\RaceUtility;
-use Processors\Races\BaseRace;
+use Games\PVP\QualifyingHandler;
 use Games\PVP\RaceRoomsHandler;
+use Games\Races\RaceUtility;
 use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
-use Games\PVP\QualifyingHandler;
-use Games\Exceptions\RaceException;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\Races\BaseRace;
 
-class PVPMatch extends BaseRace
-{
+class PVPMatch extends BaseRace {
 
     protected bool|null $mustInRace = false;
-    public function Process(): ResultData
-    {
+
+    public function Process(): ResultData {
         $userID = $_SESSION[Sessions::UserID];
         $lobby = InputHelper::post('lobby');
-
 
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
@@ -37,7 +35,7 @@ class PVPMatch extends BaseRace
         }
 
         $useTicketId = RaceUtility::GetTicketID($lobby);
-        if ($userBagHandler->GetItemAmount($useTicketId) <= 0) {
+        if (($useTicketId !== 0) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
@@ -77,4 +75,5 @@ class PVPMatch extends BaseRace
 
         return $result;
     }
+
 }

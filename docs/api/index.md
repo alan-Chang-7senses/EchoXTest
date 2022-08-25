@@ -35,6 +35,9 @@
 		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
 		- [PVP配對離開](PVP/PVPMatchQuit.md)。
+		- [創建房間](PVP/CreateRoom.md)。
+		- [加入房間](PVP/JoinRoom.md)。		
+		- [離開房間](PVP/LeaveRoom.md)。
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。
