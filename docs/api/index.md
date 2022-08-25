@@ -35,6 +35,9 @@
 		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
 		- [PVP配對離開](PVP/PVPMatchQuit.md)。
+		- [創建房間](PVP/CreateRoom.md)。
+		- [加入房間](PVP/JoinRoom.md)。		
+		- [離開房間](PVP/LeaveRoom.md)。
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [機器人角色](Races/BotPlayer.md)。
@@ -66,6 +69,7 @@
 		- CB 1.5
 			- [競賽最快速排行榜](Leaderboard/CB15/RaceFastest.md)。
 			- [最有錢使用者排行榜](leaderboard/CB15/UserRichest.md)。
+		- [領先率](leaderboard/LeadRate.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
 		- [使用者資料](EliteTest/UserInfo.md)。

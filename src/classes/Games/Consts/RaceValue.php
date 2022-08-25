@@ -43,6 +43,8 @@ class RaceValue {
     const DivisorHP = 100;
     const DivisorSkillDuration = 75;
     const DivisorSkillDurationForOther = 50;
+    const DivisorLeadRate = 10000;
+    const DivisorPercent = 100;
     
     const SunNone = 100;
     const SunSame = 120;
@@ -147,7 +149,16 @@ class RaceValue {
         SkillValue::EffectWindHeadwind => SceneValue::Headwind,
     ];
 
-
     const HitConditionCount = 1;
     const TakenOverConditionCount = 1;
+    
+    const LeadRanking = [
+        2 => 1,
+        3 => 1,
+        4 => 2,
+        5 => 2,
+        6 => 3,
+        7 => 3,
+        8 => 4,
+    ];
 }

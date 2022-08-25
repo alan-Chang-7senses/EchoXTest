@@ -2,6 +2,7 @@
 
 namespace Games\Users;
 
+use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
@@ -11,15 +12,19 @@ use Generators\ConfigGenerator;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class UserUtility {
+        
+    public static function IsNonUser(int $userID) : bool{
+        return $userID <= 0;
+    }
     
-    public static function AddItems(int $userID, array $items) : void {
+    public static function AddItems(int $userID, array $items, $cause = ItemValue::CauseDefault) : void {
         
         $userBagHandler = new UserBagHandler($userID);
         
         $mailItems = [];
         foreach ($items as $item){
             
-            $addItemResult = $userBagHandler->AddItems($item);
+            $addItemResult = $userBagHandler->AddItems($item, $cause);
             if($addItemResult === false ) $mailItems[] = $item;
         }
         
