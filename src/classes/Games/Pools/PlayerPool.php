@@ -63,6 +63,9 @@ class PlayerPool extends PoolAccessor {
         $holder->intelligent = PlayerAbility::GetAbilityValue(AbilityFactor::Intelligent,$baseInfo);
         $holder->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
         $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
+
+        PlayerAbility::ApplySyncRateBonus($holder,$holder->sync);
+
         
         $holder->dna = new PlayerDnaHolder();
         $holder->dna->head = $player->HeadDNA;
@@ -150,4 +153,5 @@ class PlayerPool extends PoolAccessor {
         (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
         return $data;
     }
+
 }

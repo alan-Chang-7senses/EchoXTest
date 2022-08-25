@@ -72,14 +72,14 @@ class AbilityFactor {
             AbilityFactor::Intelligent => [0,0.4,0,0.4,0,0.56,0,0.56]
     ];
 
-    /**同步率相同時的優先順序 */
-    const AbilityWeight = 
-    [
-        'velocity' => 5,
-        'stamina' => 4,
-        'breakOut' => 3,
-        'will' => 2,
-        'intelligent' => 1,
-    ];
 
+    /**同步率加成 */
+    const SyncRateBonus = 1.1;
+
+    /**同步率加成類型分類 */
+    const SyncRateTypeMax = [1,1];
+    const SyncRateTypeSecond = [0.99,0.85];
+    const SyncRateTypeThird = [0.84,0.7];
+    const SyncRateTypeFourth = [0.69,0.55];
+    const SyncRateTypeFifth = [0.54,0.4];
 }

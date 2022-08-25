@@ -177,31 +177,4 @@ class PlayerHandler {
         }
         $this->SaveData($bind);
     }
-
-    public function GetAbilityDesc() : array
-    {
-        $abilities = 
-        [
-            ['velocity' => $this->info->velocity],
-            ['stamina' => $this->info->stamina],
-            ['breakOut' => $this->info->breakOut],
-            ['will' => $this->info->will],
-            ['intelligent' => $this->info->intelligent],
-        ];
-
-        usort($abilities,function($a, $b)
-        {
-            $aVal = array_values($a)[0];
-            $bVal = array_values($b)[0];
-            if($aVal < $bVal)return 1;
-            if($aVal == $bVal)
-            {
-                $akey = array_keys($a)[0];
-                $bkey = array_keys($b)[0];
-                return AbilityFactor::AbilityWeight[$akey] < AbilityFactor::AbilityWeight[$bkey] ? 1 : -1;
-            }
-            return -1;
-        });
-        return $abilities;
-    }
 }
