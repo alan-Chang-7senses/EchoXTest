@@ -35,7 +35,7 @@ class RecordPositions extends BaseRace{
         $racePlayerPositions = [];
         foreach($positions as $position){
             $racePlayerID = $raceInfo->racePlayers->{$position->player} ?? null;
-            if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace);
+            if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $position->player]);
             $racePlayerPositions[$racePlayerID] = $position->position;
         }
         

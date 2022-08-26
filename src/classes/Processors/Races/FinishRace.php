@@ -59,9 +59,9 @@ class FinishRace extends BaseRace{
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
             if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
             if($racePlayerInfo->ranking > $playerCount) throw new RaceException (RaceException::RankingNoMatch, [
-                'player' => $racePlayerInfo->player,
-                'ranking' => $racePlayerInfo->ranking,
-                'count' => $playerCount,
+                '[player]' => $racePlayerInfo->player,
+                '[ranking]' => $racePlayerInfo->ranking,
+                '[count]' => $playerCount,
             ]);
             
             if(isset($this->rewardField[$this->userInfo->lobby] )){
