@@ -42,7 +42,7 @@ class RaceHandler {
     public function SetPlayer(PlayerHandler $handler) : RacePlayerHandler{
         $playerInfo = $handler->GetInfo();
         $racePlayerID = $this->info->racePlayers->{$playerInfo->id} ?? null;
-        if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace);
+        if($racePlayerID === null) throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $playerInfo->id]);
         $this->playerHandler = $handler;
         $this->racePlayerHandler = new RacePlayerHandler($racePlayerID);
         return $this->racePlayerHandler;
