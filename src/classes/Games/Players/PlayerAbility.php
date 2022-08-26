@@ -174,6 +174,7 @@ class PlayerAbility {
         return $rt;
     }
 
+    /**同步率應介於0~1之間 */
     public static function ApplySyncRateBonus(PlayerInfoHolder|stdClass $holder, int|float $syncRate) : void
     {
         $abilityDesc = self::GetAbilityDesc($holder);

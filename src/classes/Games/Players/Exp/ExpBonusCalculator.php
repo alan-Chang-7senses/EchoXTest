@@ -1,17 +1,25 @@
 <?php
 namespace Games\Players\Exp;
 
+use Games\Random\RandomUtility;
 use stdClass;
 
 class ExpBonusCalculator
 {
-    private int|float $rawExp;
+    private int|float $exp;
     private array $bonus = [];
-    private const MinPriority = 999999;
+    public int|float $start = 0;
+    public int|float $end = 100;
 
     public function __construct(int|float $rawExp)
     {
-        $this->rawExp = $rawExp;
+        $this->exp = $rawExp;
+    }
+
+    public function SetRange(int|float $start, int|float $end)
+    {
+        $this->start = $start;
+        $this->end = $end;
     }
     
     public function AddBonus(ExpBonus $bonus)
@@ -22,43 +30,23 @@ class ExpBonusCalculator
     public function Process() : stdClass
     {
         $bonus = [];
-        $bonusPriority = [];
+        $dice = RandomUtility::RandomFloat($this->start,$this->end);
         foreach($this->bonus as $b)
         {
-            $bonusResult = $b->GetExpBonus();
-            if($bonusResult != null)
-            {
-                if($bonusResult->priority === null)
-                $bonus[] = $bonusResult;
-                else
-                $bonusPriority[] = $bonusResult;
-            }             
+            $rt = $b->GetExpBonus($dice);
+            if($rt != null)$bonus[] = $rt;
         }
-        $bonusTemp = $this->GetBonusPriority($bonusPriority);
-        if($bonusTemp != null) $bonus[] = $bonusTemp;
-        $result = new stdClass();
         if(!empty($bonus))
-        {
-            foreach($bonus as $b) $this->rawExp *= $b->multiplier;
-            $result->bonus = $bonus;
-        }
-        $result->exp = $this->rawExp;
-        return $result;
-    }
-    
-    
-    private function GetBonusPriority(array $bonusPriority) : ExpBonus|null
-    {
-        if(empty($bonusPriority))return null;
-        $priorityTemp = self::MinPriority;
-        foreach($bonusPriority as $bonus)
-        {
-            if($bonus->priority < $priorityTemp)
+        {            
+            foreach($bonus as $b)
             {
-                $priorityTemp = $bonus->priority;
-                $rt = $bonus;
+                $this->exp *= $b->multiplier;                                
             }
         }
-        return $rt;
-    }   
+        $result = new stdClass();
+        $result->exp = $this->exp;
+        $result->bonus = $bonus;
+        return $result;
+    }
+       
 }
