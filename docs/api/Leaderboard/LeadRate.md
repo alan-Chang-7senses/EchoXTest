@@ -33,7 +33,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [list](#list) | array | 數據列表陣列 |
-| ranking | int | 當前角色排名 |
+| [self](#self) | object | 當前角色排名資料 |
 
 #### <span id="list"> list 內容</span>
 
@@ -45,6 +45,16 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | nickname | string | 角色暱稱 |
 | tokenName | string | 角色的 NFT 名稱 |
 | leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
+
+#### <span id="self"> self 內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| ranking | int | 名次 |
+| nickname | string | 角色暱稱 |
+| tokenName | string | 角色的 NFT 名稱 |
+| leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
+
 
 ### Example
 
@@ -66,7 +76,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "ranking": 2,
 	            "nickname": "1010000000000005",
 	            "tokenName": "1010000000000005",
-	            "leadRate": 46.66
+	            "leadRate": 46.67
 	        },
 	        {
 	            "ranking": 3,
@@ -78,8 +88,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            "ranking": 4,
 	            "nickname": "1010000000000007",
 	            "tokenName": "1010000000000007",
-	            "leadRate": 46.66
+	            "leadRate": 46.65
 	        }
 	    ],
-	    "ranking": 3
+	    "self": {
+	        "ranking": 3,
+	        "nickname": "1010000000000001",
+	        "tokenName": "1010000000000001",
+	        "leadRate": 46.66
+	    }
 	}
