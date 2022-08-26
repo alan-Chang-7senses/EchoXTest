@@ -19,8 +19,20 @@ class Test001 extends BaseProcessor{
         $result = new ResultData(ErrorCode::Success, 'OK');
         $result->AmountRacePlayerMax = $config->AmountRacePlayerMax;
         $result->TimelimitElitetestRace = $config->TimelimitElitetestRace;
+        $result->call = $this->CallB();
         
         return $result;
     }
 
+    private function CallA(array $callback){
+        return call_user_func($callback, 123);
+    }
+    
+    private Function CallB(){
+        return $this->CallA([$this, 'CallC']);
+    }
+    
+    private function CallC($num) {
+        return 'CallC '.$num;
+    }
 }

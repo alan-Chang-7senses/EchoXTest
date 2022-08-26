@@ -31,11 +31,12 @@ class ItemAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('UserItems')->WhereEqual('UserItemID', $id)->Modify($bind);
     }
 
-    public function AddLog(int $userItemID, int $userID, int $itemID, int $action, int $amount, int $remain) : mixed{
+    public function AddLog(int $userItemID, int $userID, int $itemID, int $cause, int $action, int $amount, int $remain) : mixed{
         return $this->LogAccessor()->FromTable('UserItemsLog')->Add([
             'UserItemID' => $userItemID,
             'UserID' => $userID,
             'ItemID' => $itemID,
+            'Cause' => $cause,            
             'Action' => $action,
             'Amount' => $amount,
             'Remain' => $remain,
@@ -43,13 +44,8 @@ class ItemAccessor extends BaseAccessor{
         ]);
     }
 
-
-    public function UserItemByItemID(int $userID, int $itemID) : mixed{
-        return $this->MainAccessor()->FromTable('UserItems')->WhereEqual('UserItemID', $userID)->WhereEqual('UserItemID', $itemID)->Fetch();
-    }
-
-    public function AddItemByItemID(int $userID, int $itemID, int $amount) : bool{
-        return $this->MainAccessor()->FromTable('UserItems')->Add([
+    public function AddItemByItemID(int $userID, int $itemID, int $amount) : string{
+        $this->MainAccessor()->FromTable('UserItems')->Add([
             'UserItemID' => null,
             'UserID' => $userID,
             'ItemID' => $itemID,
@@ -57,5 +53,6 @@ class ItemAccessor extends BaseAccessor{
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);
+        return $this->MainAccessor()->LastInsertID();
     }
 }

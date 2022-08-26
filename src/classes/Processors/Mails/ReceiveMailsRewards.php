@@ -4,6 +4,7 @@ namespace Processors\Mails;
 
 use Consts\Sessions;
 use Consts\ErrorCode;
+use Games\Consts\ItemValue;
 use Holders\ResultData;
 use Helpers\InputHelper;
 use Games\Users\ItemUtility;
@@ -41,7 +42,7 @@ class ReceiveMailsRewards extends BaseProcessor
                 throw new ItemException(ItemException::UserItemStacklimitReached);
             }
             foreach ($items as $item) {
-                $userBagHandler->AddItems($item);
+                $userBagHandler->AddItems($item, ItemValue::CauseMail);
                 $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
             $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);

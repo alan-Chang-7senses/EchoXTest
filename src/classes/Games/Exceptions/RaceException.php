@@ -32,4 +32,6 @@ class RaceException extends NormalException{
     const UserTicketNotYet = 4021;
     const NoSeasonData = 4022;
     const UserTicketError = 4023;
+    const UserInRoom = 4024;
+    const UserNotInRoom = 4025;
 }

@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.196
--- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
+-- 主機:                           127.0.0.1
+-- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
 -- --------------------------------------------------------
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `UserItemsLog` (
   `UserItemID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者物品編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
+  `Cause` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '原因',
   `Action` tinyint(4) NOT NULL DEFAULT 0 COMMENT '動作',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
   `Remain` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘數量',
