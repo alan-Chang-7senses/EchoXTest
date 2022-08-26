@@ -9,11 +9,15 @@ class TicketInfoHolder
     /** @var int 入場卷物品編號 */
     public int $ticketID;
 
-    /** @var int 入場卷物品圖號 */
+    /** @var string 入場卷物品圖號 */
     public string $ticketIcon;
+    
+    /** @var string 入場卷物品名稱 */
+    public string $ticketName;  
 
     /** @var int 入場卷物品數量 */
     public int $amount;
+    
     /** @var int 入場卷領取上限 */
     public int $maxReceive;
 
