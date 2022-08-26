@@ -1392,6 +1392,23 @@ INSERT INTO `FreeTicket` (`Serial`, `Ticket_Coin`, `Ticket_PT`, `Ticket_Group`) 
 	(3, '16:00:00', NULL, NULL);
 /*!40000 ALTER TABLE `FreeTicket` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_static.HintText 結構
+CREATE TABLE IF NOT EXISTS `HintText` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `HintID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '提示編號',
+  `Lang` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '語言',
+  `Title` varchar(50) NOT NULL DEFAULT '' COMMENT '標題',
+  `Content` text NOT NULL DEFAULT '' COMMENT '內容',
+  PRIMARY KEY (`Serial`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提示文字';
+
+-- 正在傾印表格  koa_static.HintText 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `HintText` DISABLE KEYS */;
+INSERT INTO `HintText` (`Serial`, `HintID`, `Lang`, `Title`, `Content`) VALUES
+	(1, 1, 2, 'hint', 'The peta gold coin competition entry ticket will be given one at 0:00 am and 12:00 noon, and will not be issued when the number exceeds 100.'),
+	(2, 1, 12, '小提示', 'peta金幣賽入場卷，凌晨0點、中午12點會給一張，當身上數量超過100張便不再發放。');
+/*!40000 ALTER TABLE `HintText` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
   `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品編號',
