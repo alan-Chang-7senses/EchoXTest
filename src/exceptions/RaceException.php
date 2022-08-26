@@ -9,7 +9,7 @@ $lang[RaceException::OtherUserInRace] = 'Have other user in the race. (User ID: 
 $lang[RaceException::PlayerReached] = 'The player has reached the end.';
 $lang[RaceException::Finished] = 'The race has finished.';
 $lang[RaceException::PlayerNotReached] = 'The player not reach the end yet.(Player ID: [player])';
-$lang[RaceException::RankingNoMatch] = 'The player ranking no match. (Player ID: [player], Ranking: [front] => [back])';
+$lang[RaceException::RankingNoMatch] = 'The player ranking no match. (Player ID: [player], Ranking: [ranking], Player Count: [count])';
 $lang[RaceException::FinishFailure] = 'The race execute finish process failure.';
 $lang[RaceException::EnergyNotEnough] = 'The player current energy not enough.';
 $lang[RaceException::PlayerNotInThisRace] = 'The player is not in this race.';
