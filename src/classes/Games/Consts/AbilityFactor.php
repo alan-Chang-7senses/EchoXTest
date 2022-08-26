@@ -80,4 +80,6 @@ class AbilityFactor {
     const SyncRateTypeThird = [0.84,0.7];
     const SyncRateTypeFourth = [0.69,0.55];
     const SyncRateTypeFifth = [0.54,0.4];
+
+    const SyncRateBonus = 1.1;
 }

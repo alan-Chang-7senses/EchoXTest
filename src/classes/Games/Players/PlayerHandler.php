@@ -147,11 +147,29 @@ class PlayerHandler {
         $this->pool->Save($this->info->id, 'Data', $bind);
         $this->ResetInfo();
     }
-
-
+    /**
+     * @param float $rawSync
+     * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
+     */
+    public function GainSync(float $rawSync, ...$bonuses) : stdClass
+    {
+        $expCalculator = new ExpBonusCalculator($rawSync);                
+        foreach($bonuses as $bonus)
+        {
+            $expCalculator->AddBonus($bonus);
+        }
+        $rt = $expCalculator->Process();
+        $exp = ($rt->exp + $this->info->sync) * SyncRate::Divisor;
+        $exp = PlayerEXP::Clamp(SyncRate::Max,SyncRate::Min,$exp);
+        //DB與快取中的直不一，先直接寫入DB
+        $playerAccessor = new PlayerAccessor();
+        $playerAccessor->ModifyPlayerByPlayerID($this->info->id,['SyncRate' => $exp]);
+        PlayerPool::Instance()->Delete($this->info->id);
+        return $rt;        
+    }
 
     /**
-     * @param int $rawExp
+     * @param int|float $rawExp
      * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
      */
     public function GainExp(int|float $rawExp, ...$bonuses) : stdClass

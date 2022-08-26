@@ -181,19 +181,19 @@ class PlayerAbility {
         match(true)
         {
             self::IsBetween(AbilityFactor::SyncRateTypeMax[0],AbilityFactor::SyncRateTypeMax[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[0],$holder,SyncRate::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[0],$holder,AbilityFactor::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeSecond[0],AbilityFactor::SyncRateTypeSecond[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[1],$holder,SyncRate::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[1],$holder,AbilityFactor::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeThird[0],AbilityFactor::SyncRateTypeThird[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[2],$holder,SyncRate::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[2],$holder,AbilityFactor::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeFourth[0],AbilityFactor::SyncRateTypeFourth[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[3],$holder,SyncRate::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[3],$holder,AbilityFactor::SyncRateBonus),
 
             self::IsBetween(AbilityFactor::SyncRateTypeFifth[0],AbilityFactor::SyncRateTypeFifth[1],$syncRate)
-            => self::ModifyPlayerValueByValueID($abilityDesc[4],$holder,SyncRate::SyncRateBonus),
+            => self::ModifyPlayerValueByValueID($abilityDesc[4],$holder,AbilityFactor::SyncRateBonus),
 
             default => null,
         };
