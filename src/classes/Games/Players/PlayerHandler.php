@@ -11,6 +11,7 @@ use Games\Consts\SyncRate;
 use Games\Exceptions\PlayerException;
 use Games\Players\Exp\ExpBonus;
 use Games\Players\Exp\ExpBonusCalculator;
+use Games\Players\Exp\ExpGainResult;
 use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
@@ -180,12 +181,7 @@ class PlayerHandler {
             $expCalculator->AddBonus($bonus);
         }
         $rt = $expCalculator->Process();
-        $this->UpdateExp(floor($rt->exp));
-        return $rt;
-    }
-
-    private function UpdateExp(int $exp)
-    {
+        $exp = floor($rt->exp);
         $currentExp = $this->info->exp;
         //限制不超過目前等階最大等級之經驗值
         $currentExpTemp = PlayerEXP::IsLevelMax($currentExp + $exp,$this->info->rank) ? 
@@ -199,5 +195,11 @@ class PlayerHandler {
             $bind['level'] = $level;
         }
         $this->SaveData($bind);
+
+        $gainResult = new ExpGainResult();
+        $gainResult->gainAmount = $currentExpTemp - $currentExp;
+        $gainResult->bonus = $rt->bonus;
+        $gainResult->resultLevel = $level;
+        return $gainResult;
     }
 }
