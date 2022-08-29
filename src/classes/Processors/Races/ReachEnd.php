@@ -26,7 +26,7 @@ class ReachEnd extends BaseRace{
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
         
-        if(!property_exists($raceInfo->racePlayers, $player)) throw new RaceException(RaceException::PlayerNotInThisRace);
+        if(!property_exists($raceInfo->racePlayers, $player)) throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $player]);
         $racePlayerID = $raceInfo->racePlayers->{$player};
         
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);

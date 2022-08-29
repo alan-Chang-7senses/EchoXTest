@@ -73,15 +73,31 @@ class LeadRate extends BaseGameLeaderboard {
         $userInfo = UserPool::Instance()->{$_SESSION[Sessions::UserID]};
         
         $accessor->ClearAll();
-        $rowSelf = $accessor->FromTable($table)
+        $rowSelf = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, UpdateTime, Nickname, TokenName')
+                ->FromTableJoinUsing($table, 'PlayerHolder', 'LEFT', 'PlayerID')
+                ->FromTableJoinUsingNext('PlayerNFT', 'LEFT', 'PlayerID')
                 ->WhereEqual('SeasonID', $seasonID)->WhereEqual('PlayerID', $userInfo->player)->WhereGreater('PlayCount', $treshold)
                 ->Fetch();
         
-        if($rowSelf === false) $ranking = 0;
-        else{
+        $self = [];
+        $accessor->ClearAll();
+        if($rowSelf === false){
             
-            $accessor->ClearAll();
-            $rows = $accessor->WhereEqual('SeasonID', $seasonID)->WhereEqual('LeadRate', $rowSelf->LeadRate)->FetchAll();
+            $row = $accessor->SelectExpr('Nickname, TokenName')
+                    ->FromTableJoinUsing('PlayerHolder', 'PlayerNFT', 'LEFT', 'PlayerID')
+                    ->WhereEqual('PlayerID', $userInfo->player)->Fetch();
+            
+            $self = [
+                'ranking' => 0,
+                'nickname' => (string)($row->Nickname ?? $userInfo->player),
+                'tokenName' => (string)($row->TokenName ?? $userInfo->player),
+                'leadRate' => 0,
+            ];
+            
+        }else{
+            
+            $rows = $accessor->FromTable($table)
+                    ->WhereEqual('SeasonID', $seasonID)->WhereEqual('LeadRate', $rowSelf->LeadRate)->FetchAll();
 
             $accessor->ClearAll();
             $ranking = $accessor->SelectExpr('COUNT(*) AS cnt')
@@ -97,12 +113,17 @@ class LeadRate extends BaseGameLeaderboard {
                 }else if($row->PlayCount == $rowSelf->PlayCount && $row->UpdateTime < $rowSelf->UpdateTime) ++$ranking;
             }
             
-            ++$ranking;
+            $self = [
+                'ranking' => ++$ranking,
+                'nickname' => (string)($rowSelf->Nickname ?? $userInfo->player),
+                'tokenName' => (string)($rowSelf->TokenName ?? $userInfo->player),
+                'leadRate' => $rowSelf->LeadRate / RaceValue::DivisorPercent,
+            ];
         }
         
         $result = new ResultData(ErrorCode::Success);
         $result->list = $list;
-        $result->ranking = $ranking;
+        $result->self = $self;
         
         return $result;
     }

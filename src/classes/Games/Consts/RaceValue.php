@@ -12,6 +12,7 @@ class RaceValue {
     const NotInLobby = 0;
     const NotInRoom = 0;
     const BotMatch = -1;
+    const RacePlayerMin = 2;
     
     const NoTicketID = 0;
     

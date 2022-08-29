@@ -34,6 +34,8 @@ class Ready extends BaseRace{
         $config = ConfigGenerator::Instance();
 
         $users = json_decode(InputHelper::post('users'));
+        if($users === null) throw new RaceException(RaceException::IncorrectPlayerNumber);
+        
         $userCount = count($users);
         if(!is_array($users) || $userCount > $config->AmountRacePlayerMax || $userCount == 0) throw new RaceException(RaceException::IncorrectPlayerNumber);
         DataGenerator::ExistProperties($users[0], ['id', 'ranking', 'trackNumber', 'rhythm']);

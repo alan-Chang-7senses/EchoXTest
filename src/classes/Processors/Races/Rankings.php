@@ -37,7 +37,7 @@ class Rankings extends BaseRace{
         $offsides = [];
         $takenOvers = [];
         foreach ($players as $player){
-            if(!property_exists($raceInfo->racePlayers, $player->id)) throw new RaceException (RaceException::PlayerNotInThisRace);
+            if(!property_exists($raceInfo->racePlayers, $player->id)) throw new RaceException (RaceException::PlayerNotInThisRace, ['[player]' => $player->id]);
             $rankings[$raceInfo->racePlayers->{$player->id}] = $player->ranking;
 
             $racePlayerID = $raceInfo->racePlayers->{$player->id};
