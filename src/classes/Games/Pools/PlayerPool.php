@@ -7,6 +7,7 @@ use Games\Accessors\PlayerAccessor;
 use Games\Consts\AbilityFactor;
 use Games\Consts\DNASun;
 use Games\Consts\NFTDNA;
+use Games\Consts\SkillValue;
 use Games\Consts\SyncRate;
 //use Games\Players\Adaptability\DurableAdaptability;
 use Games\Players\Adaptability\EnvironmentAdaptability;
@@ -18,10 +19,9 @@ use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
-use stdClass;
-use Games\Consts\SkillValue;
 use Games\Players\PlayerBaseInfoHolder;
-
+use Generators\ConfigGenerator;
+use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -45,12 +45,14 @@ class PlayerPool extends PoolAccessor {
         $player = $playerAccessor->rowPlayerJoinHolderLevelByPlayerID($playerID);
         if(empty($player)) return false;
         
+        $allPlayerLevel = ConfigGenerator::Instance()->AllPlayerLevel;
+        
         $holder = new PlayerInfoHolder();
         $holder->id = $playerID;
         $holder->name = $player->Nickname ?? (string)$playerID;
         $holder->ele = $player->Attribute;
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
-        $holder->level = $player->Level;
+        $holder->level = empty($allPlayerLevel) ? $player->Level : $allPlayerLevel;
         $holder->exp = $player->Exp;
         $holder->maxExp = 0; //還沒有資料
         $holder->rank = $player->Rank;
