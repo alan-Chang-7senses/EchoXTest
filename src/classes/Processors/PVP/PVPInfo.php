@@ -3,10 +3,14 @@
 namespace Processors\PVP;
 
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Exceptions\RaceException;
+use Games\Pools\ItemInfoPool;
 use Games\PVP\QualifyingHandler;
+use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Scenes\SceneUtility;
+use Games\Users\UserBagHandler;
 use Holders\ResultData;
 use Processors\Races\BaseRace;
 use stdClass;
@@ -22,12 +26,15 @@ class PVPInfo extends BaseRace {
         }
 
         $infos = [];
+        $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
         foreach (QualifyingHandler::MatchLobbies as $lobby) {
             $lobbyinfo = new stdClass;
             $lobbyinfo->lobby = $lobby;
+            $ticketID = RaceUtility::GetTicketID($lobby);
+            $ticketInfo = ItemInfoPool::Instance()->{$ticketID};
+            $lobbyinfo->ticketIcon = $ticketInfo->Icon;            
+            $lobbyinfo->ticketAmount = $userBagHandler->GetItemAmount($ticketID);
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
-
-//            $ticketInfo = $qualifyingHandler->GetTicketInfo($this->userInfo->id, $lobby);
 
             $scendID = $qualifyingHandler->GetSceneID($lobby);
             $sceneHandler = new SceneHandler($scendID);
