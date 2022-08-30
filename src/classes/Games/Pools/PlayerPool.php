@@ -48,7 +48,7 @@ class PlayerPool extends PoolAccessor {
         $player = $playerAccessor->rowPlayerJoinHolderLevelByPlayerID($playerID);
         if(empty($player)) return false;
         
-        // $allPlayerLevel = ConfigGenerator::Instance()->AllPlayerLevel;
+        $allPlayerLevel = ConfigGenerator::Instance()->AllPlayerLevel;
         
         $holder = new PlayerInfoHolder();
         $holder->id = $playerID;
