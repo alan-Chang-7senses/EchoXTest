@@ -50,7 +50,8 @@ abstract class BaseLaunchSkill extends BaseRace{
         $skillHandler = new SkillHandler($skillID);
         $skillInfo = $skillHandler->GetInfo();
         if(!$racePlayerHandlerSelf->EnoughEnergy($skillInfo->energy)) throw new RaceException(RaceException::EnergyNotEnough);
-        
+
+        $racePlayerInfoSelf = $racePlayerHandlerSelf->PayEnergy($skillInfo->energy);
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $expireTime = $currentTime + ($skillInfo->duration == SkillValue::DurationForever ? RaceValue::ForeverAdditiveSec : $skillInfo->duration * $playerInfo->intelligent / RaceValue::DivisorSkillDuration);
         
@@ -77,7 +78,7 @@ abstract class BaseLaunchSkill extends BaseRace{
         $otherBinds = [];
         $racePlayerHandlerOthers = [];
         $launchMaxResult = RaceValue::LaunchMaxFail;
-        if($launchMax == RaceValue::LaunchMaxYes && /*$playerHandlerSelf->SkillLevel($skillID) == SkillValue::LevelMax &&*/ $raceHandler->LaunchMaxEffect($skillHandler)){
+        if($launchMax == RaceValue::LaunchMaxYes &&  $raceHandler->LaunchMaxEffect($skillHandler)){
             
             $racePlayerHandlers = [];
             $racePlayerhandlerAll = [];
@@ -161,9 +162,12 @@ abstract class BaseLaunchSkill extends BaseRace{
             'Result' => $launchMaxResult
         ]);
         
-        $racePlayerInfoSelf = $racePlayerHandlerSelf->PayEnergy($skillInfo->energy);
+        
         $playerHandlerSelf = RacePlayerEffectHandler::EffectPlayer($playerHandlerSelf, $racePlayerHandlerSelf);
         $raceHandler->SetPlayer($playerHandlerSelf);
+
+        $racePlayerInfoSelf = $racePlayerHandlerSelf->GetInfo();
+
         $self = [
             'h' => $raceHandler->ValueH(),
             's' => $raceHandler->ValueS(),
