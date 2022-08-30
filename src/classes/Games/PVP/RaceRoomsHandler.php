@@ -28,13 +28,8 @@ class RaceRoomsHandler {
 
     public function GetMatchRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
 
-        if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//add new|idle room
-            $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
-            if ($idleRoom !== false) {
-                return $idleRoom;
-            } else {
-                return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
-            }
+        if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
+            return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
         } else {
             $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound, $qualifyingSeasonID);
             $roomNumber = count($rooms);
@@ -42,8 +37,17 @@ class RaceRoomsHandler {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+                return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
             }
+        }
+    }
+
+    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
+        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+        if ($idleRoom !== false) {
+            return $idleRoom;
+        } else {
+            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
         }
     }
 
@@ -85,9 +89,8 @@ class RaceRoomsHandler {
             throw new RaceException(RaceException::UserMatchError);
         }
 
-        $key = array_search( $userID, $users);
-        if ($key !== false)
-        {
+        $key = array_search($userID, $users);
+        if ($key !== false) {
             throw new RaceException(RaceException::UserInRoom);
         }
         $users[] = $userID;
@@ -105,8 +108,7 @@ class RaceRoomsHandler {
         if ($key !== false) {
             unset($users[$key]);
             return $this->UpdateUsers($raceRoomID, array_values($users));
-        }else
-        {
+        } else {
             throw new RaceException(RaceException::UserNotInRoom);
         }
     }
