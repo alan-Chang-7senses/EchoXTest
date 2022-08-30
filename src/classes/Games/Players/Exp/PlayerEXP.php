@@ -12,6 +12,8 @@ class PlayerEXP
     private const LevelUnit = 1;
     private const ExpUnit = 1;
 
+    private const TestLevel = 100;
+
 
     /**取得目前階段能到達最高的經驗值 */
     public static function GetMaxEXP(int $currentRank) : int 
@@ -42,6 +44,7 @@ class PlayerEXP
     public static function GetNextLevelRequireEXP(int $currentLevel, int $currentRank,int $currentExp) : int | bool
     {
         $allLevelMaxExp = self::GetData();
+        if($currentLevel >= self::TestLevel)return false;
         if(self::IsLevelMax($currentExp,$currentRank))return false;
         return $allLevelMaxExp[$currentLevel] - $currentExp + self::ExpUnit;
     }
