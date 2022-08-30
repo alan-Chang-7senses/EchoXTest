@@ -18,6 +18,7 @@ use Games\Races\RaceUtility;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
 use Games\Users\UserUtility;
+use Generators\ConfigGenerator;
 use Holders\ResultData;
 /**
  * Description of FinishRace
@@ -54,6 +55,7 @@ class FinishRace extends BaseRace{
         $users = [];
         $rewards = [];
         $items = [];
+        $rewardMultiplier = ConfigGenerator::Instance()->RaceRewardMultiplier ?? 1;
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
@@ -77,11 +79,11 @@ class FinishRace extends BaseRace{
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
-                'items' => array_map(function($value){
+                'items' => array_map(function($value) use ($rewardMultiplier) {
                     return [
                         'id' => $value->ItemID,
                         'icon' => ItemInfoPool::Instance()->{$value->ItemID}->Icon,
-                        'amount' => $value->Amount,
+                        'amount' => $value->Amount * $rewardMultiplier,
                     ];
                 }, $items[$racePlayerInfo->user]),
             ];

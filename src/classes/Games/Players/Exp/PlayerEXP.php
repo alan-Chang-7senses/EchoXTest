@@ -23,7 +23,6 @@ class PlayerEXP
     /**取得是否在目前階段已滿等 */
     public static function IsLevelMax(int $currentExp,int $currentRank) : bool
     {
-        $allLevelMaxExp = self::GetData();
         return self::GetMaxEXP($currentRank) <= $currentExp;
     }
 

@@ -86,7 +86,9 @@ class RacePlayerEffectHandler {
     
     private static function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
         $energy = $racePlayerHandler->GetInfo()->energy;
-        $energy[$type] += $value;
+        $colorTemp = $energy[$type] + $value;
+        //限制不小於0
+        $energy[$type] = $colorTemp > SkillValue::EnergyMin ? $colorTemp : SkillValue::EnergyMin;
         $racePlayerHandler->SaveData(['energy' => $energy]);
     }
 

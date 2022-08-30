@@ -57,6 +57,7 @@
 		- [完成競賽](Races/FinishRace.md)。
 	- 公告：
 		- [跑馬燈](Notices/Marquee.md)。
+		- [提示文字](Notices/HintText.md)。		
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
