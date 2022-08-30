@@ -1402,7 +1402,7 @@ CREATE TABLE IF NOT EXISTS `HintText` (
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提示文字';
 
--- 正在傾印表格  koa_static.HintText 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.HintText 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `HintText` DISABLE KEYS */;
 INSERT INTO `HintText` (`Serial`, `HintID`, `Lang`, `Title`, `Content`) VALUES
 	(1, 1, 2, 'hint', 'The peta gold coin competition entry ticket will be given one at 0:00 am and 12:00 noon, and will not be issued when the number exceeds 100.'),
@@ -2357,9 +2357,9 @@ INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `Target
 	(900004, 'Atk_HP_15_1', 201, 1, '-1.5*N'),
 	(900005, 'Atk_S_10_3', 102, 3, '-S*0.1*N'),
 	(900006, 'Atk_H_10_1', 201, 1, 'H*1%*N'),
-	(900007, 'Atk_Spd_13_5', 111, 5, 'SPD*(0-1.3)*N'),
-	(900008, 'Atk_Pow_10_5', 112, 5, 'POW*(0-1%)*N'),
-	(900009, 'Atk_Pow_11_5', 112, 5, 'POW*(0-1.1%)*N');
+	(900007, 'Atk_Spd_13_5', 111, 5, 'INT*(0-1.3%)*N'),
+	(900008, 'Atk_Pow_10_5', 112, 5, 'INT*(0-1%)*N'),
+	(900009, 'Atk_Pow_11_5', 112, 5, 'INT*(0-1.1%)*N');
 /*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillPart 結構
