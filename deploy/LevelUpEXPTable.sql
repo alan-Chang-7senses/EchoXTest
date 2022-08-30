@@ -110,3 +110,40 @@ INSERT INTO `LevelUpEXP` (`Level`, `RequireEXP`) VALUES
 	(98, 29655),
 	(99, 30116);
 
+-- 傾印  資料表 koa_static.ItemCharge 結構
+CREATE TABLE IF NOT EXISTS `ItemCharge` (
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品ID',
+  `Charge` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '使用手續費',
+  PRIMARY KEY (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用物品所需的手續費';
+
+-- 正在傾印表格  koa_static.ItemCharge 的資料：~2 rows (近似值)
+INSERT INTO `ItemCharge` (`ItemID`, `Charge`) VALUES
+	(1001, 1000),
+	(1002, 5000),
+	(1003, 14000);
+
+CREATE TABLE IF NOT EXISTS `UpgradeBonus` (
+  `BonusID` int(11) NOT NULL AUTO_INCREMENT COMMENT '編號',
+  `Multiplier` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '加成倍率',
+  PRIMARY KEY (`BonusID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='升級加成倍率';
+
+-- 正在傾印表格  koa_static.UpgradeBonus 的資料：~0 rows (近似值)
+INSERT INTO `UpgradeBonus` (`BonusID`, `Multiplier`) VALUES
+	(1, 150),
+	(2, 200);
+
+CREATE TABLE IF NOT EXISTS `UpgradeMode` (
+  `Mode` tinyint(4) NOT NULL DEFAULT 0 COMMENT '強化模式',
+  `ChargeMultiply` int(11) NOT NULL DEFAULT 0 COMMENT '手續費倍率',
+  `BigBonusProbability` int(11) NOT NULL DEFAULT 0 COMMENT '大成功機率',
+  `UltimateBonusProbability` int(11) NOT NULL DEFAULT 0 COMMENT '大成功機率',
+  PRIMARY KEY (`Mode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提升角色等級的模式';
+
+-- 正在傾印表格  koa_static.UpgradeMode 的資料：~3 rows (近似值)
+INSERT INTO `UpgradeMode` (`Mode`, `ChargeMultiply`, `BigBonusProbability`, `UltimateBonusProbability`) VALUES
+	(0, 90, 0, 0),
+	(1, 100, 20, 5),
+	(2, 130, 60, 5);

@@ -36,4 +36,18 @@ class PlayerAccessor extends BaseAccessor{
         ->WhereEqual('PlayerID',$id)
         ->Modify($bind);
     }
+
+    public function ModifySyncByPlayerID(int $id, array $bind) : bool
+    {
+        return $this->MainAccessor()->FromTable('PlayerHolder')
+                                    ->WhereEqual('PlayerID',$id)
+                                    ->Modify($bind);
+    }
+
+    public function ModifyLevelByPlayerID(int $id, array $bind) : bool
+    {
+        return $this->MainAccessor()->FromTable('PlayerLevel')
+                                    ->WhereEqual('PlayerID',$id)
+                                    ->Modify($bind);
+    }
 }

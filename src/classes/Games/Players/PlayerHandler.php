@@ -148,6 +148,14 @@ class PlayerHandler {
         $this->pool->Save($this->info->id, 'Data', $bind);
         $this->ResetInfo();
     }
+    public function SaveSync(float|int $bind) : void{    
+        $this->pool->Save($this->info->id, 'Sync', $bind);
+        $this->ResetInfo();
+    }
+    public function SaveLevel(array $bind) : void{    
+        $this->pool->Save($this->info->id, 'Level', $bind);
+        $this->ResetInfo();
+    }
     /**
      * @param float $rawSync
      * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
@@ -160,12 +168,9 @@ class PlayerHandler {
             $expCalculator->AddBonus($bonus);
         }
         $rt = $expCalculator->Process();
-        $exp = ($rt->exp + $this->info->sync) * SyncRate::Divisor;
-        $exp = PlayerEXP::Clamp(SyncRate::Max,SyncRate::Min,$exp);
-        //DB與快取中的直不一，先直接寫入DB
-        $playerAccessor = new PlayerAccessor();
-        $playerAccessor->ModifyPlayerByPlayerID($this->info->id,['SyncRate' => $exp]);
-        PlayerPool::Instance()->Delete($this->info->id);
+        $exp = ($rt->exp + $this->info->sync);
+        $exp = PlayerEXP::Clamp(SyncRate::Max / SyncRate::Divisor,SyncRate::Min,$exp);
+        $this->SaveSync($exp);
         return $rt;        
     }
 
@@ -194,7 +199,7 @@ class PlayerHandler {
         {
             $bind['level'] = $level;
         }
-        $this->SaveData($bind);
+        $this->SaveLevel($bind);
 
         $gainResult = new ExpGainResult();
         $gainResult->gainAmount = $currentExpTemp - $currentExp;

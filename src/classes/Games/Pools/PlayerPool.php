@@ -156,4 +156,25 @@ class PlayerPool extends PoolAccessor {
         return $data;
     }
 
+    protected function SaveSync(stdClass $data, float|int $sync):stdClass
+    {
+        $bind = ['SyncRate' => $sync * SyncRate::Divisor];
+        $res = (new PlayerAccessor())->ModifySyncByPlayerID($data->id,$bind);
+        if($res !== false)
+        {
+            $data->sync = $sync;
+        }
+        return $data;
+    }
+    protected function SaveLevel(stdClass $data, array $values):stdClass
+    {
+        $bind = [];
+        foreach($values as $key => $value){
+            $bind[ucfirst($key)] = $value;
+            $data->$key = $value;
+        }        
+        (new PlayerAccessor())->ModifyLevelByPlayerID($data->id, $bind);        
+        return $data;
+    }
+
 }
