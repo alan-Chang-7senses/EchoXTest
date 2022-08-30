@@ -30,6 +30,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| pvpRemainTime | int | 剩餘PVP賽季時間(秒) |
 | petaToken | int | Peta虛擬幣 |
 | coin | int | 遊戲金幣 |
 | diamond | int | 鑽石 |
@@ -41,7 +42,8 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
+        "pvpRemainTime": 290839,
         "petaToken": 0,
-        "coin": 0,
+        "coin": 95000,
         "diamond": 0
     }

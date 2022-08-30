@@ -39,6 +39,8 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | lobby | int | [大廳種類](../codes/race.md#lobby) |
+| ticketIcon | string | 入場卷物品圖號 |
+| ticketAmount | int | 入場卷已有物品數量 |
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [rank](#rank) | object | 排行榜資訊 |
 | [scene](#scene) | object | 場景資訊 |
@@ -49,7 +51,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | raceAmount | int | 上場次數 |
 | aveRank| string | 平均排名 |
-| rank | int | 排行嗙名次 |
+| rank | int | 排行榜名次 |
 |
 
 #### <span id="scene">scene 內容</span>
@@ -72,10 +74,12 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
-        "seasonRemainTime": 770882,
+        "seasonRemainTime": 291032,
         "infos": [
             {
                 "lobby": 1,
+                "ticketIcon": "ItemIcon_0032",
+                "ticketAmount": 998,
                 "petaLimitLevel": 70,
                 "rank": {
                     "raceAmount": 12,
@@ -83,17 +87,19 @@ Content Type: `application/json`
                     "rank": "5"
                 },
                 "scene": {
-                    "id": 1,
-                    "name": "CloseBeta",
+                    "id": 1001,
+                    "name": "9001",
                     "env": 1,
-                    "weather": 1,
-                    "windDirection": 2,
+                    "weather": 2,
+                    "windDirection": 3,
                     "windSpeed": 50,
-                    "lighting": 1
+                    "lighting": 2
                 }
             },
             {
                 "lobby": 2,
+                "ticketIcon": "ItemIcon_0031",
+                "ticketAmount": 0,
                 "petaLimitLevel": 0,
                 "rank": {
                     "raceAmount": 34,
@@ -101,13 +107,13 @@ Content Type: `application/json`
                     "rank": "15"
                 },
                 "scene": {
-                    "id": 2,
-                    "name": "CloseBeta",
+                    "id": 1001,
+                    "name": "9001",
                     "env": 1,
-                    "weather": 1,
-                    "windDirection": 1,
-                    "windSpeed": 1,
-                    "lighting": 0
+                    "weather": 2,
+                    "windDirection": 3,
+                    "windSpeed": 50,
+                    "lighting": 2
                 }
             }
         ]

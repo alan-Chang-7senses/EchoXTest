@@ -26,6 +26,8 @@ class SkillValue {
     const EnergyYellow = 1;
     const EnergyBlue = 2;
     const EnergyGreen = 3;
+
+    const EnergyMin = 0;
     
     const EffectH = 101;
     const EffectS = 102;
