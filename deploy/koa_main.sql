@@ -46,10 +46,10 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_B_Treshold_1', '10', '火星幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_Treshold_2', '10', 'PT幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_WeeksPerSeacon', '2', '晉級賽每賽季有幾週'),
-	('PvP_ExtraMatchSeconds', '120', '開局配對延長等待秒數'),
-	('PvP_MaxMatchSeconds', '200', '開局配對基本等待秒數'),
+	('PvP_ExtraMatchSeconds', '60', '開局配對延長等待秒數'),
+	('PvP_MaxMatchSeconds', '60', '開局配對基本等待秒數'),
 	('RaceRewardMultiplier', '1', '競賽獎勵倍數'),
-	('TimelimitElitetestRace', '300', '菁英測試競賽時限(秒)');
+	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.LeaderboardLeadCoin 結構
