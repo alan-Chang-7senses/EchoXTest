@@ -20,6 +20,7 @@ class LobbyInfo extends BaseRace
         }
 
         $result = new ResultData(ErrorCode::Success);
+        $result->pvpRemainTime = $qualifyingHandler->GetSeasonRemaintime();        
         $result->petaToken = $this->userInfo->petaToken;
         $result->coin = $this->userInfo->coin;
         $result->diamond = $this->userInfo->diamond;
