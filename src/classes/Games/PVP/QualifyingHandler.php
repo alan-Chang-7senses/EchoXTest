@@ -250,22 +250,4 @@ class QualifyingHandler {
         }
     }
 
-    public function GetRank(int $lobby): stdclass {
-        //todo
-        $result = new stdclass;
-        switch ($lobby) {
-            case RaceValue::LobbyCoin:
-                $result->raceAmount = 12;
-                $result->aveRank = "1.11";
-                $result->rank = "5";
-                break;
-            case RaceValue::LobbyPT:
-                $result->raceAmount = 34;
-                $result->aveRank = "3.21";
-                $result->rank = "15";
-                break;
-        }
-        return $result;
-    }
-
 }
