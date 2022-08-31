@@ -69,14 +69,8 @@ class UpgradeItem extends BaseProcessor{
         $bigSuccess = new ExpBonus($bigSuccessData->BonusID,$bigSuccessData->Multiplier / UpgradeValue::Divisor,$bigBonusProbability,$ultimateBonusProbability);
         $ultimateSuccessData = $upgradeBonusTable[UpgradeValue::BonusUltimateSuccessId];
         $ultimateSuccess = new ExpBonus($ultimateSuccessData->BonusID,$ultimateSuccessData->Multiplier / UpgradeValue::Divisor,$ultimateBonusProbability);
-
-        $expCal = new ExpBonusCalculator($expTotal);
-        $expCal->AddBonus($bigSuccess);
-        $expCal->AddBonus($ultimateSuccess);
         
-        $expRt = $expCal->Process();
-        
-        $playerHandler->GainExp($expRt->exp);
+        $expRt = $playerHandler->GainExp($expTotal,$bigSuccess,$ultimateSuccess);
         
         //扣錢
         $userHandler->SaveData(['Coin' => $userInfo->coin - $costTotal]);
@@ -93,9 +87,9 @@ class UpgradeItem extends BaseProcessor{
         $userBaghandler->DecItems($decItems,ItemValue::EffectExp);
         //打包：成功模式、目前等級
         $results = new ResultData(ErrorCode::Success);        
+        $results->bonus = [];
         if(!empty($expRt->bonus))
         {
-            $results->bonus = [];
             foreach($expRt->bonus as $bonus)
             {
                 $results->bonus[] = $bonus->id;
