@@ -26,28 +26,28 @@ class RaceRoomsHandler {
         return 1000;
     }
 
-    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
+    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
 
         if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
-            return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            return $this->GetIdleRoom($lobby, $lowBound, $upBound);
         } else {
-            $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound);
             $roomNumber = count($rooms);
             if ($roomNumber > 0) {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+                return $this->GetIdleRoom($lobby, $lowBound, $upBound);
             }
         }
     }
 
-    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
-        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
+        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound);
         if ($idleRoom !== false) {
             return $idleRoom;
         } else {
-            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound);
         }
     }
 
@@ -81,7 +81,7 @@ class RaceRoomsHandler {
         return $accessor->Update($raceRoomID, $bind);
     }
 
-    public function TakeSeat(int $userID, stdClass $roomInfo): bool {
+    public function JoinRoom(int $userID, stdClass $roomInfo): bool {
         $users = json_decode($roomInfo->RaceRoomSeats);
         $seatCount = count($users);
 
@@ -97,7 +97,7 @@ class RaceRoomsHandler {
         return $this->UpdateUsers($roomInfo->RaceRoomID, $users);
     }
 
-    public function LeaveSeat(int $userID, int $raceRoomID): bool {
+    public function LeaveRoom(int $userID, int $raceRoomID): bool {
         $roomInfo = $this->accessor->GetRoom($raceRoomID);
         if ($roomInfo == false) {
             throw new RaceException(RaceException::UserMatchError);

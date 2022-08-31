@@ -28,7 +28,7 @@ class PVPMatchQuit extends BaseRace
                     throw new RaceException(RaceException::UserNotInMatch);
                 }
                 $raceroomHandler = new RaceRoomsHandler();
-                $raceroomHandler->LeaveSeat($userID, $userInfo->Room);
+                $raceroomHandler->LeaveRoom($userID, $userInfo->Room);
 
                 $accessor->ClearCondition();
                 $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([

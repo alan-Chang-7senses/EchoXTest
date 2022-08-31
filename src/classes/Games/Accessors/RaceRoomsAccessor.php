@@ -16,25 +16,24 @@ class RaceRoomsAccessor extends BaseAccessor {
         return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->Fetch();
     }
 
-    public function GetMatchRooms(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): array {
-        return $this->useTable()->WhereEqual('Status', 1)->WhereEqual('Lobby', $lobby)
-                        ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
-                        ->ForUpdate()->FetchAll();
+    public function GetMatchRooms(int $lobby, int $lowBound, int $upBound): array {
+        return $this->useTable()->WhereEqual('Status', 1)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
+                        ForUpdate()->FetchAll();
     }
 
-    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdClass|false {
-        return $this->useTable()->WhereEqual('Status', 0)->WhereEqual('Lobby', $lobby)
-                        ->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->WhereEqual('QualifyingSeasonID', $qualifyingSeasonID)
-                        ->ForUpdate()->Fetch();
+    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdClass|false {
+        return $this->useTable()->WhereEqual('Status', 0)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
+                        ForUpdate()->Fetch();
     }
 
-    public function AddNewRoom(int $lobby, int $lowBound, int $upBound, int $qualifyingSeasonID): stdClass|false {
+    public function AddNewRoom(int $lobby, int $lowBound, int $upBound): stdClass|false {
         $this->useTable()->Add([
             'Status' => 1,
             'Lobby' => $lobby,
             'LowBound' => $lowBound,
             'UpBound' => $upBound,
-            'QualifyingSeasonID' => $qualifyingSeasonID,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);

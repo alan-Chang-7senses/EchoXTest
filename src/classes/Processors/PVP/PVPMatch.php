@@ -89,8 +89,8 @@ class PVPMatch extends BaseProcessor {
             $upbound = 0;
             //
             $raceroomHandler = new RaceRoomsHandler();
-            $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound, $qualifyingHandler->NowSeasonID);
-            $raceroomHandler->TakeSeat($userID, $raceRoom);
+            $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound);
+            $raceroomHandler->JoinRoom($userID, $raceRoom);
             $raceRoomID = $raceRoom->RaceRoomID;
 
             $accessor->ClearCondition();

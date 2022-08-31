@@ -43,7 +43,7 @@ class JoinRoom {
                 throw new RaceException(RaceException::UserMatchError);
             }
 
-            $raceroomHandler->TakeSeat($userID, $raceRoom);
+            $raceroomHandler->JoinRoom($userID, $raceRoom);
             $accessor->ClearCondition();
             $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
                 'Lobby' => $raceRoom->Lobby,
