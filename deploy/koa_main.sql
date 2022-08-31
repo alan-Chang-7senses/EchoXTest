@@ -883,12 +883,13 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
-  `QualifyingSeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '晉級賽賽季編號',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   `RaceID` int(10) NOT NULL DEFAULT 0 COMMENT '競賽編號',
   `RaceRoomSeats` varchar(255) NOT NULL DEFAULT '[]' COMMENT '競賽席次房間編號',
-  PRIMARY KEY (`RaceRoomID`)
+  PRIMARY KEY (`RaceRoomID`),
+  KEY `Status` (`Status`),
+  KEY `Lobby_LowBound_UpBound` (`Lobby`,`LowBound`,`UpBound`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
 
 -- 傾印  資料表 koa_main.Races 結構
