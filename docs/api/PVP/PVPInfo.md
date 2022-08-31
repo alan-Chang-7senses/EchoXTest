@@ -49,9 +49,9 @@ Content Type: `application/json`
 #### <span id="rank">rank 排行榜資訊</span>
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| raceAmount | int | 上場次數 |
-| aveRank| string | 平均排名 |
-| rank | int | 排行榜名次 |
+| playCount | int | 參賽次數 |
+| leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
+| ranking | int | 排行榜名次 |
 |
 
 #### <span id="scene">scene 內容</span>
@@ -74,7 +74,7 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
-        "seasonRemainTime": 291032,
+        "seasonRemainTime": 130165,
         "infos": [
             {
                 "lobby": 1,
@@ -82,18 +82,18 @@ Content Type: `application/json`
                 "ticketAmount": 998,
                 "petaLimitLevel": 70,
                 "rank": {
-                    "raceAmount": 12,
-                    "aveRank": "1.11",
-                    "rank": "5"
+                    "playCount": 1,
+                    "leadRate": 0,
+                    "ranking": 0
                 },
                 "scene": {
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 3,
+                    "weather": 1,
+                    "windDirection": 2,
                     "windSpeed": 50,
-                    "lighting": 2
+                    "lighting": 1
                 }
             },
             {
@@ -102,18 +102,18 @@ Content Type: `application/json`
                 "ticketAmount": 0,
                 "petaLimitLevel": 0,
                 "rank": {
-                    "raceAmount": 34,
-                    "aveRank": "3.21",
-                    "rank": "15"
+                    "playCount": 0,
+                    "leadRate": 0,
+                    "ranking": 0
                 },
                 "scene": {
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 3,
+                    "weather": 1,
+                    "windDirection": 2,
                     "windSpeed": 50,
-                    "lighting": 2
+                    "lighting": 1
                 }
             }
         ]
