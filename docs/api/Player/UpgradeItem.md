@@ -39,9 +39,9 @@ Content Type: `application/x-www-form-urlencoded`
 | 道具ID(int) | 使用數量(int) | 
 ### Example
     {
-        "1001": 999,
-        "1002":0,
-        "1003":0
+        "1001": 2,
+        "1002":1,
+        "1003":1
     }
 
 ## Response
