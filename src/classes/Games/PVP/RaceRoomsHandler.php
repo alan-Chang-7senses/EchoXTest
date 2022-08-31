@@ -82,9 +82,12 @@ class RaceRoomsHandler {
     }
 
     public function JoinRoom(int $userID, stdClass $roomInfo): bool {
+        if ($roomInfo->Status === RaceValue::RoomClose) {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+
         $users = json_decode($roomInfo->RaceRoomSeats);
         $seatCount = count($users);
-
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
             throw new RaceException(RaceException::UserMatchError);
         }
@@ -102,14 +105,18 @@ class RaceRoomsHandler {
         if ($roomInfo == false) {
             throw new RaceException(RaceException::UserMatchError);
         }
-
-        $users = json_decode($roomInfo->RaceRoomSeats);
-        $key = array_search($userID, $users);
-        if ($key !== false) {
-            unset($users[$key]);
-            return $this->UpdateUsers($raceRoomID, array_values($users));
+        if ($roomInfo->Status !== RaceValue::RoomClose) {
+            $users = json_decode($roomInfo->RaceRoomSeats);
+            $key = array_search($userID, $users);
+            if ($key !== false) {
+                unset($users[$key]);
+                return $this->UpdateUsers($raceRoomID, array_values($users));
+            } else {
+                throw new RaceException(RaceException::UserNotInRoom);
+            }
         } else {
-            throw new RaceException(RaceException::UserNotInRoom);
+            //房間已經關閉了不處理, 但需更新使用者狀態            
+            return true;
         }
     }
 
