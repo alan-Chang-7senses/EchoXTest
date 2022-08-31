@@ -7,25 +7,61 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\RacePool;
 use Games\Pools\UserPool;
 use Games\PVP\QualifyingHandler;
 use Games\PVP\RaceRoomsHandler;
+use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
 use Games\Users\UserBagHandler;
+use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
-use Processors\Races\BaseRace;
+use Processors\BaseProcessor;
 
-class PVPMatch extends BaseRace {
-
-    protected bool|null $mustInRace = false;
+class PVPMatch extends BaseProcessor {
 
     public function Process(): ResultData {
-        $userID = $_SESSION[Sessions::UserID];
-        $lobby = InputHelper::post('lobby');
 
+        $userID = $_SESSION[Sessions::UserID];
+        $userHandler = new UserHandler($userID);
+        $userInfo = $userHandler->GetInfo();
+        if ($userInfo->race !== RaceValue::NotInRace) {
+            $raceHandler = new RaceHandler($userInfo->race);
+            $raceInfo = $raceHandler->GetInfo();           
+
+            if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitElitetestRace) {
+
+                $accessor = new PDOAccessor(EnvVar::DBMain);
+
+                $raceUsers = $accessor->FromTable('Users')->WhereEqual('Race', $userInfo->race)->FetchAll();
+                if ($raceUsers !== false) {
+                    foreach ($raceUsers as $raceUser) {
+
+                        $accessor->ClearCondition()->FromTable('Users')->WhereEqual('UserID', $raceUser->UserID)->Modify([
+                            'Race' => RaceValue::NotInRace,
+                            'Lobby' => RaceValue::LobbyNone,
+                            'Room' => RaceValue::NotInRoom,
+                            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                        ]);
+                        UserPool::Instance()->Delete($raceUser->UserID);
+                    }
+                }
+
+                $accessor->ClearCondition()->FromTable('Races')->WhereEqual('RaceID', $userInfo->race)->Modify([
+                    'Status' => RaceValue::StatusFinish,
+                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                ]);
+                RacePool::Instance()->Delete($userInfo->race);
+            } else {
+                throw new RaceException(RaceException::UserInRace);
+            }
+        }
+
+        $lobby = InputHelper::post('lobby');
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
         $userBagHandler = new UserBagHandler($userID);
