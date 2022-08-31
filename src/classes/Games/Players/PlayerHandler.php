@@ -2,9 +2,6 @@
 
 namespace Games\Players;
 
-use Accessors\MemcacheAccessor;
-use Games\Accessors\PlayerAccessor;
-use Games\Consts\AbilityFactor;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Consts\SyncRate;
@@ -143,11 +140,7 @@ class PlayerHandler {
     private function ResetInfo() : void{
         $this->info = $this->pool->{$this->info->id};
     }
-
-    public function SaveData(array $bind) : void{    
-        $this->pool->Save($this->info->id, 'Data', $bind);
-        $this->ResetInfo();
-    }
+    
     public function SaveSync(float|int $bind) : void{    
         $this->pool->Save($this->info->id, 'Sync', $bind);
         $this->ResetInfo();

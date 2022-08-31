@@ -9,7 +9,6 @@ use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;
 use Games\Exceptions\UserException;
 use Games\Players\Exp\ExpBonus;
-use Games\Players\Exp\ExpBonusCalculator;
 use Games\Players\PlayerHandler;
 use Games\Players\UpgradeData;
 use Games\Users\UserBagHandler;

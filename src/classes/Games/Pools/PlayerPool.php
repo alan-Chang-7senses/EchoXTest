@@ -148,16 +148,16 @@ class PlayerPool extends PoolAccessor {
     }
 
     
-    protected function SaveData(stdClass $data, array $values) : stdClass{
+    // protected function SaveData(stdClass $data, array $values) : stdClass{
         
-        $bind = [];
-        foreach($values as $key => $value){
-            $bind[ucfirst($key)] = $value;
-            $data->$key = $value;
-        }        
-        (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
-        return $data;
-    }
+    //     $bind = [];
+    //     foreach($values as $key => $value){
+    //         $bind[ucfirst($key)] = $value;
+    //         $data->$key = $value;
+    //     }        
+    //     (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
+    //     return $data;
+    // }
 
     protected function SaveSync(stdClass $data, float|int $sync):stdClass
     {
