@@ -4,6 +4,7 @@ namespace Processors\PVP;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\ItemInfoPool;
 use Games\PVP\QualifyingHandler;
@@ -21,7 +22,7 @@ class PVPInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == -1) {
+        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 

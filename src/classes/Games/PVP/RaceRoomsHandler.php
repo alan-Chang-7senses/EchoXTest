@@ -60,11 +60,11 @@ class RaceRoomsHandler {
         $seatCount = count($users);
 
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
-            $bind['Status'] = 2;
+            $bind['Status'] = RaceValue::RoomFull;
         } else if ($seatCount == 0) {
-            $bind['Status'] = 0;
+            $bind['Status'] = RaceValue::RoomIdle;
         } else {
-            $bind['Status'] = 1;
+            $bind['Status'] = RaceValue::RoomMatching;
         }
 
         $bind["RaceRoomSeats"] = json_encode($users);
@@ -73,7 +73,7 @@ class RaceRoomsHandler {
 
     public static function StartRace(int $raceRoomID, $raceID) {
         $bind = [
-            'Status' => 3,
+            'Status' => RaceValue::RoomClose,
             'RaceID' => $raceID,
         ];
 

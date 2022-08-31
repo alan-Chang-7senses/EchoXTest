@@ -2,16 +2,17 @@
 
 namespace Processors\PVP;
 
-use Consts\Sessions;
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Consts\ItemValue;
-use Holders\ResultData;
-use Helpers\InputHelper;
-use Games\Races\RaceUtility;
-use Processors\BaseProcessor;
-use Games\Users\UserBagHandler;
-use Games\PVP\QualifyingHandler;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\PVP\QualifyingHandler;
+use Games\Races\RaceUtility;
+use Games\Users\UserBagHandler;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
 use stdClass;
 
 class ReceiveTicket extends BaseProcessor
@@ -22,7 +23,7 @@ class ReceiveTicket extends BaseProcessor
 
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
-        if ($qualifyingHandler->NowSeasonID == -1) {
+        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 

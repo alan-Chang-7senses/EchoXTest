@@ -71,17 +71,17 @@ class PVPMatch extends BaseProcessor {
         }
 
         $useTicketId = RaceUtility::GetTicketID($lobby);
-        if (($useTicketId !== 0) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
+        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
-        $raceRoomID = 0;
+        $raceRoomID = RaceValue::NotInRoom;
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID) {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
-            if ($userInfo->Room != 0) {
+            if ($userInfo->Room != RaceValue::NotInRoom) {
                 throw new RaceException(RaceException::UserInMatch);
             }
             //todo

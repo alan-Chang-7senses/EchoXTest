@@ -14,6 +14,7 @@ class RaceValue {
     const BotMatch = -1;
     const RacePlayerMin = 2;
     
+    const NOSeasonID = -1;
     const NoTicketID = 0;
     
     const ForeverAdditiveSec = 1000000000;
@@ -104,6 +105,11 @@ class RaceValue {
     const LobbyCoin = 1;
     const LobbyPT = 2;
     const LobbyStudy = 3;
+    
+    const RoomIdle = 0;
+    const RoomMatching = 1;
+    const RoomFull = 2;
+    const RoomClose = 3;   
     
     const PlayerEffectTypes = [
         SkillValue::EffectH,

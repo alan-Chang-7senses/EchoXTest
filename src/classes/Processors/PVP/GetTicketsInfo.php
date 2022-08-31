@@ -3,6 +3,7 @@
 namespace Processors\PVP;
 
 use Consts\ErrorCode;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\PVP\QualifyingHandler;
 use Holders\ResultData;
@@ -14,7 +15,7 @@ class GetTicketsInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == -1) {
+        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 

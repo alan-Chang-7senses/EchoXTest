@@ -7,6 +7,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\PVP\QualifyingHandler;
 use Games\PVP\RaceRoomsHandler;
@@ -29,7 +30,7 @@ class JoinRoom {
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, &$raceRoomID) {
 
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
-            if ($userInfo->Room != 0) {
+            if ($userInfo->Room !== RaceValue::NotInRoom) {
                 throw new RaceException(RaceException::UserInMatch);
             }
 
@@ -41,6 +42,11 @@ class JoinRoom {
 
             if (in_array($raceRoom->Lobby, QualifyingHandler::MatchLobbies)) {
                 throw new RaceException(RaceException::UserMatchError);
+            }
+            
+            if ($raceRoom -> Status !== RaceValue::RoomMatching)
+            {
+                throw new RaceException(RaceException::UserMatchError);                
             }
 
             $raceroomHandler->JoinRoom($userID, $raceRoom);
