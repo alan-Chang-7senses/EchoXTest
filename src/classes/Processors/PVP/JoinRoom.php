@@ -43,10 +43,9 @@ class JoinRoom {
             if (in_array($raceRoom->Lobby, QualifyingHandler::MatchLobbies)) {
                 throw new RaceException(RaceException::UserMatchError);
             }
-            
-            if ($raceRoom -> Status !== RaceValue::RoomMatching)
-            {
-                throw new RaceException(RaceException::UserMatchError);                
+
+            if ($raceRoom->Status !== RaceValue::RoomMatching) {
+                throw new RaceException(RaceException::UserMatchError);
             }
 
             $raceroomHandler->JoinRoom($userID, $raceRoom);

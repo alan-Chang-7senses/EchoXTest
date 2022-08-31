@@ -15,10 +15,9 @@ use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
 
-class ReceiveTicket extends BaseProcessor
-{
-    public function Process(): ResultData
-    {
+class ReceiveTicket extends BaseProcessor {
+
+    public function Process(): ResultData {
         $lobby = InputHelper::post('lobby');
 
         $qualifyingHandler = new QualifyingHandler();
@@ -57,6 +56,5 @@ class ReceiveTicket extends BaseProcessor
         $result->receiveRemainTime = $qualifyingHandler->GetRemainTicketTime($userID, $lobby);
         return $result;
     }
-
 
 }

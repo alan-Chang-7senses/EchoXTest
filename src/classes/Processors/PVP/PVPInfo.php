@@ -33,7 +33,7 @@ class PVPInfo extends BaseRace {
             $lobbyinfo->lobby = $lobby;
             $ticketID = RaceUtility::GetTicketID($lobby);
             $ticketInfo = ItemInfoPool::Instance()->{$ticketID};
-            $lobbyinfo->ticketIcon = $ticketInfo->Icon;            
+            $lobbyinfo->ticketIcon = $ticketInfo->Icon;
             $lobbyinfo->ticketAmount = $userBagHandler->GetItemAmount($ticketID);
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
 

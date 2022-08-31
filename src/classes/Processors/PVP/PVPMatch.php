@@ -31,7 +31,7 @@ class PVPMatch extends BaseProcessor {
         $userInfo = $userHandler->GetInfo();
         if ($userInfo->race !== RaceValue::NotInRace) {
             $raceHandler = new RaceHandler($userInfo->race);
-            $raceInfo = $raceHandler->GetInfo();           
+            $raceInfo = $raceHandler->GetInfo();
 
             if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitElitetestRace) {
 
