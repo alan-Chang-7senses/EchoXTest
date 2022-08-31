@@ -33,8 +33,12 @@ class SkillEffectFormula {
     private PlayerInfoHolder|stdClass $playerInfo;
     private RacePlayerHandler| null $racePlayerHandler;
 
+    /**
+     * @var int $level 是否指定等級。$level = 0 : 使用當前等級。$level = N：指定等級為N*/
     private int $level;
 
+    /**
+     * @param int $level 是否指定等級。$level = 0 : 使用當前等級。$level = N：指定等級為N*/
     public function __construct(SkillHandler $skill, string|null $formula, PlayerHandler $player, RacePlayerHandler|null $racePlayer = null, int $level = 0) {
         
         $this->skillHandler = $skill;
