@@ -44,10 +44,11 @@ class UpgradeItem extends BaseProcessor{
         $costTotal = 0;
         //檢查是否持有且充足        
         foreach($itemInfo as $itemID => $amount)
-        {
+        {            
             if($userBaghandler->GetItemAmount($itemID) < $amount)
             throw new ItemException(ItemException::ItemNotEnough,['item' => $itemID]);
-            
+            if(!$userBaghandler->CheckItemEffectType($itemID,ItemValue::EffectExp))
+            throw new ItemException(ItemException::UseItemError,['itemID' => $itemID]);
             //算出欲增加之經驗值量與金幣基數
             $expTotal += $itemChargeTable[$itemID]->EffectValue * $amount;
             $costTotal += $itemChargeTable[$itemID]->Charge * $amount;
