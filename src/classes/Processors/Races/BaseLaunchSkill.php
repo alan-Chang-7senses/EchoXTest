@@ -9,16 +9,19 @@ use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Races\Holders\RacePlayerHolder;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RacePlayerSkillHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
+use Games\Skills\Holders\SkillInfoHolder;
 use Games\Skills\SkillHandler;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
+use stdClass;
 /**
  * Description of BaseLaunchSkill
  *
@@ -205,16 +208,14 @@ abstract class BaseLaunchSkill extends BaseRace{
     }
 
     
-    function DeterminOtherTargetExpireTime($info, $skillInfo,$endTime) : float{
+    function DeterminOtherTargetExpireTime(RacePlayerHolder|stdClass $info, SkillInfoHolder|stdClass $skillInfo,float $endTime) : float{
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $interval  = $endTime - $currentTime;
         $playerHandler = new PlayerHandler($info->player);
         $playerIntelligent = $playerHandler->GetInfo()->intelligent;
 
-        if($skillInfo->duration == SkillValue::DurationForever){
-            return $currentTime + RaceValue::ForeverAdditiveSec;
-        }
-        if($interval < 0.001)return $endTime;
+        if($interval < 0.001) return $endTime;
+        if($skillInfo->duration == SkillValue::DurationForever) return $currentTime + RaceValue::ForeverAdditiveSec;
         return $currentTime + ($interval  * RaceValue::DivisorSkillDurationForOther / $playerIntelligent);
     }
 }
