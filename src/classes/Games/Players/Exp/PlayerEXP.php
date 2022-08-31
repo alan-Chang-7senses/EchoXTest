@@ -9,7 +9,7 @@ use Games\Consts\PlayerValue;
 class PlayerEXP
 {
 
-    private const LevelUnit = 1;
+    public const LevelUnit = 1;
     private const ExpUnit = 1;
 
     private const TestLevel = 100;

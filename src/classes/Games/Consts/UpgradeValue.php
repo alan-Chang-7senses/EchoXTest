@@ -13,4 +13,8 @@ class UpgradeValue
 
     const BigSuccessStart = 5;
     const Divisor = 100;
+
+    const UpgradeItemIDSmall = 1001;
+    const UpgradeItemIDMiddle = 1002;
+    const UpgradeItemIDLarge = 1003;
 }
