@@ -5,6 +5,7 @@ namespace Processors\PVP;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Exceptions\RaceException;
+use Games\Leadboards\LeadboardUtility;
 use Games\Pools\ItemInfoPool;
 use Games\PVP\QualifyingHandler;
 use Games\Races\RaceUtility;
@@ -41,7 +42,12 @@ class PVPInfo extends BaseRace {
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
-            $lobbyinfo->rank = $qualifyingHandler->GetRank($lobby);
+            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->NowSeasonID);
+            $lobbyinfo->rank = new stdClass();
+            $lobbyinfo->rank->playCount = $rankInfo->playCount;
+            $lobbyinfo->rank->leadRate = $rankInfo->leadRate;
+            $lobbyinfo->rank->ranking = $rankInfo->ranking;
+
             $lobbyinfo->scene = [
                 'id' => $sceneInfo->id,
                 'name' => $sceneInfo->name,
