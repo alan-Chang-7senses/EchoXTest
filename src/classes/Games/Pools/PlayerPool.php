@@ -22,6 +22,9 @@ use Games\Players\PlayerAbility;
 use Games\Players\PlayerBaseInfoHolder;
 use Generators\ConfigGenerator;
 use stdClass;
+use Games\Exceptions\PlayerException;
+use Games\Players\Exp\PlayerEXP;
+
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -54,8 +57,8 @@ class PlayerPool extends PoolAccessor {
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
         $holder->level = empty($allPlayerLevel) ? $player->Level : $allPlayerLevel;
         $holder->exp = $player->Exp;
-        $holder->maxExp = 0; //還沒有資料
         $holder->rank = $player->Rank;
+        $holder->maxExp = PlayerEXP::GetNextLevelRequireEXP($holder->level,$holder->rank,$holder->exp);
         $holder->strengthLevel = $player->StrengthLevel;
         $holder->skeletonType = $player->SkeletonType;
 
@@ -65,6 +68,9 @@ class PlayerPool extends PoolAccessor {
         $holder->intelligent = PlayerAbility::GetAbilityValue(AbilityFactor::Intelligent,$baseInfo);
         $holder->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
         $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
+
+        PlayerAbility::ApplySyncRateBonus($holder,$holder->sync);
+
         
         $holder->dna = new PlayerDnaHolder();
         $holder->dna->head = $player->HeadDNA;
@@ -115,8 +121,9 @@ class PlayerPool extends PoolAccessor {
         $rows = $playerAccessor->rowsSkillByPlayerID($playerID);
         $holder->skills = [];
         $slot = [];
+        $allSkillLevel = ConfigGenerator::Instance()->AllSkillLevel;
         foreach ($rows as $row) {
-            $holder->skills[] = new PlayerSkillHolder($row->SkillID, $row->Level, $row->Slot);
+            $holder->skills[] = new PlayerSkillHolder($row->SkillID, empty($allSkillLevel) ? $row->Level : $allSkillLevel, $row->Slot);
             $slot[$row->Slot] = $row->SkillID;
         }
         
@@ -140,4 +147,38 @@ class PlayerPool extends PoolAccessor {
             $holder->skills[$i]->slot = $i + 1;
         }
     }
+
+    
+    // protected function SaveData(stdClass $data, array $values) : stdClass{
+        
+    //     $bind = [];
+    //     foreach($values as $key => $value){
+    //         $bind[ucfirst($key)] = $value;
+    //         $data->$key = $value;
+    //     }        
+    //     (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
+    //     return $data;
+    // }
+
+    protected function SaveSync(stdClass $data, float|int $sync):stdClass
+    {
+        $bind = ['SyncRate' => $sync * SyncRate::Divisor];
+        $res = (new PlayerAccessor())->ModifySyncByPlayerID($data->id,$bind);
+        if($res !== false)
+        {
+            $data->sync = $sync;
+        }
+        return $data;
+    }
+    protected function SaveLevel(stdClass $data, array $values):stdClass
+    {
+        $bind = [];
+        foreach($values as $key => $value){
+            $bind[ucfirst($key)] = $value;
+            $data->$key = $value;
+        }        
+        (new PlayerAccessor())->ModifyLevelByPlayerID($data->id, $bind);        
+        return $data;
+    }
+
 }

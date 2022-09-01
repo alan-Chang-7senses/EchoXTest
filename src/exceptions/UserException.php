@@ -19,4 +19,5 @@ $lang[UserException::UseItemError] = 'ItemID:[itemID] use error!!';
 $lang[UserException::UseRewardIDError] = 'RewardID:[rewardID] use error!!';
 $lang[UserException::UserFreePlayerListEmpty] = 'User:[userID] free player list is empty.';
 $lang[UserException::UserFreePlayerOverLimit] = 'User:[userID] free player count over limit.';
+$lang[UserException::UserCoinNotEnough] = 'User:[userID] Coin Not Enough.';
 return $lang;

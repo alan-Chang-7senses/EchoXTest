@@ -14,6 +14,7 @@ class RaceValue {
     const BotMatch = -1;
     const RacePlayerMin = 2;
     
+    const NOSeasonID = -1;
     const NoTicketID = 0;
     
     const ForeverAdditiveSec = 1000000000;
@@ -46,6 +47,8 @@ class RaceValue {
     const DivisorSkillDurationForOther = 50;
     const DivisorLeadRate = 10000;
     const DivisorPercent = 100;
+    
+    const ValueMinHP = 0;
     
     const SunNone = 100;
     const SunSame = 120;
@@ -104,6 +107,11 @@ class RaceValue {
     const LobbyCoin = 1;
     const LobbyPT = 2;
     const LobbyStudy = 3;
+    
+    const RoomIdle = 0;
+    const RoomMatching = 1;
+    const RoomFull = 2;
+    const RoomClose = 3;   
     
     const PlayerEffectTypes = [
         SkillValue::EffectH,

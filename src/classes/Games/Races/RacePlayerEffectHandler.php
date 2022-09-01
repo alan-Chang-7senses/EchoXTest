@@ -71,7 +71,7 @@ class RacePlayerEffectHandler {
                 SkillValue::EffectAdaptDownslope => $playerHandler->offsetDownslope += $value,
                 SkillValue::EffectAdaptSun => self::DealWithSunValue($playerHandler,SceneValue::Sunshine,$value),
                 SkillValue::EffectAdaptNight => self::DealWithSunValue($playerHandler,SceneValue::Backlight,$value),
-                SkillValue::EffectHP => $racePlayerHandler->SaveData(['hp' => $racePlayerInfo->hp + $value * RaceValue::DivisorHP]),
+                SkillValue::EffectHP => self::AddHP($racePlayerHandler, $value),
                 SkillValue::EffectEnergyAll => $racePlayerHandler->SaveData(['energy' => array_map(function($val) use ($value) { return $val + $value; }, $racePlayerInfo->energy)]),
                 SkillValue::EffectEnergyRed => self::AddEnergy($racePlayerHandler, SkillValue::EnergyRed, $value),
                 SkillValue::EffectEnergyYellow => self::AddEnergy($racePlayerHandler, SkillValue::EnergyYellow, $value),
@@ -84,6 +84,13 @@ class RacePlayerEffectHandler {
         return $playerHandler;
     }
     
+    private static function AddHP(RacePlayerHandler $racePlayerHandler, float $value) {
+        
+        $hp = $racePlayerHandler->GetInfo()->hp + $value * RaceValue::DivisorHP;
+        if($hp <= RaceValue::ValueMinHP) $hp = RaceValue::ValueMinHP;
+        $racePlayerHandler->SaveData(['hp' => $hp]);
+    }
+
     private static function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
         $energy = $racePlayerHandler->GetInfo()->energy;
         $colorTemp = $energy[$type] + $value;

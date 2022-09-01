@@ -5,8 +5,12 @@ namespace Games\Players;
 use Games\Consts\AbilityFactor;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
+use Games\Consts\SyncRate;
 use Games\Players\Adaptability\BaseAdaptability;
 use Games\Players\Holders\PlayerDnaHolder;
+use Games\Players\Holders\PlayerInfoHolder;
+use stdClass;
+
 /**
  * NFT 到遊戲中角色能力值換算
  *
@@ -138,6 +142,79 @@ class PlayerAbility {
 
          + $levelMultiplier * AbilityFactor::Delta;
          return number_format($rt, AbilityFactor::Decimals);
+    }
+
+    /**算出數值大小排名。數值相同依照企劃說明排序。回傳陣列內容數字依照常數定義 */
+    public static function GetAbilityDesc(PlayerBaseInfoHolder|PlayerInfoHolder|stdClass $info) : array
+    {
+        $abilities = 
+        [
+            [AbilityFactor::Velocity => $info->velocity],
+            [AbilityFactor::Stamina => $info->stamina],
+            [AbilityFactor::BreakOut => $info->breakOut],
+            [AbilityFactor::Will => $info->will],
+            [AbilityFactor::Intelligent => $info->intelligent],
+        ];
+
+        usort($abilities,function($a, $b)
+        {
+            $aVal = array_values($a)[0];
+            $bVal = array_values($b)[0];
+            if($aVal < $bVal)return 1;
+            if($aVal == $bVal)
+            {
+                $akey = array_keys($a)[0];
+                $bkey = array_keys($b)[0];
+                return $akey > $bkey ? 1 : -1;
+            }
+            return -1;
+        });
+        $rt = [];
+        foreach($abilities as $ability)$rt[] = array_keys($ability)[0];        
+        return $rt;
+    }
+
+    /**同步率應介於0~1之間 */
+    public static function ApplySyncRateBonus(PlayerInfoHolder|stdClass $holder, int|float $syncRate) : void
+    {
+        $abilityDesc = self::GetAbilityDesc($holder);
+        match(true)
+        {
+            self::IsBetween(AbilityFactor::SyncRateTypeMax[0],AbilityFactor::SyncRateTypeMax[1],$syncRate)
+            => self::ModifyPlayerValueByValueID($abilityDesc[0],$holder,AbilityFactor::SyncRateBonus),
+
+            self::IsBetween(AbilityFactor::SyncRateTypeSecond[0],AbilityFactor::SyncRateTypeSecond[1],$syncRate)
+            => self::ModifyPlayerValueByValueID($abilityDesc[1],$holder,AbilityFactor::SyncRateBonus),
+
+            self::IsBetween(AbilityFactor::SyncRateTypeThird[0],AbilityFactor::SyncRateTypeThird[1],$syncRate)
+            => self::ModifyPlayerValueByValueID($abilityDesc[2],$holder,AbilityFactor::SyncRateBonus),
+
+            self::IsBetween(AbilityFactor::SyncRateTypeFourth[0],AbilityFactor::SyncRateTypeFourth[1],$syncRate)
+            => self::ModifyPlayerValueByValueID($abilityDesc[3],$holder,AbilityFactor::SyncRateBonus),
+
+            self::IsBetween(AbilityFactor::SyncRateTypeFifth[0],AbilityFactor::SyncRateTypeFifth[1],$syncRate)
+            => self::ModifyPlayerValueByValueID($abilityDesc[4],$holder,AbilityFactor::SyncRateBonus),
+
+            default => null,
+        };
+    }
+
+    public static function IsBetween(int|float $max, int|float $min, int|float $value)
+    {
+        return ($value >= $min) && ($value <= $max);
+    }
+
+    public static function ModifyPlayerValueByValueID(int $valueID,PlayerInfoHolder|stdClass $holder,int|float $modifyCoefficient)
+    {
+        match($valueID)
+        {
+            AbilityFactor::Velocity => $holder->velocity = number_format($modifyCoefficient * $holder->velocity,AbilityFactor::Decimals),
+            AbilityFactor::Stamina => $holder->stamina = number_format($modifyCoefficient * $holder->stamina,AbilityFactor::Decimals),
+            AbilityFactor::BreakOut => $holder->breakOut = number_format($modifyCoefficient * $holder->breakOut,AbilityFactor::Decimals),
+            AbilityFactor::Will => $holder->will = number_format($modifyCoefficient * $holder->will,AbilityFactor::Decimals),
+            AbilityFactor::Intelligent => $holder->intelligent = number_format($modifyCoefficient * $holder->intelligent,AbilityFactor::Decimals),
+        };
+        
     }
 
 }
