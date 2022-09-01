@@ -48,6 +48,8 @@ class RaceValue {
     const DivisorLeadRate = 10000;
     const DivisorPercent = 100;
     
+    const ValueMinHP = 0;
+    
     const SunNone = 100;
     const SunSame = 120;
     const SunDiff = 80;
