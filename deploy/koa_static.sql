@@ -1358,21 +1358,21 @@ CREATE TABLE IF NOT EXISTS `FreePetaInfo` (
 -- 正在傾印表格  koa_static.FreePetaInfo 的資料：~15 rows (近似值)
 /*!40000 ALTER TABLE `FreePetaInfo` DISABLE KEYS */;
 INSERT INTO `FreePetaInfo` (`ID`, `Type`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`) VALUES
-	(1, 0, 4000, 6500, 4600, 4500, 1),
-	(2, 0, 4000, 6600, 4400, 4600, 1),
-	(3, 0, 3900, 6700, 4600, 4400, 1),
-	(4, 0, 4000, 5100, 5100, 5400, 1),
-	(5, 0, 4000, 4500, 4300, 6800, 1),
-	(6, 1, 5200, 4900, 4800, 4700, 1),
-	(7, 1, 5300, 4700, 4700, 4900, 1),
-	(8, 1, 5400, 4600, 5000, 4600, 1),
-	(9, 1, 4600, 4700, 4800, 5500, 1),
-	(10, 1, 4800, 4700, 5000, 5100, 1),
-	(11, 2, 5400, 4000, 6000, 4200, 1),
-	(12, 2, 4800, 4400, 6100, 4300, 1),
-	(13, 2, 4600, 4300, 6200, 4500, 1),
-	(14, 2, 6000, 4000, 5300, 4300, 1),
-	(15, 2, 5500, 4400, 5200, 4500, 1);
+	(1, 0, 4000, 6700, 4600, 4700, 1),
+	(2, 0, 4000, 6800, 4400, 4800, 1),
+	(3, 0, 3900, 6700, 4600, 4800, 1),
+	(4, 0, 4000, 5300, 5100, 5600, 1),
+	(5, 0, 4000, 4700, 4300, 7000, 1),
+	(6, 1, 5300, 5000, 4900, 4800, 1),
+	(7, 1, 5400, 4800, 4800, 5000, 1),
+	(8, 1, 5500, 4700, 5100, 4700, 1),
+	(9, 1, 4700, 4800, 4900, 5600, 1),
+	(10, 1, 4900, 4800, 5100, 5200, 1),
+	(11, 2, 5600, 4000, 6200, 4200, 1),
+	(12, 2, 5000, 4400, 6300, 4300, 1),
+	(13, 2, 4800, 4300, 6400, 4500, 1),
+	(14, 2, 6200, 4000, 5500, 4300, 1),
+	(15, 2, 5700, 4400, 5400, 4500, 1);
 /*!40000 ALTER TABLE `FreePetaInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.FreeTicket 結構
@@ -1408,6 +1408,21 @@ INSERT INTO `HintText` (`Serial`, `HintID`, `Lang`, `Title`, `Content`) VALUES
 	(1, 1, 2, 'hint', 'The peta gold coin competition entry ticket will be given one at 0:00 am and 12:00 noon, and will not be issued when the number exceeds 100.'),
 	(2, 1, 12, '小提示', 'peta金幣賽入場卷，凌晨0點、中午12點會給一張，當身上數量超過100張便不再發放。');
 /*!40000 ALTER TABLE `HintText` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.ItemCharge 結構
+CREATE TABLE IF NOT EXISTS `ItemCharge` (
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '物品ID',
+  `Charge` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '使用手續費',
+  PRIMARY KEY (`ItemID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用物品所需的手續費';
+
+-- 正在傾印表格  koa_static.ItemCharge 的資料：~3 rows (近似值)
+/*!40000 ALTER TABLE `ItemCharge` DISABLE KEYS */;
+INSERT INTO `ItemCharge` (`ItemID`, `Charge`) VALUES
+	(1001, 1000),
+	(1002, 5000),
+	(1003, 14000);
+/*!40000 ALTER TABLE `ItemCharge` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ItemInfo 結構
 CREATE TABLE IF NOT EXISTS `ItemInfo` (
@@ -1466,6 +1481,117 @@ INSERT INTO `ItemInfo` (`ItemID`, `ItemNameText`, `ItemName`, `DescriptionText`,
 	(5201, 'PT幣賽邀請函', '8130', '大奔走協會發行的邀請函，邀請各方能者一較高低。使用邀請函，可以參與一次以PT幣作為獎勵的Peta晉級賽。', '8630', 5, 'ItemIcon_0031', 9999, 0, 0, 0, 0, '0'),
 	(5202, '滿等技術賽邀請函', '8131', '大奔走協會發行的邀請函，上面規定了一定要3隻一起組隊，合作互助截長補短。使用邀請函，可以參與一次以PT幣作為獎勵的3局競賽。', '8631', 5, 'ItemIcon_0030', 9999, 0, 0, 0, 0, '0');
 /*!40000 ALTER TABLE `ItemInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.LevelUpEXP 結構
+CREATE TABLE IF NOT EXISTS `LevelUpEXP` (
+  `Level` int(10) unsigned NOT NULL DEFAULT 1,
+  `RequireEXP` int(10) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Level`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='各等級升級所需經驗值';
+
+-- 正在傾印表格  koa_static.LevelUpEXP 的資料：~99 rows (近似值)
+/*!40000 ALTER TABLE `LevelUpEXP` DISABLE KEYS */;
+INSERT INTO `LevelUpEXP` (`Level`, `RequireEXP`) VALUES
+	(1, 20),
+	(2, 30),
+	(3, 45),
+	(4, 60),
+	(5, 70),
+	(6, 85),
+	(7, 95),
+	(8, 105),
+	(9, 115),
+	(10, 125),
+	(11, 140),
+	(12, 165),
+	(13, 170),
+	(14, 185),
+	(15, 292),
+	(16, 325),
+	(17, 361),
+	(18, 400),
+	(19, 442),
+	(20, 487),
+	(21, 535),
+	(22, 589),
+	(23, 646),
+	(24, 708),
+	(25, 775),
+	(26, 828),
+	(27, 885),
+	(28, 947),
+	(29, 1014),
+	(30, 1086),
+	(31, 1164),
+	(32, 1249),
+	(33, 1341),
+	(34, 1441),
+	(35, 1549),
+	(36, 1667),
+	(37, 1795),
+	(38, 1934),
+	(39, 2086),
+	(40, 2251),
+	(41, 2431),
+	(42, 2628),
+	(43, 2843),
+	(44, 3078),
+	(45, 3335),
+	(46, 3616),
+	(47, 3924),
+	(48, 4262),
+	(49, 4633),
+	(50, 5041),
+	(51, 5314),
+	(52, 5604),
+	(53, 5912),
+	(54, 6239),
+	(55, 6586),
+	(56, 6955),
+	(57, 7347),
+	(58, 7763),
+	(59, 8206),
+	(60, 8677),
+	(61, 9178),
+	(62, 9712),
+	(63, 10280),
+	(64, 10885),
+	(65, 11530),
+	(66, 12218),
+	(67, 12952),
+	(68, 13735),
+	(69, 14570),
+	(70, 16462),
+	(71, 16414),
+	(72, 17432),
+	(73, 18520),
+	(74, 19683),
+	(75, 20927),
+	(76, 22350),
+	(77, 21560),
+	(78, 21885),
+	(79, 22215),
+	(80, 22551),
+	(81, 22892),
+	(82, 23239),
+	(83, 23592),
+	(84, 23951),
+	(85, 24316),
+	(86, 24687),
+	(87, 25064),
+	(88, 25447),
+	(89, 25837),
+	(90, 26233),
+	(91, 26636),
+	(92, 27046),
+	(93, 27463),
+	(94, 27887),
+	(95, 28318),
+	(96, 28756),
+	(97, 29202),
+	(98, 29655),
+	(99, 30116);
+/*!40000 ALTER TABLE `LevelUpEXP` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsInfo 結構
 CREATE TABLE IF NOT EXISTS `MailsInfo` (
@@ -2493,6 +2619,37 @@ INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `A
 	(113, '130204', 5, 'Fox015', NULL, NULL, 6),
 	(114, '130204', 6, 'Fox016', NULL, NULL, 6);
 /*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.UpgradeBonus 結構
+CREATE TABLE IF NOT EXISTS `UpgradeBonus` (
+  `BonusID` int(11) NOT NULL AUTO_INCREMENT COMMENT '編號',
+  `Multiplier` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '加成倍率',
+  PRIMARY KEY (`BonusID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='升級加成倍率';
+
+-- 正在傾印表格  koa_static.UpgradeBonus 的資料：~2 rows (近似值)
+/*!40000 ALTER TABLE `UpgradeBonus` DISABLE KEYS */;
+INSERT INTO `UpgradeBonus` (`BonusID`, `Multiplier`) VALUES
+	(1, 150),
+	(2, 200);
+/*!40000 ALTER TABLE `UpgradeBonus` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.UpgradeMode 結構
+CREATE TABLE IF NOT EXISTS `UpgradeMode` (
+  `Mode` tinyint(4) NOT NULL DEFAULT 0 COMMENT '強化模式',
+  `ChargeMultiply` int(11) NOT NULL DEFAULT 0 COMMENT '手續費倍率',
+  `BigBonusProbability` int(11) NOT NULL DEFAULT 0 COMMENT '大成功機率',
+  `UltimateBonusProbability` int(11) NOT NULL DEFAULT 0 COMMENT '大成功機率',
+  PRIMARY KEY (`Mode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='提升角色等級的模式';
+
+-- 正在傾印表格  koa_static.UpgradeMode 的資料：~3 rows (近似值)
+/*!40000 ALTER TABLE `UpgradeMode` DISABLE KEYS */;
+INSERT INTO `UpgradeMode` (`Mode`, `ChargeMultiply`, `BigBonusProbability`, `UltimateBonusProbability`) VALUES
+	(0, 90, 0, 0),
+	(1, 100, 20, 5),
+	(2, 130, 60, 5);
+/*!40000 ALTER TABLE `UpgradeMode` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
