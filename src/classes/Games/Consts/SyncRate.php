@@ -9,6 +9,12 @@ namespace Games\Consts;
  */
 class SyncRate {
     
-    const Divisor = 100;
-    const Max = 100;
+    const Divisor = 10000;
+    const Max = 10000;
+    const Min = 0;
+
+    const PVEMultiplier = 0.0001;
+    const PVPMultiplier = 0.002;
+    const ExpeditionMultiplier = 0.001;
+
 }

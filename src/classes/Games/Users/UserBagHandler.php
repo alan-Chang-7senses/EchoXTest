@@ -311,4 +311,9 @@ class UserBagHandler
         return $userItemHandler->GetInfo();
     }
 
+    public function CheckItemEffectType(int $itemID, int $type) : bool
+    {
+        $info = $this->itemInfoPool->{ $itemID};
+        return $info->EffectType == $type;
+    }
 }

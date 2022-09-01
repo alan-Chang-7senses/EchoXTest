@@ -29,4 +29,25 @@ class PlayerAccessor extends BaseAccessor{
         return $this->MainAccessor()->FromTable('PlayerHolder')
                 ->WhereEqual('UserID', $userID)->FetchStyle(PDO::FETCH_ASSOC)->FetchAll();
     }
+
+    public function ModifyPlayerByPlayerID(int $id, array $bind) : bool{
+        return $this->MainAccessor()->FromTableJoinUsing('PlayerNFT', 'PlayerHolder', 'INNER', 'PlayerID')
+        ->FromTableJoinUsingNext('PlayerLevel', 'LEFT', 'PlayerID')
+        ->WhereEqual('PlayerID',$id)
+        ->Modify($bind);
+    }
+
+    public function ModifySyncByPlayerID(int $id, array $bind) : bool
+    {
+        return $this->MainAccessor()->FromTable('PlayerHolder')
+                                    ->WhereEqual('PlayerID',$id)
+                                    ->Modify($bind);
+    }
+
+    public function ModifyLevelByPlayerID(int $id, array $bind) : bool
+    {
+        return $this->MainAccessor()->FromTable('PlayerLevel')
+                                    ->WhereEqual('PlayerID',$id)
+                                    ->Modify($bind);
+    }
 }

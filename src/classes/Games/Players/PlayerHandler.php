@@ -4,7 +4,12 @@ namespace Games\Players;
 
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
+use Games\Consts\SyncRate;
 use Games\Exceptions\PlayerException;
+use Games\Players\Exp\ExpBonus;
+use Games\Players\Exp\ExpBonusCalculator;
+use Games\Players\Exp\ExpGainResult;
+use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
 use stdClass;
@@ -129,5 +134,70 @@ class PlayerHandler {
     public function SkillLevel(int $id) : int{
         if(!isset($this->skills[$id])) return SkillValue::LevelMin;
         return $this->skills[$id]->level;
+    }
+
+    
+    private function ResetInfo() : void{
+        $this->info = $this->pool->{$this->info->id};
+    }
+    
+    public function SaveSync(float|int $bind) : void{    
+        $this->pool->Save($this->info->id, 'Sync', $bind);
+        $this->ResetInfo();
+    }
+    public function SaveLevel(array $bind) : void{    
+        $this->pool->Save($this->info->id, 'Level', $bind);
+        $this->ResetInfo();
+    }
+    /**
+     * @param float $rawSync
+     * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
+     */
+    public function GainSync(float $rawSync, ...$bonuses) : stdClass
+    {
+        $expCalculator = new ExpBonusCalculator($rawSync);                
+        foreach($bonuses as $bonus)
+        {
+            $expCalculator->AddBonus($bonus);
+        }
+        $rt = $expCalculator->Process();
+        $exp = ($rt->exp + $this->info->sync);
+        $exp = PlayerEXP::Clamp(SyncRate::Max / SyncRate::Divisor,SyncRate::Min,$exp);
+        $this->SaveSync($exp);
+        return $rt;        
+    }
+
+    /**
+     * @param int|float $rawExp
+     * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
+     */
+    public function GainExp(int|float $rawExp, ...$bonuses) : stdClass
+    {
+        $expCalculator = new ExpBonusCalculator($rawExp);                
+        foreach($bonuses as $bonus)
+        {
+            $expCalculator->AddBonus($bonus);
+        }
+        $rt = $expCalculator->Process();
+        $exp = floor($rt->exp);
+        $currentExp = $this->info->exp;
+        //限制不超過目前等階最大等級之經驗值
+        $currentExpTemp = PlayerEXP::IsLevelMax($currentExp + $exp,$this->info->rank) ? 
+            PlayerEXP::GetMaxEXP($this->info->rank) :
+             $currentExp + $exp;             
+        $level = PlayerEXP::GetLevel($currentExpTemp,$this->info->rank,$this->info->level);
+        $bind = [];
+        $bind['exp'] = $currentExpTemp;
+        if($level != $this->info->level)
+        {
+            $bind['level'] = $level;
+        }
+        $this->SaveLevel($bind);
+
+        $gainResult = new ExpGainResult();
+        $gainResult->gainAmount = $currentExpTemp - $currentExp;
+        $gainResult->bonus = $rt->bonus;
+        $gainResult->resultLevel = $level;
+        return $gainResult;
     }
 }
