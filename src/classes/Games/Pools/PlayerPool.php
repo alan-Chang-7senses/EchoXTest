@@ -121,8 +121,9 @@ class PlayerPool extends PoolAccessor {
         $rows = $playerAccessor->rowsSkillByPlayerID($playerID);
         $holder->skills = [];
         $slot = [];
+        $allSkillLevel = ConfigGenerator::Instance()->AllSkillLevel;
         foreach ($rows as $row) {
-            $holder->skills[] = new PlayerSkillHolder($row->SkillID, $row->Level, $row->Slot);
+            $holder->skills[] = new PlayerSkillHolder($row->SkillID, empty($allSkillLevel) ? $row->Level : $allSkillLevel, $row->Slot);
             $slot[$row->Slot] = $row->SkillID;
         }
         
