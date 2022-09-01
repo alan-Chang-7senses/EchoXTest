@@ -94,7 +94,7 @@ levelData陣列中的第一個元素是當前等級
     }
 
 
-### Example
+### Example 回傳結果
     {
         "error": {
             "code": 0,
