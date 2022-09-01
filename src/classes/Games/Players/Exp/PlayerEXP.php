@@ -49,6 +49,13 @@ class PlayerEXP
         return $allLevelMaxExp[$currentLevel] - $currentExp + self::ExpUnit;
     }
 
+    public static function GetLevelRequireExp(int $level)
+    {
+        $allLevelMaxExp = self::GetData();
+        if($level <= PlayerValue::LevelMin || $level > PlayerValue::LevelMax)return 0;
+        return $allLevelMaxExp[$level - self::LevelUnit] + self::ExpUnit;
+    }
+
     public static function Clamp(int|float $max, int|float $min, int|float $value)
     {
         return max($min, min($max, $value));

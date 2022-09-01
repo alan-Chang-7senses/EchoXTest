@@ -217,10 +217,12 @@ class PlayerAbility {
         
     }
 
-    public static function GetAbilityValueByLevel(int $playerID, int $targetLevel,int $strengthLevel) : stdClass
+    public static function GetAbilityValueByLevel(int $playerID, int $targetLevel) : stdClass
     {
         $info = (new PlayerBaseValueHandler($playerID))->GetInfo();
-        $sync = (new PlayerHandler($playerID))->GetInfo()->sync;
+        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $sync = $playerInfo->sync;
+        $strengthLevel = $playerInfo->strengthLevel;
         $baseInfo = new PlayerBaseInfoHolder($targetLevel,$strengthLevel,$info->strength,$info->agility,$info->constitution,$info->dexterity);
         $res = new stdClass();
         $res->velocity = self::GetAbilityValue(AbilityFactor::Velocity,$baseInfo);

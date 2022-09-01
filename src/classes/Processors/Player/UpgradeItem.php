@@ -25,7 +25,7 @@ class UpgradeItem extends BaseProcessor{
         //跟前端要道具名稱跟數量與培養模式，還有角色ID
         $playerID = InputHelper::post('playerID');
         $itemInfo = json_decode(InputHelper::post('item'));
-        $useMode = InputHelper::post('mode');
+        $useMode = InputHelper::post('mode');        
 
         $userID = $_SESSION[Sessions::UserID];
         $userBaghandler = new UserBagHandler($userID);
@@ -79,6 +79,7 @@ class UpgradeItem extends BaseProcessor{
         $decItems = [];
         foreach($itemInfo as $itemID => $amount)
         {
+            if($amount <= 0)continue;
             $itemTemp = new stdClass();
             $itemTemp->ItemID = $itemID;
             $itemTemp->Amount = $amount;
