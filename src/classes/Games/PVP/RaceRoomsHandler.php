@@ -26,28 +26,28 @@ class RaceRoomsHandler {
         return 1000;
     }
 
-    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
+    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
 
         if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
-            return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            return $this->GetIdleRoom($lobby, $lowBound, $upBound);
         } else {
-            $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound);
             $roomNumber = count($rooms);
             if ($roomNumber > 0) {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+                return $this->GetIdleRoom($lobby, $lowBound, $upBound);
             }
         }
     }
 
-    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound, $qualifyingSeasonID): stdclass|false {
-        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
+        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound);
         if ($idleRoom !== false) {
             return $idleRoom;
         } else {
-            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound, $qualifyingSeasonID);
+            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound);
         }
     }
 
@@ -60,11 +60,11 @@ class RaceRoomsHandler {
         $seatCount = count($users);
 
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
-            $bind['Status'] = 2;
+            $bind['Status'] = RaceValue::RoomFull;
         } else if ($seatCount == 0) {
-            $bind['Status'] = 0;
+            $bind['Status'] = RaceValue::RoomIdle;
         } else {
-            $bind['Status'] = 1;
+            $bind['Status'] = RaceValue::RoomMatching;
         }
 
         $bind["RaceRoomSeats"] = json_encode($users);
@@ -73,7 +73,7 @@ class RaceRoomsHandler {
 
     public static function StartRace(int $raceRoomID, $raceID) {
         $bind = [
-            'Status' => 3,
+            'Status' => RaceValue::RoomClose,
             'RaceID' => $raceID,
         ];
 
@@ -81,10 +81,13 @@ class RaceRoomsHandler {
         return $accessor->Update($raceRoomID, $bind);
     }
 
-    public function TakeSeat(int $userID, stdClass $roomInfo): bool {
+    public function JoinRoom(int $userID, stdClass $roomInfo): bool {
+        if ($roomInfo->Status === RaceValue::RoomClose) {
+            throw new RaceException(RaceException::UserMatchError);
+        }
+
         $users = json_decode($roomInfo->RaceRoomSeats);
         $seatCount = count($users);
-
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
             throw new RaceException(RaceException::UserMatchError);
         }
@@ -97,19 +100,23 @@ class RaceRoomsHandler {
         return $this->UpdateUsers($roomInfo->RaceRoomID, $users);
     }
 
-    public function LeaveSeat(int $userID, int $raceRoomID): bool {
+    public function LeaveRoom(int $userID, int $raceRoomID): bool {
         $roomInfo = $this->accessor->GetRoom($raceRoomID);
         if ($roomInfo == false) {
             throw new RaceException(RaceException::UserMatchError);
         }
-
-        $users = json_decode($roomInfo->RaceRoomSeats);
-        $key = array_search($userID, $users);
-        if ($key !== false) {
-            unset($users[$key]);
-            return $this->UpdateUsers($raceRoomID, array_values($users));
+        if ($roomInfo->Status !== RaceValue::RoomClose) {
+            $users = json_decode($roomInfo->RaceRoomSeats);
+            $key = array_search($userID, $users);
+            if ($key !== false) {
+                unset($users[$key]);
+                return $this->UpdateUsers($raceRoomID, array_values($users));
+            } else {
+                throw new RaceException(RaceException::UserNotInRoom);
+            }
         } else {
-            throw new RaceException(RaceException::UserNotInRoom);
+            //房間已經關閉了不處理, 但需更新使用者狀態            
+            return true;
         }
     }
 

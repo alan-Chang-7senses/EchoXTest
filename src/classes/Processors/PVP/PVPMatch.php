@@ -31,7 +31,7 @@ class PVPMatch extends BaseProcessor {
         $userInfo = $userHandler->GetInfo();
         if ($userInfo->race !== RaceValue::NotInRace) {
             $raceHandler = new RaceHandler($userInfo->race);
-            $raceInfo = $raceHandler->GetInfo();           
+            $raceInfo = $raceHandler->GetInfo();
 
             if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitElitetestRace) {
 
@@ -71,17 +71,17 @@ class PVPMatch extends BaseProcessor {
         }
 
         $useTicketId = RaceUtility::GetTicketID($lobby);
-        if (($useTicketId !== 0) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
+        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
-        $raceRoomID = 0;
+        $raceRoomID = RaceValue::NotInRoom;
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID) {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
-            if ($userInfo->Room != 0) {
+            if ($userInfo->Room != RaceValue::NotInRoom) {
                 throw new RaceException(RaceException::UserInMatch);
             }
             //todo
@@ -89,8 +89,8 @@ class PVPMatch extends BaseProcessor {
             $upbound = 0;
             //
             $raceroomHandler = new RaceRoomsHandler();
-            $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound, $qualifyingHandler->NowSeasonID);
-            $raceroomHandler->TakeSeat($userID, $raceRoom);
+            $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound);
+            $raceroomHandler->JoinRoom($userID, $raceRoom);
             $raceRoomID = $raceRoom->RaceRoomID;
 
             $accessor->ClearCondition();

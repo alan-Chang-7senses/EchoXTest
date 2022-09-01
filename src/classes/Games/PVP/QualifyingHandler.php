@@ -46,12 +46,12 @@ class QualifyingHandler {
             if (($nowtime > $this->info->StartTime) && ($nowtime < $this->info->EndTime)) {
                 $this->NowSeasonID = $this->info->QualifyingSeasonID;
             } else {
-                $this->NowSeasonID = -1;
+                $this->NowSeasonID = RaceValue::NOSeasonID;
             }
         } else {
             $this->info = new stdClass;
-            $this->info->QualifyingSeasonID = -1;
-            $this->NowSeasonID = -1;
+            $this->info->QualifyingSeasonID = RaceValue::NOSeasonID;
+            $this->NowSeasonID = RaceValue::NOSeasonID;
         }
     }
 
@@ -63,7 +63,7 @@ class QualifyingHandler {
             //正常排程換季            
             $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
-            if ($this->info->QualifyingSeasonID == -1) {
+            if ($this->info->QualifyingSeasonID == RaceValue::NOSeasonID) {
                 //目前資料表沒有賽季,根據設定時間開啟賽季, 是否立即開始: $startRightNow
                 $arenaID = 1;
                 $newSeason = $this->GetNewSeasonInfo($startRightNow);
@@ -84,7 +84,7 @@ class QualifyingHandler {
             }
         } else {
             //強制換季
-            if ($this->info->QualifyingSeasonID != -1) {
+            if ($this->info->QualifyingSeasonID != RaceValue::NOSeasonID) {
                 $lastQualifyingSeasonID = $this->info->QualifyingSeasonID;
             }
 
@@ -101,7 +101,7 @@ class QualifyingHandler {
     }
 
     public function SendPrizes(int $qualifyingSeasonID): bool {
-        if ($qualifyingSeasonID == -1) {
+        if ($qualifyingSeasonID == RaceValue::NOSeasonID) {
             return false;
         }
         //todo send prize 金幣和PT
