@@ -61,7 +61,7 @@ class LeadboardUtility {
 
             $accessor->ClearCondition();
             $ranking = $accessor->SelectExpr('COUNT(*) AS cnt')
-                    ->WhereEqual('SeasonID', $seasonID)->WhereGreater('LeadRate', $playerLead->LeadRate)
+                    ->WhereEqual('SeasonID', $seasonID)->WhereGreater('LeadRate', $playerLead->LeadRate)->WhereCondition('PlayCount', '>=', $treshold)
                     ->Fetch()->cnt;
 
             foreach($rows as $row){
