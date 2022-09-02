@@ -35,6 +35,7 @@ class RaceValue {
     const StatusUpdate = 1;
     const StatusReach = 2;
     const StatusFinish = 3;
+    const StatusGiveUp = 4;
     
     const StepFinishSuccess = 3;
 
