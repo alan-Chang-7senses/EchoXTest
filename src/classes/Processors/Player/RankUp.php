@@ -4,7 +4,6 @@ namespace Processors\Player;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Consts\ItemValue;
 use Games\Consts\PlayerValue;
 use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;

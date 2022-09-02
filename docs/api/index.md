@@ -30,6 +30,7 @@
 		- [設定暱稱](Player/SetNickname.md)。
 		- [使用經驗道具](Player/UpgradeItem.md)。
 		- [升級頁面](Player/UpgradePage.md)。
+		- [提升階級](Player/RankUp.md)。
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。
