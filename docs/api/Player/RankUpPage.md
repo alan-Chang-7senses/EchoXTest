@@ -32,11 +32,13 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| currentLevel | int | 當前等級 |
 | [currentRank](#currentRank) | array | 目前階級資訊 |
 | [nextRank](#nextRank) | array | 下個階級資訊 |
 | [requireItemDust](#requireItemDust) | array | 粉塵資訊 |
 | [requireItemCrystal](#requireItemCrystal) | array | 晶石資訊 |
 | [requireCoin](#requireCoin) | array | 金幣資訊 |
+| canRankUp | bool | 可否升階 |
 
 #### <span id="currentRank">currentRank 內容</span>
 
@@ -82,28 +84,30 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
+        "currentLevel": 40,
         "currentRank": {
-            "rank": 3,
-            "maxLevel": 90,
-            "skillLevelMax": 4
+            "rank": 1,
+            "maxLevel": 40,
+            "skillLevelMax": 2
         },
         "nextRank": {
-            "rank": 4,
-            "maxLevel": 100,
-            "skillLevelMax": 5
+            "rank": 2,
+            "maxLevel": 70,
+            "skillLevelMax": 3
         },
         "requireItemDust": {
             "itemID": 1111,
             "amount": 1061,
-            "requireAmount": 90
+            "requireAmount": 30
         },
         "requireItemCrystal": {
             "itemID": 1112,
             "amount": 9987,
-            "requireAmount": 18
+            "requireAmount": 0
         },
         "requireCoin": {
-            "requireAmount": 342000,
+            "requireAmount": 30000,
             "isEnough": true
-        }
+        },
+        "canRankUp": true
     }

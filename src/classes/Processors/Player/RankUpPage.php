@@ -46,6 +46,7 @@ class RankUpPage extends BaseProcessor{
         $dustAmount = $userBagHandler->GetItemAmount($dustItemID);
         $crystalAmount = $userBagHandler->GetItemAmount($crystalItemID);
 
+        $results->currentLevel = $playerInfo->level;
         $results->currentRank = 
         [
             'rank' => $playerInfo->rank,
@@ -76,6 +77,11 @@ class RankUpPage extends BaseProcessor{
             'requireAmount' => $chargeRequire,
             'isEnough' => $userInfo->coin >= $chargeRequire,
         ];
+
+        $results->canRankUp = (PlayerValue::RankMaxLevel[$playerInfo->rank] == $playerInfo->level
+                    && $dustAmount >= $dustRequireAmount
+                    && $crystalAmount >= $dustRequireAmount
+                    && $userInfo->coin >= $chargeRequire);
                         
         return $results;
     }
