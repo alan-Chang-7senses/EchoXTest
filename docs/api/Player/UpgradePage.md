@@ -100,7 +100,7 @@ levelData陣列中的第一個元素是當前等級
             "code": 0,
             "message": ""
         },
-        "rank": 5,
+        "rank": 4,
         "currentCoin": 548899,
         "currentExp": 933075,
         "maxLevel": 100,
