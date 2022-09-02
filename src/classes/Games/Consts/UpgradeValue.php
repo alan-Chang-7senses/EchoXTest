@@ -103,5 +103,7 @@ class UpgradeValue
         self::RankUpSecond => 3,
         self::RankUpThird => 4,
         self::RankUpForth => 5,
+        5 => 5,//並不確定有無五階，先寫上。
     ];
+
 }

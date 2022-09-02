@@ -52,6 +52,7 @@ Content Type: `application/json`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
+| error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [bonus](#bonus) | array | 強化大成功模式 |
 | level | int | 強化後等級 |
 | hasUpgrade | bool | 是否等級提升 |
