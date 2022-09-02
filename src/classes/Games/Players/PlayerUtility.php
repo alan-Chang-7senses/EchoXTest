@@ -6,7 +6,6 @@ use Games\Consts\AdaptablilityLevel;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
 use Games\Consts\SceneValue;
-use Games\Exceptions\PlayerException;
 
 /**
  * Description of PlayerUtility

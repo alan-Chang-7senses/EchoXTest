@@ -52,12 +52,14 @@ class PlayerValue {
     /**最高等級 */
     const LevelMax = 100;
 
+    const RankMax = 4;
+
     /**每等階可提升最高等級 */
     const RankMaxLevel = [
         1 => 40,
         2 => 70,
         3 => 90,
         4 => 100,
-        5 => 100,
+        // 5 => 100,
     ];
 }

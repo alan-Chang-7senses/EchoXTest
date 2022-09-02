@@ -73,7 +73,7 @@ class UpgradeItem extends BaseProcessor{
         $expRt = $playerHandler->GainExp($expTotal,$bigSuccess,$ultimateSuccess);
         
         //扣錢
-        $userHandler->SaveData(['Coin' => $userInfo->coin - $costTotal]);
+        $userHandler->SaveData(['coin' => $userInfo->coin - $costTotal]);
         
         //扣道具
         $decItems = [];

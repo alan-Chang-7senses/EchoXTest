@@ -64,7 +64,7 @@ class UpgradePage extends BaseProcessor{
             $quotient = floor($expToCost / $item->EffectValue);
             $costAmount = $quotient > $amount ? $amount : $quotient;
             $expToCost -= $costAmount * $item->EffectValue;
-            $itemData[$item->ItemID]['autoAmount'] = $i == count($upgradeData) && $costAmount > 0 ? $costAmount + 1 : $costAmount;
+            $itemData[$item->ItemID]['autoAmount'] = $i == count($upgradeData) && $costAmount > 0 && $costAmount < $amount ? $costAmount + 1 : $costAmount;
         }
 
         $targetLevel = PlayerEXP::GetLevel($expTotal + $playerInfo->exp,$playerInfo->rank,$playerInfo->level);        
