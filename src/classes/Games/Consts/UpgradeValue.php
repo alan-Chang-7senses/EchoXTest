@@ -21,6 +21,7 @@ class UpgradeValue
     const RankUpFirst = 1;
     const RankUpSecond = 2;
     const RankUpThird = 3;
+    const RankUpForth = 4;
 
     const RankUnit = 1;
 
@@ -94,5 +95,13 @@ class UpgradeValue
             self::Dust => ItemValue::EffectWoodUp,
             self::Crystal => ItemValue::EffectWoodUpHigh,
         ],
+    ];
+
+    const SkillLevelLimit = 
+    [
+        self::RankUpFirst => 2,
+        self::RankUpSecond => 3,
+        self::RankUpThird => 4,
+        self::RankUpForth => 5,
     ];
 }
