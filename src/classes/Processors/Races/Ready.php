@@ -19,6 +19,7 @@ use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
+use Games\Races\OfflineRecoveryDataHandler;
 /**
  * Description of Ready
  *
@@ -150,6 +151,10 @@ class Ready extends BaseRace{
 
             $racePlayerIDs[$userInfo->player] = $racePlayerID;
             $playerSkills[$userInfo->player] = $skills;
+            
+            $offlineRecoveryDataHandler = new OfflineRecoveryDataHandler();
+            $offlineRecoveryDataHandler->SetRecoveryData($raceID,0,0,$racePlayerID,0,
+            0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$GLOBALS[Globals::TIME_BEGIN]);  
         }
 
         $raceHandler = new RaceHandler($raceID);
