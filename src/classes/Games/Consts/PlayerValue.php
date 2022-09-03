@@ -10,6 +10,7 @@ namespace Games\Consts;
 class PlayerValue {
     
     const BotIDLimit = 0;
+    const LengthNFTID = 16;
     
     const Head = 1;
     const Body = 2;
