@@ -29,7 +29,7 @@ class LeadRate extends BaseGameLeaderboard {
         
         $table = $content['table'];
         $treshold = ConfigGenerator::Instance()->{$content['tresholdParam']} - 1;
-        $seasonID = LeadboardUtility::{$content['seasonIdFunc']}();
+        $seasonID = $content['seasonIdFunc']();
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
         $rows = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, Nickname, TokenName')
