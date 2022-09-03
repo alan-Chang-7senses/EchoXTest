@@ -153,7 +153,7 @@ class Ready extends BaseRace{
             $playerSkills[$userInfo->player] = $skills;
             
             $offlineRecoveryDataHandler = new OfflineRecoveryDataHandler();
-            $offlineRecoveryDataHandler->SetRecoveryData($raceID,0,0,$racePlayerID,0,
+            $offlineRecoveryDataHandler->SetRecoveryData($raceID,0,0,$userInfo->player,0,
             0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$GLOBALS[Globals::TIME_BEGIN]);  
         }
 
