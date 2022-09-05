@@ -142,10 +142,10 @@ class PlayerAbility {
 
          + $levelMultiplier * AbilityFactor::Delta;
          return number_format($rt, AbilityFactor::Decimals);
-    }
+    }    
 
     /**算出數值大小排名。數值相同依照企劃說明排序。回傳陣列內容數字依照常數定義 */
-    public static function GetAbilityDesc(PlayerBaseInfoHolder|PlayerInfoHolder|stdClass $info) : array
+    public static function GetAbilityDesc(PlayerInfoHolder|stdClass $info) : array
     {
         $abilities = 
         [
@@ -208,13 +208,30 @@ class PlayerAbility {
     {
         match($valueID)
         {
-            AbilityFactor::Velocity => $holder->velocity = number_format($modifyCoefficient * $holder->velocity,AbilityFactor::Decimals),
-            AbilityFactor::Stamina => $holder->stamina = number_format($modifyCoefficient * $holder->stamina,AbilityFactor::Decimals),
-            AbilityFactor::BreakOut => $holder->breakOut = number_format($modifyCoefficient * $holder->breakOut,AbilityFactor::Decimals),
-            AbilityFactor::Will => $holder->will = number_format($modifyCoefficient * $holder->will,AbilityFactor::Decimals),
-            AbilityFactor::Intelligent => $holder->intelligent = number_format($modifyCoefficient * $holder->intelligent,AbilityFactor::Decimals),
+            AbilityFactor::Velocity => $holder->velocity = (float)number_format($modifyCoefficient * $holder->velocity,AbilityFactor::Decimals),
+            AbilityFactor::Stamina => $holder->stamina = (float)number_format($modifyCoefficient * $holder->stamina,AbilityFactor::Decimals),
+            AbilityFactor::BreakOut => $holder->breakOut = (float)number_format($modifyCoefficient * $holder->breakOut,AbilityFactor::Decimals),
+            AbilityFactor::Will => $holder->will = (float)number_format($modifyCoefficient * $holder->will,AbilityFactor::Decimals),
+            AbilityFactor::Intelligent => $holder->intelligent = (float)number_format($modifyCoefficient * $holder->intelligent,AbilityFactor::Decimals),
         };
         
+    }
+
+    public static function GetAbilityValueByLevel(int $playerID, int $targetLevel) : stdClass
+    {
+        $info = (new PlayerBaseValueHandler($playerID))->GetInfo();
+        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $sync = $playerInfo->sync;
+        $strengthLevel = $playerInfo->strengthLevel;
+        $baseInfo = new PlayerBaseInfoHolder($targetLevel,$strengthLevel,$info->strength,$info->agility,$info->constitution,$info->dexterity);
+        $res = new stdClass();
+        $res->velocity = self::GetAbilityValue(AbilityFactor::Velocity,$baseInfo);
+        $res->stamina = self::GetAbilityValue(AbilityFactor::Stamina,$baseInfo);
+        $res->breakOut = self::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
+        $res->will = self::GetAbilityValue(AbilityFactor::Will,$baseInfo);
+        $res->intelligent = self::GetAbilityValue(AbilityFactor::Intelligent,$baseInfo);
+        self::ApplySyncRateBonus($res,$sync);
+        return $res;
     }
 
 }

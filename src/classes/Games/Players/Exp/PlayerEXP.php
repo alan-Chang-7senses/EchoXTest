@@ -9,7 +9,7 @@ use Games\Consts\PlayerValue;
 class PlayerEXP
 {
 
-    private const LevelUnit = 1;
+    public const LevelUnit = 1;
     private const ExpUnit = 1;
 
     private const TestLevel = 100;
@@ -47,6 +47,13 @@ class PlayerEXP
         if($currentLevel >= self::TestLevel)return false;
         if(self::IsLevelMax($currentExp,$currentRank))return false;
         return $allLevelMaxExp[$currentLevel] - $currentExp + self::ExpUnit;
+    }
+
+    public static function GetLevelRequireExp(int $level)
+    {
+        $allLevelMaxExp = self::GetData();
+        if($level <= PlayerValue::LevelMin || $level > PlayerValue::LevelMax)return 0;
+        return $allLevelMaxExp[$level - self::LevelUnit] + self::ExpUnit;
     }
 
     public static function Clamp(int|float $max, int|float $min, int|float $value)
