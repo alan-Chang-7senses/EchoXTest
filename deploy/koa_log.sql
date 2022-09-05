@@ -34,6 +34,24 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
 
+-- 傾印  資料表 koa_log.Upgrade 結構
+CREATE TABLE IF NOT EXISTS `Upgrade` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT,
+  `PlayerID` bigint(20) NOT NULL DEFAULT 0,
+  `SkillID` int(11) DEFAULT NULL COMMENT '技能ID',
+  `SkillLevelDelta` int(11) NOT NULL DEFAULT 0 COMMENT '技能等級變化量',
+  `CoinDelta` int(11) NOT NULL DEFAULT 0 COMMENT '金幣變化量',
+  `BonusType` int(11) DEFAULT NULL COMMENT '強化加成類型',
+  `ExpDelta` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '角色經驗值變化量',
+  `RankDelta` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '角色階級變化量',
+  `LogTime` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Serial`,`LogTime`),
+  KEY `PlayerID` (`PlayerID`),
+  KEY `SkillID` (`SkillID`),
+  KEY `RankDelta` (`RankDelta`),
+  KEY `ExpDelta` (`ExpDelta`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='升級、升階、升技能LOG';
+
 -- 傾印  資料表 koa_log.UserItemsLog 結構
 CREATE TABLE IF NOT EXISTS `UserItemsLog` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
