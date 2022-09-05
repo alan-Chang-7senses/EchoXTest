@@ -168,15 +168,14 @@ class QualifyingHandler {
         $ticketInfo->receiveRemainTime = $this->GetRemainTicketTime($userID, $lobby);
         return $ticketInfo;
     }
-
-    public function GetSceneID(int $lobby): int {
+    public function GetSceneID(int $lobby, int $defaultSceneID): int {
         switch ($lobby) {
             case RaceValue::LobbyCoin:
                 return $this->info->CoinScene;
             case RaceValue::LobbyPT:
                 return $this->info->PTScene;
         }
-        return 0;
+        return $defaultSceneID;
     }
 
     public function GetPetaLimitLevel(int $lobby): int {
