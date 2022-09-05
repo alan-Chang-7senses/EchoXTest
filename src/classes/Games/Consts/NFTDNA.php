@@ -31,6 +31,8 @@ class NFTDNA {
     const SpeciesAdaptOffset = 0;
     /** 物種適性長度 */
     const SpeciesAdaptLength = 1;
+    /** 物種編號長度 */
+    const SpeciesLength = 2;
     
     /** 來源標記第一碼 - 推廣用 */
     const SourcePromote = 0;

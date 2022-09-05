@@ -1,5 +1,6 @@
 <?php
-namespace Games\Players;
+
+namespace Games\Players\Holders;
 
 use stdClass;
 

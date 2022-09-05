@@ -35,8 +35,22 @@ class UpgradeValue
     const ItemIDStarDust = 1131;
     const ItemIDStarCrystal = 1132;
 
+    const ItemIDBlueBerryRock = 2000;
+    const ItemIDChipLion = 2011;
+    const ItemIDChipDeer = null; // 暫時廢棄
+    const ItemIDChipFox = 2013;
+    const ItemIDChipCat = 2014;
+    const ItemIDChipTiger = 2015;
+    const ItemIDChipDog = 2016;
+    const ItemIDChipMokey = 2017;
+    const ItemIDChipMultiverse = 2002;
+    const ItemIDChipSpecial = 2001;
+
     const Dust = 0;
     const Crystal = 1;
+
+    const BlueBerryRock = 2;
+    const Chip = 3;
 
     const RankUpItem = 
     [
@@ -106,5 +120,47 @@ class UpgradeValue
         self::RankUpForth => 5,
         5 => 5,//並不確定有無五階，先寫上。
     ];
+
+    const SkillUpgradeCharge = 
+    [
+        self::RankUpFirst => 10000,
+        self::RankUpSecond => 30000,
+        self::RankUpThird => 218000,
+        self::RankUpForth => 342000,
+    ];
+
+
+    const SkillUpgradeItemAmount = 
+    [
+        self::RankUpFirst => 
+        [
+            self::ItemIDBlueBerryRock => 10,
+        ],
+        self::RankUpSecond => 
+        [
+            self::ItemIDBlueBerryRock => 15,
+        ],
+        self::RankUpThird => 
+        [
+            self::Chip => 10,
+        ],
+        self::RankUpForth => 
+        [
+            self::Chip => 15,
+        ],
+    ];
+
+    const SkillUpgradeSpeciesItem = 
+    [
+        SpeciesValue::LionDNA => self::ItemIDChipLion,
+        SpeciesValue::DeerDNA => self::ItemIDChipDeer,
+        SpeciesValue::FoxDNA => self::ItemIDChipFox,
+        SpeciesValue::CatDNA => self::ItemIDChipCat,
+        SpeciesValue::TigerDNA => self::ItemIDChipTiger,
+        SpeciesValue::DogDNA => self::ItemIDChipDog,
+        SpeciesValue::MokeyDNA => self::ItemIDChipMokey,
+    ];
+
+    
 
 }
