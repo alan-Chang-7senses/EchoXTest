@@ -2109,7 +2109,8 @@ INSERT INTO `SingleRankingReward` (`Serial`, `PlayerNumber`, `Ranking`, `CoinRew
 	(32, 3, 2, 1000032, 0),
 	(33, 3, 3, 1000033, 0),
 	(34, 2, 1, 1000021, 0),
-	(35, 2, 2, 1000022, 0);
+	(35, 2, 2, 1000022, 0),
+	(36, 1, 1, 1000021, 0);
 /*!40000 ALTER TABLE `SingleRankingReward` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SkillAffixAlias 結構

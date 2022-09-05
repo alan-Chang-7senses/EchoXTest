@@ -37,15 +37,23 @@ class Rankings extends BaseRace{
         $offsides = [];
         $takenOvers = [];
         foreach ($players as $player){
-            if(!property_exists($raceInfo->racePlayers, $player->id)) throw new RaceException (RaceException::PlayerNotInThisRace, ['[player]' => $player->id]);
-            $rankings[$raceInfo->racePlayers->{$player->id}] = $player->ranking;
-
+            if(!property_exists($raceInfo->racePlayers, $player->id)) continue;
+            
             $racePlayerID = $raceInfo->racePlayers->{$player->id};
+            $rankings[$racePlayerID] = $player->ranking;
+
             $rph = new RacePlayerHandler($racePlayerID);
             $rpInfo = $rph->GetInfo();
             $offside = $rpInfo->ranking - $player->ranking;                        
             if($offside > 0) $offsides[$racePlayerID] = $rpInfo->offside + $offside;
             elseif($offside < 0) $takenOvers[$racePlayerID] = $rpInfo->takenOver + (-$offside);                         
+        }
+        
+        asort($rankings);
+        $keys = array_keys($rankings);
+        $n = 1;
+        foreach ($keys as $racePlayerID){
+            $rankings[$racePlayerID] = $n++;
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);

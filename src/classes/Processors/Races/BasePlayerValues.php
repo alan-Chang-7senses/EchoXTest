@@ -6,6 +6,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Games\Consts\RaceValue;
+use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
@@ -40,10 +41,25 @@ abstract class BasePlayerValues extends BaseRace{
         $playerID = $this->GetPlayerID();
         
         $raceHandler = new RaceHandler($this->userInfo->race);
+        $raceInfo = $raceHandler->GetInfo();
+        
+        if(!isset($raceInfo->racePlayers->{$playerID})){
+            
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $row = $accessor->FromTable('RacePlayer')->WhereEqual('RaceID', $raceInfo->id)->WhereEqual('PlayerID', $playerID)->Fetch();
+            if(!empty($row) && $row->Status == RaceValue::StatusGiveUp) {
+                $result = new ResultData(ErrorCode::Success);
+                $result->h = SkillValue::SkillH;
+                $result->s = SkillValue::SkillS;
+                return $result;
+            }
+            
+            throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $playerID]);
+        }
+        
         $playerHandler = new PlayerHandler($playerID);
         $racePlayerHandler = $raceHandler->SetPlayer($playerHandler);
         
-        $raceInfo = $raceHandler->GetInfo();
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
         $racePlayerInfo = $raceHandler->GetRacePlayerInfo();

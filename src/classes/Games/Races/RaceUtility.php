@@ -1,6 +1,8 @@
 <?php
 namespace Games\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Scenes\SceneHandler;
@@ -102,5 +104,10 @@ class RaceUtility {
 
     public static function GetLeadRateForWriteDB(int $leadCount, int $playCount) : int{
         return intval($leadCount / $playCount * RaceValue::DivisorLeadRate);
+    }
+    
+    public static function QualifyingSeasonID() : int{
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
     }
 }
