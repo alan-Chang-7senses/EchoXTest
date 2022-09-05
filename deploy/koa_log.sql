@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   `RecordTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '紀錄時間',
   PRIMARY KEY (`Serial`,`RecordTime`),
   KEY `UserID` (`UserID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
 
 -- 傾印  資料表 koa_log.Upgrade 結構
 CREATE TABLE IF NOT EXISTS `Upgrade` (
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `Upgrade` (
   KEY `SkillID` (`SkillID`),
   KEY `RankDelta` (`RankDelta`),
   KEY `ExpDelta` (`ExpDelta`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='升級、升階、升技能LOG';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='升級、升階、升技能LOG';
 
 -- 傾印  資料表 koa_log.UserItemsLog 結構
 CREATE TABLE IF NOT EXISTS `UserItemsLog` (
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `UserItemsLog` (
   KEY `UserItemID` (`UserItemID`),
   KEY `UserID` (`UserID`),
   KEY `ItemID` (`ItemID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='使用者物品紀錄';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者物品紀錄';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
