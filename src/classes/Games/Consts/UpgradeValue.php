@@ -8,6 +8,7 @@ class UpgradeValue
     const ModeNormal = 1;
     const ModeLuxury = 2;
     
+    const BonuSuccessID = 0;
     const BonusBigSuccessID = 1;
     const BonusUltimateSuccessId = 2;
 

@@ -4,6 +4,7 @@ namespace Processors\Player;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Accessors\GameLogAccessor;
 use Games\Consts\PlayerValue;
 use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;
@@ -71,15 +72,21 @@ class RankUp extends BaseProcessor{
         $userHandler->SaveData(['coin' => $userInfo->coin - $charge]);
         
         // 扣道具
-        $itemTemp = new stdClass();
-        $itemTemp->ItemID = $dustItemID;
-        $itemTemp->Amount = $dustAmount;
-        $userBagHandler->DecItems($itemTemp,UpgradeValue::RankUpItemValue[$playerInfo->ele][UpgradeValue::Dust]);
-
-        $itemTemp = new stdClass();
-        $itemTemp->ItemID = $crystalItemID;
-        $itemTemp->Amount = $crystalAmount;
-        $userBagHandler->DecItems($itemTemp,UpgradeValue::RankUpItemValue[$playerInfo->ele][UpgradeValue::Crystal]);
+        if($dustAmount > 0)
+        {
+            $itemTemp = new stdClass();
+            $itemTemp->ItemID = $dustItemID;
+            $itemTemp->Amount = $dustAmount;
+            $userBagHandler->DecItems($itemTemp,UpgradeValue::RankUpItemValue[$playerInfo->ele][UpgradeValue::Dust]);
+        }
+        if($crystalAmount > 0)
+        {
+            $itemTemp = new stdClass();
+            $itemTemp->ItemID = $crystalItemID;
+            $itemTemp->Amount = $crystalAmount;
+            $userBagHandler->DecItems($itemTemp,UpgradeValue::RankUpItemValue[$playerInfo->ele][UpgradeValue::Crystal]);
+        }
+        (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$charge,null,null,UpgradeValue::RankUnit);
         $results = new ResultData(ErrorCode::Success);        
         return $results;
     }
