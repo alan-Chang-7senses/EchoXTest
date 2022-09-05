@@ -38,7 +38,7 @@ class PVPInfo extends BaseRace {
             $lobbyinfo->ticketAmount = $userBagHandler->GetItemAmount($ticketID);
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
 
-            $scendID = $qualifyingHandler->GetSceneID($lobby);
+            $scendID = $qualifyingHandler->GetSceneID($lobby, $this->userInfo->scene);
             $sceneHandler = new SceneHandler($scendID);
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
