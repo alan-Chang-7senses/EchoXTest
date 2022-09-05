@@ -59,6 +59,7 @@
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
+		- [離開競賽](Races/LeaveRace.md)。
 	- 公告：
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。		

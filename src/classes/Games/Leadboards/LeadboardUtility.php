@@ -17,20 +17,15 @@ class LeadboardUtility {
     const LeadRateContents = [
         RaceValue::LobbyCoin => [
             'table' => 'LeaderboardLeadCoin',
-            'seasonIdFunc' => 'QualifyingSeasonID',
+            'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',
         ],
         RaceValue::LobbyPT => [
             'table' => 'LeaderboardLeadPT',
-            'seasonIdFunc' => 'QualifyingSeasonID',
+            'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_2',
         ]
     ];
-    
-    public static function QualifyingSeasonID() : int{
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
-    }
     
     public static function PlayerLeadRanking(int $lobby, int $playerID, int $seasonID) : stdClass {
         

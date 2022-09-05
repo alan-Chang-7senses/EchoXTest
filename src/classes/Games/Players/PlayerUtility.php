@@ -41,4 +41,8 @@ class PlayerUtility {
             default => PlayerValue::SunDiff,
         };
     }
+    
+    public static function GetIDName(int $playerID) : string {
+        return strlen($playerID) != PlayerValue::LengthNFTID ? (string)$playerID : 'NFT'. intval(substr($playerID, 3));
+    }
 }

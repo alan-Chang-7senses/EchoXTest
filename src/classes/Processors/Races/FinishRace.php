@@ -28,15 +28,13 @@ use Holders\ResultData;
 class FinishRace extends BaseRace{
     
     private array $rewardField = [
-        RaceValue::LobbyNone => 'coinReward', //Ready 檢驗房間後移除
         RaceValue::LobbyCoin => 'coinReward',
         RaceValue::LobbyPT => 'petaTokenReward',
     ];
     
     private array $leaderboardLeadFunc = [
-        RaceValue::LobbyNone => 'LeaderboardLeadCoin', //Ready 檢驗房間後移除
         RaceValue::LobbyCoin => 'LeaderboardLeadCoin',
-        RaceValue::LobbyPT => 'RecordLeaderboardPT',
+        RaceValue::LobbyPT => 'LeaderboardLeadPT',
     ];
 
     public function Process(): ResultData {
@@ -46,7 +44,8 @@ class FinishRace extends BaseRace{
         $raceInfo = $racePool->$raceID;
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
-        $playerCount = count((array)$raceInfo->racePlayers);
+        $racePlayersArr = (array)$raceInfo->racePlayers;
+        $playerCount = count($racePlayersArr);
         if($playerCount < RaceValue::RacePlayerMin) throw new RaceException(RaceException::IncorrectPlayerNumber);
         
         $userPool = UserPool::Instance();
@@ -105,20 +104,22 @@ class FinishRace extends BaseRace{
             
             if(UserUtility::IsNonUser($user['id'])) continue;
             
+            $users[$idx]['leadRate'] = $leadRates[$user['player']] ?? 0;
+            
+            if(empty($rewards[$user['id']])) continue;
+            
             $rewardInfo = $rewards[$user['id']]->GetInfo();
             if($rewardInfo->Modes == RewardValue::ModeSelfSelect) continue;
             
             UserUtility::AddItems($user['id'], $items[$user['id']]);
-            
-            $users[$idx]['leadRate'] = $leadRates[$user['player']] ?? 0;
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function() use ($accessor, $raceID, $users){
+        $accessor->Transaction(function() use ($accessor, $raceID, $racePlayersArr, $users){
             
             $currentTime = $GLOBALS[Globals::TIME_BEGIN];
             
-            $accessor->FromTable('RacePlayer')->WhereEqual('RaceID', $raceID)->Modify([
+            $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values($racePlayersArr))->Modify([
                 'Status' => RaceValue::StatusFinish,
                 'UpdateTime' => $currentTime,
             ]);
@@ -160,16 +161,11 @@ class FinishRace extends BaseRace{
     }
     
     private function LeaderboardLeadCoin() : array{
-        return $this->RecordLeaderboardLead('LeaderboardLeadCoin', [$this, 'GetQualifyingSeasonID']);
+        return $this->RecordLeaderboardLead('LeaderboardLeadCoin', 'Games\Races\RaceUtility::QualifyingSeasonID');
     }
     
     private function LeaderboardLeadPT() : array{
-        return $this->RecordLeaderboardLead('LeaderboardLeadPT', [$this, 'GetQualifyingSeasonID']);
-    }
-    
-    private function GetQualifyingSeasonID() : int{
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
+        return $this->RecordLeaderboardLead('LeaderboardLeadPT', 'Games\Races\RaceUtility::QualifyingSeasonID');
     }
     
     private function RecordLeaderboardLead(string $table, $seasonIDFunc) : array{
@@ -180,7 +176,6 @@ class FinishRace extends BaseRace{
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $seasonID = call_user_func($seasonIDFunc);
-        $accessor->ClearOrderBy()->ClearLimt();
         $rows = $accessor->FromTable($table)
                 ->WhereEqual('SeasonID', $seasonID)->WhereIn('PLayerID', array_keys($racePlayers))
                 ->FetchAll();

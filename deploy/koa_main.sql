@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `LeaderboardLeadCoin` (
   UNIQUE KEY `SeasonID_PlayerID` (`SeasonID`,`PlayerID`),
   KEY `SeasonID` (`SeasonID`),
   KEY `PlayCount_LeadRate_UpdateTime` (`PlayCount`,`LeadRate`,`UpdateTime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='金幣賽領先排行榜';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='金幣賽領先排行榜';
 
 -- 傾印  資料表 koa_main.LeaderboardLeadPT 結構
 CREATE TABLE IF NOT EXISTS `LeaderboardLeadPT` (
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `LeaderboardLeadPT` (
   UNIQUE KEY `SeasonID_PlayerID` (`SeasonID`,`PlayerID`),
   KEY `SeasonID` (`SeasonID`),
   KEY `PlayCount_LeadRate_UpdateTime` (`PlayCount`,`LeadRate`,`UpdateTime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COMMENT='PT賽領先排行榜';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PT賽領先排行榜';
 
 -- 傾印  資料表 koa_main.Marquee 結構
 CREATE TABLE IF NOT EXISTS `Marquee` (

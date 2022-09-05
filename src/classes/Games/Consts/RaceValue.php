@@ -12,7 +12,7 @@ class RaceValue {
     const NotInLobby = 0;
     const NotInRoom = 0;
     const BotMatch = -1;
-    const RacePlayerMin = 2;
+    const RacePlayerMin = 1;
     
     const NOSeasonID = -1;
     const NoTicketID = 0;
@@ -35,6 +35,7 @@ class RaceValue {
     const StatusUpdate = 1;
     const StatusReach = 2;
     const StatusFinish = 3;
+    const StatusGiveUp = 4;
     
     const StepFinishSuccess = 3;
 
@@ -162,6 +163,7 @@ class RaceValue {
     const TakenOverConditionCount = 1;
     
     const LeadRanking = [
+        1 => 1,
         2 => 1,
         3 => 1,
         4 => 2,

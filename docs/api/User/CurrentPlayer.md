@@ -41,6 +41,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | id | int | 角色編號 |
+| idName | string | 給前端顯示的角色編號字串 |
 | name | string | 角色暱稱，由使用者命名，若未編輯則與角色編號相同 |
 | ele | int | [屬性](../codes/player.md#attr) |
 | sync | float | 同步率 |
@@ -124,6 +125,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
         },
         "player": {
             "id": 1010000000000001,
+            "idName": "NFT1",
             "name": "1010000000000001",
             "ele": 1,
             "sync": 0,
