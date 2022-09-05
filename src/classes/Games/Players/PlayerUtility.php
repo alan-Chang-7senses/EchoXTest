@@ -6,7 +6,6 @@ use Games\Consts\AdaptablilityLevel;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
 use Games\Consts\SceneValue;
-use Games\Exceptions\PlayerException;
 
 /**
  * Description of PlayerUtility
@@ -41,5 +40,9 @@ class PlayerUtility {
             $lighting => PlayerValue::SunSame,
             default => PlayerValue::SunDiff,
         };
+    }
+    
+    public static function GetIDName(int $playerID) : string {
+        return strlen($playerID) != PlayerValue::LengthNFTID ? (string)$playerID : 'NFT'. intval(substr($playerID, 3));
     }
 }

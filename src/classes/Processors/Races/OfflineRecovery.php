@@ -37,7 +37,7 @@ class OfflineRecovery extends BaseRace {
             'weather' => $raceInfo->weather,
             'windDirection' => $raceInfo->windDirection,
             'windSpeed' => $climate->windSpeed,
-            'ligthing' => $climate->lighting,
+            'lighting' => $climate->lighting,
         ];
         
         $players = [];

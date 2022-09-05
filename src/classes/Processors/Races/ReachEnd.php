@@ -26,12 +26,21 @@ class ReachEnd extends BaseRace{
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
         
-        if(!property_exists($raceInfo->racePlayers, $player)) throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $player]);
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        
+        if(!property_exists($raceInfo->racePlayers, $player)){
+            
+            $row = $accessor->FromTable('RacePlayer')->WhereEqual('RaceID', $this->userInfo->race)->WhereEqual('PlayerID', $player)->Fetch();
+            if(!empty($row) && $row->Status == RaceValue::StatusGiveUp) return new ResultData (ErrorCode::Success);
+            
+            throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $player]);
+        }
+        
         $racePlayerID = $raceInfo->racePlayers->{$player};
         
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
-        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->ClearAll();
         $accessor->Transaction(function() use ($accessor, $racePlayerID){
             
             $row = $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();

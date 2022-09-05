@@ -29,6 +29,9 @@
 		- [儲存技能](Player/SetSkill.md)。
 		- [設定暱稱](Player/SetNickname.md)。
 		- [使用經驗道具](Player/UpgradeItem.md)。
+		- [升級頁面](Player/UpgradePage.md)。
+		- [提升階級](Player/RankUp.md)。
+		- [提升階級頁面](Player/RankUpPage.md)。
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。
@@ -56,6 +59,7 @@
 		- [排名](Races/Rankings.md)。
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
+		- [離開競賽](Races/LeaveRace.md)。
 	- 公告：
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。		

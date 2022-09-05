@@ -10,6 +10,7 @@ namespace Games\Consts;
 class PlayerValue {
     
     const BotIDLimit = 0;
+    const LengthNFTID = 16;
     
     const Head = 1;
     const Body = 2;
@@ -51,6 +52,8 @@ class PlayerValue {
 
     /**最高等級 */
     const LevelMax = 100;
+
+    const RankMax = 4;
 
     /**每等階可提升最高等級 */
     const RankMaxLevel = [

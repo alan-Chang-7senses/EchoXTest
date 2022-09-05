@@ -16,4 +16,7 @@ class PlayerException extends NormalException{
     const NicknameInValid = 3004;
     const NicknameLengthError = 3005;
     const NicknameNotEnglish = 3006;
+
+    const AlreadyRankMax = 3007;
+    const NotReachMaxLevelYet = 3008;
 }

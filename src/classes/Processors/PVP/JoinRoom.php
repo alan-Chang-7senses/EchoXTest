@@ -53,7 +53,7 @@ class JoinRoom {
             $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
                 'Lobby' => $raceRoom->Lobby,
                 'Room' => $raceRoom->RaceRoomID,
-                'Scene' => $qualifyingHandler->GetSceneID($raceRoom->Lobby),
+                'Scene' => $qualifyingHandler->GetSceneID($raceRoom->Lobby, $userInfo->Scene),
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
         });

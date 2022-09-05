@@ -97,7 +97,7 @@ class PVPMatch extends BaseProcessor {
             $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify([
                 'Lobby' => $lobby,
                 'Room' => $raceRoom->RaceRoomID,
-                'Scene' => $qualifyingHandler->GetSceneID($lobby),
+                'Scene' => $qualifyingHandler->GetSceneID($lobby, $userInfo->Scene),
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
         });

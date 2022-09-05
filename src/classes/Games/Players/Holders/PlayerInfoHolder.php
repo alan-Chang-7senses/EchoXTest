@@ -12,6 +12,8 @@ class PlayerInfoHolder extends stdClass {
     
     /** @var int PlayerID */
     public int $id = 0;
+    /** @var string 顯示用的 PlayerID */
+    public string $idName;
     /** @var string 角色暱稱 */
     public string $name;
     /** @var int 生物屬性 */

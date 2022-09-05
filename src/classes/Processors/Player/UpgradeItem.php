@@ -4,6 +4,7 @@ namespace Processors\Player;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Accessors\GameLogAccessor;
 use Games\Consts\ItemValue;
 use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;
@@ -25,7 +26,7 @@ class UpgradeItem extends BaseProcessor{
         //跟前端要道具名稱跟數量與培養模式，還有角色ID
         $playerID = InputHelper::post('playerID');
         $itemInfo = json_decode(InputHelper::post('item'));
-        $useMode = InputHelper::post('mode');
+        $useMode = InputHelper::post('mode');        
 
         $userID = $_SESSION[Sessions::UserID];
         $userBaghandler = new UserBagHandler($userID);
@@ -70,21 +71,24 @@ class UpgradeItem extends BaseProcessor{
         $ultimateSuccessData = $upgradeBonusTable[UpgradeValue::BonusUltimateSuccessId];
         $ultimateSuccess = new ExpBonus($ultimateSuccessData->BonusID,$ultimateSuccessData->Multiplier / UpgradeValue::Divisor,$ultimateBonusProbability);
         
-        $expRt = $playerHandler->GainExp($expTotal,$bigSuccess,$ultimateSuccess);
         
-        //扣錢
-        $userHandler->SaveData(['Coin' => $userInfo->coin - $costTotal]);
+        $expRt = $playerHandler->GainExp($expTotal,$bigSuccess,$ultimateSuccess);
         
         //扣道具
         $decItems = [];
         foreach($itemInfo as $itemID => $amount)
         {
+            if($amount <= 0)continue;
             $itemTemp = new stdClass();
             $itemTemp->ItemID = $itemID;
             $itemTemp->Amount = $amount;
             $decItems[] = $itemTemp;
         }
+        
         $userBaghandler->DecItems($decItems,ItemValue::EffectExp);
+        //扣錢
+        $userHandler->SaveData(['coin' => $userInfo->coin - $costTotal]);
+        
         //打包：成功模式、目前等級
         $results = new ResultData(ErrorCode::Success);        
         $results->bonus = [];
@@ -97,6 +101,8 @@ class UpgradeItem extends BaseProcessor{
         }
         $results->level = $playerHandler->GetInfo()->level;
         $results->hasUpgrade = $previousLevel < $playerHandler->GetInfo()->level;
+        $bonus = empty($results->bonus) ? [UpgradeValue::BonuSuccessID] : $results->bonus;
+        (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$costTotal,$bonus,$expRt->gainAmount,null);
         return $results;
     }
 }

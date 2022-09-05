@@ -9,6 +9,7 @@ use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Exceptions\LeaderboardException;
 use Games\Leadboards\LeadboardUtility;
+use Games\Players\PlayerUtility;
 use Games\Pools\UserPool;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
@@ -29,7 +30,7 @@ class LeadRate extends BaseGameLeaderboard {
         
         $table = $content['table'];
         $treshold = ConfigGenerator::Instance()->{$content['tresholdParam']} - 1;
-        $seasonID = LeadboardUtility::{$content['seasonIdFunc']}();
+        $seasonID = $content['seasonIdFunc']();
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
         $rows = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, Nickname, TokenName')
@@ -42,11 +43,11 @@ class LeadRate extends BaseGameLeaderboard {
         $list = [];
         $ranking = $this->offset + 1;
         foreach($rows as $row){
-            
+            $idName = PlayerUtility::GetIDName($row->PlayerID);
             $list[] = [
                 'ranking' => $ranking,
-                'nickname' => (string)($row->Nickname ?? $row->PlayerID),
-                'tokenName' => (string)($row->TokenName ?? $row->PlayerID),
+                'nickname' => (string)($row->Nickname ?? $idName),
+                'tokenName' => (string)($row->TokenName ?? $idName),
                 'leadRate' => $row->LeadRate / RaceValue::DivisorPercent,
                 'playCount' => $row->PlayCount,
             ];

@@ -15,16 +15,15 @@ use Games\Players\Adaptability\SlotNumber;
 use Games\Players\Adaptability\TerrainAdaptability;
 use Games\Players\Adaptability\WeatherAdaptability;
 use Games\Players\Adaptability\WindAdaptability;
+use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\PlayerBaseInfoHolder;
+use Games\Players\PlayerUtility;
 use Generators\ConfigGenerator;
 use stdClass;
-use Games\Exceptions\PlayerException;
-use Games\Players\Exp\PlayerEXP;
-
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
  * 資料將暫存於 memcached 中
@@ -52,7 +51,8 @@ class PlayerPool extends PoolAccessor {
         
         $holder = new PlayerInfoHolder();
         $holder->id = $playerID;
-        $holder->name = $player->Nickname ?? (string)$playerID;
+        $holder->idName = PlayerUtility::GetIDName($playerID);
+        $holder->name = $player->Nickname ?? $holder->idName;
         $holder->ele = $player->Attribute;
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
         $holder->level = empty($allPlayerLevel) ? $player->Level : $allPlayerLevel;
