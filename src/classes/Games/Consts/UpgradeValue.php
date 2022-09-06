@@ -51,14 +51,14 @@ class UpgradeValue
     const BlueBerryRock = 2;
     const Chip = 3;
 
-    const SkillUpFirst = 1;
-    const SkillUpSecond = 2;
-    const SkillUpThird = 3;
-    const SkillUpForth = 4;
+    const SkillUpgradeFirst = 1;
+    const SkillUpgradeSecond = 2;
+    const SkillUpgradeThird = 3;
+    const SkillUpgradeForth = 4;
 
     const SkillUpOther = 0;
 
-    const SkillLevelUnit = 1;
+    const SkillRankUnit = 1;
 
     const RankUpItem = 
     [
@@ -131,28 +131,28 @@ class UpgradeValue
 
     const SkillUpgradeCharge = 
     [
-        self::SkillUpFirst => 10000,
-        self::SkillUpSecond => 30000,
-        self::SkillUpThird => 218000,
-        self::SkillUpForth => 342000,
+        self::SkillUpgradeFirst => 10000,
+        self::SkillUpgradeSecond => 30000,
+        self::SkillUpgradeThird => 218000,
+        self::SkillUpgradeForth => 342000,
     ];
 
 
     const SkillUpgradeItemAmount = 
     [
-        self::SkillUpFirst => 
+        self::SkillUpgradeFirst => 
         [
             self::BlueBerryRock => 10,
         ],
-        self::SkillUpSecond => 
+        self::SkillUpgradeSecond => 
         [
             self::BlueBerryRock => 15,
         ],
-        self::SkillUpThird => 
+        self::SkillUpgradeThird => 
         [
             self::Chip => 10,
         ],
-        self::SkillUpForth => 
+        self::SkillUpgradeForth => 
         [
             self::Chip => 15,
         ],

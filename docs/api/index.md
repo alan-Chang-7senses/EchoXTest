@@ -32,6 +32,8 @@
 		- [升級頁面](Player/UpgradePage.md)。
 		- [提升階級](Player/RankUp.md)。
 		- [提升階級頁面](Player/RankUpPage.md)。
+		- [提升技能等級](Player/UpgradeSkill.md)。
+		- [提升技能等級頁面](Player/UpgradeSkillPage.md)。
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。

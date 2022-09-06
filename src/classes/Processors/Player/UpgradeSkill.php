@@ -15,6 +15,7 @@ use Games\Exceptions\ItemException;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Players\UpgradeUtility;
 use Games\Pools\PlayerPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
@@ -43,8 +44,6 @@ class UpgradeSkill extends BaseProcessor{
         if(!$playerhandler->HasSkill($skillID))
         throw new PlayerException(PlayerException::NoSuchSkill, ['[player]' => $playerInfo->id, '[skillID]' => $skillID]);
         
-        $results = new ResultData(ErrorCode::Success);
-        
         $levelLimit = UpgradeValue::SkillLevelLimit[$playerInfo->rank];
         $skillLevel = $playerhandler->SkillLevel($skillID);
         
@@ -52,34 +51,8 @@ class UpgradeSkill extends BaseProcessor{
         if($skillLevel >= $levelLimit)
         throw new PlayerException(PlayerException::SkillLevelMax,['playerID' => $playerID,'skillID' => $skillID]);
 
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $skillRow = $accessor->FromTable('SkillInfo')
-                        ->WhereEqual('SkillID',$skillID)
-                        ->Fetch();
-
-
-        $accessor->ClearCondition();
-        $skillPartRow = $accessor->FromTable('SkillPart')
-                ->WhereEqual('AliasCode1',$skillRow->AliasCode)
-                ->Fetch();
-        $speciesCode = $skillPartRow === false ?
-            UpgradeValue::SkillUpOther :
-            substr($skillPartRow->PartCode, NFTDNA::PartStart, NFTDNA::SpeciesLength);        
-
-        $chipID = UpgradeValue::SkillUpgradeSpeciesItem[$speciesCode];
-        $requireItems = UpgradeValue::SkillUpgradeItemAmount[$skillLevel];
-        $requireItemIDAmounts = [];
-        //將物品編號轉為ItemID
-        foreach($requireItems as $itemSerial => $amount)
-        {
-            match($itemSerial)
-            {
-                UpgradeValue::BlueBerryRock 
-                => $requireItemIDAmounts[UpgradeValue::ItemIDBlueBerryRock] = $amount,
-                UpgradeValue::Chip
-                => $requireItemIDAmounts[$chipID] = $amount,
-            };
-        }
+        $chipID = UpgradeUtility::GetSkillUpgradeChipID($skillID);
+        $requireItemIDAmounts = UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);
 
         $charge = UpgradeValue::SkillUpgradeCharge[$skillLevel];
         //檢查金幣是否足夠
@@ -95,7 +68,7 @@ class UpgradeSkill extends BaseProcessor{
         }
 
         //升級
-        (new PlayerAccessor())->ModifySkill($playerID,$skillID,['Level' => $skillLevel + UpgradeValue::SkillLevelUnit]);
+        (new PlayerAccessor())->ModifySkill($playerID,$skillID,['Level' => $skillLevel + UpgradeValue::SkillRankUnit]);
         PlayerPool::Instance()->Delete($playerID);                        
         //扣錢
         $userHandler->SaveData(['coin' => $userInfo->coin - $charge]);
@@ -110,8 +83,9 @@ class UpgradeSkill extends BaseProcessor{
         }
         $userBagHandler->DecItems($itemsToDelete,ItemValue::EffectSkillLevel); 
 
-       (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillLevelUnit,-$charge,null,null,null);
+       (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillRankUnit,-$charge,null,null,null);
         
-        return $results;
+       $results = new ResultData(ErrorCode::Success);
+       return $results;
     }
 }
