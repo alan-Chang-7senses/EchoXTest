@@ -1,6 +1,8 @@
 <?php
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Accessors\RaceAccessor;
@@ -8,9 +10,10 @@ use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
-use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
-use Games\Races\RaceHandler;
 use Games\PVP\RaceRoomsHandler;
+use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
+use Games\Races\OfflineRecoveryDataHandler;
+use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
@@ -19,7 +22,6 @@ use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
-use Games\Races\OfflineRecoveryDataHandler;
 /**
  * Description of Ready
  *
@@ -192,6 +194,17 @@ class Ready extends BaseRace{
             'lighting' => $climate->lighting,
         ];
 
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->PrepareName('IncreaseTotalUserRaceBegin');
+        foreach($readyUserInfos as $readyUserInfo){
+            
+            $accessor->executeBind('INSERT INTO `TotalUserRace` (`UserID`, `BeginAmount`, `UpdateTime`) VALUES (:userID, 1, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
+                'userID' => $readyUserInfo['id'],
+                'updateTime1' => $currentTime,
+                'updateTime2' => $currentTime,
+            ]);
+        }
+        
         $result = new ResultData(ErrorCode::Success);
         $result->scene = $scene;
         $result->users = $readyUserInfos;
