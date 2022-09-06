@@ -22,7 +22,7 @@ class UpgradeValue
     const RankUpFirst = 1;
     const RankUpSecond = 2;
     const RankUpThird = 3;
-    const RankUpForth = 4;
+    const RankUpForth = 4;    
 
     const RankUnit = 1;
 
@@ -48,9 +48,17 @@ class UpgradeValue
 
     const Dust = 0;
     const Crystal = 1;
-
     const BlueBerryRock = 2;
     const Chip = 3;
+
+    const SkillUpFirst = 1;
+    const SkillUpSecond = 2;
+    const SkillUpThird = 3;
+    const SkillUpForth = 4;
+
+    const SkillUpOther = 0;
+
+    const SkillLevelUnit = 1;
 
     const RankUpItem = 
     [
@@ -123,28 +131,28 @@ class UpgradeValue
 
     const SkillUpgradeCharge = 
     [
-        self::RankUpFirst => 10000,
-        self::RankUpSecond => 30000,
-        self::RankUpThird => 218000,
-        self::RankUpForth => 342000,
+        self::SkillUpFirst => 10000,
+        self::SkillUpSecond => 30000,
+        self::SkillUpThird => 218000,
+        self::SkillUpForth => 342000,
     ];
 
 
     const SkillUpgradeItemAmount = 
     [
-        self::RankUpFirst => 
+        self::SkillUpFirst => 
         [
-            self::ItemIDBlueBerryRock => 10,
+            self::BlueBerryRock => 10,
         ],
-        self::RankUpSecond => 
+        self::SkillUpSecond => 
         [
-            self::ItemIDBlueBerryRock => 15,
+            self::BlueBerryRock => 15,
         ],
-        self::RankUpThird => 
+        self::SkillUpThird => 
         [
             self::Chip => 10,
         ],
-        self::RankUpForth => 
+        self::SkillUpForth => 
         [
             self::Chip => 15,
         ],
@@ -159,6 +167,7 @@ class UpgradeValue
         SpeciesValue::TigerDNA => self::ItemIDChipTiger,
         SpeciesValue::DogDNA => self::ItemIDChipDog,
         SpeciesValue::MokeyDNA => self::ItemIDChipMokey,
+        self::SkillUpOther => self::ItemIDChipSpecial,
     ];
 
     
