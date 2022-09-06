@@ -5,8 +5,8 @@ namespace Games\Players;
 use Games\Consts\AbilityFactor;
 use Games\Consts\NFTDNA;
 use Games\Consts\PlayerValue;
-use Games\Consts\SyncRate;
 use Games\Players\Adaptability\BaseAdaptability;
+use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use stdClass;
@@ -124,6 +124,7 @@ class PlayerAbility {
      * @param int $type 數值的種類
      * @param PlayerBaseInfoHolder 基礎數值的結構類
      */
+    
     public static function GetAbilityValue(int $type,PlayerBaseInfoHolder $playerBaseInfo) : float{
         
         $levelMultiplier = ceil(($playerBaseInfo->level + $type) / AbilityFactor::LevelDivisor);

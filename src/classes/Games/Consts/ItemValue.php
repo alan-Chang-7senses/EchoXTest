@@ -17,6 +17,7 @@ class ItemValue
     const EffectWaterUpHigh = 204;
     const EffectWoodUp = 205;
     const EffectWoodUpHigh = 206;
+    const EffectSkillLevel = 207;
 
     Const ItemCannotStack = 0;
 

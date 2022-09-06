@@ -20,7 +20,7 @@ use Games\Players\Holders\PlayerDnaHolder;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
-use Games\Players\PlayerBaseInfoHolder;
+use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
 use Generators\ConfigGenerator;
 use stdClass;
