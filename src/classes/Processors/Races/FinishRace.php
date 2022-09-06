@@ -48,6 +48,26 @@ class FinishRace extends BaseRace{
         $playerCount = count($racePlayersArr);
         if($playerCount < RaceValue::RacePlayerMin) throw new RaceException(RaceException::IncorrectPlayerNumber);
         
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function() use ($accessor, $raceInfo){
+            
+            $racePlayerPool = RacePlayerPool::Instance();
+            
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values((array)$raceInfo->racePlayers))
+                    ->ForUpdate()->FetchAll();
+            
+            $rankings = [];
+            foreach($rows as $row) $rankings[$row->RacePlayerID] = $row->Ranking;
+            asort($rankings);
+            $n = 0;
+            $accessor->PrepareName('RacePlayerRanking');
+            foreach(array_keys($rankings) as $id){
+                $rankings[$id] = ++$n;
+                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => $rankings[$id]]);
+                $racePlayerPool->Delete($id);
+            }
+        });
+        
         $userPool = UserPool::Instance();
         $racePlayerPool = RacePlayerPool::Instance();
         $singleRankingRewardPool = SingleRankingRewardPool::Instance();
@@ -114,15 +134,16 @@ class FinishRace extends BaseRace{
             UserUtility::AddItems($user['id'], $items[$user['id']]);
         }
         
-        $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function() use ($accessor, $raceID, $racePlayersArr, $users){
             
             $currentTime = $GLOBALS[Globals::TIME_BEGIN];
             
-            $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values($racePlayersArr))->Modify([
-                'Status' => RaceValue::StatusFinish,
-                'UpdateTime' => $currentTime,
-            ]);
+            $accessor->ClearAll()
+                    ->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values($racePlayersArr))
+                    ->Modify([
+                        'Status' => RaceValue::StatusFinish,
+                        'UpdateTime' => $currentTime,
+                    ]);
             
             $accessor->ClearCondition()
                     ->FromTable('Users')->WhereIn('UserID', array_column($users, 'id'))
