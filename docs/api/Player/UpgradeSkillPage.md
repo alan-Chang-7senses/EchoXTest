@@ -40,12 +40,12 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | id | int | 技能ID |
-| IsReachedLimit | bool | 技能是否到上升限制 |
+| hasReachedLimit | bool | 技能是否到上升限制 |
 | requireCoin | int | 升階所需金幣數量 |
-| IsCoinEnough | bool | 金幣是否足夠升階 |
+| isCoinEnough | bool | 金幣是否足夠升階 |
 | [requireItem](#requireItem) | array | 技能升階需求素材 |
 | [itemHold](#itemHold) | array | 升階對應道具數量 |
-| IsRequireItemEnough | bool | 持有是否足夠升階 |
+| isRequireItemEnough | bool | 持有是否足夠升階 |
 
 #### <span id="requireItem">requireItem 內容</span>
 
@@ -71,7 +71,7 @@ Content Type: `application/json`
         "skillsData": [
             {
                 "id": 40,
-                "isReachedLimit": false,
+                "hasReachedLimit": false,
                 "requireCoin": 218000,
                 "isCoinEnough": true,
                 "requireItem": {
@@ -84,7 +84,7 @@ Content Type: `application/json`
             },
             {
                 "id": 59,
-                "isReachedLimit": false,
+                "hasReachedLimit": false,
                 "requireCoin": 218000,
                 "isCoinEnough": true,
                 "requireItem": {
@@ -97,7 +97,7 @@ Content Type: `application/json`
             },
             {
                 "id": 80,
-                "isReachedLimit": false,
+                "hasReachedLimit": false,
                 "requireCoin": 218000,
                 "isCoinEnough": true,
                 "requireItem": {
@@ -110,7 +110,7 @@ Content Type: `application/json`
             },
             {
                 "id": 85,
-                "isReachedLimit": false,
+                "hasReachedLimit": false,
                 "requireCoin": 218000,
                 "isCoinEnough": true,
                 "requireItem": {
@@ -123,7 +123,7 @@ Content Type: `application/json`
             },
             {
                 "id": 151,
-                "isReachedLimit": false,
+                "hasReachedLimit": false,
                 "requireCoin": 218000,
                 "isCoinEnough": true,
                 "requireItem": {

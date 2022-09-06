@@ -58,7 +58,7 @@ class UpgradeSkillPage extends BaseProcessor{
             $skillDatas[] = 
             [
                 'id' => $skillInfo->id,
-                'isReachedLimit' => $hasReachedRankMax,
+                'hasReachedLimit' => $hasReachedRankMax,
                 'requireCoin' => $hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel],
                 'isCoinEnough' =>$hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel] <= $userInfo->coin,
                 'requireItem' => $requireItems,
