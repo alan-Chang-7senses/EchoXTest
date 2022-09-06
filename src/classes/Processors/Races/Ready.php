@@ -196,7 +196,7 @@ class Ready extends BaseRace{
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
-        $accessor->executeBind('UPDATE `TotalRaceBeginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE `Hours` = :hour AND `Lobby` = :lobby', [
+        $accessor->executeBind('UPDATE `RaceBeginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE `Hours` = :hour AND `Lobby` = :lobby', [
             'updateTime' => $currentTime,
             'hour' => DataGenerator::TodayHourByTimezone(getenv(EnvVar::TimezoneDefault)),
             'lobby' => $this->userInfo->lobby,
