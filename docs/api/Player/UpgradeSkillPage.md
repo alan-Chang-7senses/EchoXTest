@@ -41,11 +41,11 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | id | int | 技能ID |
 | hasReachedLimit | bool | 技能是否到上升限制 |
-| requireCoin | int | 升等所需金幣數量 |
-| isCoinEnough | bool | 金幣是否足夠升等 |
-| [requireItem](#requireItem) | array | 技能升等需求素材 |
+| requireCoin | int | 升等所需金幣數量，滿級為null |
+| isCoinEnough | bool | 金幣是否足夠升等，，滿級為null |
+| [requireItem](#requireItem) | array | 技能升等需求素材，滿級為null | 
 | [itemHold](#itemHold) | array | 升等對應道具數量 |
-| isRequireItemEnough | bool | 持有是否足夠升等 |
+| isRequireItemEnough | bool | 持有是否足夠升等，滿級為null |
 
 #### <span id="requireItem">requireItem 內容</span>
 
