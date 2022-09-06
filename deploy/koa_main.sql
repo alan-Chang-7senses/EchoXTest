@@ -50,7 +50,8 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_ExtraMatchSeconds', '60', '開局配對延長等待秒數'),
 	('PvP_MaxMatchSeconds', '60', '開局配對基本等待秒數'),
 	('RaceRewardMultiplier', '1', '競賽獎勵倍數'),
-	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)');
+	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
+	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.LeaderboardLeadCoin 結構
@@ -777,12 +778,98 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~2 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
 	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242),
 	(2, 2, 1001, 1001, 1660838400, 1662048000, 1661157822);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.RaceBeginHours 結構
+CREATE TABLE IF NOT EXISTS `RaceBeginHours` (
+  `Hours` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '小時',
+  `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳賽制',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`Hours`,`Lobby`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽開局時間計量';
+
+-- 正在傾印表格  koa_main.RaceBeginHours 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `RaceBeginHours` DISABLE KEYS */;
+INSERT INTO `RaceBeginHours` (`Hours`, `Lobby`, `Amount`, `UpdateTime`) VALUES
+	(0, 1, 0, 0),
+	(0, 2, 0, 0),
+	(0, 3, 0, 0),
+	(1, 1, 0, 0),
+	(1, 2, 0, 0),
+	(1, 3, 0, 0),
+	(2, 1, 0, 0),
+	(2, 2, 0, 0),
+	(2, 3, 0, 0),
+	(3, 1, 0, 0),
+	(3, 2, 0, 0),
+	(3, 3, 0, 0),
+	(4, 1, 0, 0),
+	(4, 2, 0, 0),
+	(4, 3, 0, 0),
+	(5, 1, 0, 0),
+	(5, 2, 0, 0),
+	(5, 3, 0, 0),
+	(6, 1, 0, 0),
+	(6, 2, 0, 0),
+	(6, 3, 0, 0),
+	(7, 1, 0, 0),
+	(7, 2, 0, 0),
+	(7, 3, 0, 0),
+	(8, 1, 0, 0),
+	(8, 2, 0, 0),
+	(8, 3, 0, 0),
+	(9, 1, 0, 0),
+	(9, 2, 0, 0),
+	(9, 3, 0, 0),
+	(10, 1, 0, 0),
+	(10, 2, 0, 0),
+	(10, 3, 0, 0),
+	(11, 1, 0, 0),
+	(11, 2, 0, 0),
+	(11, 3, 0, 0),
+	(12, 1, 0, 0),
+	(12, 2, 0, 0),
+	(12, 3, 0, 0),
+	(13, 1, 0, 0),
+	(13, 2, 0, 0),
+	(13, 3, 0, 0),
+	(14, 1, 0, 0),
+	(14, 2, 0, 0),
+	(14, 3, 0, 0),
+	(15, 1, 0, 0),
+	(15, 2, 0, 0),
+	(15, 3, 0, 0),
+	(16, 1, 0, 0),
+	(16, 2, 0, 0),
+	(16, 3, 0, 0),
+	(17, 1, 0, 0),
+	(17, 2, 0, 0),
+	(17, 3, 0, 0),
+	(18, 1, 0, 0),
+	(18, 2, 0, 0),
+	(18, 3, 0, 0),
+	(19, 1, 0, 0),
+	(19, 2, 0, 0),
+	(19, 3, 0, 0),
+	(20, 1, 0, 0),
+	(20, 2, 0, 0),
+	(20, 3, 0, 0),
+	(21, 1, 0, 0),
+	(21, 2, 0, 0),
+	(21, 3, 0, 0),
+	(22, 1, 0, 0),
+	(22, 2, 0, 0),
+	(22, 3, 0, 0),
+	(23, 1, 0, 0),
+	(23, 2, 0, 0),
+	(23, 3, 0, 0);
+/*!40000 ALTER TABLE `RaceBeginHours` ENABLE KEYS */;
 
 -- 傾印  程序 koa_main.RaceFinish 結構
 DELIMITER //
@@ -905,7 +992,8 @@ CREATE TABLE IF NOT EXISTS `Races` (
   `Weather` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '天氣',
   `WindDirection` tinyint(4) NOT NULL DEFAULT 0 COMMENT '風向',
   `RacePlayerIDs` text DEFAULT NULL COMMENT '競賽角色編號',
-  PRIMARY KEY (`RaceID`)
+  PRIMARY KEY (`RaceID`),
+  KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
 
 -- 傾印  資料表 koa_main.RecoveryData 結構
@@ -996,6 +1084,17 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `UserID` (`UserID`) USING BTREE,
   KEY `MailsID` (`MailsID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.UserRaceAmount 結構
+CREATE TABLE IF NOT EXISTS `UserRaceAmount` (
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Begin` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開局次數',
+  `Finish` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '完賽次數',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserID`) USING BTREE,
+  KEY `BeginAmount` (`Begin`) USING BTREE,
+  KEY `FinishAmount` (`Finish`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者參賽計量';
 
 -- 傾印  資料表 koa_main.UserRaceTiming 結構
 CREATE TABLE IF NOT EXISTS `UserRaceTiming` (
