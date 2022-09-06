@@ -91,6 +91,9 @@ abstract class BaseLaunchSkill extends BaseRace{
 
                 $racePlayerHandler = new RacePlayerHandler($racePlayerID);
                 $racePlayerInfo = $racePlayerHandler->GetInfo();
+                
+                if($racePlayerInfo->status == RaceValue::StatusReach) continue;
+                
                 $racePlayerhandlerAll[$playerID] = $racePlayerHandler;
 
                 match($racePlayerInfo->ranking){

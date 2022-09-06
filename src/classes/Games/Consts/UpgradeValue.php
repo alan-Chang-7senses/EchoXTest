@@ -22,7 +22,7 @@ class UpgradeValue
     const RankUpFirst = 1;
     const RankUpSecond = 2;
     const RankUpThird = 3;
-    const RankUpForth = 4;
+    const RankUpForth = 4;    
 
     const RankUnit = 1;
 
@@ -35,8 +35,30 @@ class UpgradeValue
     const ItemIDStarDust = 1131;
     const ItemIDStarCrystal = 1132;
 
+    const ItemIDBlueBerryRock = 2000;
+    const ItemIDChipLion = 2011;
+    const ItemIDChipDeer = null; // 暫時廢棄
+    const ItemIDChipFox = 2013;
+    const ItemIDChipCat = 2014;
+    const ItemIDChipTiger = 2015;
+    const ItemIDChipDog = 2016;
+    const ItemIDChipMokey = 2017;
+    const ItemIDChipMultiverse = 2002;
+    const ItemIDChipSpecial = 2001;
+
     const Dust = 0;
     const Crystal = 1;
+    const BlueBerryRock = 2;
+    const Chip = 3;
+
+    const SkillUpgradeFirst = 1;
+    const SkillUpgradeSecond = 2;
+    const SkillUpgradeThird = 3;
+    const SkillUpgradeForth = 4;
+
+    const SkillUpOther = 0;
+
+    const SkillRankUnit = 1;
 
     const RankUpItem = 
     [
@@ -106,5 +128,48 @@ class UpgradeValue
         self::RankUpForth => 5,
         5 => 5,//並不確定有無五階，先寫上。
     ];
+
+    const SkillUpgradeCharge = 
+    [
+        self::SkillUpgradeFirst => 10000,
+        self::SkillUpgradeSecond => 30000,
+        self::SkillUpgradeThird => 218000,
+        self::SkillUpgradeForth => 342000,
+    ];
+
+
+    const SkillUpgradeItemAmount = 
+    [
+        self::SkillUpgradeFirst => 
+        [
+            self::BlueBerryRock => 10,
+        ],
+        self::SkillUpgradeSecond => 
+        [
+            self::BlueBerryRock => 15,
+        ],
+        self::SkillUpgradeThird => 
+        [
+            self::Chip => 10,
+        ],
+        self::SkillUpgradeForth => 
+        [
+            self::Chip => 15,
+        ],
+    ];
+
+    const SkillUpgradeSpeciesItem = 
+    [
+        SpeciesValue::LionDNA => self::ItemIDChipLion,
+        SpeciesValue::DeerDNA => self::ItemIDChipDeer,
+        SpeciesValue::FoxDNA => self::ItemIDChipFox,
+        SpeciesValue::CatDNA => self::ItemIDChipCat,
+        SpeciesValue::TigerDNA => self::ItemIDChipTiger,
+        SpeciesValue::DogDNA => self::ItemIDChipDog,
+        SpeciesValue::MokeyDNA => self::ItemIDChipMokey,
+        self::SkillUpOther => self::ItemIDChipSpecial,
+    ];
+
+    
 
 }

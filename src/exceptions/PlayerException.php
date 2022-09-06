@@ -9,5 +9,7 @@ $lang[PlayerException::NicknameLengthError] = 'Nickname length is invalid';
 $lang[PlayerException::NicknameNotEnglish] = 'Nickname not English or number';
 $lang[PlayerException::AlreadyRankMax] = 'Player: [playerID] has already rank max.';
 $lang[PlayerException::NotReachMaxLevelYet] = 'Player: [playerID] has not reach level max yet.';
+$lang[PlayerException::SkillLevelMax] = 'Player: [playerID] skill [skillID] reached level max.';
+
 
 return $lang;

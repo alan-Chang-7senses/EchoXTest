@@ -19,4 +19,6 @@ class PlayerException extends NormalException{
 
     const AlreadyRankMax = 3007;
     const NotReachMaxLevelYet = 3008;
+
+    const SkillLevelMax = 3009;
 }

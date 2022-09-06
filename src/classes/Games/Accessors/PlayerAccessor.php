@@ -50,4 +50,12 @@ class PlayerAccessor extends BaseAccessor{
                                     ->WhereEqual('PlayerID',$id)
                                     ->Modify($bind);
     }
+
+    public function ModifySkill(int $id, int $skillID, array $bind) : bool
+    {
+        return $this->MainAccessor()->FromTable('PlayerSkill')
+                                    ->WhereEqual('PlayerID',$id)
+                                    ->WhereEqual('SkillID',$skillID)
+                                    ->Modify($bind);
+    }
 }
