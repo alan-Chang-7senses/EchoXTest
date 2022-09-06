@@ -195,10 +195,17 @@ class Ready extends BaseRace{
         ];
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
+        
+        $accessor->executeBind('UPDATE `RaceBeginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE `Hours` = :hour AND `Lobby` = :lobby', [
+            'updateTime' => $currentTime,
+            'hour' => DataGenerator::TodayHourByTimezone(getenv(EnvVar::TimezoneDefault)),
+            'lobby' => $this->userInfo->lobby,
+        ]);
+        
         $accessor->PrepareName('IncreaseTotalUserRaceBegin');
         foreach($readyUserInfos as $readyUserInfo){
             
-            $accessor->executeBind('INSERT INTO `TotalUserRace` (`UserID`, `BeginAmount`, `UpdateTime`) VALUES (:userID, 1, :updateTime1) ON DUPLICATE KEY UPDATE `BeginAmount` = `BeginAmount` + 1, `UpdateTime` = :updateTime2', [
+            $accessor->executeBind('INSERT INTO `UserRaceAmount` (`UserID`, `Begin`, `UpdateTime`) VALUES (:userID, 1, :updateTime1) ON DUPLICATE KEY UPDATE `Begin` = `Begin` + 1, `UpdateTime` = :updateTime2', [
                 'userID' => $readyUserInfo['id'],
                 'updateTime1' => $currentTime,
                 'updateTime2' => $currentTime,

@@ -179,7 +179,7 @@ class FinishRace extends BaseRace{
         
         $whereValues = $accessor->valuesForWhereIn(array_column($users, 'id'));
         $whereValues->bind['updateTime'] = $currentTime;
-        $accessor->executeBind('UPDATE `TotalUserRace` SET `FinishAmount` = `FinishAmount` + 1, UpdateTime = :updateTime WHERE UserID IN '.$whereValues->values, $whereValues->bind);
+        $accessor->executeBind('UPDATE `UserRaceAmount` SET `Finish` = `Finish` + 1, UpdateTime = :updateTime WHERE UserID IN '.$whereValues->values, $whereValues->bind);
         
         $result = new ResultData(ErrorCode::Success);
         $result->users = $users;
