@@ -167,14 +167,19 @@ class FinishRace extends BaseRace{
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
         
-        foreach($users as $user){
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        foreach($users as $user){    
             if(UserUtility::IsNonUser($user['id'])) continue;
             $accessor->CallProcedure('UserRaceTimingRecord', [
                 'userID' => $user['id'],
                 'duration' => $user['duration'],
-                'updateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                'updateTime' => $currentTime,
             ]);
         }
+        
+        $whereValues = $accessor->valuesForWhereIn(array_column($users, 'id'));
+        $whereValues->bind['updateTime'] = $currentTime;
+        $accessor->executeBind('UPDATE `TotalUserRace` SET `FinishAmount` = `FinishAmount` + 1, UpdateTime = :updateTime WHERE UserID IN '.$whereValues->values, $whereValues->bind);
         
         $result = new ResultData(ErrorCode::Success);
         $result->users = $users;
