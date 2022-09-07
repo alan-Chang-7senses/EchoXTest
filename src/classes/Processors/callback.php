@@ -9,6 +9,9 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Exception;
+use Games\Consts\ItemValue;
+use Games\Mails\MailsHandler;
+use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Helpers\LogHelper;
@@ -79,18 +82,17 @@ class callback extends BaseProcessor{
             $userID = $accessor->LastInsertID();
             $uniwebviewMessage = 'LoginFirst';
             
-            // CB1.5 專用，創帳號送 1000 金幣賽入場卷。
             if($res){
                 
                 $config = ConfigGenerator::Instance();
                 
-                $accessor->FromTable('UserItems')->Add([
-                    'UserID' => $userID,
-                    'ItemID' => $config->PvP_B_TicketId_1,
-                    'Amount' => 50,
-                    'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
-                    'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
-                ]);
+                $items = json_decode($config->CreateUserItems ?? '[]');
+                if(!empty($items)) UserUtility::AddItems($userID, $items, ItemValue::CauseCreateUser);
+                
+                $mailIDs = json_decode($config->CreateUserMailIDs ?? '[]');
+                $mailDay = $config->CreateUserMailDay;
+                $mailsHandler = new MailsHandler();
+                foreach($mailIDs as $mailID) $mailsHandler->AddMail($userID, $mailID, $mailDay);
             }
             
         }else{
