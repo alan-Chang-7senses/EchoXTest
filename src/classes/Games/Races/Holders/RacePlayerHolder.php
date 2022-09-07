@@ -48,6 +48,7 @@ class RacePlayerHolder extends stdClass{
     /** @var int 被妨礙次數（成功妨礙） */
     public int $hit;
     public float $createTime;
+    public float $startTime;
     public float $updateTime;
     public float $finishTime;
 }

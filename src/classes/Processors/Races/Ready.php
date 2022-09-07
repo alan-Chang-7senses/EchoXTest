@@ -51,7 +51,8 @@ class Ready extends BaseRace{
         $userHandlers = [];
         $readyRaceInfos = [];
         foreach($users as $user){
-
+            
+            if(isset($readyRaceInfos[$user->id])) continue;
             $handler = new UserHandler($user->id);
             $userInfo = $handler->GetInfo();
             if($userInfo->race != RaceValue::NotInRace && $userInfo->race != RaceValue::BotMatch) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);

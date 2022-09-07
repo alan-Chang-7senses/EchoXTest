@@ -19,10 +19,9 @@
 		- [獲取物品資訊](User/GetItemInfo.md)。
 		- [使用物品](User/UseItems.md)。
 		- [取得選擇物品資訊](User/GetItemSelectInfo.md)。
-		- [使用選擇物品](User/UseItemSelect.md)。				
+		- [使用選擇物品](User/UseItemSelect.md)。
 		- [隨機三隻免費Peta](User/Get3FreePlayer.md)。
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
-			
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
@@ -49,6 +48,7 @@
 		- [機器人角色](Races/BotPlayer.md)。
 		- [釋放機器人角色](Races/BotPlayerRelease.md)。
 		- [開局](Races/Ready.md)。
+		- [起跑](Races/Start.md)。
 		- [紀錄位置](Races/RecordPositions.md)。
 		- [斷線恢復](Races/OfflineRecovery.md)。
 		- [斷線恢復(取多人資料)](Races/OfflineRecoveryData.md)。
@@ -64,7 +64,7 @@
 		- [離開競賽](Races/LeaveRace.md)。
 	- 公告：
 		- [跑馬燈](Notices/Marquee.md)。
-		- [提示文字](Notices/HintText.md)。		
+		- [提示文字](Notices/HintText.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
