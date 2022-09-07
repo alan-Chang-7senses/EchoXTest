@@ -3,6 +3,7 @@
 namespace Games\Users;
 
 use Games\Consts\ItemValue;
+use Games\Consts\PlayerValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
@@ -14,7 +15,7 @@ use Generators\ConfigGenerator;
 class UserUtility {
         
     public static function IsNonUser(int $userID) : bool{
-        return $userID <= 0;
+        return $userID <= PlayerValue::BotIDLimit;
     }
     
     public static function AddItems(int $userID, array $items, $cause = ItemValue::CauseDefault) : void {
