@@ -18,6 +18,7 @@ use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
+use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -34,6 +35,8 @@ class Ready extends BaseRace{
 
     public function Process(): ResultData {
 
+        if($this->userInfo->room == RaceValue::NotInRoom) throw new RaceException(RaceException::UserNotInRoom);
+        
         $config = ConfigGenerator::Instance();
 
         $users = json_decode(InputHelper::post('users'));
@@ -47,12 +50,18 @@ class Ready extends BaseRace{
         $trackShape = InputHelper::post('trackShape');
         $direction = InputHelper::post('direction');
 
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $row = $accessor->FromTable('Users')->WhereEqual('Room', $this->userInfo->room)->FetchStyleAssoc()->FetchAll();
+        $roomUserIDs = array_column($row, 'UserID');
+        
         $n = 1;
         $userHandlers = [];
         $readyRaceInfos = [];
         foreach($users as $user){
             
             if(isset($readyRaceInfos[$user->id])) continue;
+            if(!UserUtility::IsNonUser($user->id) && !in_array($user->id, $roomUserIDs)) continue;
+            
             $handler = new UserHandler($user->id);
             $userInfo = $handler->GetInfo();
             if($userInfo->race != RaceValue::NotInRace && $userInfo->race != RaceValue::BotMatch) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
@@ -167,7 +176,8 @@ class Ready extends BaseRace{
         $readyUserInfos = [];
         foreach ($userHandlers as $userHandler) {
 
-            $raceHandler->SetPlayer(new PlayerHandler($userHandler->GetInfo()->player));
+            $userInfo = $userHandler->GetInfo();
+            $raceHandler->SetPlayer(new PlayerHandler($userInfo->player));
             $racePlayerInfo = $raceHandler->GetRacePlayerInfo();
 
             $readyUserInfos[] = [
@@ -183,8 +193,7 @@ class Ready extends BaseRace{
                 'skills' => $playerSkills[$racePlayerInfo->player],
             ];
 
-            $userHandler->SaveData(['race' => $raceID]);
-
+            if(!UserUtility::IsNonUser($userInfo->id)) $userHandler->SaveData(['race' => $raceID]);
         }
 
         $scene = [
@@ -194,8 +203,6 @@ class Ready extends BaseRace{
             'windSpeed' => $climate->windSpeed,
             'lighting' => $climate->lighting,
         ];
-
-        $accessor = new PDOAccessor(EnvVar::DBMain);
         
         $accessor->executeBind('UPDATE `RaceBeginHours` SET `Amount` = `Amount` + 1, `UpdateTime` = :updateTime WHERE `Hours` = :hour AND `Lobby` = :lobby', [
             'updateTime' => $currentTime,
