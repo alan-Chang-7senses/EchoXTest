@@ -37,6 +37,7 @@ class ItemValue
     const CauseGainExp = 4;
     const CauseRankUp = 5;
     const CauseSkillUpgrade = 6;
+    const CauseCreateUser = 7;
 
     const ActionObtain = 1;
     const ActionUsed = 2;
