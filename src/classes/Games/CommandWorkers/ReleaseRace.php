@@ -40,7 +40,7 @@ class ReleaseRace extends BaseWorker{
             if($currentTime - $row->CreateTime < $finishTimelimit) continue;
             
             $raceIDs[] = $row->RaceID;
-            $racePlayerIDs = array_merge($racePlayerIDs, array_values(get_object_vars(json_decode($row->RacePlayerIDs))));
+            if($row->RacePlayerIDs != null) $racePlayerIDs = array_merge($racePlayerIDs, array_values(get_object_vars(json_decode($row->RacePlayerIDs))));
             
             $racePool->Delete($row->RaceID);
         }
