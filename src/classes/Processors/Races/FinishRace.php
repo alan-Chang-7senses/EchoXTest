@@ -97,7 +97,7 @@ class FinishRace extends BaseRace{
                 'nickname' => $userPool->{$racePlayerInfo->user}->nickname,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
-                'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->createTime,
+                'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->startTime,
                 'items' => array_map(function($value) use ($rewardMultiplier) {
                     return [
                         'id' => $value->ItemID,
