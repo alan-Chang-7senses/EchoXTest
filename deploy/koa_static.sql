@@ -1635,7 +1635,10 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sende
 	(25, 8, 12, '除蟲大作戰', '搶先體驗DEMO期間內，只要在遊戲中發現BUG，並且透過指定管道回報，經官方人員核實無誤，依據BUG的嚴重程度，首位回報者將會在「CB2」開放後第七天，獲得相對應的獎勵。\n\n※回報BUG管道：\nhttps://forms.gle/Cp8zSZ3pAnfzP2sDA\n\n※詳情請見：\nhttps://chr2.io/petarush/announcement/?lang=tc&id=5', '寄件人：研發團隊', ''),
 	(26, 9, 0, 'Daily Login Bonus', 'The Reward of the “Peta Qualifier - Marscoin Qualifier” will be doubled during the event period. For those who want to get into the Marscoin Billionaire, you must not miss it!\n\n※Click on the link below to check out the details.\nhttps://chr2.io/petarush/announcement/?lang=en&id=6', 'Sender: Direct Team', ''),
 	(27, 9, 2, 'Daily Login Bonus', 'The Reward of the “Peta Qualifier - Marscoin Qualifier” will be doubled during the event period. For those who want to get into the Marscoin Billionaire, you must not miss it!\n\n※Click on the link below to check out the details.\nhttps://chr2.io/petarush/announcement/?lang=en&id=6', 'Sender: Direct Team', ''),
-	(28, 9, 12, '獎金加碼送', '活動期間內，「Peta晉級賽-火星幣賽」的獎金翻倍送，想要把握最後機會，晉身富豪排名的玩家們，千萬別錯過！\n\n※詳情請見：\nhttps://chr2.io/petarush/announcement/?lang=tc&id=6', '寄件人：研發團隊', '');
+	(28, 9, 12, '獎金加碼送', '活動期間內，「Peta晉級賽-火星幣賽」的獎金翻倍送，想要把握最後機會，晉身富豪排名的玩家們，千萬別錯過！\n\n※詳情請見：\nhttps://chr2.io/petarush/announcement/?lang=tc&id=6', '寄件人：研發團隊', ''),
+	(29, 10, 0, 'Item collection', 'You don\'t have enough vacant slots in your bag,please make some space and try again.', 'Sender: Direct Team', ''),
+	(30, 10, 2, 'Item collection', 'You don\'t have enough vacant slots in your bag,please make some space and try again.', 'Sender: Direct Team', ''),
+	(31, 10, 12, '道具領取', '由於物品數量已超過上限，請整理背包後再從附件領取。', '寄件人：研發團隊', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
@@ -2403,7 +2406,7 @@ INSERT INTO `SkillInfo` (`SkillID`, `AliasCode`, `SkillName`, `Icon`, `Descripti
 	(149, 'Arty_5', '21166', 'Skill_Icon_0029', '20002', '0,0,0,5', '10105', 200, 1220, 250, 500, 750, 1000, 1250, '22211', 64, 0, '', '151040,31036'),
 	(150, 'Arty_6', '21167', 'Skill_Icon_0029', '20002', '0,0,0,6', '10106', 200, 1500, 300, 600, 900, 1200, 1500, '22211', 64, 0, '', '151040,31036'),
 	(151, 'Genesis_1', '21213', 'Skill_Icon_0029', '20002', '1,1,1,0', '10107', 200, 720, 150, 300, 450, 600, 750, '22255', 51, 0, '', '41009'),
-	(152, 'Genesis_2', '21214', 'Skill_Icon_0009', '22211', '0,1,1,1', '20503,30103', 200, 720, 300, 600, 900, 1200, 1500, '22266', 52, 0, '', '41010'),
+	(152, 'Genesis_2', '21214', 'Skill_Icon_0009', '22211', '0,1,1,1', '20503,30103', 200, 720, 300, 600, 900, 1200, 1500, '22266', 52, 0, '23238', '41010'),
 	(153, 'Genesis_3', '21215', 'Skill_Icon_0027', '22212', '1,0,1,1', '10203', 200, 720, 150, 300, 450, 600, 750, '22257', 53, 0, '', '41011'),
 	(154, 'Pur_Lion', '21216', 'Skill_Icon_0027', '22212', '2,0,0,2', '10204', 200, 960, 200, 400, 600, 800, 1000, '22004', 1, 1, '', '30026'),
 	(155, 'Pur_Cat', '21217', 'Skill_Icon_0001', '22207', '0,3,0,0', '20103', 200, 720, 300, 600, 900, 1200, 1500, '22212', 5, 1, '', '21015'),
