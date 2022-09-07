@@ -932,6 +932,7 @@ CREATE TABLE IF NOT EXISTS `RacePlayer` (
   `TakenOver` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '被超越 n 名',
   `Hit` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '被妨礙次數',
   `CreateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '建立時間',
+  `StartTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '開跑時間',
   `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
   `FinishTime` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '結束時間',
   PRIMARY KEY (`RacePlayerID`),
