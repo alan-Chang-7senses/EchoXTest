@@ -92,17 +92,22 @@ class FinishRace extends BaseRace{
                 $items[$racePlayerInfo->user] = array_values($rewardHandler->GetItems());
             }else $items[$racePlayerInfo->user] = [];
             
+            $items[$racePlayerInfo->user] = array_map(function($obj) use ($rewardMultiplier){
+                $obj->Amount *= $rewardMultiplier;
+                return $obj;
+            }, $items[$racePlayerInfo->user]);
+            
             $users[] = [
                 'id' => $racePlayerInfo->user,
                 'nickname' => $userPool->{$racePlayerInfo->user}->nickname,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->startTime,
-                'items' => array_map(function($value) use ($rewardMultiplier) {
+                'items' => array_map(function($value) {
                     return [
                         'id' => $value->ItemID,
                         'icon' => ItemInfoPool::Instance()->{$value->ItemID}->Icon,
-                        'amount' => $value->Amount * $rewardMultiplier,
+                        'amount' => $value->Amount,
                     ];
                 }, $items[$racePlayerInfo->user]),
             ];
