@@ -85,7 +85,7 @@ class UpgradeItem extends BaseProcessor{
             $decItems[] = $itemTemp;
         }
         
-        $userBaghandler->DecItems($decItems,ItemValue::EffectExp);
+        $userBaghandler->DecItems($decItems,ItemValue::CauseGainExp);
         //扣錢
         $userHandler->SaveData(['coin' => $userInfo->coin - $costTotal]);
         
