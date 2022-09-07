@@ -50,6 +50,7 @@ class RacePlayerPool extends PoolAccessor{
         $holder->takenOver = $row->TakenOver;
         $holder->hit = $row->Hit;
         $holder->createTime = $row->CreateTime;
+        $holder->startTime = $row->StartTime;
         $holder->updateTime = $row->UpdateTime;
         $holder->finishTime = $row->FinishTime;
         
