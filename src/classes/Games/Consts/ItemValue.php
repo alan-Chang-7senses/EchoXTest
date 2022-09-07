@@ -34,6 +34,7 @@ class ItemValue
     const CauseUsed = 1;
     const CauseMail = 2;
     const CauseRace = 3;
+    const CauseCreateUser = 4;
 
     const ActionObtain = 1;
     const ActionUsed = 2;
