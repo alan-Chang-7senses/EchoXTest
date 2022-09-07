@@ -34,6 +34,9 @@ class ItemValue
     const CauseUsed = 1;
     const CauseMail = 2;
     const CauseRace = 3;
+    const CauseGainExp = 4;
+    const CauseRankUp = 5;
+    const CauseSkillUpgrade = 6;
 
     const ActionObtain = 1;
     const ActionUsed = 2;
