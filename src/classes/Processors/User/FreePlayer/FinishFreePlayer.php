@@ -87,14 +87,11 @@ class FinishFreePlayer extends BaseProcessor{
             (new UserAccessor())->ModifyUserValuesByID($userInfo->id,
             ["Nickname" => $nickname, "Player" => $playerID]);
         }
-        catch(Exception $ex)
+        catch(PDOException $ex)
         {
-            if($ex instanceof PDOException)
-            {
-                $info = $ex->errorInfo;   
-                if($info[1] == self::PDOKeyDuplicateError)
-                throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
-            }
+            $info = $ex->errorInfo;   
+            if($info[1] == self::PDOKeyDuplicateError)
+            throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);            
         }
         //開始存檔
         $pdo->ClearAll();
