@@ -108,8 +108,6 @@ class FinishFreePlayer extends BaseProcessor{
             }
             $pdo->ClearAll();
         if(count($ids) > 0)$pdo->FromTable("PlayerSkill")->AddAll($ids);
-        $ua = new UserAccessor();
-        // $ua->ModifyUserValuesByID($userInfo->id,["Nickname" => $nickname, "Player" => $playerID]);    
         UserPool::Instance()->Delete($userInfo->id);           
         $results = new ResultData(ErrorCode::Success);
         return $results;
