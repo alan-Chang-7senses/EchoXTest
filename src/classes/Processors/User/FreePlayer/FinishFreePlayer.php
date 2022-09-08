@@ -20,7 +20,7 @@ use Processors\BaseProcessor;
 
 class FinishFreePlayer extends BaseProcessor{
     
-    const PDOKeyDuplicateError = 1062;
+    // const PDOKeyDuplicateError = 1062;
     public function Process(): ResultData
     {
         
@@ -89,7 +89,7 @@ class FinishFreePlayer extends BaseProcessor{
         catch(PDOException $ex)
         {
             $info = $ex->errorInfo;   
-            if($info[1] == self::PDOKeyDuplicateError)
+            if(!empty($info) && $info[0] == ErrorCode::PDODuplicate)
             throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
         }
         //開始存檔
