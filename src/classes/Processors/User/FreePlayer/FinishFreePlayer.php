@@ -91,6 +91,7 @@ class FinishFreePlayer extends BaseProcessor{
             $info = $ex->errorInfo;   
             if(!empty($info) && $info[0] == ErrorCode::PDODuplicate)
             throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
+            else throw $ex;
         }
         //開始存檔
         $pdo->ClearAll();
