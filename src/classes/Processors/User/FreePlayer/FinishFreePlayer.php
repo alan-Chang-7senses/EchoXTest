@@ -6,7 +6,6 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
-use Exception;
 use Games\Accessors\UserAccessor;
 use Games\Consts\DirtyWordValue;
 use Games\Consts\PlayerValue;
@@ -91,7 +90,7 @@ class FinishFreePlayer extends BaseProcessor{
         {
             $info = $ex->errorInfo;   
             if($info[1] == self::PDOKeyDuplicateError)
-            throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);            
+            throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
         }
         //開始存檔
         $pdo->ClearAll();
