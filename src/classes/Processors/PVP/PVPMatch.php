@@ -33,7 +33,7 @@ class PVPMatch extends BaseProcessor {
             $raceHandler = new RaceHandler($userInfo->race);
             $raceInfo = $raceHandler->GetInfo();
 
-            if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitElitetestRace) {
+            if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitRaceFinish) {
 
                 $accessor = new PDOAccessor(EnvVar::DBMain);
 
