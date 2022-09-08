@@ -33,7 +33,7 @@ class PVPMatch extends BaseProcessor {
             $raceHandler = new RaceHandler($userInfo->race);
             $raceInfo = $raceHandler->GetInfo();
 
-            if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitElitetestRace) {
+            if ($GLOBALS[Globals::TIME_BEGIN] - $raceInfo->createTime > ConfigGenerator::Instance()->TimelimitRaceFinish) {
 
                 $accessor = new PDOAccessor(EnvVar::DBMain);
 
@@ -82,7 +82,14 @@ class PVPMatch extends BaseProcessor {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
             if ($userInfo->Room != RaceValue::NotInRoom) {
-                throw new RaceException(RaceException::UserInMatch);
+
+                //fix 4016
+                $raceroomHandler = new RaceRoomsHandler();
+                $roomInfo = $raceroomHandler->GetRoomInfo($userInfo->Room);
+                if ($roomInfo->Status !== RaceValue::RoomClose) {                    
+                    throw new RaceException(RaceException::UserInMatch);
+                }
+                
             }
             //todo
             $lowbound = 0;
