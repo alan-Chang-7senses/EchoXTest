@@ -56,14 +56,13 @@ class FinishRace extends BaseRace{
             $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values((array)$raceInfo->racePlayers))
                     ->ForUpdate()->FetchAll();
             
-            $rankings = [];
-            foreach($rows as $row) $rankings[$row->RacePlayerID] = $row->Ranking;
-            asort($rankings);
-            $n = 0;
+            $duration = [];
+            foreach($rows as $row) $duration[$row->RacePlayerID] = $row->FinishTime - $row->StartTime;
+            asort($duration);
+            $ranking = 0;
             $accessor->PrepareName('RacePlayerRanking');
-            foreach(array_keys($rankings) as $id){
-                $rankings[$id] = ++$n;
-                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => $rankings[$id]]);
+            foreach(array_keys($duration) as $id){
+                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => ++$ranking]);
                 $racePlayerPool->Delete($id);
             }
         });
