@@ -61,6 +61,8 @@ class NFTDNA {
     const StrengthNormalC = 8;
     const StrengthMinusC = 9;
 
-    /**原生種標記 */
+    /** 原生種標記 */
     const NativeNone = 0;
+    /** 純種部位數 */
+    const PureredPartCount = 6;
 }

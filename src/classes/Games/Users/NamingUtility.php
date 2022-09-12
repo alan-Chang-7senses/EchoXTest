@@ -19,15 +19,6 @@ class NamingUtility
         return !preg_match('/[^A-Za-z0-9]/',$name);
     }
 
-    public static function IsNameAlreadyExist(string $name,string $dbName, string $table, string $column)
-    {
-        $pdo = new PDOAccessor($dbName);
-        $alreadyExist = $pdo->FromTable($table)
-            ->WhereEqual($column,$name)
-            ->Fetch();
-        return !$alreadyExist === false;     
-    }
-
     public static function HasSymbols(string $checkWord) : bool
     {
         return preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $checkWord) == self::FindDirty;

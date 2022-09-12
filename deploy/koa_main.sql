@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~336 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~342 rows (近似值)
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 13, 1, 0),
@@ -437,6 +437,7 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-38, 64, 1, 0),
 	(-38, 89, 1, 0),
 	(-38, 131, 1, 0),
+	(-38, 151, 1, 0),
 	(-37, 32, 1, 0),
 	(-37, 41, 1, 0),
 	(-37, 64, 1, 0),
@@ -498,6 +499,7 @@ INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `Slot`) VALUES
 	(-23, 55, 1, 0),
 	(-23, 57, 1, 0),
 	(-23, 96, 1, 0),
+	(-23, 155, 1, 0),
 	(-22, 46, 1, 0),
 	(-22, 54, 1, 0),
 	(-22, 56, 1, 0),
@@ -1164,6 +1166,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `Nickname` (`Nickname`),
   KEY `Race` (`Race`),
   KEY `Coin` (`Coin`),
   KEY `Room` (`Room`)
