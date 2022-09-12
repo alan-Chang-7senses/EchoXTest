@@ -10,7 +10,7 @@ use Games\Players\PlayerUtility;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class CreatePlayerSkill extends BaseWorker{
+abstract class CreatePlayerSkill extends BaseWorker{
     
     public function Process(): array {
         
