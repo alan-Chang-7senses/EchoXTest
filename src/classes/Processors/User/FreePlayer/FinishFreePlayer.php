@@ -15,10 +15,12 @@ use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
+use PDOException;
 use Processors\BaseProcessor;
 
 class FinishFreePlayer extends BaseProcessor{
     
+    // const PDOKeyDuplicateError = 1062;
     public function Process(): ResultData
     {
         
@@ -33,13 +35,10 @@ class FinishFreePlayer extends BaseProcessor{
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname))throw new UserException(UserException::UsernameNotEnglishOrNumber);        
         if(NamingUtility::ValidateLength($nickname,SetUserNicknameValue::MaxLenght)) throw new UserException(UserException::UsernameTooLong);
         $pdo = new PDOAccessor(EnvVar::DBMain);
-        $isAlreayExist = NamingUtility::IsNameAlreadyExist($nickname,EnvVar::DBMain,"Users","Nickname");
-        if($isAlreayExist)throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);                 
         if(NamingUtility::HasDirtyWords($nickname,DirtyWordValue::BandWordName))throw new UserException(UserException::UsernameDirty);
-        
         $row = $pdo->FromTable("UserFreePeta")
-            ->WhereEqual("UserID",$userInfo->id)
-            ->Fetch();
+        ->WhereEqual("UserID",$userInfo->id)
+        ->Fetch();
         if($row === false)throw new UserException(UserException::UserFreePlayerListEmpty,['userID' => $_SESSION[Sessions::UserID]]);
         $freePetas = json_decode($row->FreePetaInfo);
         $chosenPeta = "";
@@ -50,9 +49,9 @@ class FinishFreePlayer extends BaseProcessor{
         if(empty($chosenPeta))throw new UserException(UserException::UserFreePlayerListEmpty,['userID' => $_SESSION[Sessions::UserID]]);
         $pdo->ClearAll();
         $freePetaRows = $pdo->FromTable("PlayerHolder")
-            ->WhereEqual("UserID",$userInfo->id)
-            ->WhereLess("PlayerID",PlayerValue::freePetaMaxPlayerID) // 暫定。小於16位為免費peta編號
-            ->FetchAll();
+        ->WhereEqual("UserID",$userInfo->id)
+        ->WhereLess("PlayerID",PlayerValue::freePetaMaxPlayerID) // 暫定。小於16位為免費peta編號
+        ->FetchAll();
         $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + 1; // 暫定。需常數化 
         if($freePetaRows !== false && count($freePetaRows) > 0)
         {
@@ -81,6 +80,19 @@ class FinishFreePlayer extends BaseProcessor{
             "StrengthLevel" => $chosenPeta->StrengthLevel,
             "SkeletonType" => $chosenPeta->SkeletonType,
         ];
+        //取名
+        try
+        {
+            (new UserAccessor())->ModifyUserValuesByID($userInfo->id,
+            ["Nickname" => $nickname, "Player" => $playerID]);
+        }
+        catch(PDOException $ex)
+        {
+            $info = $ex->errorInfo;   
+            if(!empty($info) && $info[0] == ErrorCode::PDODuplicate)
+            throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
+            else throw $ex;
+        }
         //開始存檔
         $pdo->ClearAll();
         $pdo->FromTable("PlayerNFT")
@@ -97,8 +109,6 @@ class FinishFreePlayer extends BaseProcessor{
             }
             $pdo->ClearAll();
         if(count($ids) > 0)$pdo->FromTable("PlayerSkill")->AddAll($ids);
-        $ua = new UserAccessor();
-        $ua->ModifyUserValuesByID($userInfo->id,["Nickname" => $nickname, "Player" => $playerID]);    
         UserPool::Instance()->Delete($userInfo->id);           
         $results = new ResultData(ErrorCode::Success);
         return $results;
