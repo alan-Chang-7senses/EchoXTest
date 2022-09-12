@@ -47,6 +47,8 @@ class PlayerUtility {
     }
     
     public static function GetIDName(int $playerID) : string {
-        return strlen($playerID) != PlayerValue::LengthNFTID ? (string)$playerID : 'NFT'. intval(substr($playerID, 3));
+        if($playerID < PlayerValue::BotIDLimit) return 'Robot'.$playerID;
+        if(strlen($playerID) == PlayerValue::LengthNFTID) return 'NFT'. intval(substr($playerID, 3));
+        return (string)$playerID;
     }
 }
