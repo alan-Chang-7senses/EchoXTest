@@ -56,14 +56,13 @@ class FinishRace extends BaseRace{
             $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values((array)$raceInfo->racePlayers))
                     ->ForUpdate()->FetchAll();
             
-            $rankings = [];
-            foreach($rows as $row) $rankings[$row->RacePlayerID] = $row->Ranking;
-            asort($rankings);
-            $n = 0;
+            $duration = [];
+            foreach($rows as $row) $duration[$row->RacePlayerID] = $row->FinishTime - $row->StartTime;
+            asort($duration);
+            $ranking = 0;
             $accessor->PrepareName('RacePlayerRanking');
-            foreach(array_keys($rankings) as $id){
-                $rankings[$id] = ++$n;
-                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => $rankings[$id]]);
+            foreach(array_keys($duration) as $id){
+                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => ++$ranking]);
                 $racePlayerPool->Delete($id);
             }
         });
@@ -92,17 +91,22 @@ class FinishRace extends BaseRace{
                 $items[$racePlayerInfo->user] = array_values($rewardHandler->GetItems());
             }else $items[$racePlayerInfo->user] = [];
             
+            $items[$racePlayerInfo->user] = array_map(function($obj) use ($rewardMultiplier){
+                $obj->Amount *= $rewardMultiplier;
+                return $obj;
+            }, $items[$racePlayerInfo->user]);
+            
             $users[] = [
                 'id' => $racePlayerInfo->user,
                 'nickname' => $userPool->{$racePlayerInfo->user}->nickname,
                 'player' => $racePlayerInfo->player,
                 'ranking' => $racePlayerInfo->ranking,
                 'duration' => $racePlayerInfo->finishTime - $racePlayerInfo->startTime,
-                'items' => array_map(function($value) use ($rewardMultiplier) {
+                'items' => array_map(function($value) {
                     return [
                         'id' => $value->ItemID,
                         'icon' => ItemInfoPool::Instance()->{$value->ItemID}->Icon,
-                        'amount' => $value->Amount * $rewardMultiplier,
+                        'amount' => $value->Amount,
                     ];
                 }, $items[$racePlayerInfo->user]),
             ];

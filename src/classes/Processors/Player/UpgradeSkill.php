@@ -81,7 +81,7 @@ class UpgradeSkill extends BaseProcessor{
             $item->Amount = $amount;
             $itemsToDelete[] = $item;
         }
-        $userBagHandler->DecItems($itemsToDelete,ItemValue::EffectSkillLevel); 
+        $userBagHandler->DecItems($itemsToDelete,ItemValue::CauseSkillUpgrade); 
 
        (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillRankUnit,-$charge,null,null,null);
         
