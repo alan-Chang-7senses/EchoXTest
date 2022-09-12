@@ -1388,8 +1388,8 @@ CREATE TABLE IF NOT EXISTS `FreeTicket` (
 /*!40000 ALTER TABLE `FreeTicket` DISABLE KEYS */;
 INSERT INTO `FreeTicket` (`Serial`, `Ticket_Coin`, `Ticket_PT`, `Ticket_Group`) VALUES
 	(1, '00:00:00', '00:00:00', '00:00:00'),
-	(2, '08:00:00', '12:00:00', NULL),
-	(3, '16:00:00', NULL, NULL);
+	(2, NULL, '12:00:00', NULL),
+	(3, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `FreeTicket` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.HintText 結構
@@ -2090,7 +2090,7 @@ CREATE TABLE IF NOT EXISTS `SingleRankingReward` (
   UNIQUE KEY `PlayerNumber_Ranking` (`PlayerNumber`,`Ranking`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='單局排名獎勵';
 
--- 正在傾印表格  koa_static.SingleRankingReward 的資料：~35 rows (近似值)
+-- 正在傾印表格  koa_static.SingleRankingReward 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `SingleRankingReward` DISABLE KEYS */;
 INSERT INTO `SingleRankingReward` (`Serial`, `PlayerNumber`, `Ranking`, `CoinReward`, `PetaTokenReward`) VALUES
 	(1, 8, 1, 1000081, 0),
@@ -2515,6 +2515,21 @@ INSERT INTO `SkillMaxEffect` (`MaxEffectID`, `EffectName`, `EffectType`, `Target
 	(900009, 'Atk_Pow_11_5', 112, 5, 'INT*(0-1.1%)*N');
 /*!40000 ALTER TABLE `SkillMaxEffect` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_static.SkillNative 結構
+CREATE TABLE IF NOT EXISTS `SkillNative` (
+  `NativeCode` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '原生種標記',
+  `AliasCode` varchar(50) NOT NULL COMMENT '技能識別碼',
+  PRIMARY KEY (`NativeCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='原生種技能';
+
+-- 正在傾印表格  koa_static.SkillNative 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillNative` DISABLE KEYS */;
+INSERT INTO `SkillNative` (`NativeCode`, `AliasCode`) VALUES
+	(01, 'Genesis_1'),
+	(02, 'Genesis_2'),
+	(03, 'Genesis_3');
+/*!40000 ALTER TABLE `SkillNative` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_static.SkillPart 結構
 CREATE TABLE IF NOT EXISTS `SkillPart` (
   `SkillPartID` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -2646,6 +2661,21 @@ INSERT INTO `SkillPart` (`SkillPartID`, `PartCode`, `PartType`, `AliasCode1`, `A
 	(113, '130204', 5, 'Fox015', NULL, NULL, 6),
 	(114, '130204', 6, 'Fox016', NULL, NULL, 6);
 /*!40000 ALTER TABLE `SkillPart` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.SkillPurebred 結構
+CREATE TABLE IF NOT EXISTS `SkillPurebred` (
+  `SpeciesCode` tinyint(2) unsigned zerofill NOT NULL DEFAULT 00 COMMENT '物種碼',
+  `AliasCode` varchar(50) NOT NULL COMMENT '技能識別碼',
+  PRIMARY KEY (`SpeciesCode`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='純種技能';
+
+-- 正在傾印表格  koa_static.SkillPurebred 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `SkillPurebred` DISABLE KEYS */;
+INSERT INTO `SkillPurebred` (`SpeciesCode`, `AliasCode`) VALUES
+	(11, 'Pur_Lion'),
+	(13, 'Pur_Fox'),
+	(14, 'Pur_Cat');
+/*!40000 ALTER TABLE `SkillPurebred` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.UpgradeBonus 結構
 CREATE TABLE IF NOT EXISTS `UpgradeBonus` (

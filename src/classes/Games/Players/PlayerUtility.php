@@ -18,6 +18,10 @@ class PlayerUtility {
         return substr($dna, NFTDNA::PartStart, NFTDNA::PartLength);
     }
     
+    public static function SpeciesCodeByDNA(string $dna) : string{
+        return substr($dna, NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesLength);
+    }
+
     public static function AdaptValueByPoint(int $point) : int{
         
         return match ($point) {
