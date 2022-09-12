@@ -1166,6 +1166,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `Nickname` (`Nickname`),
   KEY `Race` (`Race`),
   KEY `Coin` (`Coin`),
   KEY `Room` (`Room`)
