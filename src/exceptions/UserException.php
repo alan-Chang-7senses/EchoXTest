@@ -20,5 +20,5 @@ $lang[UserException::UseRewardIDError] = 'RewardID:[rewardID] use error!!';
 $lang[UserException::UserFreePlayerListEmpty] = 'User:[userID] free player list is empty.';
 $lang[UserException::UserFreePlayerOverLimit] = 'User:[userID] free player count over limit.';
 $lang[UserException::UserCoinNotEnough] = 'User:[userID] Coin Not Enough.';
-$lang[UserException::UserPowerError] = 'User:[userID] power modify error.';
+$lang[UserException::UserPowerNotEnough] = 'User:[userID] power not enough.';
 return $lang;

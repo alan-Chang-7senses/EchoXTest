@@ -1,7 +1,11 @@
 <?php
 namespace Games\Users;
 
+use Consts\Globals;
+use Games\Accessors\GameLogAccessor;
 use Games\Accessors\UserAccessor;
+use Games\Consts\ActionPointValue;
+use Games\Consts\PowerValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
 use Games\Users\Holders\UserInfoHolder;
@@ -38,21 +42,42 @@ class UserHandler {
         $this->ResetInfo();
     }
 
-    public function ModifyPower(int $amount, int|null $updateTime = null)
+    /**
+     * 增加或減少體力。會自動更新正確的體力。
+     * @param int $addAmount 值為0時為單純更新體力
+     */
+    public function HandlePower(int $addAmount, int $cause = ActionPointValue::CauseNone) : bool
     {
-        $apInfo = APRecoverUtility::GetMaxAPAmountAndRecoverRate($this->id);
-        $limit = $apInfo->maxAP;
         $currentPower = $this->info->power;
-        $powerTemp = $currentPower + $amount;            
-        //從滿體力 => 滿體力以下時，必須要有更新時間參數
-        if($currentPower >= $limit && $powerTemp < $limit && $updateTime == null)
+        $powerBefore = $currentPower;
+        $userAccessor = new UserAccessor();
+        $row = $userAccessor->rowPowerByID($this->info->id);
+        $apInfo = APRecoverUtility::GetMaxAPAmountAndRecoverRate($this->id);
+        $lastUpdateTime = $row === false ? 0 : $row->PowerUpdateTime;
+        $natureUpdatePowerInfo = APRecoverUtility::GetCurrentAPInfo($currentPower,$lastUpdateTime,$this->info->id);
+        $currentPower = $natureUpdatePowerInfo->power;
+        $updateTime = isset($natureUpdatePowerInfo->powerUpdateTime) ? $natureUpdatePowerInfo->powerUpdateTime : null;
+
+        $limit = $apInfo->maxAP;
+        $powerTemp = $currentPower + $addAmount;
+        if($powerTemp < 0)return false;
+        //從滿體力 => 滿體力以下時，計時重制
+        if($currentPower >= $limit && $powerTemp < $limit)
         {
-            if($updateTime == null)throw new UserException(UserException::UserPowerError,['userID' => $this->info->id]);
+            $updateTime = $GLOBALS[Globals::TIME_BEGIN];
         }
-        $this->SaveData(['power' => $powerTemp >= 0 ? $powerTemp : 0]);
+
+        if($powerBefore != $powerTemp)
+        $this->SaveData(['power' => $powerTemp]);
+
         if($updateTime != null)
         {
-            (new UserAccessor)->ModifyUserValuesByID($this->id,['PowerUpdateTime' => $updateTime]);
-        }        
+            $userAccessor->UpdatePowerTimeByID($this->id,['PowerUpdateTime' => floor($updateTime)]);
+        }
+        //需要寫LOG
+        if($cause != ActionPointValue::CauseNone)
+        (new GameLogAccessor())->AddUsePowerLog($cause,$powerBefore,$powerTemp);
+
+        return true;
     }
 }

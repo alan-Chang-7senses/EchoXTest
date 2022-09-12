@@ -5,6 +5,7 @@ namespace Games\Accessors;
 
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Consts\ActionPointValue;
 use Generators\DataGenerator;
 /**
  * Description of GameLogAccessor
@@ -42,6 +43,24 @@ class GameLogAccessor extends BaseAccessor{
             'ExpDelta' => $expDelta ?? 0,
             'RankDelta' => $rankDelta ?? 0,
             'LogTime' => $currentTime,
+        ]);
+    }
+
+    public function AddUsePowerLog(int $cause, int $powerBefore, int $powerAfter)
+    {
+        $logTime = $GLOBALS[Globals::TIME_BEGIN];
+        $pveLevel = null;
+        if($cause == ActionPointValue::CausePVENormal || $cause == ActionPointValue::CausePVERush)
+        {
+            //取得PVE關卡
+        }
+        $this->LogAccessor()->FromTable('PowerLog')->Add([
+            'UserID' => $_SESSION[Sessions::UserID],
+            'BeforeChange' => $powerBefore,
+            'AfterChange' => $powerAfter,
+            'Cause' => $cause,
+            'PVELevel' => $pveLevel,
+            'LogTime' => $logTime,
         ]);
     }
 }

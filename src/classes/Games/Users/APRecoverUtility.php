@@ -35,12 +35,24 @@ class APRecoverUtility
         return $rt;
     }
 
+    /**取得到最到體力還需多少秒。必須先更新過體力後再使用較為準確 */
+    public static function GetFullAPTime(int $userID, int $lastUpdateTime)
+    {
+        $recoverInfo = self::GetMaxAPAmountAndRecoverRate($userID);
+        $limit = $recoverInfo->maxAP;
+        $recoverRate = $recoverInfo->rate;
+        $timeDiff = floor($GLOBALS[Globals::TIME_BEGIN] - $lastUpdateTime);
+        $apDiff = $limit - (new UserHandler($userID))->GetInfo()->power;
+        $rt = $apDiff * $recoverRate - $timeDiff % $recoverRate;
+        return $rt > 0 ? $rt : 0;
+    }
+
     /**
      * 取得目前電力
      * @param int $lastPower 更新前電力
      * @param int $powerLastUpdate 更新前使用者欄位PowerUpdateTime
      * @param int $userID 使用者ID
-     * @return stdClass 欄位：power=>更新後電力、timeRemain=>到滿電力所需秒數、powerUpdateTime =>給DB使用者欄位更新的時間戳，不需更新則無此欄位
+     * @return stdClass 欄位：power=>更新後電力、powerUpdateTime =>給DB使用者欄位更新的時間戳，不需更新則無此欄位
      */
     public static function GetCurrentAPInfo(int $lastPower, int $powerLastUpdate, int $userID) : stdClass
     {
@@ -51,9 +63,8 @@ class APRecoverUtility
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];        
         if($lastPower >= $limit)
         {
-            // 還要回傳：距離回滿0時間
             $results->power = $lastPower;
-            $results->timeRemain = 0;
+            // $results->timeRemain = 0;
             return $results;
         }
         
@@ -61,20 +72,20 @@ class APRecoverUtility
         if($timeDiff >= ($limit - $lastPower) * $recoverRate)
         {
             $results->power = $limit;
-            $results->timeRemain = 0;
+            // $results->timeRemain = 0;
             return $results;
         }
 
         $addAmount = floor($timeDiff / $recoverRate);
-        $rtPower = PlayerEXP::Clamp($limit, 0, $lastPower + $addAmount);
-        $nextPowerTimeRemain = ($limit - $rtPower) * $recoverRate - $timeDiff % $recoverRate;
+        $rtPower = $lastPower + $addAmount;
+        // $nextPowerTimeRemain = ($limit - $rtPower) * $recoverRate - $timeDiff % $recoverRate;
         if ($addAmount > 0) 
         {
             $timeForUpdate = $powerLastUpdate + $recoverRate * $addAmount;
             $results->powerUpdateTime = $timeForUpdate;
         }
         $results->power = $rtPower;
-        $results->timeRemain = $nextPowerTimeRemain;
+        // $results->timeRemain = $nextPowerTimeRemain;
         return $results;
     }
     
