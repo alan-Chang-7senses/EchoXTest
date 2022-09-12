@@ -3,6 +3,7 @@
 namespace Games\Users;
 
 use Games\Consts\ItemValue;
+use Games\Consts\PlayerValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
@@ -35,5 +36,19 @@ class UserUtility {
             $userMailID = $mailsHandler->AddMail($userID, $config->ItemFullAddMailID, $config->ItemFullAddMailIDay);
             $mailsHandler->AddMailItems($userMailID, $mailItems);
         }
+    }
+
+    
+    /**取得使用者所持NFT角色數量 */
+    public static function GetUserNFTPlayerAmount(int $userID) : int
+    {
+        $playerInfo = (new UserHandler($userID))->GetInfo();
+        $count = 0;
+        foreach($playerInfo->players as $playerID)
+        {
+            if($playerID > PlayerValue::freePetaMaxPlayerID)
+            $count++;
+        }
+        return $count;
     }
 }

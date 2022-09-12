@@ -1,6 +1,7 @@
 <?php
 namespace Games\Users;
 
+use Games\Accessors\UserAccessor;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
 use Games\Users\Holders\UserInfoHolder;
@@ -35,5 +36,23 @@ class UserHandler {
     public function SaveData(array $bind) : void{
         $this->pool->Save($this->id, 'Data', $bind);
         $this->ResetInfo();
+    }
+
+    public function ModifyPower(int $amount, int|null $updateTime = null)
+    {
+        $apInfo = APRecoverUtility::GetMaxAPAmountAndRecoverRate($this->id);
+        $limit = $apInfo->maxAP;
+        $currentPower = $this->info->power;
+        $powerTemp = $currentPower + $amount;            
+        //從滿體力 => 滿體力以下時，必須要有更新時間參數
+        if($currentPower >= $limit && $powerTemp < $limit && $updateTime == null)
+        {
+            if($updateTime == null)throw new UserException(UserException::UserPowerError,['userID' => $this->info->id]);
+        }
+        $this->SaveData(['power' => $powerTemp >= 0 ? $powerTemp : 0]);
+        if($updateTime != null)
+        {
+            (new UserAccessor)->ModifyUserValuesByID($this->id,['PowerUpdateTime' => $updateTime]);
+        }        
     }
 }

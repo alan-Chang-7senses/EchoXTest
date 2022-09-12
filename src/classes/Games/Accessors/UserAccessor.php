@@ -28,10 +28,21 @@ class UserAccessor extends BaseAccessor {
                 WhereLess('UserID', PlayerValue::BotIDLimit)->WhereEqual('Race', RaceValue::NotInRace)->
                 Limit($amount)->FetchStyleAssoc()->FetchAll();
     }
+
+    public function rowPowerByID(int $id) : mixed{
+        return $this->MainAccessor()->FromTableJoinUsing('UserPower','Users','INNER','UserID')
+                    ->WhereEqual('UserId',$id)                    
+                    ->Fetch();
+    }
     
     public function ModifyUserValuesByID(int $id, array $bind) : bool{
         $bind['UpdateTime'] = time();
         return $this->MainAccessor()->FromTable('Users')->WhereEqual('UserID', $id)->Modify($bind);
+    }
+
+    public function UpdatePowerTimeByID(int $id, array $bind) : bool{
+        $bind['UserID'] = $id;
+        return $this->MainAccessor()->FromTable('UserPower')->Add($bind,true);
     }
     
     public function DeleteUserSessionByUserId(int $userID) : bool{
