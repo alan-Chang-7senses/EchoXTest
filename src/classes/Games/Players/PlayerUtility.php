@@ -18,6 +18,10 @@ class PlayerUtility {
         return substr($dna, NFTDNA::PartStart, NFTDNA::PartLength);
     }
     
+    public static function SpeciesCodeByDNA(string $dna) : string{
+        return substr($dna, NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesLength);
+    }
+
     public static function AdaptValueByPoint(int $point) : int{
         
         return match ($point) {
@@ -43,6 +47,8 @@ class PlayerUtility {
     }
     
     public static function GetIDName(int $playerID) : string {
-        return strlen($playerID) != PlayerValue::LengthNFTID ? (string)$playerID : 'NFT'. intval(substr($playerID, 3));
+        if($playerID < PlayerValue::BotIDLimit) return 'Robot'.$playerID;
+        if(strlen($playerID) == PlayerValue::LengthNFTID) return 'NFT'. intval(substr($playerID, 3));
+        return (string)$playerID;
     }
 }
