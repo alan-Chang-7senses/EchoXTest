@@ -24,7 +24,7 @@ class UpdatePower extends BaseProcessor
         
         $results = new ResultData(ErrorCode::Success);
         $results->power = $userHandler->GetInfo()->power;
-        $results->fullTime = $time;
+        $results->timeTillFull = $time;
         return $results;        
     }
 }

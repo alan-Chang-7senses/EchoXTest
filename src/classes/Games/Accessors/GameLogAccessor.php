@@ -46,14 +46,9 @@ class GameLogAccessor extends BaseAccessor{
         ]);
     }
 
-    public function AddUsePowerLog(int $cause, int $powerBefore, int $powerAfter)
+    public function AddUsePowerLog(int $cause, int $powerBefore, int $powerAfter, ?int $pveLevel = null)
     {
         $logTime = $GLOBALS[Globals::TIME_BEGIN];
-        $pveLevel = null;
-        if($cause == ActionPointValue::CausePVENormal || $cause == ActionPointValue::CausePVERush)
-        {
-            //取得PVE關卡
-        }
         $this->LogAccessor()->FromTable('PowerLog')->Add([
             'UserID' => $_SESSION[Sessions::UserID],
             'BeforeChange' => $powerBefore,

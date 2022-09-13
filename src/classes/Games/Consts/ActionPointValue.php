@@ -15,11 +15,16 @@ class ActionPointValue
     const APRankNine = 9;
     const APRankMoreThanTen = 10;
 
-    const ActionPointDivisor = 1000;
-
+    
+    const CauseNone = 0;
+    const CauseSystemReward = 1;
+    const CauseUseUCG = 2;
+    const CausePVENormal = 3;
+    const CausePVERush = 4;
+    
     const APLimit = 'APLimit';
     const APIncreaseRate = 'APIncreaseRate';
-
+    
     const APRecoverInfo = 
     [
         self::APRankLessThanOne =>
@@ -74,9 +79,4 @@ class ActionPointValue
         ],
     ];
 
-    const CauseNone = 0;
-    const CauseSystemReward = 1;
-    const CauseUseUCG = 2;
-    const CausePVENormal = 3;
-    const CausePVERush = 4;
 }

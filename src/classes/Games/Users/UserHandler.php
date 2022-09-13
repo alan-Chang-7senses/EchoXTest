@@ -44,40 +44,42 @@ class UserHandler {
 
     /**
      * 增加或減少體力。會自動更新正確的體力。
-     * @param int $addAmount 值為0時為單純更新體力
+     * @param int $addAmount 值為0時為單純更新體力，小於零時扣除體力。
+     * @param int $cause 有消耗或增加體力時辨識使用原由。Log需求。
+     * @param int $pveLevel 因PVE消耗體力時，消耗的關卡代號。
+     * @return bool 體力不足時回傳false
      */
-    public function HandlePower(int $addAmount, int $cause = ActionPointValue::CauseNone) : bool
+    public function HandlePower(int $addAmount, int $cause = ActionPointValue::CauseNone, ?int $pveLevel = null) : bool
     {
-        $currentPower = $this->info->power;
-        $powerBefore = $currentPower;
+        $powerOld = $this->info->power;
         $userAccessor = new UserAccessor();
         $row = $userAccessor->rowPowerByID($this->info->id);
         $apInfo = APRecoverUtility::GetMaxAPAmountAndRecoverRate($this->id);
         $lastUpdateTime = $row === false ? 0 : $row->PowerUpdateTime;
-        $natureUpdatePowerInfo = APRecoverUtility::GetCurrentAPInfo($currentPower,$lastUpdateTime,$this->info->id);
-        $currentPower = $natureUpdatePowerInfo->power;
+        $natureUpdatePowerInfo = APRecoverUtility::GetCurrentAPInfo($powerOld,$lastUpdateTime,$this->info->id);
+        $updatedPower = $natureUpdatePowerInfo->power;
         $updateTime = isset($natureUpdatePowerInfo->powerUpdateTime) ? $natureUpdatePowerInfo->powerUpdateTime : null;
 
         $limit = $apInfo->maxAP;
-        $powerTemp = $currentPower + $addAmount;
-        if($powerTemp < 0)return false;
+        $powerAdded = $updatedPower + $addAmount;
+        //體力不足
+        if($powerAdded < 0)return false;
         //從滿體力 => 滿體力以下時，計時重制
-        if($currentPower >= $limit && $powerTemp < $limit)
+        if($updatedPower >= $limit && $powerAdded < $limit)
         {
             $updateTime = $GLOBALS[Globals::TIME_BEGIN];
         }
 
-        if($powerBefore != $powerTemp)
-        $this->SaveData(['power' => $powerTemp]);
+        if($powerOld != $powerAdded)
+        $this->SaveData(['power' => $powerAdded]);
 
         if($updateTime != null)
         {
             $userAccessor->UpdatePowerTimeByID($this->id,['PowerUpdateTime' => floor($updateTime)]);
         }
-        //需要寫LOG
-        if($cause != ActionPointValue::CauseNone)
-        (new GameLogAccessor())->AddUsePowerLog($cause,$powerBefore,$powerTemp);
 
+        if($addAmount != 0)
+        (new GameLogAccessor())->AddUsePowerLog($cause,$updatedPower,$powerAdded,$pveLevel);
         return true;
     }
 }
