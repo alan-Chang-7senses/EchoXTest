@@ -5,7 +5,6 @@ use Consts\Globals;
 use Games\Accessors\GameLogAccessor;
 use Games\Accessors\UserAccessor;
 use Games\Consts\ActionPointValue;
-use Games\Consts\PowerValue;
 use Games\Exceptions\UserException;
 use Games\Pools\UserPool;
 use Games\Users\Holders\UserInfoHolder;
@@ -66,17 +65,15 @@ class UserHandler {
         if($powerAdded < 0)return false;
         //從滿體力 => 滿體力以下時，計時重制
         if($updatedPower >= $limit && $powerAdded < $limit)
-        {
-            $updateTime = $GLOBALS[Globals::TIME_BEGIN];
-        }
+        $updateTime = $GLOBALS[Globals::TIME_BEGIN];
+        
 
         if($powerOld != $powerAdded)
         $this->SaveData(['power' => $powerAdded]);
 
         if($updateTime != null)
-        {
-            $userAccessor->UpdatePowerTimeByID($this->id,['PowerUpdateTime' => floor($updateTime)]);
-        }
+        $userAccessor->UpdatePowerTimeByID($this->id,['PowerUpdateTime' => floor($updateTime)]);
+        
 
         if($addAmount != 0)
         (new GameLogAccessor())->AddUsePowerLog($cause,$updatedPower,$powerAdded,$pveLevel);
