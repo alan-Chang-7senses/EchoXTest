@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `PowerLog` (
   `Cause` int(11) NOT NULL DEFAULT 0 COMMENT '使用原由',
   `PVELevel` int(11) DEFAULT NULL COMMENT '在哪個關卡使用',
   `LogTime` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`Serial`,`LogTime`) USING BTREE,
+  PRIMARY KEY (`Serial`) USING BTREE,
   KEY `UserID` (`UserID`),
   KEY `Cause` (`Cause`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='電力消耗log';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='電力消耗log';
