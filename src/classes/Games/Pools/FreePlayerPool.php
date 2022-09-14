@@ -9,6 +9,7 @@ use Games\Consts\AbilityFactor;
 use Games\Consts\DNASun;
 use Games\Consts\FreePlayerValue;
 use Games\Consts\NFTDNA;
+use Games\Consts\PlayerAttr;
 use Games\Consts\PlayerValue;
 use Games\Consts\SkillValue;
 use Games\Players\Adaptability\EnvironmentAdaptability;
@@ -21,6 +22,7 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
+use Games\Random\RandomUtility;
 use Games\Users\FreePeta\FreePetaUtility;
 use stdClass;
 
@@ -119,7 +121,7 @@ class FreePlayerPool extends PlayerPool
             }
         }
         $holder->type = $freePlayerBase->Type;
-        $holder->ele = $freePlayerBase->Attribute;
+        $holder->ele = RandomUtility::GetRandomObject(PlayerAttr::Fire,PlayerAttr::Water,PlayerAttr::Wood);
         $base = new PlayerBaseInfoHolder($holder->level,NFTDNA::StrengthNormalC,$freePlayerBase->Strength,$freePlayerBase->Agility,$freePlayerBase->Constitution,$freePlayerBase->Dexterity);
         
         $holder->velocity = PlayerAbility::GetAbilityValue(AbilityFactor::Velocity,$base);
