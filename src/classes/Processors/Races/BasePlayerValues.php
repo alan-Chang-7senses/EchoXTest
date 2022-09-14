@@ -7,6 +7,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
+use Games\Consts\RaceVerifyValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
@@ -95,7 +96,12 @@ abstract class BasePlayerValues extends BaseRace{
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
                 
-        RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers-> $playerID, $result->s, $distance );
+        
+        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers-> $playerID, $result->s, $distance ) == RaceVerifyValue::VerifyCheat)
+        {                    
+            $result = new ResultData(ErrorCode::Success);
+            $result->moveDistance = RaceVerifyHandler::Instance()->GetMoveDistance($raceInfo->racePlayers-> $playerID);
+        }
                 
         return $result;
     }

@@ -2,7 +2,10 @@
 
 namespace Games\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\Globals;
+use Consts\Sessions;
 use Games\Consts\RaceVerifyValue;
 use Games\Pools\RaceVerifyPool;
 use Games\Races\Holders\RaceVerifyHolder;
@@ -38,7 +41,6 @@ class RaceVerifyHandler {
             $verifyInfo->speed = $readyUserInfo['s'];
             $verifyInfo->serverDistance = 0;
             $verifyInfo->clientDistance = 0;
-            //$verifyInfo->isCheat = RaceVerifyValue::VerifyNotCheat;
             $verifyInfo->updateTime = $GLOBALS[Globals::TIME_BEGIN];
             $verifyInfo->startTime = 0;
             $verifyInfo->createTime = (int) $GLOBALS[Globals::TIME_BEGIN];
@@ -52,6 +54,7 @@ class RaceVerifyHandler {
 
         foreach ($racePlayerIDs as $racePlayerID) {
             if ($this->GetInfo($racePlayerID) === false) {
+                RaceVerify::Instance()->AddTestLog("racePlayerID(" . $racePlayerID . ") does not start");
                 continue;
             }
 
@@ -92,21 +95,22 @@ class RaceVerifyHandler {
         return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStagePlayerValue, $speed, $distance);
     }
 
+    public function GetMoveDistance(int $racePlayerID): int {
+        if ($this->GetInfo($racePlayerID) === false) {
+            return 0;
+        }
+        return $this->raceVerifyInfo->serverDistance;
+    }
+
     private function UpdatePlayer(int $racePlayerID, int $verifyStage, float $speed, float $distance): int {
         if ($this->GetInfo($racePlayerID) === false) {
             return RaceVerifyValue::VerifyNoInfo;
         }
 
-
-//        if ($this->raceVerifyInfo->isCheat === RaceVerifyValue::VerifyCheat) {
-//            return RaceVerifyValue::VerifyCheat;
-//        }
-
         if ($this->raceVerifyInfo->startTime !== 0) {
 
             $this->AccumulateDistance();
         } else {
-
             // 還沒開始前,Client 校正 起始位置, todo 理應要表定
             if ($verifyStage === RaceVerifyValue::VerifyStagePlayerValue) {
                 $this->raceVerifyInfo->serverDistance = $distance;
@@ -133,13 +137,12 @@ class RaceVerifyHandler {
             'speed' => $this->raceVerifyInfo->speed,
             'serverDistance' => $this->raceVerifyInfo->serverDistance,
             'clientDistance' => $this->raceVerifyInfo->clientDistance,
-                //'isCheat' => $this->raceVerifyInfo->isCheat
         ]);
 
         RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs
         //return $this->raceVerifyInfo->isCheat;
         if ($isCheat === RaceVerifyValue::VerifyCheat) {
-            //logout
+            //logout?
             $this->HandleCheatUser();
         }
 
@@ -168,7 +171,20 @@ class RaceVerifyHandler {
     }
 
     private function HandleCheatUser() {
-        session_destroy();        
+        $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
+        $racePlayerInfo = $racePlayerHandler->GetInfo();
+        if ($racePlayerInfo->user !== $_SESSION[Sessions::UserID]) {
+            RaceVerify::Instance()->AddTestLog("User different"); //test logs
+        } else {
+            session_destroy();
+
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $accessor->FromTable('RecoveryData')->WhereEqual('PlayerID', $racePlayerInfo->player)->Modify([
+                'MoveDistance' => $this->raceVerifyInfo->serverDistance]);
+
+            RaceVerify::Instance()->AddTestLog("Change Client Distance form" . $this->raceVerifyInfo->clientDistance . " -> " .
+                    $this->raceVerifyInfo->serverDistance); //test logs            
+        }
     }
 
 }

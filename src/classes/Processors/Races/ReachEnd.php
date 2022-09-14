@@ -7,6 +7,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
+use Games\Consts\RaceVerifyValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
@@ -40,6 +41,14 @@ class ReachEnd extends BaseRace{
         
         $racePlayerID = $raceInfo->racePlayers->{$player};
         
+        //驗證是否結束,作弊就校正位置
+        if (RaceVerifyHandler::Instance()->ReachEnd($racePlayerID, $distance) == RaceVerifyValue::VerifyCheat)
+        {
+            $result = new ResultData(ErrorCode::Success);            
+            $result -> moveDistance = RaceVerifyHandler::Instance()->GetMoveDistance();
+            return $result;
+        }
+        
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
         $accessor->ClearAll();
@@ -60,7 +69,7 @@ class ReachEnd extends BaseRace{
         
         $result = new ResultData(ErrorCode::Success);
                 
-        RaceVerifyHandler::Instance()->ReachEnd($racePlayerID, $distance);
+
 
         return $result;
     }

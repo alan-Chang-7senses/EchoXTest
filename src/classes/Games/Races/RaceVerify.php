@@ -27,14 +27,13 @@ class RaceVerify {
     private string $root;
     private string $alllogFile;
 
-    public function BaseRaceLog(bool $inRace) {
-        $redirectURL = 'NeedInRace:' . ( $inRace ? 'True ' : 'False') . filter_input(INPUT_SERVER, 'REDIRECT_URL');
-        $this->SaveKeys($redirectURL, 'api.log');
-    }
+//    public function BaseRaceLog(bool $inRace) {
+//        $redirectURL = 'NeedInRace:' . ( $inRace ? 'True ' : 'False') . filter_input(INPUT_SERVER, 'REDIRECT_URL');
+//        $this->SaveKeys($redirectURL, 'api.log');
+//    }
            
     public function AddTestLog(string $message) {
         $this->SaveKeys($message, 'TestMessage.log');        
-
     }
 
     public function AddLog(stdClass $raceVerifyInfo) {
