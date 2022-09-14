@@ -15,6 +15,7 @@ use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RacePlayerSkillHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\Holders\SkillInfoHolder;
 use Games\Skills\SkillHandler;
@@ -206,7 +207,10 @@ abstract class BaseLaunchSkill extends BaseRace{
         $result->windDirection = $raceInfo->windDirection;
         $result->self = $self;
         $result->others = $others;
-        
+
+        RaceVerifyHandler::Instance()->LaunchSelfSkill($racePlayerIDSelf, $self['s']); 
+        RaceVerifyHandler::Instance()->LaunchOthersSkill($others, $raceInfo->racePlayers); 
+
         return $result;
     }
 

@@ -10,6 +10,7 @@ use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
+use Games\Races\RaceVerifyHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
 /**
@@ -22,6 +23,7 @@ class ReachEnd extends BaseRace{
     public function Process(): ResultData {
         
         $player = InputHelper::post('player');
+        $distance = InputHelper::post('distance');
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
@@ -57,6 +59,9 @@ class ReachEnd extends BaseRace{
         RacePlayerPool::Instance()->Delete($racePlayerID);
         
         $result = new ResultData(ErrorCode::Success);
+                
+        RaceVerifyHandler::Instance()->ReachEnd($racePlayerID, $distance);
+
         return $result;
     }
 }

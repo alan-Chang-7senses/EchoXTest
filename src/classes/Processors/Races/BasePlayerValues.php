@@ -13,6 +13,7 @@ use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -39,6 +40,7 @@ abstract class BasePlayerValues extends BaseRace{
     public function Process(): ResultData {
         
         $hp = InputHelper::post('hp');
+        $distance = InputHelper::post('distance');
         
         $values = json_decode(InputHelper::post('values'));
         if($values === null) $values = new stdClass();
@@ -92,7 +94,9 @@ abstract class BasePlayerValues extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
-        
+                
+        RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers-> $playerID, $result->s, $distance );
+                
         return $result;
     }
 }

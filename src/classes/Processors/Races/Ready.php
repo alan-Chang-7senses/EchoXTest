@@ -15,6 +15,7 @@ use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\OfflineRecoveryDataHandler;
 use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
@@ -223,6 +224,9 @@ class Ready extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->scene = $scene;
         $result->users = $readyUserInfos;
+                
+        RaceVerifyHandler::Instance()->Ready($readyUserInfos, $racePlayerIDs);
+
         return $result;
     }
 }
