@@ -6,7 +6,7 @@ use stdClass;
 class PVELevelInfoHolder extends stdClass
 {
     /** 關卡ID */
-    public int $levelID;
+    public int|string $levelID;
 
     /**推薦角色等級 */
     public int $recommendLevel;
@@ -15,10 +15,10 @@ class PVELevelInfoHolder extends stdClass
     public int $power;
 
     /** 關卡名稱字碼*/
-    public int $levelName;
+    public int|string $levelName;
 
     /** 關卡簡介字碼*/
-    public int $description;
+    public int|string $description;
 
     /**使用場景ID */
     public int $sceneID;

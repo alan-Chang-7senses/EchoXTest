@@ -41,7 +41,11 @@ class PVELevelPool extends PoolAccessor
         $holder->sustainRewardID = $row->SustainRewardID;
 
         //TODO：處理跑道上的AI
-        
+        foreach($rows as $r)
+        {
+            $holder->aiInfo[$r->AIID] = $r->TrackNumber;
+        }
+
         return $holder;
     }
 }
