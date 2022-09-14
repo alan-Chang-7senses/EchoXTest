@@ -39,7 +39,6 @@ class RaceVerifyPool extends PoolAccessor {
             $holder->speed = $row->Speed;
             $holder->serverDistance = $row->ServerDistance;
             $holder->clientDistance = $row->ClientDistance;
-            //$holder->isCheat = $row->IsCheat;
             $holder->updateTime = $row->UpdateTime;
             $holder->startTime = $row->StartTime;
             $holder->createTime = $row->CreateTime;
@@ -64,15 +63,19 @@ class RaceVerifyPool extends PoolAccessor {
 
     protected function SaveUpdate(stdClass $nowData, array $values): stdClass {
 
-        $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
-        $bind = [];
-        foreach ($values as $key => $value) {
-            $bind[ucfirst($key)] = $value;
-            $nowData->$key = $value;
-        }
-
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable($this->tablename)->WhereEqual('RacePlayerID', $nowData->racePlayerID)->Modify($bind);
+        $accessor->Transaction(function () use ($accessor, $nowData, $values) {
+
+            $accessor->ClearCondition()->FromTable($this->tablename)->WhereEqual('RacePlayerID', $nowData->racePlayerID)->ForUpdate();
+
+            $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+            $bind = [];
+            foreach ($values as $key => $value) {
+                $bind[ucfirst($key)] = $value;
+                $nowData->$key = $value;
+            }
+            $accessor->ClearCondition()->FromTable($this->tablename)->WhereEqual('RacePlayerID', $nowData->racePlayerID)->Modify($bind);
+        });
 
         return $nowData;
     }
