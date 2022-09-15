@@ -13,20 +13,20 @@ class RaceVerifyHolder extends stdClass {
     /** @var int 競賽角色編號 RacePlayerID */
     public int $racePlayerID;
 
-    /** @var int 驗證階段 VerifyStage */
-    public int $verifyStage;
+    /** @var int 驗證階段 VerifyState */
+    public int $verifyState;
 
     /** @var float 當前速度 Speed */
     public float $speed;
 
-    /** @var float 移動距離 ServerDistance */
+    /** @var float 後端移動總距離 ServerDistance */
     public float $serverDistance;
        
-    /** @var float 誤差值 ClientDistance */
+    /** @var float 前端移動總距離 ClientDistance */
     public float $clientDistance;
 
     /** @var int 是否作弊 IsCheat */
-    //public int $isCheat;
+    public int $isCheat;
 
     /** @var float 更新時間 UpdateTime */
     public float $updateTime;

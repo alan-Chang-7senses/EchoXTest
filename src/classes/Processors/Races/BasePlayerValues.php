@@ -95,12 +95,12 @@ abstract class BasePlayerValues extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
-                
-        
-        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers-> $playerID, $result->s, $distance ) == RaceVerifyValue::VerifyCheat)
-        {                    
-            $result = new ResultData(ErrorCode::Success);
-            $result->moveDistance = RaceVerifyHandler::Instance()->GetMoveDistance($raceInfo->racePlayers-> $playerID);
+
+        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance) == RaceVerifyValue::VerifyCheat) {
+            if ($this->userInfo->player === $playerID)//API:PlayerValues;  HostPlayerValue:不處理
+            {
+                throw new RaceException(RaceException::UserCheat);
+            }
         }
                 
         return $result;

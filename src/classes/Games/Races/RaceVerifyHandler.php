@@ -6,9 +6,15 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Consts\RaceVerifyValue;
+use Games\Pools\RacePlayerPool;
+use Games\Pools\RacePool;
 use Games\Pools\RaceVerifyPool;
+use Games\Pools\RaceVerifyScenePool;
+use Games\Pools\UserPool;
 use Games\Races\Holders\RaceVerifyHolder;
+use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use stdClass;
 
@@ -27,24 +33,38 @@ class RaceVerifyHandler {
         return self::$instance;
     }
 
-    private stdClass|false $raceVerifyInfo;
+    private int $nowUserID;
+    private stdClass|RaceVerifyHolder $raceVerifyInfo;
+
+    public function __construct() {
+        $this->nowUserID = $_SESSION[Sessions::UserID];
+    }
 
     public function Ready(array $readyUserInfos, array $racePlayerIDs) {
+
+        $pathInfos = $this->GetPathInfos();
 
         foreach ($readyUserInfos as $readyUserInfo) {
             $playerID = $readyUserInfo['player'];
             $racePlayerID = $racePlayerIDs[$playerID];
 
+            $racePlayerHandler = new RacePlayerHandler($racePlayerID);
+            $racePlayerInfo = $racePlayerHandler->GetInfo();
+            $pathInfo = $pathInfos->{$racePlayerInfo->trackNumber};
+
             $verifyInfo = new RaceVerifyHolder();
             $verifyInfo->racePlayerID = $racePlayerID;
-            $verifyInfo->verifyStage = RaceVerifyValue::VerifyStageReady;
+            $verifyInfo->verifyState = RaceVerifyValue::StateReady;
             $verifyInfo->speed = $readyUserInfo['s'];
-            $verifyInfo->serverDistance = 0;
+            $verifyInfo->serverDistance = $pathInfo->begin;
             $verifyInfo->clientDistance = 0;
+            $verifyInfo->isCheat = RaceVerifyValue::VerifyNotCheat;
             $verifyInfo->updateTime = $GLOBALS[Globals::TIME_BEGIN];
             $verifyInfo->startTime = 0;
             $verifyInfo->createTime = (int) $GLOBALS[Globals::TIME_BEGIN];
-            RaceVerifyPool::Instance()->Save($racePlayerID, "New", $verifyInfo);
+            
+            RaceVerifyPool::Instance()->Add($verifyInfo);
+            //RaceVerifyPool::Instance()->Save($racePlayerID, "New", $verifyInfo);
 
             RaceVerify::Instance()->AddLog($verifyInfo); //test logs                
         }
@@ -58,26 +78,31 @@ class RaceVerifyHandler {
                 continue;
             }
 
+            $this->raceVerifyInfo->verifyState = RaceVerifyValue::StateStart;
             $this->raceVerifyInfo->startTime = (int) $GLOBALS[Globals::TIME_BEGIN];
-            RaceVerifyPool::Instance()->Save($this->raceVerifyInfo->racePlayerID, "Update", [
-                'verifyStage' => RaceVerifyValue::VerifyStageStart,
-                'startTime' => $this->raceVerifyInfo->startTime
-            ]);
+
+            $bind = [
+                'VerifyState' => $this->raceVerifyInfo->verifyState,
+                'StartTime' => $this->raceVerifyInfo->startTime
+            ];
+
+            //$this->UpdateDB($bind);
+            RaceVerifyPool::Instance()->Update($this->raceVerifyInfo->racePlayerID, $bind);
 
             RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs                
         }
     }
 
     public function EnergyAgain(int $racePlayerID): int {
-        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStageEnergyAgain, 0, 0);
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyAgain, 0, 0);
     }
 
     public function ReachEnd(int $racePlayerID, float $distance): int {
-        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStageReachEnd, 0, $distance);
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateReachEnd, 0, $distance);
     }
 
     public function LaunchSelfSkill(int $racePlayerID, float $speed): int {
-        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStageSkill, $speed, 0);
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateSkill, $speed, 0);
     }
 
     public function LaunchOthersSkill(array $others, stdClass $racePlayerIDs): array {
@@ -85,75 +110,93 @@ class RaceVerifyHandler {
         foreach ($others as $other) {
             $playerID = $other->{'id'}; //$playerID
             $racePlayerID = $racePlayerIDs->{$playerID};
-            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStageOtherSkill, $other->s, 0);
+            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateOtherSkill, $other->s, 0);
         }
         return $result;
     }
 
     public function PlayerValues(int $racePlayerID, float $speed, float $distance): int {
 
-        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::VerifyStagePlayerValue, $speed, $distance);
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StatePlayerValue, $speed, $distance);
     }
 
-    public function GetMoveDistance(int $racePlayerID): int {
-        if ($this->GetInfo($racePlayerID) === false) {
-            return 0;
-        }
-        return $this->raceVerifyInfo->serverDistance;
-    }
-
-    private function UpdatePlayer(int $racePlayerID, int $verifyStage, float $speed, float $distance): int {
+    private function UpdatePlayer(int $racePlayerID, int $verifyState, float $speed, float $distance): int {
         if ($this->GetInfo($racePlayerID) === false) {
             return RaceVerifyValue::VerifyNoInfo;
         }
+        $this->raceVerifyInfo->verifyState = $verifyState;
 
         if ($this->raceVerifyInfo->startTime !== 0) {
-
             $this->AccumulateDistance();
         } else {
-            // 還沒開始前,Client 校正 起始位置, todo 理應要表定
-            if ($verifyStage === RaceVerifyValue::VerifyStagePlayerValue) {
-                $this->raceVerifyInfo->serverDistance = $distance;
-            }
+            RaceVerify::Instance()->AddTestLog("User does not start"); //test logs
         }
 
         $isCheat = RaceVerifyValue::VerifyNotCheat;
-        if ($verifyStage === RaceVerifyValue::VerifyStagePlayerValue ||
-                $verifyStage === RaceVerifyValue::VerifyStageReachEnd) {
-            $this->raceVerifyInfo->clientDistance = $distance;
+        if ($verifyState == RaceVerifyValue::StatePlayerValue ||
+                $verifyState == RaceVerifyValue::StateReachEnd) {
+
+            //改變速度前要先驗證            
+            $this->raceVerifyInfo->clientDistance = (float)number_format($distance, RaceVerifyValue::Decimals);
             $isCheat = $this->VerifyDistance();
         }
 
-        if ($verifyStage === RaceVerifyValue::VerifyStageSkill ||
-                $verifyStage === RaceVerifyValue::VerifyStageOtherSkill ||
-                $verifyStage === RaceVerifyValue::VerifyStagePlayerValue) {
-            //改變速度前要先驗證
+        if ($verifyState == RaceVerifyValue::StateSkill ||
+                $verifyState == RaceVerifyValue::StateOtherSkill ||
+                $verifyState == RaceVerifyValue::StatePlayerValue) {
             $this->raceVerifyInfo->speed = $speed;
         }
 
-        $this->raceVerifyInfo->verifyStage = $verifyStage;
-        RaceVerifyPool::Instance()->Save($this->raceVerifyInfo->racePlayerID, "Update", [
-            'verifyStage' => $this->raceVerifyInfo->verifyStage,
-            'speed' => $this->raceVerifyInfo->speed,
-            'serverDistance' => $this->raceVerifyInfo->serverDistance,
-            'clientDistance' => $this->raceVerifyInfo->clientDistance,
-        ]);
+        if ($isCheat == RaceVerifyValue::VerifyCheat) {
+            if ($this->raceVerifyInfo->isCheat === RaceVerifyValue::VerifyNotCheat) {
+                $this->raceVerifyInfo->isCheat = RaceVerifyValue::VerifyCheat;
+                $this->HandleCheatUser();
+            }
+        }
+
+        $this->raceVerifyInfo->verifyState = $verifyState;
+        $bind = [
+            'VerifyState' => $this->raceVerifyInfo->verifyState,
+            'Speed' => $this->raceVerifyInfo->speed,
+            'ServerDistance' => $this->raceVerifyInfo->serverDistance,
+            'ClientDistance' => $this->raceVerifyInfo->clientDistance,
+            'IsCheat' => $this->raceVerifyInfo->isCheat
+        ];
+
+        //$this->UpdateDB($bind);
+        RaceVerifyPool::Instance()->Update($this->raceVerifyInfo->racePlayerID, $bind);
 
         RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs
-        //return $this->raceVerifyInfo->isCheat;
-        if ($isCheat === RaceVerifyValue::VerifyCheat) {
-            //logout?
-            $this->HandleCheatUser();
-        }
 
         return $isCheat;
     }
 
     private function GetInfo(int $racePlayerID): bool {
-        $this->raceVerifyInfo = RaceVerifyPool::Instance()->$racePlayerID;
-        $result = $this->raceVerifyInfo !== false;
-        return $result;
+        $info = RaceVerifyPool::Instance()->$racePlayerID;
+        if ($info !== false) {
+            $this->raceVerifyInfo = $info;
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    private function GetPathInfos(): stdClass {
+        $handler = new UserHandler($this->nowUserID);
+        $userInfo = $handler->GetInfo();
+        return RaceVerifyScenePool::Instance()->{$userInfo->scene};
+    }
+
+//    private function UpdateDB(array $bind) {
+//        $accessor = new PDOAccessor(EnvVar::DBMain);
+//        $racePlayerID = $this->raceVerifyInfo->racePlayerID;
+//        $accessor->Transaction(function () use ($accessor, $bind, $racePlayerID) {
+//            $accessor->FromTable('RaceVerify')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+//            $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+//            $accessor->ClearCondition()->FromTable('RaceVerify')->WhereEqual('RacePlayerID', $racePlayerID)->Modify($bind);
+//        });
+//        RaceVerifyPool::Instance()->Delete($racePlayerID);
+//    }
 
     private function AccumulateDistance() {
         $timeSpan = $GLOBALS[Globals::TIME_BEGIN] - $this->raceVerifyInfo->updateTime;
@@ -162,7 +205,17 @@ class RaceVerifyHandler {
     }
 
     private function VerifyDistance(): int {
-        $deviation = $this->raceVerifyInfo->clientDistance - $this->raceVerifyInfo->serverDistance;
+
+        if ($this->raceVerifyInfo->verifyState == RaceVerifyValue::StateReachEnd) {
+
+            $pathInfos = $this->GetPathInfos();
+            $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
+            $racePlayerInfo = $racePlayerHandler->GetInfo();
+            $pathInfo = $pathInfos->{$racePlayerInfo->trackNumber};
+            $deviation = $pathInfo->total - $this->raceVerifyInfo->serverDistance;
+        } else {
+            $deviation = $this->raceVerifyInfo->clientDistance - $this->raceVerifyInfo->serverDistance;
+        }
         if ($deviation > ConfigGenerator::Instance()->RaceVerifyDistance) {
             return RaceVerifyValue::VerifyCheat;
         } else {
@@ -173,18 +226,51 @@ class RaceVerifyHandler {
     private function HandleCheatUser() {
         $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
-        if ($racePlayerInfo->user !== $_SESSION[Sessions::UserID]) {
+        if ($racePlayerInfo->user !== $this->nowUserID) {
             RaceVerify::Instance()->AddTestLog("User different"); //test logs
-        } else {
-            session_destroy();
-
-            $accessor = new PDOAccessor(EnvVar::DBMain);
-            $accessor->FromTable('RecoveryData')->WhereEqual('PlayerID', $racePlayerInfo->player)->Modify([
-                'MoveDistance' => $this->raceVerifyInfo->serverDistance]);
-
-            RaceVerify::Instance()->AddTestLog("Change Client Distance form" . $this->raceVerifyInfo->clientDistance . " -> " .
-                    $this->raceVerifyInfo->serverDistance); //test logs            
         }
+//        else {
+//            session_destroy();
+//            $accessor = new PDOAccessor(EnvVar::DBMain);
+//            $accessor->FromTable('RecoveryData')->WhereEqual('PlayerID', $racePlayerInfo->player)->Modify([
+//                'MoveDistance' => $this->raceVerifyInfo->serverDistance]);
+//            RaceVerify::Instance()->AddTestLog("Change Client Distance form" . $this->raceVerifyInfo->clientDistance . " -> " .
+//                    $this->raceVerifyInfo->serverDistance); //test logs
+//        }
+//把玩家踢出比賽                
+
+        $handler = new UserHandler($racePlayerInfo->user);
+        $userInfo = $handler->GetInfo();
+
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function () use ($accessor, $userInfo) {
+
+            $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+
+            $race = $accessor->FromTable('Races')->WhereEqual('RaceID', $userInfo->race)->ForUpdate()->Fetch();
+            $racePlayerIDs = json_decode($race->RacePlayerIDs);
+            $racePlayerID = $racePlayerIDs->{$userInfo->player};
+            unset($racePlayerIDs->{$userInfo->player});
+            $accessor->Modify(['RacePlayerIDs' => json_encode($racePlayerIDs)]);
+
+            $accessor->ClearCondition();
+            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
+                'Status' => RaceValue::StatusGiveUp,
+                'UpdateTime' => $currentTime,
+            ]);
+
+            $accessor->ClearCondition();
+            $accessor->FromTable('Users')->WhereEqual('UserID', $userInfo->id, 'id')->Modify([
+                'Race' => RaceValue::NotInRace,
+                'Lobby' => RaceValue::NotInLobby,
+                'Room' => RaceValue::NotInRoom,
+                'UpdateTime' => $currentTime,
+            ]);
+        });
+
+        UserPool::Instance()->Delete($userInfo->id);
+        RacePool::Instance()->Delete($userInfo->race);
+        RacePlayerPool::Instance()->Delete($this->raceVerifyInfo->racePlayerID);
     }
 
 }

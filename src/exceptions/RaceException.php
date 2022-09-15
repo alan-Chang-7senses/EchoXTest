@@ -27,5 +27,6 @@ $lang[RaceException::NoSeasonData] = 'No season data.';
 $lang[RaceException::UserTicketError] = 'Receive ticket has error.';
 $lang[RaceException::UserInRoom] = 'User is in the room.';
 $lang[RaceException::UserNotInRoom] = 'User is not in the room.';
+$lang[RaceException::UserCheat] = 'User is cheating.';
 
 return $lang;

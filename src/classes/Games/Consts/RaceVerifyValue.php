@@ -17,14 +17,13 @@ class RaceVerifyValue {
     const VerifyWaitStart = 2;
     const VerifyNoInfo = 3;
 
-    /* 驗證階段 */
-    const VerifyStageReady = 1;
-    const VerifyStageStart = 2;
-    const VerifyStageSkill = 3;
-    const VerifyStageOtherSkill = 4;
-    const VerifyStagePlayerValue = 5;
-    const VerifyStageEnergyAgain = 6;
-    const VerifyStageReachEnd = 7;
-    const VerifyStageFinish = 8;
+    /* 驗證狀態 */
+    const StateReady = 1;
+    const StateStart = 2;
+    const StateSkill = 3;
+    const StateOtherSkill = 4;
+    const StatePlayerValue = 5;
+    const StateEnergyAgain = 6;
+    const StateReachEnd = 7;
 
 }

@@ -38,16 +38,16 @@ class RaceVerify {
 
     public function AddLog(stdClass $raceVerifyInfo) {
 
-        $stage = $raceVerifyInfo->{'verifyStage'};
+        $stage = $raceVerifyInfo->{'verifyState'};
         $raceVerifyInfo->{'API'} = match ($stage) {
-            RaceVerifyValue::VerifyStageReady => 'Ready',
-            RaceVerifyValue::VerifyStageStart => 'Start',
-            RaceVerifyValue::VerifyStageSkill => 'Skill',
-            RaceVerifyValue::VerifyStageOtherSkill => 'OtherSkill',
-            RaceVerifyValue::VerifyStagePlayerValue => 'PlayerValue',
-            RaceVerifyValue::VerifyStageEnergyAgain => 'EnergyAgain',
-            RaceVerifyValue::VerifyStageReachEnd => 'ReachEnd',
-            RaceVerifyValue::VerifyStageFinish => 'Finish',
+            RaceVerifyValue::StateReady => 'Ready',
+            RaceVerifyValue::StateStart => 'Start',
+            RaceVerifyValue::StateSkill => 'Skill',
+            RaceVerifyValue::StateOtherSkill => 'OtherSkill',
+            RaceVerifyValue::StatePlayerValue => 'PlayerValue',
+            RaceVerifyValue::StateEnergyAgain => 'EnergyAgain',
+            RaceVerifyValue::StateReachEnd => 'ReachEnd',
+
         };
         $raceVerifyInfo->{'Diff'} = $raceVerifyInfo->{'clientDistance'} - $raceVerifyInfo->{'serverDistance'};             
         

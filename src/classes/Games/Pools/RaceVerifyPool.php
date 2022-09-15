@@ -26,7 +26,6 @@ class RaceVerifyPool extends PoolAccessor {
 
     protected string $keyPrefix = 'raceVerify_';
     private string $tablename = "RaceVerify";
-    private string $checkTablename = "CheckVerify";
 
     public function FromDB(int|string $racePlayerID): stdClass|false {
 
@@ -35,10 +34,11 @@ class RaceVerifyPool extends PoolAccessor {
         if ($row !== false) {
             $holder = new RaceVerifyHolder();
             $holder->racePlayerID = $row->RacePlayerID;
-            $holder->verifyStage = $row->VerifyStage;
+            $holder->verifyState = $row->VerifyState;
             $holder->speed = $row->Speed;
             $holder->serverDistance = $row->ServerDistance;
             $holder->clientDistance = $row->ClientDistance;
+            $holder->isCheat = $row->IsCheat;
             $holder->updateTime = $row->UpdateTime;
             $holder->startTime = $row->StartTime;
             $holder->createTime = $row->CreateTime;
@@ -48,36 +48,25 @@ class RaceVerifyPool extends PoolAccessor {
         }
     }
 
-    protected function SaveNew(stdClass|bool $nowData, RaceVerifyHolder $newData): stdClass {
-
-        if ($nowData == false) {
-            $bind = [];
-            foreach ($newData as $key => $value) {
-                $bind[ucfirst($key)] = $value;
-            }
-            $accessor = new PDOAccessor(EnvVar::DBMain);
-            $accessor->FromTable($this->tablename)->Add($bind);
-            return $newData;
+    public function Add(RaceVerifyHolder $newData) {
+        $bind = [];
+        foreach ($newData as $key => $value) {
+            $bind[ucfirst($key)] = $value;
         }
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->FromTable($this->tablename)->Add($bind);
     }
 
-    protected function SaveUpdate(stdClass $nowData, array $values): stdClass {
+    public function Update(int|string $racePlayerID, array $bind) {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($accessor, $nowData, $values) {
+        $accessor->Transaction(function () use ($accessor, $racePlayerID, $bind) {
 
-            $accessor->ClearCondition()->FromTable($this->tablename)->WhereEqual('RacePlayerID', $nowData->racePlayerID)->ForUpdate();
-
-            $values['updateTime'] = $GLOBALS[Globals::TIME_BEGIN];
-            $bind = [];
-            foreach ($values as $key => $value) {
-                $bind[ucfirst($key)] = $value;
-                $nowData->$key = $value;
-            }
-            $accessor->ClearCondition()->FromTable($this->tablename)->WhereEqual('RacePlayerID', $nowData->racePlayerID)->Modify($bind);
+            $accessor->FromTable($this->tablename)->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+            $accessor->ClearCondition()->FromTable($this->tablename)->WhereEqual('RacePlayerID', $racePlayerID)->Modify($bind);
         });
-
-        return $nowData;
+        $this->Delete($racePlayerID);
     }
 
 }

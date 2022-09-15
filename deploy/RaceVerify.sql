@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- 主機:                           127.0.0.1
--- 伺服器版本:                        10.8.3-MariaDB-1:10.8.3+maria~jammy - mariadb.org binary distribution
+-- 伺服器版本:                        10.9.2-MariaDB-1:10.9.2+maria~ubu2204 - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
 -- --------------------------------------------------------
@@ -20,7 +20,7 @@ USE `koa_main`;
 -- 傾印  資料表 koa_main.RaceVerify 結構
 CREATE TABLE IF NOT EXISTS `RaceVerify` (
   `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色編號',
-  `VerifyStage` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '驗證階段',
+  `VerifyState` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '驗證階段',
   `Speed` float unsigned NOT NULL DEFAULT 0 COMMENT '當前速度',
   `ServerDistance` float unsigned NOT NULL DEFAULT 0 COMMENT '移動距離',
   `ClientDistance` float unsigned NOT NULL DEFAULT 0 COMMENT '誤差值',
@@ -31,9 +31,7 @@ CREATE TABLE IF NOT EXISTS `RaceVerify` (
   PRIMARY KEY (`RacePlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='比賽驗證表';
 
--- 正在傾印表格  koa_main.RaceVerify 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `RaceVerify` DISABLE KEYS */;
-/*!40000 ALTER TABLE `RaceVerify` ENABLE KEYS */;
+-- 取消選取資料匯出。
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

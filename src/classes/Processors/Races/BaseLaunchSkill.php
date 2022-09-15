@@ -208,8 +208,10 @@ abstract class BaseLaunchSkill extends BaseRace{
         $result->self = $self;
         $result->others = $others;
 
-        RaceVerifyHandler::Instance()->LaunchSelfSkill($racePlayerIDSelf, $self['s']); 
-        RaceVerifyHandler::Instance()->LaunchOthersSkill($others, $raceInfo->racePlayers); 
+        
+        $raceVerifyHandler = RaceVerifyHandler::Instance();       
+        $raceVerifyHandler->LaunchSelfSkill($racePlayerIDSelf, $self['s']); 
+        $raceVerifyHandler->LaunchOthersSkill($others, $raceInfo->racePlayers); 
 
         return $result;
     }
