@@ -23,6 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | player | int | 角色編號 |
+| distance | float | 移動距離 |
 
 ## Response
 

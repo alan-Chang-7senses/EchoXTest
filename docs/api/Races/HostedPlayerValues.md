@@ -25,6 +25,7 @@ Content Type: `application/x-www-form-urlencoded`
 |:-:|:-:|:-:|
 | player | int | 角色編號 |
 | hp | float | 剩餘耐力 |
+| distance | float | 移動距離 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
 #### <span id="values">values 內容</span>
