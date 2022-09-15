@@ -1661,20 +1661,21 @@ CREATE TABLE IF NOT EXISTS `RaceSceneVerify` (
   `SceneID` int(10) unsigned NOT NULL COMMENT '場景',
   `TrackNumber` tinyint(3) unsigned NOT NULL COMMENT '賽道',
   `BeginDistance` float unsigned NOT NULL COMMENT '開始距離',
-  `TotalDistance` float unsigned NOT NULL COMMENT '總長'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+  `TotalDistance` float unsigned NOT NULL COMMENT '總長',
+  PRIMARY KEY (`SceneID`,`TrackNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='比賽場景驗證表';
 
--- 正在傾印表格  koa_static.RaceSceneVerify 的資料：2 rows
+-- 正在傾印表格  koa_static.RaceSceneVerify 的資料：8 rows
 /*!40000 ALTER TABLE `RaceSceneVerify` DISABLE KEYS */;
 INSERT INTO `RaceSceneVerify` (`SceneID`, `TrackNumber`, `BeginDistance`, `TotalDistance`) VALUES
-	(1001, 1, 0, 1300),
-	(1001, 2, 0, 1300),
-	(1001, 3, 0, 1300),
-	(1001, 4, 0, 1300),
-	(1001, 5, 0, 1300),
-	(1001, 6, 0, 1300),
-	(1001, 7, 0, 1300),
-	(1001, 8, 0, 1300),;
+	(1001, 1, 0, 1289),
+	(1001, 2, 0, 1289),
+	(1001, 3, 0, 1289),
+	(1001, 4, 0, 1289),
+	(1001, 5, 0, 1289),
+	(1001, 6, 0, 1289),
+	(1001, 7, 0, 1289),
+	(1001, 8, 0, 1289);
 /*!40000 ALTER TABLE `RaceSceneVerify` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.RewardContent 結構
