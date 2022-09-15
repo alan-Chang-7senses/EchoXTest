@@ -62,11 +62,10 @@ class RaceVerifyHandler {
             $verifyInfo->updateTime = $GLOBALS[Globals::TIME_BEGIN];
             $verifyInfo->startTime = 0;
             $verifyInfo->createTime = (int) $GLOBALS[Globals::TIME_BEGIN];
-            
-            RaceVerifyPool::Instance()->Add($verifyInfo);
-            //RaceVerifyPool::Instance()->Save($racePlayerID, "New", $verifyInfo);
 
-            RaceVerify::Instance()->AddLog($verifyInfo); //test logs                
+            RaceVerifyPool::Instance()->Add($verifyInfo);
+
+            //RaceVerify::Instance()->AddLog($verifyInfo); //test logs                
         }
     }
 
@@ -74,7 +73,6 @@ class RaceVerifyHandler {
 
         foreach ($racePlayerIDs as $racePlayerID) {
             if ($this->GetInfo($racePlayerID) === false) {
-                RaceVerify::Instance()->AddTestLog("racePlayerID(" . $racePlayerID . ") does not start");
                 continue;
             }
 
@@ -86,10 +84,9 @@ class RaceVerifyHandler {
                 'StartTime' => $this->raceVerifyInfo->startTime
             ];
 
-            //$this->UpdateDB($bind);
             RaceVerifyPool::Instance()->Update($this->raceVerifyInfo->racePlayerID, $bind);
 
-            RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs                
+            // RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs                
         }
     }
 
@@ -124,20 +121,24 @@ class RaceVerifyHandler {
         if ($this->GetInfo($racePlayerID) === false) {
             return RaceVerifyValue::VerifyNoInfo;
         }
+
+        if ($this->raceVerifyInfo->isCheat == RaceVerifyValue::VerifyCheat) {
+            // 玩家已經離開比賽了,不處理作弊檢查
+            return RaceVerifyValue::VerifyCheat;
+        }
+
         $this->raceVerifyInfo->verifyState = $verifyState;
 
         if ($this->raceVerifyInfo->startTime !== 0) {
             $this->AccumulateDistance();
-        } else {
-            RaceVerify::Instance()->AddTestLog("User does not start"); //test logs
         }
 
         $isCheat = RaceVerifyValue::VerifyNotCheat;
         if ($verifyState == RaceVerifyValue::StatePlayerValue ||
                 $verifyState == RaceVerifyValue::StateReachEnd) {
 
-            //改變速度前要先驗證            
-            $this->raceVerifyInfo->clientDistance = (float)number_format($distance, RaceVerifyValue::Decimals);
+            //改變速度前要先驗證距離
+            $this->raceVerifyInfo->clientDistance = round($distance, RaceVerifyValue::Decimals);
             $isCheat = $this->VerifyDistance();
         }
 
@@ -163,10 +164,9 @@ class RaceVerifyHandler {
             'IsCheat' => $this->raceVerifyInfo->isCheat
         ];
 
-        //$this->UpdateDB($bind);
         RaceVerifyPool::Instance()->Update($this->raceVerifyInfo->racePlayerID, $bind);
 
-        RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs
+        //RaceVerify::Instance()->AddLog($this->raceVerifyInfo); //test logs
 
         return $isCheat;
     }
@@ -187,20 +187,9 @@ class RaceVerifyHandler {
         return RaceVerifyScenePool::Instance()->{$userInfo->scene};
     }
 
-//    private function UpdateDB(array $bind) {
-//        $accessor = new PDOAccessor(EnvVar::DBMain);
-//        $racePlayerID = $this->raceVerifyInfo->racePlayerID;
-//        $accessor->Transaction(function () use ($accessor, $bind, $racePlayerID) {
-//            $accessor->FromTable('RaceVerify')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
-//            $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
-//            $accessor->ClearCondition()->FromTable('RaceVerify')->WhereEqual('RacePlayerID', $racePlayerID)->Modify($bind);
-//        });
-//        RaceVerifyPool::Instance()->Delete($racePlayerID);
-//    }
-
     private function AccumulateDistance() {
         $timeSpan = $GLOBALS[Globals::TIME_BEGIN] - $this->raceVerifyInfo->updateTime;
-        $moveDistane = (float) number_format($this->raceVerifyInfo->speed * $timeSpan, RaceVerifyValue::Decimals);
+        $moveDistane = round($this->raceVerifyInfo->speed * $timeSpan, RaceVerifyValue::Decimals);
         $this->raceVerifyInfo->serverDistance += $moveDistane;
     }
 
@@ -224,20 +213,9 @@ class RaceVerifyHandler {
     }
 
     private function HandleCheatUser() {
+        //把玩家踢出比賽
         $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
-        if ($racePlayerInfo->user !== $this->nowUserID) {
-            RaceVerify::Instance()->AddTestLog("User different"); //test logs
-        }
-//        else {
-//            session_destroy();
-//            $accessor = new PDOAccessor(EnvVar::DBMain);
-//            $accessor->FromTable('RecoveryData')->WhereEqual('PlayerID', $racePlayerInfo->player)->Modify([
-//                'MoveDistance' => $this->raceVerifyInfo->serverDistance]);
-//            RaceVerify::Instance()->AddTestLog("Change Client Distance form" . $this->raceVerifyInfo->clientDistance . " -> " .
-//                    $this->raceVerifyInfo->serverDistance); //test logs
-//        }
-//把玩家踢出比賽                
 
         $handler = new UserHandler($racePlayerInfo->user);
         $userInfo = $handler->GetInfo();
@@ -253,11 +231,12 @@ class RaceVerifyHandler {
             unset($racePlayerIDs->{$userInfo->player});
             $accessor->Modify(['RacePlayerIDs' => json_encode($racePlayerIDs)]);
 
-            $accessor->ClearCondition();
-            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
-                'Status' => RaceValue::StatusGiveUp,
-                'UpdateTime' => $currentTime,
-            ]);
+            if (!empty($racePlayerID)) {
+                $accessor->ClearCondition()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
+                    'Status' => RaceValue::StatusGiveUp,
+                    'UpdateTime' => $currentTime,
+                ]);
+            }
 
             $accessor->ClearCondition();
             $accessor->FromTable('Users')->WhereEqual('UserID', $userInfo->id, 'id')->Modify([
