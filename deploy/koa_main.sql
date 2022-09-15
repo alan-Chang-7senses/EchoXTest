@@ -53,6 +53,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_ExtraMatchSeconds', '60', '開局配對延長等待秒數'),
 	('PvP_MaxMatchSeconds', '60', '開局配對基本等待秒數'),
 	('RaceRewardMultiplier', '1', '競賽獎勵倍數'),
+	('RaceVerifyDistance', '10', '驗證比賽距離誤差值'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
 	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
@@ -1002,6 +1003,20 @@ CREATE TABLE IF NOT EXISTS `Races` (
   PRIMARY KEY (`RaceID`),
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽資訊';
+
+-- 傾印  資料表 koa_main.RaceVerify 結構
+CREATE TABLE IF NOT EXISTS `RaceVerify` (
+  `RacePlayerID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '競賽角色編號',
+  `VerifyState` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '驗證階段',
+  `Speed` float(10,2) unsigned NOT NULL DEFAULT 0.00 COMMENT '當前速度',
+  `ServerDistance` float(10,2) unsigned NOT NULL DEFAULT 0.00 COMMENT '移動距離',
+  `ClientDistance` float(10,2) unsigned NOT NULL DEFAULT 0.00 COMMENT '誤差值',
+  `IsCheat` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '是否作弊',
+  `UpdateTime` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '更新時間',
+  `StartTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開始時間',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  PRIMARY KEY (`RacePlayerID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='比賽驗證表';
 
 -- 傾印  資料表 koa_main.RecoveryData 結構
 CREATE TABLE IF NOT EXISTS `RecoveryData` (
