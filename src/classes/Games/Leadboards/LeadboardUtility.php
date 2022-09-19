@@ -20,11 +20,21 @@ class LeadboardUtility {
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',
         ],
+        RaceValue::LobbyCoinB => [
+            'table' => 'LeaderboardLeadCoinB',
+            'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
+            'tresholdParam' => 'PvP_B_Treshold_1',
+        ],
         RaceValue::LobbyPT => [
             'table' => 'LeaderboardLeadPT',
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_2',
-        ]
+        ],
+        RaceValue::LobbyPetaTokenB => [
+            'table' => 'LeaderboardLeadPTB',
+            'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
+            'tresholdParam' => 'PvP_B_Treshold_2',
+        ],
     ];
     
     public static function PlayerLeadRanking(int $lobby, int $playerID, int $seasonID) : stdClass {
