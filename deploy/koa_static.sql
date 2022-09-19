@@ -1668,14 +1668,14 @@ CREATE TABLE IF NOT EXISTS `RaceSceneVerify` (
 -- 正在傾印表格  koa_static.RaceSceneVerify 的資料：8 rows
 /*!40000 ALTER TABLE `RaceSceneVerify` DISABLE KEYS */;
 INSERT INTO `RaceSceneVerify` (`SceneID`, `TrackNumber`, `BeginDistance`, `TotalDistance`) VALUES
-	(1001, 1, 0, 643.248),
-	(1001, 2, 2.72253, 644.61),
-	(1001, 3, 5.90479, 646.201),
-	(1001, 4, 8.81299, 647.655),
-	(1001, 5, 11.4562, 648.977),
-	(1001, 6, 14.3441, 650.421),
-	(1001, 7, 17.4749, 651.986),
-	(1001, 8, 20.1553, 653.326);
+	(1001, 1, 0, 1286.5),
+	(1001, 2, 2.72253, 1289.22),
+	(1001, 3, 5.90479, 1292.4),
+	(1001, 4, 8.81299, 1295.31),
+	(1001, 5, 11.4562, 1297.95),
+	(1001, 6, 14.3441, 1300.84),
+	(1001, 7, 17.4749, 1303.97),
+	(1001, 8, 20.1553, 1306.65);
 /*!40000 ALTER TABLE `RaceSceneVerify` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.RewardContent 結構
