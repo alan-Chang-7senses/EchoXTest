@@ -131,8 +131,10 @@ class RaceHandler {
         $rhythmValueS = $this->RhythmValueS();
         
         return match ($windDirection) {
-            SceneValue::Tailwind => min($result*$rhythmValueS + $climate->windSpeed * 0.01, RaceValue::ValueSMax),
-            SceneValue::Headwind => max($result*$rhythmValueS - $climate->windSpeed * 0.01, RaceValue::ValueSMin),
+            SceneValue::Tailwind => 
+            max(RaceValue::ValueSMin, min(RaceValue::ValueSMax, $result*$rhythmValueS + $climate->windSpeed * 0.01)),
+            SceneValue::Headwind => 
+            max(RaceValue::ValueSMin, min(RaceValue::ValueSMax, $result*$rhythmValueS - $climate->windSpeed * 0.01)),
             default => $result,
         }  + $this->playerHandler->offsetS;
        
