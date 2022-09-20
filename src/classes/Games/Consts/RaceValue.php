@@ -109,6 +109,8 @@ class RaceValue {
     const LobbyCoin = 1;
     const LobbyPT = 2;
     const LobbyStudy = 3;
+    const LobbyCoinB = 4;
+    const LobbyPetaTokenB = 5;
     
     const RoomIdle = 0;
     const RoomMatching = 1;
