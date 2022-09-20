@@ -2,6 +2,7 @@
 
 namespace Games\Players;
 
+use Games\Accessors\PlayerAccessor;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Consts\SyncRate;
@@ -163,7 +164,9 @@ class PlayerHandler {
         $rt = $expCalculator->Process();
         $exp = ($rt->exp + $this->info->sync);
         $exp = PlayerEXP::Clamp(SyncRate::Max / SyncRate::Divisor,SyncRate::Min,$exp);
-        $this->SaveSync($exp);
+        // $this->SaveSync($exp);
+        (new PlayerAccessor())->ModifySyncByPlayerID($this->info->id,['SyncRate' => $exp]);
+        PlayerPool::Instance()->Delete($this->info->id);
         return $rt;        
     }
 
@@ -192,8 +195,9 @@ class PlayerHandler {
         {
             $bind['level'] = $level;
         }
-        $this->SaveLevel($bind);
-
+        // $this->SaveLevel($bind);
+        (new PlayerAccessor())->ModifyLevelByPlayerID($this->info->id,$bind);
+        PlayerPool::Instance()->Delete($this->info->id);
         $gainResult = new ExpGainResult();
         $gainResult->gainAmount = $currentExpTemp - $currentExp;
         $gainResult->bonus = $rt->bonus;
