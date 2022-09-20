@@ -68,6 +68,7 @@ class UpgradePage extends BaseProcessor{
         }
 
         $targetLevel = PlayerEXP::GetLevel($expTotal + $playerInfo->exp,$playerInfo->rank,$playerInfo->level);        
+        $targetLevel = $targetLevel == $playerInfo->level && $targetLevel < PlayerValue::LevelMax ? $targetLevel + 1 : $targetLevel;
         $levelData = [];
         for($i = $playerInfo->level; $i <= $targetLevel;$i++)
         {

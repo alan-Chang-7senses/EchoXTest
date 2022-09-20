@@ -18,6 +18,7 @@ class WindAdaptability extends BaseAdaptability {
         
         if($code == DNAWind::Tailwind) ++$this->tailwind;
         else if($code == DNAWind::Crosswind) ++$this->crosswind;
-        else if($code == $this->headwind) ++$this->headwind;
+        else if($code == DNAWind::Headwind) ++$this->headwind;
+        // else if($code == $this->headwind) ++$this->headwind;
     }
 }
