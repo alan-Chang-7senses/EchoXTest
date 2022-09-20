@@ -8,4 +8,8 @@ class FreePlayerValue
     const FreePlayerStartLevel = 1;
     const FreePlayerSync = 0;
     const FreePlayerRank = 1;
+
+    const FreePlayerTypeSpeed = 1;
+    const FreePlayerTypeBalance = 2;
+    const FreePlayerTypeLasting = 3;
 }
