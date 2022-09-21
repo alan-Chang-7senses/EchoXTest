@@ -37,7 +37,7 @@ class FreePlayerPool extends PlayerPool
 
     protected string $keyPrefix = 'freePlayer_';
 
-    public function FromDB(int|string $number): stdClass|false
+    public function FromDB(int|string $number): PlayerInfoHolder|stdClass|false
     {
         $pdo = new PDOAccessor(EnvVar::DBStatic);
         $table = $pdo->FromTable("FreePetaInfo")->FetchAll();
@@ -54,6 +54,7 @@ class FreePlayerPool extends PlayerPool
         $skillPartTable = $pdo->FromTable("SkillPart")
             ->FetchAll();
         $holder = new PlayerInfoHolder();
+        $freePlayerBase->Attribute = RandomUtility::GetRandomObject(PlayerAttr::Fire,PlayerAttr::Water,PlayerAttr::Wood);
         $holder->freePlayerBase = $freePlayerBase;
 
         $aliasCodes = [];
@@ -121,7 +122,7 @@ class FreePlayerPool extends PlayerPool
             }
         }
         $holder->type = $freePlayerBase->Type;
-        $holder->ele = RandomUtility::GetRandomObject(PlayerAttr::Fire,PlayerAttr::Water,PlayerAttr::Wood);
+        $holder->ele = $freePlayerBase->Attribute;
         $base = new PlayerBaseInfoHolder($holder->level,NFTDNA::StrengthNormalC,$freePlayerBase->Strength,$freePlayerBase->Agility,$freePlayerBase->Constitution,$freePlayerBase->Dexterity);
         
         $holder->velocity = PlayerAbility::GetAbilityValue(AbilityFactor::Velocity,$base);

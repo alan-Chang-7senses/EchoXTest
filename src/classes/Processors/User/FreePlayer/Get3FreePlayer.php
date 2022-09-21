@@ -61,7 +61,7 @@ class Get3FreePlayer extends BaseProcessor
             $playerForDB->native = NFTDNA::NativeNone; 
             $playerForDB->source = NFTDNA::FreePetaSource;
             $playerForDB->StrengthLevel = NFTDNA::StrengthNormalC;
-            $playerForDB->SkeletonType = NFTDNA::PetaSkeletonType;
+            $playerForDB->SkeletonType = NFTDNA::SkeletonTypePeta;
 
             foreach($info->skills as $row)
             {

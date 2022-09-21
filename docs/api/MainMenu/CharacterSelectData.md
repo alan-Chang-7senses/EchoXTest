@@ -45,12 +45,12 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | id | int | 角色編號，16 碼 |
-| head | string | 頭部代碼 |
-| body | string | 身體代碼 |
-| hand | string | 手部代碼 |
-| leg | string | 腿部代碼 |
-| back | string | 背部代碼 |
-| hat | string | 頭冠代碼 |
+| head | string | 頭部代碼（或空字串略過此部位） |
+| body | string | 身體代碼（或空字串略過此部位） |
+| hand | string | 手部代碼（或空字串略過此部位） |
+| leg | string | 腿部代碼（或空字串略過此部位） |
+| back | string | 背部代碼（或空字串略過此部位） |
+| hat | string | 頭冠代碼（或空字串略過此部位） |
 
 ### Example
 

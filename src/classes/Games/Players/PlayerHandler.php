@@ -167,6 +167,7 @@ class PlayerHandler {
         // $this->SaveSync($exp);
         (new PlayerAccessor())->ModifySyncByPlayerID($this->info->id,['SyncRate' => $exp]);
         PlayerPool::Instance()->Delete($this->info->id);
+        $this->ResetInfo();
         return $rt;        
     }
 
@@ -198,6 +199,7 @@ class PlayerHandler {
         // $this->SaveLevel($bind);
         (new PlayerAccessor())->ModifyLevelByPlayerID($this->info->id,$bind);
         PlayerPool::Instance()->Delete($this->info->id);
+        $this->ResetInfo();
         $gainResult = new ExpGainResult();
         $gainResult->gainAmount = $currentExpTemp - $currentExp;
         $gainResult->bonus = $rt->bonus;
