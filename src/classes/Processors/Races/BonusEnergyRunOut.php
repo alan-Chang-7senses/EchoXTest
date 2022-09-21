@@ -24,6 +24,34 @@ use Holders\ResultData;
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
 class BonusEnergyRunOut extends BaseRace{
+
+    const RunOutRewards = 
+    [
+        [
+            'proportion' => 10,
+            'duration' => 10,
+            'type' => SkillValue::EffectS,
+            'value' => 5,
+        ],
+        [
+            'proportion' => 20,
+            'duration' => 0,
+            'type' => SkillValue::EffectHP,
+            'value' => 35,
+        ],
+        [
+            'proportion' => 40,
+            'duration' => 10,
+            'type' => SkillValue::EffectS,
+            'value' => 1.5,
+        ],
+        [
+            'proportion' => 30,
+            'duration' => 20,
+            'type' => SkillValue::EffectH,
+            'value' => -0.5,
+        ],
+    ];    
     
     public function Process(): ResultData {
         
@@ -38,10 +66,25 @@ class BonusEnergyRunOut extends BaseRace{
         if($remainingEnergy > 0) throw new RaceException(RaceException::EnergyNotRunOut);
         if($remainingEnergy < 0) throw new RaceException(RaceException::EnergyNotEnough);
 
-        $duration = 5;
+        $duration = 0;
+        $effectType = 0;
+        $effectValue = 0;
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        $r = rand(1,100);
+        foreach(self::RunOutRewards as $rewardEffect)
+        {
+            $r -= $rewardEffect['proportion'];
+            if($r <= 0)
+            {
+                $duration = $rewardEffect['duration'];
+                $effectType = $rewardEffect['type'];
+                $effectValue = $rewardEffect['value'];
+                break;
+            }
+        }
+
         
-        $binds[] = RaceUtility::BindRacePlayerEffect($racePlayerID, SkillValue::EffectS, 0.5, $GLOBALS[Globals::TIME_BEGIN], $currentTime + $duration);
+        $binds[] = RaceUtility::BindRacePlayerEffect($racePlayerID, $effectType, $effectValue, $GLOBALS[Globals::TIME_BEGIN], $currentTime + $duration);
         
         $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerID);
         $racePlayerEffectHandler->AddAll($binds);
@@ -61,6 +104,9 @@ class BonusEnergyRunOut extends BaseRace{
         $result->s = $raceHandler->ValueS();
         $result->hp = $racePlayerInfo->hp / RaceValue::DivisorHP;
         $result->duration = $duration;
+        
+        $result->effect = $effectType;
+        $result->effectValue = $effectValue;
         
         return $result;
     }

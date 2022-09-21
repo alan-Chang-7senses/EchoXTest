@@ -34,16 +34,28 @@ Content Type: `application/json`
 | s | float | S值 |
 | hp | float | 剩餘體力 |
 | duration | float | 有效時間（秒）|
+| [effect](#effect) | int | 獲得影響效果 |
+| effectValue | float | 獲得影響效果值 |
+
+#### <span id="effect">effect 內容</span>
+
+| 代號 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| 101 | int | 減少H值消耗 |
+| 102 | int | 增加S值 |
+| 201 | int | 增加HP |
+
 
 ### Example
-
 	{
 	    "error": {
 	        "code": 0,
 	        "message": ""
 	    },
-	    "h": 1.2516472770190523,
-	    "s": 4.6397,
-	    "hp": 0,
-	    "duration": 5
+	    "h": 0.5482427186347083,
+	    "s": 13.249680999999995,
+	    "hp": 148.29,
+	    "duration": 20,
+	    "effect": 101,
+	    "effectValue": -0.5
 	}
