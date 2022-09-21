@@ -34,7 +34,7 @@ class MainData extends BaseProcessor{
         $result->player = [
             'id' => $playerInfo->id,
             'head' => $parts->head,
-            'body ' => $parts->body,
+            'body' => $parts->body,
             'hand' => $parts->hand,
             'leg' => $parts->leg,
             'back' => $parts->back,
