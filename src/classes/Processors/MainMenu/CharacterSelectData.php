@@ -10,7 +10,6 @@ use Games\Pools\UserPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use stdClass;
 /**
  * Description of CharacterSelectData
  *
@@ -28,17 +27,17 @@ class CharacterSelectData extends BaseProcessor {
         $players = [];
         foreach (array_slice($user->players, $offset, $count) as $playerID){
             
-            $row = $playerPool->$playerID;
-            $player = new stdClass();
-            $player->id = $row->id;
-            $player->head = PlayerUtility::PartCodeByDNA($row->dna->head);
-            $player->body = PlayerUtility::PartCodeByDNA($row->dna->body);
-            $player->hand = PlayerUtility::PartCodeByDNA($row->dna->hand);
-            $player->leg = PlayerUtility::PartCodeByDNA($row->dna->leg);
-            $player->back = PlayerUtility::PartCodeByDNA($row->dna->back);
-            $player->hat = PlayerUtility::PartCodeByDNA($row->dna->hat);
-            $players[] = $player;
-            
+            $info = $playerPool->$playerID;
+            $parts = PlayerUtility::PartCodes($info);
+            $players[] = [
+                'id' => $info->id,
+                'head' => $parts->head,
+                'body' => $parts->body,
+                'hand' => $parts->hand,
+                'leg' => $parts->leg,
+                'back' => $parts->back,
+                'hat' => $parts->hat,
+            ];
         }
         
         $result = new ResultData(ErrorCode::Success);

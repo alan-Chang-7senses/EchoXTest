@@ -3,15 +3,14 @@
 namespace Processors\Races;
 
 use Consts\ErrorCode;
-use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
+use Games\Races\OfflineRecoveryDataHandler;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
-use Games\Races\OfflineRecoveryDataHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Holders\ResultData;
@@ -95,6 +94,7 @@ class OfflineRecovery extends BaseRace {
                 'skillData' => $skillData,
                 'createTime' =>$recoveryDataArray->CreateTime,
             ];
+            
             $players[] = [
                 'user' => $racePlayerInfo->user,
                 'player' => $racePlayerInfo->player,
@@ -103,19 +103,11 @@ class OfflineRecovery extends BaseRace {
                 's' => $raceHandler->ValueS(),
                 'h' => $raceHandler->ValueH(),
                 'position' => $racePlayerInfo->position,
-                'parts' => [
-                    'head' => PlayerUtility::PartCodeByDNA($playerInfo->dna->head),
-                    'body' => PlayerUtility::PartCodeByDNA($playerInfo->dna->body),
-                    'hand' => PlayerUtility::PartCodeByDNA($playerInfo->dna->hand),
-                    'leg' => PlayerUtility::PartCodeByDNA($playerInfo->dna->leg),
-                    'back' => PlayerUtility::PartCodeByDNA($playerInfo->dna->back),
-                    'hat' => PlayerUtility::PartCodeByDNA($playerInfo->dna->hat),
-                ],
+                'parts' => PlayerUtility::PartCodes($playerInfo),
                 'skills' => $skills,
                 'recovery' => $recoveryDataArray,
             ];
         }
-
 
         $result = new ResultData(ErrorCode::Success);
         $result->user = $this->userInfo->id;
