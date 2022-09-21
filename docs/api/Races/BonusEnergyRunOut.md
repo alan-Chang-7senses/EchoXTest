@@ -36,6 +36,7 @@ Content Type: `application/json`
 | duration | float | 有效時間（秒）|
 | [effect](#effect) | int | 獲得影響效果 |
 | effectValue | float | 獲得影響效果值 |
+| [number](#number) | int | 獲得效果編號 |
 
 #### <span id="effect">effect 內容</span>
 
@@ -45,6 +46,15 @@ Content Type: `application/json`
 | 102 | int | 增加S值 |
 | 201 | int | 增加HP |
 
+#### <span id="number">number 內容</span>
+
+| 代號 | 說明 |
+|:-:|:-:|
+| 1 | 增減S值 => 15點 |
+| 2 | 增減S值 => 50點 |
+| 3 | 增減HP值 => 35點 |
+| 4 | 增減H值 => -0.5點 |
+
 
 ### Example
 	{
@@ -52,10 +62,11 @@ Content Type: `application/json`
 	        "code": 0,
 	        "message": ""
 	    },
-	    "h": 0.5482427186347083,
-	    "s": 13.249680999999995,
-	    "hp": 148.29,
+	    "h": 0.6964231220820043,
+	    "s": 13.205215,
+	    "hp": 50,
 	    "duration": 20,
 	    "effect": 101,
-	    "effectValue": -0.5
+	    "effectValue": -0.5,
+	    "number": 4
 	}

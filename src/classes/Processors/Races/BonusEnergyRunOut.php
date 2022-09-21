@@ -28,24 +28,28 @@ class BonusEnergyRunOut extends BaseRace{
     const RunOutRewards = 
     [
         [
+            'number' => 2,
             'proportion' => 10,
             'duration' => 10,
             'type' => SkillValue::EffectS,
             'value' => 5,
         ],
         [
+            'number' => 3,
             'proportion' => 20,
             'duration' => 0,
             'type' => SkillValue::EffectHP,
             'value' => 35,
         ],
         [
+            'number' => 1,
             'proportion' => 40,
             'duration' => 10,
             'type' => SkillValue::EffectS,
             'value' => 1.5,
         ],
         [
+            'number' => 4,
             'proportion' => 30,
             'duration' => 20,
             'type' => SkillValue::EffectH,
@@ -69,6 +73,7 @@ class BonusEnergyRunOut extends BaseRace{
         $duration = 0;
         $effectType = 0;
         $effectValue = 0;
+        $number = 0;
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $r = rand(1,100);
         foreach(self::RunOutRewards as $rewardEffect)
@@ -79,6 +84,7 @@ class BonusEnergyRunOut extends BaseRace{
                 $duration = $rewardEffect['duration'];
                 $effectType = $rewardEffect['type'];
                 $effectValue = $rewardEffect['value'];
+                $number = $rewardEffect['number'];
                 break;
             }
         }
@@ -107,6 +113,7 @@ class BonusEnergyRunOut extends BaseRace{
         
         $result->effect = $effectType;
         $result->effectValue = $effectValue;
+        $result->number = $number;
         
         return $result;
     }
