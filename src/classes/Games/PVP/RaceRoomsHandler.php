@@ -24,8 +24,10 @@ class RaceRoomsHandler {
             case RaceValue::LobbyPT:
             case RaceValue::LobbyPetaTokenB:                
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
+            case RaceValue::LobbyStudy:
+                return 0;//find match room first
         }
-        return 1000;
+        return 1000;//find idle/new room
     }
 
     public function GetMatchRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
@@ -44,7 +46,7 @@ class RaceRoomsHandler {
         }
     }
 
-    private function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
+    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
         $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound);
         if ($idleRoom !== false) {
             return $idleRoom;
