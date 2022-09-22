@@ -9,6 +9,7 @@ use Games\Consts\AbilityFactor;
 use Games\Consts\DNASun;
 use Games\Consts\FreePlayerValue;
 use Games\Consts\NFTDNA;
+use Games\Consts\PlayerAttr;
 use Games\Consts\PlayerValue;
 use Games\Consts\SkillValue;
 use Games\Players\Adaptability\EnvironmentAdaptability;
@@ -21,6 +22,7 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
+use Games\Random\RandomUtility;
 use Games\Users\FreePeta\FreePetaUtility;
 use stdClass;
 
@@ -35,7 +37,7 @@ class FreePlayerPool extends PlayerPool
 
     protected string $keyPrefix = 'freePlayer_';
 
-    public function FromDB(int|string $number): stdClass|false
+    public function FromDB(int|string $number): PlayerInfoHolder|stdClass|false
     {
         $pdo = new PDOAccessor(EnvVar::DBStatic);
         $table = $pdo->FromTable("FreePetaInfo")->FetchAll();
@@ -52,6 +54,7 @@ class FreePlayerPool extends PlayerPool
         $skillPartTable = $pdo->FromTable("SkillPart")
             ->FetchAll();
         $holder = new PlayerInfoHolder();
+        $freePlayerBase->Attribute = RandomUtility::GetRandomObject(PlayerAttr::Fire,PlayerAttr::Water,PlayerAttr::Wood);
         $holder->freePlayerBase = $freePlayerBase;
 
         $aliasCodes = [];

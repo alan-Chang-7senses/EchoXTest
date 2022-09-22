@@ -43,11 +43,13 @@ class NFTDNA {
     /** 來源標記 免費Peta */
     const FreePetaSource = -2;
 
-    /**骨架編碼 一般Peta */
-    const PetaSkeletonType = '00';
+    /** 骨架類別 - 一般 Peta */
+    const SkeletonTypePeta = '00';
+    /** 骨架類別 - Phanta Bear */
+    const SkeletonTypePhantaBear = '01';
     
-    /** 骨架類別 杰倫熊模組 */
-    const JayBearSkeletonType = 1;
+    /** 空部位 DNA 編碼 - Phanta Bear */
+    const EmptyPartPhantaBear = '180223000218022300021802230002';
     
     /** 來源標記第二碼 - 強度級別 */
     const StrengthS = 0;

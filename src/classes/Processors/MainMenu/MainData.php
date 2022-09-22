@@ -10,7 +10,6 @@ use Games\Players\PlayerUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use stdClass;
 
 /**
  * Description of MainData
@@ -24,15 +23,7 @@ class MainData extends BaseProcessor{
         $userInfo = (new UserHandler($_SESSION[Sessions::UserID]))->GetInfo();
         
         $playerInfo = (new PlayerHandler($userInfo->player))->GetInfo();
-        
-        $player = new stdClass();
-        $player->id = $playerInfo->id;
-        $player->head = PlayerUtility::PartCodeByDNA($playerInfo->dna->head);
-        $player->body = PlayerUtility::PartCodeByDNA($playerInfo->dna->body);
-        $player->hand = PlayerUtility::PartCodeByDNA($playerInfo->dna->hand);
-        $player->leg = PlayerUtility::PartCodeByDNA($playerInfo->dna->leg);
-        $player->back = PlayerUtility::PartCodeByDNA($playerInfo->dna->back);
-        $player->hat = PlayerUtility::PartCodeByDNA($playerInfo->dna->hat);
+        $parts = PlayerUtility::PartCodes($playerInfo);
         
         $result = new ResultData(ErrorCode::Success);
         $result->name = $userInfo->nickname;
@@ -40,7 +31,15 @@ class MainData extends BaseProcessor{
         $result->coin = $userInfo->coin;
         $result->power = $userInfo->power;
         $result->diamond = $userInfo->diamond;
-        $result->player = $player;
+        $result->player = [
+            'id' => $playerInfo->id,
+            'head' => $parts->head,
+            'body' => $parts->body,
+            'hand' => $parts->hand,
+            'leg' => $parts->leg,
+            'back' => $parts->back,
+            'hat' => $parts->hat,
+        ];
 
         $userMailsHandler = new MailsHandler();
         $result->unreadmail = $userMailsHandler->GetUnreadMails($_SESSION[Sessions::UserID]);

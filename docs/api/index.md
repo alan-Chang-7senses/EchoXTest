@@ -47,8 +47,8 @@
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。
-		- [機器人角色](Races/BotPlayer.md)。
-		- [釋放機器人角色](Races/BotPlayerRelease.md)。
+		- [機器人角色](Races/BotPlayer.md) - ***不再可用***。
+		- [釋放機器人角色](Races/BotPlayerRelease.md) - ***不再可用***。
 		- [開局](Races/Ready.md)。
 		- [起跑](Races/Start.md)。
 		- [紀錄位置](Races/RecordPositions.md)。

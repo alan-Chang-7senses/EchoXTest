@@ -24,4 +24,9 @@ class RandomUtility
         if ($st_num>$end_num) return false;
         return mt_rand($st_num*$mul,$end_num*$mul)/$mul;
     }
+
+    public static function GetRandomObject(...$object) : mixed
+    {
+        return $object[rand(0,count($object) - 1)];
+    }
 }

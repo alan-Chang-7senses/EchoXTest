@@ -33,17 +33,18 @@ class RandomBotPlayer extends BaseRace{
         foreach ($rows as $row){
             
             $player = $playerPool->{$row->Player};
+            $parts = PlayerUtility::PartCodes($player);
             
             $players[] = [
                 'id' => $player->id,
                 'idName' => $player->idName,
                 'nickname' => $player->name,
-                'head' => PlayerUtility::PartCodeByDNA($player->dna->head),
-                'body' => PlayerUtility::PartCodeByDNA($player->dna->body),
-                'hand' => PlayerUtility::PartCodeByDNA($player->dna->hand),
-                'leg' => PlayerUtility::PartCodeByDNA($player->dna->leg),
-                'back' => PlayerUtility::PartCodeByDNA($player->dna->back),
-                'hat' => PlayerUtility::PartCodeByDNA($player->dna->hat),
+                'head' => $parts->head,
+                'body' => $parts->body,
+                'hand' => $parts->hand,
+                'leg' => $parts->leg,
+                'back' => $parts->back,
+                'hat' => $parts->hat,
             ];
         }
 

@@ -34,6 +34,34 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
 
+-- 傾印  資料表 koa_log.PowerLog 結構
+CREATE TABLE IF NOT EXISTS `PowerLog` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者ID',
+  `BeforeChange` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '變化前電力',
+  `AfterChange` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '變化後電力',
+  `Cause` int(11) NOT NULL DEFAULT 0 COMMENT '使用原由',
+  `PVELevel` int(11) DEFAULT NULL COMMENT '在哪個關卡使用',
+  `LogTime` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Serial`) USING BTREE,
+  KEY `UserID` (`UserID`),
+  KEY `Cause` (`Cause`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='電力消耗log';
+
+-- 傾印  資料表 koa_log.SeasonRankingReward 結構
+CREATE TABLE IF NOT EXISTS `SeasonRankingReward` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `SeasonID` int(11) NOT NULL COMMENT '賽季編號',
+  `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '賽制大廳',
+  `Ranking` mediumint(9) NOT NULL DEFAULT 0 COMMENT '排名',
+  `UserID` int(10) NOT NULL DEFAULT 0,
+  `PlayerID` bigint(20) NOT NULL,
+  `Content` text NOT NULL COMMENT '內容',
+  `LogTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  PRIMARY KEY (`Serial`,`LogTime`),
+  KEY `SeasonID` (`SeasonID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='賽季排名獎勵紀錄';
+
 -- 傾印  資料表 koa_log.Upgrade 結構
 CREATE TABLE IF NOT EXISTS `Upgrade` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT,

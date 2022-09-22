@@ -30,11 +30,15 @@ class FinishRace extends BaseRace{
     private array $rewardField = [
         RaceValue::LobbyCoin => 'coinReward',
         RaceValue::LobbyPT => 'petaTokenReward',
+        RaceValue::LobbyCoinB => 'coinRewardB',
+        RaceValue::LobbyPetaTokenB => 'petaTokenRewardB',
     ];
     
     private array $leaderboardLeadFunc = [
         RaceValue::LobbyCoin => 'LeaderboardLeadCoin',
         RaceValue::LobbyPT => 'LeaderboardLeadPT',
+        RaceValue::LobbyCoinB => 'LeaderboardLeadCoinB',
+        RaceValue::LobbyPetaTokenB => 'LeaderboardLeadPTB',
     ];
 
     public function Process(): ResultData {
@@ -196,6 +200,14 @@ class FinishRace extends BaseRace{
     
     private function LeaderboardLeadPT() : array{
         return $this->RecordLeaderboardLead('LeaderboardLeadPT', 'Games\Races\RaceUtility::QualifyingSeasonID');
+    }
+    
+    private function LeaderboardLeadCoinB() : array{
+        return $this->RecordLeaderboardLead('LeaderboardLeadCoinB', 'Games\Races\RaceUtility::QualifyingSeasonID');
+    }
+    
+    private function LeaderboardLeadPTB() : array{
+        return $this->RecordLeaderboardLead('LeaderboardLeadPTB', 'Games\Races\RaceUtility::QualifyingSeasonID');
     }
     
     private function RecordLeaderboardLead(string $table, $seasonIDFunc) : array{
