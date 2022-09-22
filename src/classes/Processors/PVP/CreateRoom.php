@@ -10,17 +10,13 @@ use Holders\ResultData;
  */
 //class CreateRoom extends BaseRace {
 
-class CreateRoom extends PVPMatch {
+class CreateRoom extends BasePVPMatch {
 
     public function Process(): ResultData {
-        $pvpResult = parent::Process();
-        if ($pvpResult->error->code === ErrorCode::Success) {
-            $result = new ResultData(ErrorCode::Success);
-            $result->raceRoomID = $pvpResult->raceRoomID;
-            return $result;
-        } else {
-            return $pvpResult;
-        }
+        $raceRoomID = $this->Matching(true);
+        $result = new ResultData(ErrorCode::Success);
+        $result->raceRoomID = $raceRoomID;
+        return $result;
     }
 
 }
