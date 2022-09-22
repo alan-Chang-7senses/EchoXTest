@@ -9,6 +9,7 @@ use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Pools\UserPool;
 use Games\PVP\QualifyingHandler;
 use Games\PVP\RaceRoomsHandler;
 use Helpers\InputHelper;
@@ -57,7 +58,7 @@ class JoinRoom {
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
         });
-
+        UserPool::Instance()->Delete($userID);
         $result = new ResultData(ErrorCode::Success);
         return $result;
     }
