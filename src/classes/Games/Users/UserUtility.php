@@ -37,4 +37,18 @@ class UserUtility {
             $mailsHandler->AddMailItems($userMailID, $mailItems);
         }
     }
+
+    
+    /**取得使用者所持NFT角色數量 */
+    public static function GetUserNFTPlayerAmount(int $userID) : int
+    {
+        $playerInfo = (new UserHandler($userID))->GetInfo();
+        $count = 0;
+        foreach($playerInfo->players as $playerID)
+        {
+            if($playerID > PlayerValue::freePetaMaxPlayerID)
+            $count++;
+        }
+        return $count;
+    }
 }

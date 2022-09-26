@@ -15,7 +15,7 @@ use Processors\Races\BaseRace;
  *
  * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
  */
-class BotPlayerRelease extends BaseRace {
+abstract class BotPlayerRelease extends BaseRace {
     
     protected bool|null $mustInRace = false;
     

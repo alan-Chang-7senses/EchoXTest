@@ -19,16 +19,17 @@ class AvatarParts extends BaseProcessor{
         $id = InputHelper::post('id');
         
         $info = (new PlayerHandler($id))->GetInfo();
+        $parts = PlayerUtility::PartCodes($info);
         
         $result = new ResultData(ErrorCode::Success);
         $result->parts = [
             'id' => $info->id,
-            'head' => PlayerUtility::PartCodeByDNA($info->dna->head),
-            'body' => PlayerUtility::PartCodeByDNA($info->dna->body),
-            'hand' => PlayerUtility::PartCodeByDNA($info->dna->hand),
-            'leg' => PlayerUtility::PartCodeByDNA($info->dna->leg),
-            'back' => PlayerUtility::PartCodeByDNA($info->dna->back),
-            'hat' => PlayerUtility::PartCodeByDNA($info->dna->hat),
+            'head' => $parts->head,
+            'body' => $parts->body,
+            'hand' => $parts->hand,
+            'leg' => $parts->leg,
+            'back' => $parts->back,
+            'hat' => $parts->hat,
         ];
         
         return $result;

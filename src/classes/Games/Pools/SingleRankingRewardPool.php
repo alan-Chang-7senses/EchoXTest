@@ -34,6 +34,8 @@ class SingleRankingRewardPool extends PoolAccessor {
         $holder = new stdClass();
         $holder->coinReward = $row->CoinReward ?? 0;
         $holder->petaTokenReward = $row->PetaTokenReward ?? 0;
+        $holder->coinRewardB = $row->CoinRewardB ?? 0;
+        $holder->petaTokenRewardB = $row->PetaTokenRewardB ?? 0;
         
         return $holder;
     }
