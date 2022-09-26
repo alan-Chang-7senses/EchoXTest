@@ -2,34 +2,47 @@
 
 namespace Processors\Player;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
-use Games\Exceptions\PlayerException;
+use Consts\Sessions;
+use Games\Exceptions\UserException;
+use Games\Pools\PlayerPool;
+use Games\Pools\UserPool;
+use Generators\DataGenerator;
+use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
-use Helpers\InputHelper;
-use Generators\DataGenerator;
-use Games\Skills\SkillHandler;
-
 
 class SetSkill extends BaseProcessor{
     
     public function Process(): ResultData {
         
-        $id = InputHelper::post('playerID');
-        $skillsData = json_decode(InputHelper::post('skillsData'));
+        $playerID = InputHelper::post('playerID');
+        
+        $userPool = UserPool::Instance();
+        $userInfo = $userPool->{$_SESSION[Sessions::UserID]};
+        if(!in_array($playerID, $userInfo->players)) throw new UserException (UserException::NotHoldPlayer, ['[player]' => $playerID]);
+        
+        $skillsData = json_decode(InputHelper::postNotEmpty('skillsData'));
         DataGenerator::ExistProperties($skillsData[0], ['skillID', 'slot']);
-
-        for($i=0; $i<count($skillsData); $i++)
-        {
-            if($skillsData[$i]->slot<=6)
-            {
-                $skillHandler = new SkillHandler($skillsData[$i]->skillID);
-                $skillHandler->SetSkillSlot($id,$skillsData[$i]->skillID,$skillsData[$i]->slot);
-            }
-            else{
-                throw new PlayerException (PlayerException::OverSlot);
-            }
+        
+        $skillSlots = [];
+        foreach($skillsData as $data) $skillSlots[$data->skillID] = $data->slot;
+        
+        $mainAccessor = new PDOAccessor(EnvVar::DBMain);
+        $mainAccessor->FromTable('PlayerSkill')->PrepareName('SetSkill');
+        
+        $playerPool = PlayerPool::Instance();
+        $playerInfo = $playerPool->$playerID;
+        foreach ($playerInfo->skills as $skill){
+            
+            $slot = $skillSlots[$skill->id] ?? 0;
+            $mainAccessor->ClearCondition();
+            $mainAccessor->WhereEqual('PlayerID', $playerID)->WhereEqual('SkillID', $skill->id)->Modify(['Slot' => $slot]);
         }
+        
+        $playerPool->Delete($playerID);
         
         $result = new ResultData(ErrorCode::Success);
         return $result;
