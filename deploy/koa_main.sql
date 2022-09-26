@@ -1892,6 +1892,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `RaceRoomID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽房間編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
+  `Version` varchar(15) NOT NULL DEFAULT '0' COMMENT 'Photon版本',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
@@ -1900,7 +1901,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `RaceRoomSeats` varchar(255) NOT NULL DEFAULT '[]' COMMENT '競賽席次房間編號',
   PRIMARY KEY (`RaceRoomID`),
   KEY `Status` (`Status`),
-  KEY `Lobby_LowBound_UpBound` (`Lobby`,`LowBound`,`UpBound`)
+  KEY `Lobby_Version_LowBound_UpBound` (`Lobby`,`Version`,`LowBound`,`UpBound`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='競賽房間';
 
 -- 傾印  資料表 koa_main.Races 結構
