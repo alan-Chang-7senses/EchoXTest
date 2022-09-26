@@ -95,7 +95,7 @@ class FreePetaUtility
                 'Native' => NFTDNA::NativeNone,
                 'Source' => NFTDNA::FreePetaSource,
                 'StrengthLevel' => NFTDNA::StrengthNormalC,
-                'SkeletonType' => NFTDNA::PetaSkeletonType,
+                'SkeletonType' => NFTDNA::SkeletonTypePeta,
             ]);
         $accessor->ClearCondition();
         $accessor->FromTable('PlayerHolder')->Add(['PlayerID' => $id, 'UserID' => $userID]);
