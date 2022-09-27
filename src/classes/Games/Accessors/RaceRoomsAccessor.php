@@ -16,22 +16,23 @@ class RaceRoomsAccessor extends BaseAccessor {
         return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->Fetch();
     }
 
-    public function GetMatchRooms(int $lobby, int $lowBound, int $upBound): array {
+    public function GetMatchRooms(int $lobby, string $version, int $lowBound, int $upBound): array {
         return $this->useTable()->WhereEqual('Status', 1)->
-                        WhereEqual('Lobby', $lobby)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
                         ForUpdate()->FetchAll();
     }
 
-    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdClass|false {
+    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound): stdClass|false {
         return $this->useTable()->WhereEqual('Status', 0)->
-                        WhereEqual('Lobby', $lobby)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
                         ForUpdate()->Fetch();
     }
 
-    public function AddNewRoom(int $lobby, int $lowBound, int $upBound): stdClass|false {
+    public function AddNewRoom(int $lobby, string $version, int $lowBound, int $upBound): stdClass|false {
         $this->useTable()->Add([
             'Status' => 1,
             'Lobby' => $lobby,
+            'Version' => $version,            
             'LowBound' => $lowBound,
             'UpBound' => $upBound,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
