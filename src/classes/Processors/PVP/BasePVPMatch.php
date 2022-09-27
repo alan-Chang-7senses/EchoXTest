@@ -60,6 +60,7 @@ abstract class BasePVPMatch extends BaseProcessor {
         }
 
         $lobby = InputHelper::post('lobby');
+        $version = InputHelper::post('version');
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
         $userBagHandler = new UserBagHandler($userID);
@@ -76,7 +77,7 @@ abstract class BasePVPMatch extends BaseProcessor {
         $raceRoomID = RaceValue::NotInRoom;
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
-        $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, &$raceRoomID, $isCreateRoom) {
+        $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, $version, &$raceRoomID, $isCreateRoom) {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
 
             if ($userInfo->Room != RaceValue::NotInRoom) {
@@ -95,9 +96,9 @@ abstract class BasePVPMatch extends BaseProcessor {
             $raceroomHandler = new RaceRoomsHandler();
 
             if ($isCreateRoom) {
-                $raceRoom = $raceroomHandler->GetIdleRoom($lobby, $lowbound, $upbound);                
+                $raceRoom = $raceroomHandler->GetIdleRoom($lobby, $version, $lowbound, $upbound);
             } else {
-                $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $lowbound, $upbound);                
+                $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $version, $lowbound, $upbound);
             }
             $raceroomHandler->JoinRoom($userID, $raceRoom);
             $raceRoomID = $raceRoom->RaceRoomID;
