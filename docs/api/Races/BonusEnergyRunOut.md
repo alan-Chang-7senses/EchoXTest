@@ -2,7 +2,7 @@
 
 ## 介紹
 
-- 競賽過程中，角色能量剛好耗盡時，可獲得獎勵效果。
+- 競賽過程中，角色能量剛好耗盡時，可獲得隨機獎勵效果編號。
 - CB2 版本。
 
 ## URL
@@ -30,10 +30,6 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| h | float | H值 |
-| s | float | S值 |
-| hp | float | 剩餘體力 |
-| duration | float | 有效時間（秒）|
 | [effect](#effect) | int | 獲得影響效果 |
 | effectValue | float | 獲得影響效果值 |
 | [number](#number) | int | 獲得效果編號 |
@@ -62,11 +58,7 @@ Content Type: `application/json`
 	        "code": 0,
 	        "message": ""
 	    },
-	    "h": 0.6964231220820043,
-	    "s": 13.205215,
-	    "hp": 50,
-	    "duration": 20,
 	    "effect": 101,
 	    "effectValue": -0.5,
-	    "number": 4
+	    "number": 3
 	}
