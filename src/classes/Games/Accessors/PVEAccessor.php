@@ -11,4 +11,12 @@ class PVEAccessor extends BaseAccessor
         ->WhereEqual('LevelID',$id)
         ->FetchAll();
     }
+    public function rowsInfoByChapterID(int $id) : mixed
+    {
+        $rows = $this->StaticAccessor()
+        ->FromTableJoinUsing('PVEChapter','PVELevel','INNER','ChapterID')
+        ->WhereEqual('ChapterID',$id)
+        ->FetchAll();
+        return $rows;
+    }
 }

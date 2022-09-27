@@ -2,8 +2,9 @@
 
 namespace Games\Pools;
 
+use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
-use Games\Accessors\PVEAccessor;
+use Consts\EnvVar;
 use Games\PVE\Holders\PVELevelInfoHolder;
 use stdClass;
 
@@ -22,11 +23,13 @@ class PVELevelPool extends PoolAccessor
     {
         $holder = new PVELevelInfoHolder();
 
-        $rows = (new PVEAccessor)->rowsInfoByID($id);
-        if($rows === false)return false;
-        $row = $rows[0];
+        // $rows = (new PVEAccessor)->rowsInfoByID($id);
+        $accessor = new PDOAccessor(EnvVar::DBStatic);
+        $row = $accessor->FromTable('PVELevel')->WhereEqual('LevelID',$id)->Fetch();
+        if($row === false)return false;
 
         $holder->levelID = $row->LevelID;
+        $holder->chapterID = $row->ChapterID;
         $holder->recommendLevel = $row->RecommendLevel;
         $holder->power = $row->Power;
         $holder->levelName = $row->LevelName;
@@ -41,10 +44,9 @@ class PVELevelPool extends PoolAccessor
         $holder->sustainRewardID = $row->SustainRewardID;
 
         //TODO：處理跑道上的AI
-        foreach($rows as $r)
-        {
-            $holder->aiInfo[$r->AIID] = $r->TrackNumber;
-        }
+        $holder->aiInfo[$row->FirstAI] = $row->FirstAITrackNumber;
+        $holder->aiInfo[$row->SecondAI] = $row->SecondAITrackNumber;
+        $holder->aiInfo[$row->ThirdAI] = $row->ThirdAITrackNumber;
 
         return $holder;
     }

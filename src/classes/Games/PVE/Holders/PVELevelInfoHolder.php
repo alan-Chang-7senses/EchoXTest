@@ -8,6 +8,9 @@ class PVELevelInfoHolder extends stdClass
     /** 關卡ID */
     public int|string $levelID;
 
+    /** 關卡所在章節ID */
+    public int|string $chapterID;
+
     /**推薦角色等級 */
     public int $recommendLevel;
 
