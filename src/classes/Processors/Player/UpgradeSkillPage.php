@@ -40,6 +40,7 @@ class UpgradeSkillPage extends BaseProcessor{
             $skillHandler = new SkillHandler($skill->id);
             $skillInfo = $skillHandler->GetInfo();
             $skillLevel = $playerhandler->SkillLevel($skillInfo->id);
+            $skillHandler->playerHandler = $playerhandler;
             $hasReachedRankMax = $skillLevel >= $levelLimit;
             $chipID = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeChipID($skillInfo->id);            
             $requireItems = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
@@ -64,6 +65,21 @@ class UpgradeSkillPage extends BaseProcessor{
                 'requireItem' => $requireItems,
                 'itemHold' => $requireItemsHoldAmount,
                 'isRequireItemEnough' =>$hasReachedRankMax ? null : $isEnough,
+                'name' => $skillInfo->name,
+                'icon' => $skillInfo->icon,
+                'description' => $skillInfo->description,
+                'level' => $skill->level,
+                'slot' => $skill->slot,
+                'energy' => $skillInfo->energy,
+                'cooldown' => $skillInfo->cooldown,
+                'duration' => $skillInfo->duration,
+                'ranks' => $skillInfo->ranks,
+                'maxDescription' => $skillInfo->maxDescription,
+                'maxCondition' => $skillInfo->maxCondition,
+                'maxConditionValue' => $skillInfo->maxConditionValue,
+                'attackedDesc' => $skillInfo->attackedDesc,
+                'effects' => $skillHandler->GetEffects(),
+                'maxEffects' => $skillHandler->GetMaxEffects()
 
             ];
         }
