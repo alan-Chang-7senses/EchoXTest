@@ -68,14 +68,12 @@ abstract class BasePlayerValues extends BaseRace{
         $values->hp = $hp * RaceValue::DivisorHP;
         $racePlayerID = $raceInfo->racePlayers->{$playerID};
 
-        $energy = '';
-        $accessor->Transaction(function() use ($accessor, $racePlayerID, $values, &$energy){
+        $accessor->Transaction(function() use ($accessor, $racePlayerID, $values){
             
             $row = $accessor->ClearCondition()
                     ->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
             if($row->Status == RaceValue::StatusReach) throw new RaceException (RaceException::PlayerReached);
             
-            $energy = array_map('intval',explode(',', $row->Energy));
             $values->Status = RaceValue::StatusUpdate;
             $values->UpdateTime = $GLOBALS[Globals::TIME_BEGIN];
             $accessor->Modify((array)$values);
@@ -96,7 +94,7 @@ abstract class BasePlayerValues extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
-        $result->energy = $energy;
+        $result->energy = $racePlayerHandler->GetInfo()->energy;
         
         return $result;
     }
