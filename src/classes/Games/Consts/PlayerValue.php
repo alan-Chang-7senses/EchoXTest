@@ -20,11 +20,11 @@ class PlayerValue {
     const Hat = 6;
     
     /** 太陽屬性 無差異值 */
-    const SunNone = 100;
+    const SunNone = 90;
     /** 太陽屬性 與賽道日照一致值 */
-    const SunSame = 120;
+    const SunSame = 92;
     /** 太陽屬性 與賽道日照相反值 */
-    const SunDiff = 80;
+    const SunDiff = 88;
     
     /** 比賽習慣 狂衝 */
     const Rush = 1;

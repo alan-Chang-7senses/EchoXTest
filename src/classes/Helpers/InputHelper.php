@@ -16,6 +16,12 @@ class InputHelper {
         return self::receive(INPUT_POST, $name);
     }
     
+    public static function postNotEmpty(string $name) : string|int|bool|float {
+        $value = self::post($name);
+        if($value === '') throw new Exception ('The parameter \''.$name.'\' is empty', ErrorCode::ParamError);
+        return $value;
+    }
+
     public static function get(string $name) : string|int|bool|float {
         
         return self::receive(INPUT_GET, $name);
