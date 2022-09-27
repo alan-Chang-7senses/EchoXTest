@@ -77,8 +77,10 @@ abstract class BasePlayerValues extends BaseRace{
             $values->Status = RaceValue::StatusUpdate;
             $values->UpdateTime = $GLOBALS[Globals::TIME_BEGIN];
             $accessor->Modify((array)$values);
+
         });
         
+
         RacePlayerPool::Instance()->Delete($racePlayerID);
         
         $playerHandler = new PlayerHandler($playerID);
@@ -92,6 +94,7 @@ abstract class BasePlayerValues extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
+        $result->energy = $racePlayerHandler->GetInfo()->energy;
         
         return $result;
     }

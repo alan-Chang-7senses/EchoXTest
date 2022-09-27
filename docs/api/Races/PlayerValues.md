@@ -56,6 +56,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | h | float | H值 |
 | s | float | S值 |
+| energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
 
 ### Example
 
@@ -65,5 +66,11 @@ Content Type: `application/json`
 	        "message": ""
 	    },
 	    "h": 1.2308113391984357,
-	    "s": 6.295599999999999
+	    "s": 6.295599999999999,
+    	"energy": [
+    	    0,
+    	    0,
+    	    0,
+    	    0
+    	]
 	}
