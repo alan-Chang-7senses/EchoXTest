@@ -4,6 +4,7 @@ namespace Games\Users;
 use Consts\Globals;
 use Games\Consts\ActionPointValue;
 use Games\Players\Exp\PlayerEXP;
+use Games\Users\VIP\VIPPrivilegeData;
 use stdClass;
 
 class APRecoverUtility
@@ -25,13 +26,11 @@ class APRecoverUtility
     /**取得最大體力與回復頻率 */
     public static function GetMaxAPAmountAndRecoverRate(int $userID) : stdClass
     {
-        // $timeDiff = self::GetUpdateTimeDifference($userID);
-        $nftPlayerAmount = UserUtility::GetUserNFTPlayerAmount($userID);
-        $amountKey = PlayerEXP::Clamp(ActionPointValue::APRankMoreThanTen,
-                                    ActionPointValue::APRankLessThanOne,$nftPlayerAmount);
+        $userInfo = (new UserHandler($userID))->GetInfo();
+        $vipInfo = VIPPrivilegeData::GetVIPInfoByDiamond($userInfo->accumulateDiamond);
         $rt = new stdClass();
-        $rt->maxAP = ActionPointValue::APRecoverInfo[$amountKey][ActionPointValue::APLimit];
-        $rt->rate = ActionPointValue::APRecoverInfo[$amountKey][ActionPointValue::APIncreaseRate];
+        $rt->maxAP = $vipInfo->PowerLimit;
+        $rt->rate = $vipInfo->PowerRate;
         return $rt;
     }
 

@@ -90,17 +90,11 @@ class RaceHandler {
         if($racePlayer->trackShape == SceneValue::Straight){
             
             if($racePlayer->hp > 0){
-                // $result = $climatAccelerations * 
-                // ($player->breakOut / $slope + $player->velocity / ($slope * 3)) * 
-                // (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
 
                 $result = $climatAccelerations * 
                 ((RaceValue::PositiveHPStraightFront * $player->breakOut + RaceValue::PositiveHPStraightBack * $player->velocity) / $slope) *
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
             }else{
-                // $result = $climatAccelerations * 
-                // ($player->breakOut + $player->will) / ($slope * 3) * 
-                // (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
 
                 $result = $climatAccelerations * 
                 ((RaceValue::MinusHPStraightFront * $player->breakOut + RaceValue::MinusHPStraightBack * $player->will) / $slope) *
@@ -110,17 +104,11 @@ class RaceHandler {
         }else{
             
             if($racePlayer->hp > 0){
-                // $result = $climatAccelerations * 
-                // ($player->velocity / $slope  + $player->breakOut / ($slope * 3)) * 
-                // (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
 
                 $result = $climatAccelerations * 
                 ((RaceValue::PositiveHPCurveFront * $player->velocity + RaceValue::PositiveHPCurveBack * $player->breakOut) / $slope) *
                 (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
             }else{
-                // $result = $climatAccelerations * 
-                // ($player->velocity + $player->will) / ($slope * 3) * 
-                // (($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400) / 100);
                 
                 $result = $climatAccelerations * 
                 ((RaceValue::MinusHPCurveFront * $player->velocity + RaceValue::MinusHPCurveBack * $player->will) / $slope) *
