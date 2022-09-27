@@ -19,39 +19,39 @@ class RaceRoomsHandler {
     private function GetNewRomRate(int $lobby): int {
         switch ($lobby) {
             case RaceValue::LobbyCoin:
-            case RaceValue::LobbyCoinB:                
+            case RaceValue::LobbyCoinB:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
             case RaceValue::LobbyPT:
-            case RaceValue::LobbyPetaTokenB:                
+            case RaceValue::LobbyPetaTokenB:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
             case RaceValue::LobbyStudy:
-                return 0;//find match room first
+                return 0; //find match room first
         }
-        return 1000;//find idle/new room
+        return 1000; //find idle/new room
     }
 
-    public function GetMatchRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
+    public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound): stdclass|false {
 
         if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
-            return $this->GetIdleRoom($lobby, $lowBound, $upBound);
+            return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
         } else {
-            $rooms = $this->accessor->GetMatchRooms($lobby, $lowBound, $upBound);
+            $rooms = $this->accessor->GetMatchRooms($lobby, $version, $lowBound, $upBound);
             $roomNumber = count($rooms);
             if ($roomNumber > 0) {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->GetIdleRoom($lobby, $lowBound, $upBound);
+                return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
             }
         }
     }
 
-    public function GetIdleRoom(int $lobby, int $lowBound, int $upBound): stdclass|false {
-        $idleRoom = $this->accessor->GetIdleRoom($lobby, $lowBound, $upBound);
+    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound): stdclass|false {
+        $idleRoom = $this->accessor->GetIdleRoom($lobby, $version, $lowBound, $upBound);
         if ($idleRoom !== false) {
             return $idleRoom;
         } else {
-            return $this->accessor->AddNewRoom($lobby, $lowBound, $upBound);
+            return $this->accessor->AddNewRoom($lobby, $version, $lowBound, $upBound);
         }
     }
 

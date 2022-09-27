@@ -35,6 +35,10 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [player](#player) | object | 角色資訊 |
+| level | int | 目前角色等級 |
+| currentExp | int | 目前角色經驗值 |
+| currentLevelExpMax | int | 目前角色等級最大經驗值 |
+| currentLevelExpMin | int | 目前角色等級最小經驗值 |
 
 #### <span id="player">player 內容</span>
 
