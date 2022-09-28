@@ -35,4 +35,5 @@ class RaceException extends NormalException{
     const UserInRoom = 4024;
     const UserNotInRoom = 4025;
     const EnergyRunOutBonusNotExist = 4026;
+    const UsePlayerError = 4028;
 }
