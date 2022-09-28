@@ -30,9 +30,6 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
         
-        $remainingEnergy = array_sum($racePlayerInfo->energy);
-        if($remainingEnergy > 0) throw new RaceException(RaceException::EnergyNotRunOut);
-        if($remainingEnergy < 0) throw new RaceException(RaceException::EnergyNotEnough);
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('EnergyRunOutBonus')
@@ -58,7 +55,6 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $sceneHandler = new SceneHandler($this->userInfo->scene);
         $raceHandler->SetSecne($sceneHandler);
         
-        $racePlayerInfo = $racePlayerHandler->PayEnergy([1, 1, 1, 1]);
 
 
         
