@@ -26,8 +26,8 @@ class PVELevelInfoHolder extends stdClass
     /**使用場景ID */
     public int $sceneID;
 
-    /**賽道屬性代碼 */
-    public int $trackAttribute;
+    /**環境代碼 */
+    public int $enviroment;
 
     /**天氣代碼 */
     public int $weather;

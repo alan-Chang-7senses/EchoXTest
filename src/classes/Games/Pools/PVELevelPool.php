@@ -34,7 +34,7 @@ class PVELevelPool extends PoolAccessor
         $holder->power = $row->Power;
         $holder->levelName = $row->LevelName;
         $holder->sceneID = $row->SceneID;
-        $holder->trackAttribute = $row->TrackAttribute;
+        $holder->enviroment = $row->Enviroment;
         $holder->weather = $row->Weather;
         $holder->wind = $row->Wind;
         $holder->windSpeed = $row->WindSpeed;
