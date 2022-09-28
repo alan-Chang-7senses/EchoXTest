@@ -4,6 +4,7 @@
 
 - 競賽過程中，用於發動指定技能以及滿等級技能效果。
 - 發動技能後，取回本身當前競賽數值、受影響角色競賽數值。
+- 發動技能時，可透過 players 參數傳入角色資訊已更新當前競賽資訊。
 
 ## URL
 
@@ -23,6 +24,33 @@ Content Type: `application/x-www-form-urlencoded`
 |:-:|:-:|:-:|
 | id | int | 技能 ID |
 | launchMax | int | 是否發動滿星技能，0 = 否、1 = 是 |
+| [players](#players) | string | 角色資訊物件陣列的 JSON 字串<br>未提供此參數則不處理 |
+
+#### <span id="players"> players 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| id | int | 角色編號 |
+| hp | float | 剩餘耐力 |
+
+#### players 範例
+
+	[
+	    {
+	        "id": 1,
+	        "hp": 12.33
+	    },
+	    {
+	        "id": -1,
+	        "hp": 22.34
+	    },
+	    {
+	        "id": 100,
+	        "hp": 99.99
+	    }
+	]
 
 ## Response
 
