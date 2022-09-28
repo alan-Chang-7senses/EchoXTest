@@ -23,4 +23,6 @@ class UserInfoHolder extends stdClass{
     public int $room;
     public array $players;
     public array $items;
+    /**只有透過金流消費的鑽石累積量 */
+    public int $accumulateDiamond;
 }
