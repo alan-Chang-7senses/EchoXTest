@@ -9,6 +9,7 @@ use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePool;
+use Games\Races\RaceVerifyHandler;
 use Holders\ResultData;
 /**
  * Description of Start
@@ -30,6 +31,8 @@ class Start extends BaseRace{
             'Status' => RaceValue::StatusStart,
             'StartTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);
+        
+        RaceVerifyHandler::Instance()->Start($racePlayerIDs);
         
         return new ResultData(ErrorCode::Success);
     }
