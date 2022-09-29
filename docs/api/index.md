@@ -65,9 +65,10 @@
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
 		- [離開競賽](Races/LeaveRace.md)。
-	- 公告：
+	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。
+		- [相容版本](Notices/Versions.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。

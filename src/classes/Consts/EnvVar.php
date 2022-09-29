@@ -9,6 +9,8 @@ namespace Consts;
  */
 class EnvVar {
     
+    const AppVersion = 'APP_VERSION';
+    
     const SysEnv = 'SYSENV';
     const Maintain = 'MAINTAIN';
     const ProcessTiming = 'PROCESS_TIMING';
