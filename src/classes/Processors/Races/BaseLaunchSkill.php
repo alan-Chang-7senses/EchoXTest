@@ -2,6 +2,8 @@
 
 namespace Processors\Races;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
@@ -9,6 +11,7 @@ use Games\Consts\SkillValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
@@ -46,6 +49,35 @@ abstract class BaseLaunchSkill extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
+        
+        $players = filter_input(INPUT_POST, 'players');
+        if(!empty($players)){
+            
+            $players = json_decode($players);
+            $playerHPs = [];
+            foreach($players as $player) $playerHPs[$player->id] = $player->hp * RaceValue::DivisorHP;
+            
+            $racePlayers = (array)$raceInfo->racePlayers;
+            
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $updateRacePlayers = $accessor->Transaction(function() use ($accessor, $playerHPs, $racePlayers){
+                
+                $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values($racePlayers))->ForUpdate()->FetchAll();
+                $accessor->ClearCondition()->PrepareName('RacePlayerHP');
+                $updateRacePlayers = [];
+                foreach($rows as $row){
+                    if(!isset($playerHPs[$row->PlayerID]))
+                        continue;
+                    $accessor->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify(['HP' => $playerHPs[$row->PlayerID]]);
+                    $updateRacePlayers[] = $row->RacePlayerID;
+                }
+                
+                return $updateRacePlayers;
+            });
+            
+            $racePlayerPool = RacePlayerPool::Instance();
+            foreach($updateRacePlayers as $racePlayerID) $racePlayerPool->Delete ($racePlayerID);
+        }
         
         $racePlayerIDSelf = $raceInfo->racePlayers->{$playerSelf};
         $racePlayerHandlerSelf = new RacePlayerHandler($racePlayerIDSelf);
@@ -216,8 +248,7 @@ abstract class BaseLaunchSkill extends BaseRace{
         return $result;
     }
 
-    
-    function DeterminOtherTargetExpireTime(RacePlayerHolder|stdClass $info, SkillInfoHolder|stdClass $skillInfo,float $endTime) : float{
+    private function DeterminOtherTargetExpireTime(RacePlayerHolder|stdClass $info, SkillInfoHolder|stdClass $skillInfo,float $endTime) : float{
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $interval  = $endTime - $currentTime;
         $playerHandler = new PlayerHandler($info->player);
