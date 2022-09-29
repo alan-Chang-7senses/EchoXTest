@@ -73,6 +73,11 @@ abstract class BasePVPMatch extends BaseProcessor {
         if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
+        
+        if (RaceUtility::CheckPlayerID($lobby, $userInfo->player) == false)
+        {
+            throw new RaceException(RaceException::UsePlayerError);
+        }
 
         $raceRoomID = RaceValue::NotInRoom;
         $accessor = new PDOAccessor(EnvVar::DBMain);
