@@ -40,6 +40,10 @@ class UserHandler {
         $this->pool->Save($this->id, 'Data', $bind);
         $this->ResetInfo();
     }
+    public function SaveAccumulateDiamond(int $amount) : void{
+        $this->pool->Save($this->id, 'AccumulateDiamond', $amount);
+        $this->ResetInfo();
+    }
 
     /**
      * 增加或減少體力。會自動更新正確的體力。
