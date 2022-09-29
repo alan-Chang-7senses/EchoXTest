@@ -2,9 +2,9 @@
 
 namespace Processors\Notices;
 
-use Consts\ErrorCode;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\ErrorCode;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 /**
@@ -14,12 +14,15 @@ use Processors\BaseProcessor;
  */
 class Versions extends BaseProcessor{
     
+    const Disable = 0;
+    const Enabled = 1;
+    
     public function Process(): ResultData {
         
         $version = getenv(EnvVar::AppVersion);
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rows = $accessor->FromTable('ConfigVersions')->WhereEqual('Backend', $version)->FetchAll();
+        $rows = $accessor->FromTable('ConfigVersions')->WhereEqual('Backend', $version)->WhereEqual('Status', self::Enabled)->FetchAll();
         
         $versions = [];
         foreach ($rows as $row) {
