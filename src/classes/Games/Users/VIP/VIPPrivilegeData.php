@@ -4,6 +4,7 @@ namespace Games\Users\VIP;
 use Accessors\MemcacheAccessor;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Games\Users\Holders\UserInfoHolder;
 use stdClass;
 
 class VIPPrivilegeData
@@ -25,6 +26,14 @@ class VIPPrivilegeData
     {
         $data = self::GetData();
         return $data[$rank];
+    }
+
+    /** 
+     * @return stdClass 取得該VIP等級整列的資料
+     */
+    public static function GetVIPInfoByUserInfoHolder(UserInfoHolder $holder) :stdClass
+    {
+        return self::GetVIPInfoByDiamond($holder->accumulateDiamond);
     }
     
     /** 
