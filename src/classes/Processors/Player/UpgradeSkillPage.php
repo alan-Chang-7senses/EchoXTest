@@ -43,10 +43,10 @@ class UpgradeSkillPage extends BaseProcessor{
             $skillHandler->playerHandler = $playerhandler;
             $hasReachedRankMax = $skillLevel >= $levelLimit;
             $chipID = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeChipID($skillInfo->id);            
-            $requireItems = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
+            $requireItems = $hasReachedRankMax ? [] : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
             $requireItemsHoldAmount = [];
             $isEnough = false;
-            if($requireItems !== null)
+            if(!empty($requireItems))
             {
                 $isEnough = true;
                 foreach($requireItems as $itemID => $amount)
