@@ -54,6 +54,7 @@ class BonusEnergyRunOut extends BaseRace{
         $accessor->FromTable('EnergyRunOutBonus')
                 ->Add(['RacePlayerID' =>$racePlayerID,'BonusID' => $number, 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]],true);
 
+        $racePlayerInfo = $racePlayerHandler->PayEnergy([1, 1, 1, 1]);
         
         $result = new ResultData(ErrorCode::Success);
         
