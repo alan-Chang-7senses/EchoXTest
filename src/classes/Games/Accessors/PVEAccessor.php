@@ -6,12 +6,13 @@ use Consts\Globals;
 
 class PVEAccessor extends BaseAccessor
 {
-    public function rowsInfoByID(int $id) : mixed
+
+    public function rowInfoByLevelID(int $id) : mixed
     {
         return $this->StaticAccessor()
-        ->FromTableJoinUsing('PVELevel','PVELevelAI','INNER','LevelID')
+        ->FromTableJoinUsing('PVELevel','PVEChapter','INNER','ChapterID')
         ->WhereEqual('LevelID',$id)
-        ->FetchAll();
+        ->Fetch();
     }
     public function rowsInfoByChapterID(int $id) : mixed
     {
@@ -21,6 +22,8 @@ class PVEAccessor extends BaseAccessor
         ->FetchAll();
         return $rows;
     }
+
+
 
     public function AddClearInfo(int $userID, int $levelID, int $medalAmount) : bool
     {

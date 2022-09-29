@@ -5,6 +5,7 @@ namespace Games\Pools;
 use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
 use Consts\EnvVar;
+use Games\Accessors\PVEAccessor;
 use Games\PVE\Holders\PVELevelInfoHolder;
 use stdClass;
 
@@ -24,8 +25,8 @@ class PVELevelPool extends PoolAccessor
         $holder = new PVELevelInfoHolder();
 
         // $rows = (new PVEAccessor)->rowsInfoByID($id);
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $row = $accessor->FromTable('PVELevel')->WhereEqual('LevelID',$id)->Fetch();
+        // $accessor = new PDOAccessor(EnvVar::DBStatic);
+        $row = (new PVEAccessor())->rowInfoByLevelID($id);
         if($row === false)return false;
 
         $holder->levelID = $row->LevelID;
