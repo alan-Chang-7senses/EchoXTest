@@ -35,8 +35,7 @@ Content Type: `application/json`
 | currentLevel | int | 當前等級 |
 | [currentRank](#currentRank) | array | 目前階級資訊 |
 | [nextRank](#nextRank) | array | 下個階級資訊 |
-| [requireItemDust](#requireItemDust) | array | 粉塵資訊 |
-| [requireItemCrystal](#requireItemCrystal) | array | 晶石資訊 |
+| [itemInfos](#itemInfos) | array | 升階所需物品資訊 |
 | [requireCoin](#requireCoin) | array | 金幣資訊 |
 | canRankUp | bool | 可否升階 |
 
@@ -56,21 +55,22 @@ Content Type: `application/json`
 | rank | int | 下個階級 |
 | maxLevel | int | 下個階級最高等級 |
 | skillLevelMax | int | 下個階級技能最高等級 |
-#### <span id="requireItemDust">requireItemDust 內容</span>
 
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| itemID | int | 道具ItemID |
-| amount | int | 持有數量 |
-| requireAmount | int | 升階需求數量 |
-#### <span id="requireItemCrystal">requireItemCrystal 內容</span>
+##### <span id="itemInfos">itemInfos 升級所需物品資訊內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| itemID | int | 道具ItemID |
-| amount | int | 持有數量 |
-| requireAmount | int | 升階需求數量 |
+| itemID | int | 物品編號 |
+| itemName | string | 物品名稱編號 |
+| description | string | 物品描述編號 |
+| itemType | int | [物品種類](../codes/item.md#itemType) |
+| useType | int | [使用種類](../codes/item.md#useType) |
+| stackLimit | int | 物品堆疊上限 |
+| icon | string | 物品圖示代號 |
+| source | array | 來源／出處 代號陣列 |
+| holdAmount | int | 使用者物品持有數量 |
+| requiredAmount | int | 升級所需道具數量 |
+
 #### <span id="requireCoin">requireCoin 內容</span>
 
 | 名稱 | 類型 | 說明 |
@@ -84,7 +84,7 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
-        "currentLevel": 40,
+        "currentLevel": 1,
         "currentRank": {
             "rank": 1,
             "maxLevel": 40,
@@ -95,19 +95,36 @@ Content Type: `application/json`
             "maxLevel": 70,
             "skillLevelMax": 3
         },
-        "requireItemDust": {
-            "itemID": 1111,
-            "amount": 1061,
-            "requireAmount": 30
-        },
-        "requireItemCrystal": {
-            "itemID": 1112,
-            "amount": 9987,
-            "requireAmount": 0
-        },
-        "requireCoin": {
-            "requireAmount": 30000,
-            "isEnough": true
-        },
-        "canRankUp": true
+        "itemInfos": [
+            {
+                "itemID": 1131,
+                "itemName": "8108",
+                "description": "8608",
+                "itemType": 1,
+                "useType": 0,
+                "stackLimit": 99999,
+                "icon": "ItemIcon_0008",
+                "source": [
+                    "s010"
+                ],
+                "holdAmount": 0,
+                "requiredAmount": 30
+            },
+            {
+                "itemID": 1132,
+                "itemName": "8109",
+                "description": "8609",
+                "itemType": 1,
+                "useType": 0,
+                "stackLimit": 99999,
+                "icon": "ItemIcon_0009",
+                "source": [
+                    "s011"
+                ],
+                "holdAmount": 0,
+                "requiredAmount": 0
+            }
+        ],
+        "requireCoin": "requireAmount",
+        "canRankUp": false
     }
