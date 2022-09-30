@@ -94,6 +94,10 @@ class RaceVerifyHandler {
         return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyAgain, 0, 0);
     }
 
+    public function EnergyBonus(int $racePlayerID, float $speed): int {
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyBonus, $speed, 0);
+    }
+
     public function ReachEnd(int $racePlayerID, float $distance): int {
         return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateReachEnd, 0, $distance);
     }
@@ -144,7 +148,8 @@ class RaceVerifyHandler {
 
         if ($verifyState == RaceVerifyValue::StateSkill ||
                 $verifyState == RaceVerifyValue::StateOtherSkill ||
-                $verifyState == RaceVerifyValue::StatePlayerValue) {
+                $verifyState == RaceVerifyValue::StatePlayerValue ||
+                $verifyState == RaceVerifyValue::StateEnergyBonus) {
             $this->raceVerifyInfo->speed = $speed;
         }
 
