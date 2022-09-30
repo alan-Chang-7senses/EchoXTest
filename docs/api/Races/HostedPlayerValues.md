@@ -59,6 +59,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | h | float | H值 |
 | s | float | S值 |
+| distance | float | Server移動距離 |
 
 ### Example
 
