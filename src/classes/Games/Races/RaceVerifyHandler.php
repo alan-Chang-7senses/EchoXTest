@@ -116,7 +116,7 @@ class RaceVerifyHandler {
         return $result;
     }
 
-    public function PlayerValues(int $racePlayerID, float $speed, float $distance): int {
+    public function PlayerValues(int $racePlayerID, float $speed, float $distance): float {
         $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StatePlayerValue, $speed, $distance);
         return $this->raceVerifyInfo->serverDistance;
     }
