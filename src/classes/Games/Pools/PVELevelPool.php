@@ -43,7 +43,8 @@ class PVELevelPool extends PoolAccessor
         $holder->userTrackNumber = $row->UserTrackNumber;
         $holder->firstRewardID = $row->FirstRewardID;
         $holder->sustainRewardID = $row->SustainRewardID;
-
+        $holder->preLevels = empty($row->PreLevel) ? null : 
+                            array_map('intval',explode(',', $row->PreLevel));
         //TODO：處理跑道上的AI
         $holder->aiInfo[$row->FirstAI] = $row->FirstAITrackNumber;
         $holder->aiInfo[$row->SecondAI] = $row->SecondAITrackNumber;

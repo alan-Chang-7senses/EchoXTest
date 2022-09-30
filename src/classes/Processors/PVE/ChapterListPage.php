@@ -26,17 +26,16 @@ class ChapterListPage extends BaseProcessor
         $result->chapters = [];
         $userPVEHandler = new UserPVEHandler($userID);
         $userPVEInfo = $userPVEHandler->GetInfo();
-        $t = $userPVEHandler->GetChapterProcess();
-
+        
         foreach($chapterData as $id => $chapter)
         {
-            $temp = 
+            $result->chapters[] = 
             [
                 'id' => $id,
                 'icon' => $chapter->icon,
                 'name' => $chapter->name,
+                'available' => isset($userPVEInfo->clearLevelInfo[$id]),
             ];
-            $result->chapters[] = $temp;
         }        
         return $result;
     }

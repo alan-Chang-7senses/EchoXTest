@@ -5,7 +5,7 @@ namespace Games\PVE;
 use Accessors\MemcacheAccessor;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
-use Processors\PVE\Holders\ChapterInfoHolder;
+use Games\PVE\Holders\ChapterInfoHolder;
 use stdClass;
 
 class PVEChapterData
@@ -53,6 +53,8 @@ class PVEChapterData
                 $holder->rewardIDSecond = $row->RewardIDSecond;
                 $holder->medalAmountThird = $row->MedalAmountThird;
                 $holder->rewardIDThrid = $row->RewardIDThrid;
+                $holder->preChapters = empty($row->PreChapter) ? null : 
+                                    array_map('intval',explode(',', $row->PreChapter));
                 $data[$row->ChapterID] = $holder;
             }
             $data[$row->ChapterID]->levels[] = $row->LevelID;

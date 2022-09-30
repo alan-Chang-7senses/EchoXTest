@@ -53,7 +53,7 @@ class UserPool extends PoolAccessor{
         $holder->players = array_column($rows, 'PlayerID');
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $accessor->FromTable('UserDiamond')->WhereEqual('UserID',$id)->Fetch();
+        $row = $accessor->FromTable('UserVIP')->WhereEqual('UserID',$id)->Fetch();
         $holder->accumulateDiamond = $row === false ? 0 : $row->AccumulateDiamond;
 
         return $holder;
@@ -84,7 +84,7 @@ class UserPool extends PoolAccessor{
         ];
         $data->accumulateDiamond = $amount;        
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('UserDiamond')->Add($bind,true);
+        $accessor->FromTable('UserVIP')->Add($bind,true);
         return $data;
     }
 

@@ -3,9 +3,9 @@
 namespace Games\PVE;
 
 use Games\Pools\UserPVEPool;
+use Games\PVE\Holders\PVELevelInfoHolder;
 use Games\PVE\Holders\UserPVEInfoHolder;
 use Games\Users\RewardHandler;
-use Processors\EliteTest\FastestList;
 use stdClass;
 
 class UserPVEHandler
@@ -81,14 +81,20 @@ class UserPVEHandler
     }
 
     /**
-     * @return int 目前進行到的章節ID
+     * @return int 目前解鎖的所有章節
      * @return bool 若尚未進行過PVE。回傳false
      */
-    public function GetChapterProcess() : int | bool
+    public function GetChapterProcess() : array | bool
     {
        if(empty($this->GetInfo()->clearLevelInfo))return false; 
        $chapterIDs = array_keys($this->GetInfo()->clearLevelInfo);
-       sort($chapterIDs);
-       return $chapterIDs[count($chapterIDs) - 1];
+    //    sort($chapterIDs);
+       return $chapterIDs;
+    }
+
+    public function HasClearedLevel(int $chapterID,int $levelID) : bool
+    {
+        $info = $this->GetInfo();
+        return isset($info->clearLevelInfo[$chapterID][$levelID]);
     }
 }

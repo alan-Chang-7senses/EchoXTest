@@ -1,6 +1,5 @@
 <?php
-
-namespace Processors\PVE\Holders;
+namespace Games\PVE\Holders;
 
 use stdClass;
 
@@ -9,7 +8,7 @@ class ChapterInfoHolder extends stdClass
     public int $chapterID;
     public string $name;
     public string $icon;
-    // public bool $isAvalible;
+    public array|null $preChapters;
     public int $medalAmountFirst;
     public int $rewardIDFirst;
     public int $medalAmountSecond;
