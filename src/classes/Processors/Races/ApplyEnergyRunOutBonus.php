@@ -14,6 +14,7 @@ use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Holders\ResultData;
 
@@ -64,6 +65,7 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $result->hp = $racePlayerInfo->hp / RaceValue::DivisorHP;
         $result->duration = $targetReward['duration'];
         
+        RaceVerifyHandler::Instance()->EnergyBonus($racePlayerInfo->id, $result->s);                
         
         return $result;
     }

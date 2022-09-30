@@ -94,6 +94,10 @@ class RaceVerifyHandler {
         return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyAgain, 0, 0);
     }
 
+    public function EnergyBonus(int $racePlayerID, float $speed): int {
+        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyBonus, $speed, 0);
+    }
+
     public function ReachEnd(int $racePlayerID, float $distance): int {
         return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateReachEnd, 0, $distance);
     }
@@ -112,9 +116,9 @@ class RaceVerifyHandler {
         return $result;
     }
 
-    public function PlayerValues(int $racePlayerID, float $speed, float $distance): int {
-
-        return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StatePlayerValue, $speed, $distance);
+    public function PlayerValues(int $racePlayerID, float $speed, float $distance): float {
+        $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StatePlayerValue, $speed, $distance);
+        return $this->raceVerifyInfo->serverDistance;
     }
 
     private function UpdatePlayer(int $racePlayerID, int $verifyState, float $speed, float $distance): int {
@@ -133,23 +137,25 @@ class RaceVerifyHandler {
             $this->AccumulateDistance();
         }
 
-        $isCheat = RaceVerifyValue::VerifyNotCheat;
         if ($verifyState == RaceVerifyValue::StatePlayerValue ||
                 $verifyState == RaceVerifyValue::StateReachEnd) {
-
-            //改變速度前要先驗證距離
             $this->raceVerifyInfo->clientDistance = round($distance, RaceVerifyValue::Decimals);
+        }
+
+        $isCheat = RaceVerifyValue::VerifyNotCheat;
+        if ($verifyState == RaceVerifyValue::StateReachEnd) {
             $isCheat = $this->VerifyDistance();
         }
 
         if ($verifyState == RaceVerifyValue::StateSkill ||
                 $verifyState == RaceVerifyValue::StateOtherSkill ||
-                $verifyState == RaceVerifyValue::StatePlayerValue) {
+                $verifyState == RaceVerifyValue::StatePlayerValue ||
+                $verifyState == RaceVerifyValue::StateEnergyBonus) {
             $this->raceVerifyInfo->speed = $speed;
         }
 
         if ($isCheat == RaceVerifyValue::VerifyCheat) {
-            if ($this->raceVerifyInfo->isCheat === RaceVerifyValue::VerifyNotCheat) {
+            if ($this->raceVerifyInfo->isCheat == RaceVerifyValue::VerifyNotCheat) {
                 $this->raceVerifyInfo->isCheat = RaceVerifyValue::VerifyCheat;
                 $this->HandleCheatUser();
             }
@@ -196,7 +202,6 @@ class RaceVerifyHandler {
     private function VerifyDistance(): int {
 
         if ($this->raceVerifyInfo->verifyState == RaceVerifyValue::StateReachEnd) {
-
             $pathInfos = $this->GetPathInfos();
             $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
             $racePlayerInfo = $racePlayerHandler->GetInfo();

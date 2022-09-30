@@ -25,5 +25,6 @@ class RaceVerifyValue {
     const StatePlayerValue = 5;
     const StateEnergyAgain = 6;
     const StateReachEnd = 7;
+    const StateEnergyBonus = 8;
 
 }
