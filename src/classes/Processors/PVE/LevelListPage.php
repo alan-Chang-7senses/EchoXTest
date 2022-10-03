@@ -78,7 +78,7 @@ class LevelListPage extends BaseProcessor
                 'powerRequired' => $levelInfo->power,
                 'hasCleared' => $userPVEHandler->HasClearedLevel($chapterID,$levelID),
                 'firstReward' => $firstRewards,
-                'sustainRewards' => $sustainRewards,
+                'sustainReward' => $sustainRewards,
                 'canRush' => $canRush,
             ];
             
@@ -130,7 +130,7 @@ class LevelListPage extends BaseProcessor
         $result->medalAmountSecond = $chapterInfo->medalAmountSecond;
         $result->rewardSecond = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDSecond));
         $result->medalAmountThird = $chapterInfo->medalAmountThird;
-        $result->rewardIDThrid = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDThrid));
+        $result->rewardThrid = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDThrid));
         $result->levels = $levels;
         $result->player = $player;
 
