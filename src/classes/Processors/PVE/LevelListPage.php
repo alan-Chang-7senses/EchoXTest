@@ -32,6 +32,9 @@ class LevelListPage extends BaseProcessor
         $userPVEInfo = $userPVEHandler->GetInfo();
         $result = new ResultData(ErrorCode::Success);
 
+        $userHandler = new UserHandler($userID);
+        $userHandler->HandlePower(0);
+
         //章節未解鎖
         if(!isset($userPVEInfo->clearLevelInfo[$chapterID]))
         throw new PVEException(PVEException::ChapterLock,['ChapterID' => $chapterID]);
@@ -51,6 +54,15 @@ class LevelListPage extends BaseProcessor
             {
                 foreach($levelInfo->preLevels as $preLevel)
                 if(!$userPVEHandler->HasClearedLevel($chapterID,$preLevel))$isUnlock = false;
+            }
+            $botInfo = [];
+            foreach($levelInfo->aiInfo as $aiID => $trackNumber)
+            {
+                $botInfo[] = 
+                [
+                    'aiUserID' => $aiID,
+                    'trackNumber' => $trackNumber,
+                ];
             }
             
             $firstRewards = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($levelInfo->firstRewardID));
@@ -74,6 +86,7 @@ class LevelListPage extends BaseProcessor
                 'windDirection' => $climate->windDirection,
                 'windSpeed' => $climate->windSpeed,
                 'lighting' => $climate->lighting,
+                'botInfo' => $botInfo,
                 'isUnlock' => $isUnlock,
                 'powerRequired' => $levelInfo->power,
                 'hasCleared' => $userPVEHandler->HasClearedLevel($chapterID,$levelID),
@@ -83,7 +96,7 @@ class LevelListPage extends BaseProcessor
             ];
             
         }
-        $userHandler = new UserHandler($userID);        
+            
         $playerHandler = new PlayerHandler($userHandler->GetInfo()->player);
         $playerInfo = $playerHandler->GetInfo();
         $player = new stdClass();
@@ -119,7 +132,7 @@ class LevelListPage extends BaseProcessor
             ];
         }
         $player->skillHole = $playerInfo->skillHole;
-        $userHandler->HandlePower(0);
+        
 
         $userMedalAmount = array_sum($userPVEInfo->clearLevelInfo[$chapterID]);
         $result->name = $chapterInfo->name;
