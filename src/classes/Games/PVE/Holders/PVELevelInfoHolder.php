@@ -28,20 +28,20 @@ class PVELevelInfoHolder extends stdClass
     /**使用場景ID */
     public int $sceneID;
 
-    /**環境代碼 */
-    public int $enviroment;
+    // /**環境代碼 */
+    // public int $enviroment;
 
-    /**天氣代碼 */
-    public int $weather;
+    // /**天氣代碼 */
+    // public int $weather;
 
-    /**風向代碼 */
-    public int $wind;
+    // /**風向代碼 */
+    // public int $wind;
 
-    /**風速 */
-    public int $windSpeed;
+    // /**風速 */
+    // public int $windSpeed;
 
-    /**日夜代碼 */
-    public int $dayNight;
+    // /**日夜代碼 */
+    // public int $dayNight;
 
     /**用戶在第幾跑道 */
     public int $userTrackNumber;

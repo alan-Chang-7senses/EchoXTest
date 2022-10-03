@@ -4,12 +4,21 @@ namespace Processors\PVE;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\PVEValue;
+use Games\Exceptions\PVEException;
+use Games\Players\PlayerHandler;
 use Games\PVE\PVEChapterData;
 use Games\PVE\PVELevelHandler;
+use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
+use Games\Scenes\SceneHandler;
+use Games\Skills\SkillHandler;
+use Games\Users\RewardHandler;
+use Games\Users\UserHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
+use stdClass;
 
 class LevelListPage extends BaseProcessor
 {
@@ -22,11 +31,12 @@ class LevelListPage extends BaseProcessor
         $userPVEHandler = new UserPVEHandler($userID);
         $userPVEInfo = $userPVEHandler->GetInfo();
         $result = new ResultData(ErrorCode::Success);
+
+        //章節未解鎖
         if(!isset($userPVEInfo->clearLevelInfo[$chapterID]))
-        {
-            //章節尚未解鎖，報錯。
-        }
-        $result->levels = [];
+        throw new PVEException(PVEException::ChapterLock,['ChapterID' => $chapterID]);
+
+        $levels = [];
         //各等階獎牌數量。加上玩家目前此章節獎牌數量。
         foreach($chapterInfo->levels as $levelID)
         {
@@ -37,33 +47,93 @@ class LevelListPage extends BaseProcessor
                           0;
             //是否已通過前置關卡                                
             $isUnlock = true;
-            foreach($levelInfo->preLevels as $preLevel)
-            if(!$userPVEHandler->HasClearedLevel($chapterID,$preLevel))$isUnlock = false;
+            if(!empty($levelInfo->preLevels))
+            {
+                foreach($levelInfo->preLevels as $preLevel)
+                if(!$userPVEHandler->HasClearedLevel($chapterID,$preLevel))$isUnlock = false;
+            }
+            
+            $firstRewards = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($levelInfo->firstRewardID));
+            $sustainRewards = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($levelInfo->sustainRewardID));
 
-            $level = 
+            $sceneHandler = new SceneHandler($levelInfo->sceneID);            
+            $climate = $sceneHandler->GetClimate();
+            $canRush = PVEValue::LevelMedalMax == $medalAount;//且vip等級大於1
+            //TODO：要判斷VIP是否可以快速掃蕩
+            $levels[] = 
             [
                 'id' => $levelInfo->levelID,
                 'name' => $levelInfo->levelName,
                 'description' => $levelInfo->description,
                 'recommendLevel' => $levelInfo->recommendLevel,
                 'currentMedalAmount' => $medalAount,
+                'scene' => $levelInfo->sceneID,
+                'sceneName' => $sceneHandler->GetInfo()->name,
+                'enviroment' => $sceneHandler->GetInfo()->env,
+                'weather' => $climate->weather,
+                'windDirection' => $climate->windDirection,
+                'windSpeed' => $climate->windSpeed,
+                'lighting' => $climate->lighting,
                 'isUnlock' => $isUnlock,
-                'hasClear' => $medalAount > 0,
                 'powerRequired' => $levelInfo->power,
+                'hasCleared' => $userPVEHandler->HasClearedLevel($chapterID,$levelID),
+                'firstReward' => $firstRewards,
+                'sustainRewards' => $sustainRewards,
+                'canRush' => $canRush,
             ];
             
-        }                
+        }
+        $userHandler = new UserHandler($userID);        
+        $playerHandler = new PlayerHandler($userHandler->GetInfo()->player);
+        $playerInfo = $playerHandler->GetInfo();
+        $player = new stdClass();
+        $player->level = $playerInfo->level;
+        $player->id = $playerInfo->id;
+        $player->idName = $playerInfo->idName;
+        $player->name = $playerInfo->name;
+
+        
+        $player->skills = [];
+        foreach($playerInfo->skills as $skill){
+            
+            $handler = new SkillHandler($skill->id);
+            $handler->playerHandler = $playerHandler;
+            $info = $handler->GetInfo();
+            $player->skills[] = [
+                'id' => $info->id,
+                'name' => $info->name,
+                'icon' => $info->icon,
+                'description' => $info->description,
+                'level' => $skill->level,
+                'slot' => $skill->slot,
+                'energy' => $info->energy,
+                'cooldown' => $info->cooldown,
+                'duration' => $info->duration,
+                'ranks' => $info->ranks,
+                'maxDescription' => $info->maxDescription,
+                'maxCondition' => $info->maxCondition,
+                'maxConditionValue' => $info->maxConditionValue,
+                'attackedDesc' => $info->attackedDesc,
+                'effects' => $handler->GetEffects(),
+                // 'maxEffects' => $handler->GetMaxEffects()
+            ];
+        }
+        $player->skillHole = $playerInfo->skillHole;
+        $userHandler->HandlePower(0);
 
         $userMedalAmount = array_sum($userPVEInfo->clearLevelInfo[$chapterID]);
         $result->name = $chapterInfo->name;
+        $result->chapterMedal = $userMedalAmount;
+        $result->currentPower = $userHandler->GetInfo()->power;
         $result->medalAmountFirst = $chapterInfo->medalAmountFirst;
-        $result->rewardIDFirst = $chapterInfo->rewardIDFirst;
+        $result->rewardFirst = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDFirst));
         $result->medalAmountSecond = $chapterInfo->medalAmountSecond;
-        $result->rewardIDSecond = $chapterInfo->rewardIDSecond;
+        $result->rewardSecond = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDSecond));
         $result->medalAmountThird = $chapterInfo->medalAmountThird;
-        $result->rewardIDThrid = $chapterInfo->rewardIDThrid;
+        $result->rewardIDThrid = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDThrid));
+        $result->levels = $levels;
+        $result->player = $player;
 
-        
         
         return $result;
     }
