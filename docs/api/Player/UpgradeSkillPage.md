@@ -43,8 +43,7 @@ Content Type: `application/json`
 | hasReachedLimit | bool | 技能是否到上升限制 |
 | requireCoin | int | 升等所需金幣數量，滿級為null |
 | isCoinEnough | bool | 金幣是否足夠升等，，滿級為null |
-| [requireItem](#requireItem) | array | 技能升等需求素材，滿級為null | 
-| [itemHold](#itemHold) | array | 升等對應道具數量 |
+| [itemInfos](#itemInfos) | array | 升級所需物品資訊。滿級時為null |
 | isRequireItemEnough | bool | 持有是否足夠升等，滿級為null |
 | name | string | 技能名稱代號 |
 | icon | string | 技能Icon代號 |
@@ -62,18 +61,22 @@ Content Type: `application/json`
 | [effects](#effects) | array | 技能效果陣列 |
 | [maxEffects](#maxEffects) | array | 滿星技能效果陣列 |
 
-#### <span id="requireItem">requireItem 內容</span>
+##### <span id="itemInfos">itemInfos 升級所需物品資訊內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| itemID | int | 物品編號 |
+| itemName | string | 物品名稱編號 |
+| description | string | 物品描述編號 |
+| itemType | int | [物品種類](../codes/item.md#itemType) |
+| useType | int | [使用種類](../codes/item.md#useType) |
+| stackLimit | int | 物品堆疊上限 |
+| icon | string | 物品圖示代號 |
+| source | array | 來源／出處 代號陣列 |
+| holdAmount | int | 使用者物品持有數量 |
+| requiredAmount | int | 升級所需道具數量 |
 
 
-| 鍵值 | 值 |
-|:-:|:-:|
-| 道具itemID(int) | 需求數量(int) |
-#### <span id="itemHold">itemHold 內容</span>
-
-
-| 鍵值 | 值 |
-|:-:|:-:|
-| 道具itemID(int) | 持有數量(int) |
 
 
 ##### <span id="effects">effects 技能效果內容</span>
@@ -106,20 +109,15 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
       "skillsData": [
         {
           "id": 4,
-          "hasReachedLimit": false,
-          "requireCoin": 10000,
-          "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
-          "isRequireItemEnough": false,
+          "hasReachedLimit": true,
+          "requireCoin": null,
+          "isCoinEnough": null,
+          "itemInfos": null,
+          "isRequireItemEnough": null,
           "name": "21066",
           "icon": "Skill_Icon_0002",
           "description": "22207",
-          "level": 1,
+          "level": 5,
           "slot": 1,
           "energy": [
             0,
@@ -143,7 +141,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "effects": [
             {
               "type": 111,
-              "formulaValue": 0.34143999999999997,
+              "formulaValue": 1.7072,
               "allRankFormulaValue": [
                 0.34143999999999997,
                 0.6828799999999999,
@@ -173,12 +171,22 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "hasReachedLimit": false,
           "requireCoin": 10000,
           "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
+          "itemInfos": [
+            {
+              "itemID": 2000,
+              "itemName": "8110",
+              "description": "8610",
+              "itemType": 2,
+              "useType": 0,
+              "stackLimit": 99999,
+              "icon": "ItemIcon_0010",
+              "source": [
+                "s001"
+              ],
+              "holdAmount": 0,
+              "requiredAmount": 10
+            }
+          ],
           "isRequireItemEnough": false,
           "name": "21073",
           "icon": "Skill_Icon_0005",
@@ -237,12 +245,22 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "hasReachedLimit": false,
           "requireCoin": 10000,
           "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
+          "itemInfos": [
+            {
+              "itemID": 2000,
+              "itemName": "8110",
+              "description": "8610",
+              "itemType": 2,
+              "useType": 0,
+              "stackLimit": 99999,
+              "icon": "ItemIcon_0010",
+              "source": [
+                "s001"
+              ],
+              "holdAmount": 0,
+              "requiredAmount": 10
+            }
+          ],
           "isRequireItemEnough": false,
           "name": "21098",
           "icon": "Skill_Icon_0001",
@@ -301,12 +319,22 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "hasReachedLimit": false,
           "requireCoin": 10000,
           "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
+          "itemInfos": [
+            {
+              "itemID": 2000,
+              "itemName": "8110",
+              "description": "8610",
+              "itemType": 2,
+              "useType": 0,
+              "stackLimit": 99999,
+              "icon": "ItemIcon_0010",
+              "source": [
+                "s001"
+              ],
+              "holdAmount": 0,
+              "requiredAmount": 10
+            }
+          ],
           "isRequireItemEnough": false,
           "name": "21117",
           "icon": "Skill_Icon_0003",
@@ -365,12 +393,22 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "hasReachedLimit": false,
           "requireCoin": 10000,
           "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
+          "itemInfos": [
+            {
+              "itemID": 2000,
+              "itemName": "8110",
+              "description": "8610",
+              "itemType": 2,
+              "useType": 0,
+              "stackLimit": 99999,
+              "icon": "ItemIcon_0010",
+              "source": [
+                "s001"
+              ],
+              "holdAmount": 0,
+              "requiredAmount": 10
+            }
+          ],
           "isRequireItemEnough": false,
           "name": "21142",
           "icon": "Skill_Icon_0005",
@@ -429,12 +467,22 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
           "hasReachedLimit": false,
           "requireCoin": 10000,
           "isCoinEnough": true,
-          "requireItem": {
-            "2000": 10
-          },
-          "itemHold": {
-            "2000": 0
-          },
+          "itemInfos": [
+            {
+              "itemID": 2000,
+              "itemName": "8110",
+              "description": "8610",
+              "itemType": 2,
+              "useType": 0,
+              "stackLimit": 99999,
+              "icon": "ItemIcon_0010",
+              "source": [
+                "s001"
+              ],
+              "holdAmount": 0,
+              "requiredAmount": 10
+            }
+          ],
           "isRequireItemEnough": false,
           "name": "21143",
           "icon": "Skill_Icon_0009",
