@@ -10,6 +10,7 @@ use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Holders\ResultData;
 /**
  * Description of BonusEnergyAgain
@@ -42,6 +43,9 @@ class EnergyAgain extends BaseRace{
         
         $result = new ResultData(ErrorCode::Success);
         $result->energy = $energy;
+                      
+        RaceVerifyHandler::Instance()->EnergyAgain($racePlayerInfo->id);
+                
         return $result;
     }
 }

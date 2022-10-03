@@ -119,3 +119,5 @@ if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
 </html>
 content;
 }
+
+if(!isset($obj))  (new Games\Accessors\GameLogAccessor())->AddBaseProcess();

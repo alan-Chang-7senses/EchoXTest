@@ -14,6 +14,7 @@ use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Holders\ResultData;
 
@@ -30,9 +31,6 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
         
-        $remainingEnergy = array_sum($racePlayerInfo->energy);
-        if($remainingEnergy > 0) throw new RaceException(RaceException::EnergyNotRunOut);
-        if($remainingEnergy < 0) throw new RaceException(RaceException::EnergyNotEnough);
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('EnergyRunOutBonus')
@@ -58,7 +56,6 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $sceneHandler = new SceneHandler($this->userInfo->scene);
         $raceHandler->SetSecne($sceneHandler);
         
-        $racePlayerInfo = $racePlayerHandler->PayEnergy([1, 1, 1, 1]);
 
 
         
@@ -68,6 +65,7 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $result->hp = $racePlayerInfo->hp / RaceValue::DivisorHP;
         $result->duration = $targetReward['duration'];
         
+        RaceVerifyHandler::Instance()->EnergyBonus($racePlayerInfo->id, $result->s);                
         
         return $result;
     }

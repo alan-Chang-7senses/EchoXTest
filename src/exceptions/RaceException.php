@@ -27,6 +27,8 @@ $lang[RaceException::NoSeasonData] = 'No season data.';
 $lang[RaceException::UserTicketError] = 'Receive ticket has error.';
 $lang[RaceException::UserInRoom] = 'User is in the room.';
 $lang[RaceException::UserNotInRoom] = 'User is not in the room.';
+$lang[RaceException::UserCheat] = 'User is cheating.';
 $lang[RaceException::EnergyRunOutBonusNotExist] = 'Energy Run Out bonus does not exist.';
+$lang[RaceException::UsePlayerError] = 'using player error';
 
 return $lang;

@@ -5,6 +5,7 @@ namespace Games\Races;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Sessions;
+use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
@@ -103,6 +104,13 @@ class RaceUtility {
             RaceValue::LobbyCoin, RaceValue::LobbyCoinB => $config->PvP_B_FreeTicketId_1_Count,
             RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB => $config->PvP_B_FreeTicketId_2_Count,
             default => 0,
+        };
+    }
+
+    public static function CheckPlayerID(int $lobby, int $playerID): bool {
+        return match ($lobby) {
+            RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB => (strlen($playerID) == PlayerValue::LengthNFTID),
+            default => true,
         };
     }
 

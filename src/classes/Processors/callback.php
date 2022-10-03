@@ -75,6 +75,7 @@ class callback extends BaseProcessor{
             
             $res = $accessor->FromTable('Users')->Add([
                 'Username' => $userProfile->data->id,
+                'Nickname' => $userProfile->data->id,
                 'Email' => $userProfile->data->email,
                 'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
             ]);
@@ -97,7 +98,7 @@ class callback extends BaseProcessor{
             
         }else{
             
-            if(empty($row->Nickname)) $uniwebviewMessage = 'LoginFirst';
+            if($row->Nickname == $row->Username) $uniwebviewMessage = 'LoginFirst';
             $userID = $row->UserID;
         }
         
