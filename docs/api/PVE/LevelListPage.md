@@ -78,7 +78,7 @@ Content Type: `application/json`
 | powerRequired | int | 需求電力 |
 | hasCleared | bool | 是否已過關 |
 | [firstReward](#rewards) | array | 初次通關獎勵內容 |
-| [sustainRewards](#rewards) | array | 初次通關獎勵內容 |
+| [sustainRewards](#rewards) | array | 固定通關獎勵內容 |
 | canRush | bool | 可否使用快速通關 |
 
 <br>
