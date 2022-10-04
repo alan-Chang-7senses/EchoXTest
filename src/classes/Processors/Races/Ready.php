@@ -10,6 +10,7 @@ use Games\Consts\RaceValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Pools\PlayerPool;
 use Games\PVP\RaceRoomsHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\OfflineRecoveryDataHandler;
@@ -58,6 +59,7 @@ class Ready extends BaseRace{
         $n = 1;
         $userHandlers = [];
         $readyRaceInfos = [];
+        $readyRacePlayerIDs = [];
         foreach($users as $user){
             
             if(isset($readyRaceInfos[$user->id])) continue;
@@ -75,6 +77,7 @@ class Ready extends BaseRace{
 
             $userHandlers[] = $handler;
             $readyRaceInfos[$userInfo->id] = $readyRaceInfo;
+            $readyRacePlayerIDs[] = $userInfo->player;
 
             ++$n;
         }
@@ -95,6 +98,8 @@ class Ready extends BaseRace{
         ]);
 
         RaceRoomsHandler::StartRace($this->userInfo->room, $raceID);
+        
+        $this->ConvertLevel($readyRacePlayerIDs);
 
         $racePlayerIDs = [];
         $playerSkills = [];
@@ -228,5 +233,29 @@ class Ready extends BaseRace{
         RaceVerifyHandler::Instance()->Ready($readyUserInfos, $racePlayerIDs);
 
         return $result;
+    }
+    
+    private function ConvertLevel(array $playerIDs) : void{
+        
+        $config = ConfigGenerator::Instance();
+        $lobbyPlayerLevelConfig = RaceValue::LobbyPlayerLevelConfig[$this->userInfo->lobby];
+        $lobbySkillLevelConfig = RaceValue::LobbySkillLevelConfig[$this->userInfo->lobby];
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $values = $accessor->valuesForWhereIn($playerIDs);
+        
+        $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
+        if(!empty($lobbyPlayerLevel)){
+            $values->bind['level'] = $lobbyPlayerLevel;
+            $accessor->executeBind('UPDATE PlayerLevel SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        $lobbySkillLevel = $config->$lobbySkillLevelConfig;
+        if(!empty($lobbySkillLevel)){
+            $values->bind['level'] = $lobbySkillLevel;
+            $accessor->executeBind('UPDATE PlayerSkill SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        PlayerPool::Instance()->DeleteAll($playerIDs);
     }
 }

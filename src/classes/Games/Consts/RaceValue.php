@@ -112,6 +112,22 @@ class RaceValue {
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
     
+    const LobbyPlayerLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinPlayerLevel',
+        self::LobbyPT => 'LobbyPTPlayerLevel',
+        self::LobbyStudy => 'LobbyStudyPlayerLevel',
+        self::LobbyCoinB => 'LobbyCoinPlayerLevel',
+        self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
+    ];
+    
+    const LobbySkillLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinSkillLevel',
+        self::LobbyPT => 'LobbyPTSkillLevel',
+        self::LobbyStudy => 'LobbyStudySkillLevel',
+        self::LobbyCoinB => 'LobbyCoinSkillLevel',
+        self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
+    ];
+    
     const RoomIdle = 0;
     const RoomMatching = 1;
     const RoomFull = 2;

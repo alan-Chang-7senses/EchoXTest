@@ -22,7 +22,6 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
-use Generators\ConfigGenerator;
 use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
@@ -40,14 +39,12 @@ class PlayerPool extends PoolAccessor {
     }
     
     protected string $keyPrefix = 'player_';
-
+    
     public function FromDB(int|string $playerID) : stdClass|false{
         
         $playerAccessor = new PlayerAccessor();
         $player = $playerAccessor->rowPlayerJoinHolderLevelByPlayerID($playerID);
         if(empty($player)) return false;
-        
-        $allPlayerLevel = ConfigGenerator::Instance()->AllPlayerLevel;
         
         $holder = new PlayerInfoHolder();
         $holder->id = $playerID;
@@ -55,7 +52,7 @@ class PlayerPool extends PoolAccessor {
         $holder->name = $player->Nickname ?? $holder->idName;
         $holder->ele = $player->Attribute;
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
-        $holder->level = empty($allPlayerLevel) ? $player->Level : $allPlayerLevel;
+        $holder->level = $player->Level;
         $holder->exp = $player->Exp;
         $holder->rank = $player->Rank;
         $holder->maxExp = PlayerEXP::GetNextLevelRequireEXP($holder->level,$holder->rank,$holder->exp);
@@ -70,7 +67,6 @@ class PlayerPool extends PoolAccessor {
         $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
 
         PlayerAbility::ApplySyncRateBonus($holder,$holder->sync);
-
         
         $holder->dna = new PlayerDnaHolder();
         $holder->dna->head = $player->HeadDNA;
@@ -121,9 +117,8 @@ class PlayerPool extends PoolAccessor {
         $rows = $playerAccessor->rowsSkillByPlayerID($playerID);
         $holder->skills = [];
         $slot = [];
-        $allSkillLevel = ConfigGenerator::Instance()->AllSkillLevel;
         foreach ($rows as $row) {
-            $holder->skills[] = new PlayerSkillHolder($row->SkillID, empty($allSkillLevel) ? $row->Level : $allSkillLevel, $row->Slot);
+            $holder->skills[] = new PlayerSkillHolder($row->SkillID, $row->Level, $row->Slot);
             $slot[$row->Slot] = $row->SkillID;
         }
         
