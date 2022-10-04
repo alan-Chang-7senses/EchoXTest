@@ -2,9 +2,7 @@
 
 namespace Games\Pools;
 
-use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
-use Consts\EnvVar;
 use Games\Accessors\PVEAccessor;
 use Games\PVE\Holders\PVELevelInfoHolder;
 use stdClass;
@@ -46,6 +44,10 @@ class PVELevelPool extends PoolAccessor
         $holder->sustainRewardID = $row->SustainRewardID;
         $holder->preLevels = empty($row->PreLevel) ? null : 
                             array_map('intval',explode(',', $row->PreLevel));
+        $holder->firstRewardItemIDs = empty($row->FirstItemIDs) ? null : 
+                            array_map('intval',explode(',', str_replace(' ','',$row->FirstItemIDs)));
+        $holder->sustainRewardItemIDs = empty($row->SustainItemIDs) ? null : 
+                            array_map('intval',explode(',', str_replace(' ','',$row->SustainItemIDs)));
         //TODO：處理跑道上的AI
         $holder->aiInfo[$row->FirstAI] = $row->FirstAITrackNumber;
         $holder->aiInfo[$row->SecondAI] = $row->SecondAITrackNumber;

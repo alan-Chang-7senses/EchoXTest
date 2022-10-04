@@ -35,4 +35,14 @@ class PVEUtility
         }
         return $rt;
     }
+
+    public static function GetItemInfos(array $itemIDs) : array
+    {
+        $rt = [];
+        foreach($itemIDs as $itemID)
+        {
+            $rt[] = self::GetItemInfo($itemID);
+        }
+        return $rt;
+    }
 }

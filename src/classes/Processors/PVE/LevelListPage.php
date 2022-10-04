@@ -65,8 +65,8 @@ class LevelListPage extends BaseProcessor
                 ];
             }
             
-            $firstRewards = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($levelInfo->firstRewardID));
-            $sustainRewards = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($levelInfo->sustainRewardID));
+            $firstRewards = PVEUtility::GetItemInfos($levelInfo->firstRewardItemIDs);
+            $sustainRewards = PVEUtility::GetItemInfos($levelInfo->sustainRewardItemIDs);
 
             $sceneHandler = new SceneHandler($levelInfo->sceneID);            
             $climate = $sceneHandler->GetClimate();
