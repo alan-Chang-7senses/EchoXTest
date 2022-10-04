@@ -10,6 +10,7 @@ use Games\Consts\RaceValue;
 use Games\Consts\RewardValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\ItemInfoPool;
+use Games\Pools\PlayerPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\SingleRankingRewardPool;
@@ -175,6 +176,8 @@ class FinishRace extends BaseRace{
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
         
+        $this->ConvertLevel(array_column($users, 'player'));
+        
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         foreach($users as $user){    
             if(UserUtility::IsNonUser($user['id'])) continue;
@@ -260,5 +263,27 @@ class FinishRace extends BaseRace{
         if(!empty($insert)) $accessor->FromTable($table)->AddAll($insert);
         
         return $leadRates;
+    }
+    
+    private function ConvertLevel(array $playerIDs) : void{
+        
+        $config = ConfigGenerator::Instance();
+        $lobbyPlayerLevelConfig = RaceValue::LobbyPlayerLevelConfig[$this->userInfo->lobby];
+        $lobbySkillLevelConfig = RaceValue::LobbySkillLevelConfig[$this->userInfo->lobby];
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $values = $accessor->valuesForWhereIn($playerIDs);
+        
+        $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
+        if(!empty($lobbyPlayerLevel)){
+            $accessor->executeBind('UPDATE PlayerLevel SET `Level` = `LevelBackup` WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        $lobbySkillLevel = $config->$lobbySkillLevelConfig;
+        if(!empty($lobbySkillLevel)){
+            $accessor->executeBind('UPDATE PlayerSkill SET `Level` = `LevelBackup` WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        PlayerPool::Instance()->DeleteAll($playerIDs);
     }
 }
