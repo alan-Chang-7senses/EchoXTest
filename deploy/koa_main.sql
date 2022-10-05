@@ -1717,13 +1717,15 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~1 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
 	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242),
-	(2, 2, 1001, 1001, 1660838400, 1662048000, 1661157822),
+	(2, 2, 1001, 1001, 1660838400, 1662048000, 1660867202),
 	(3, 3, 1001, 1001, 1662048000, 1663257600, 1662076802),
-	(4, 4, 1001, 1001, 1663257600, 1664467200, 1663286402);
+	(4, 4, 1001, 1001, 1663257600, 1663862400, 1663286402),
+	(5, 5, 1001, 1001, 1663862400, 1664467200, 1663891202),
+	(6, 6, 1001, 1001, 1664467200, 1665072000, 1664496002);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.RaceBeginHours 結構
