@@ -141,14 +141,12 @@ class RaceUtility {
         
         $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
         if(!empty($lobbyPlayerLevel)){
-            $values->bind['level'] = $lobbyPlayerLevel;
-            $accessor->executeBind('UPDATE PlayerLevel SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+            $accessor->executeBind('UPDATE PlayerLevel SET `Level` = `LevelBackup` WHERE PlayerID IN '.$values->values, $values->bind);
         }
         
         $lobbySkillLevel = $config->$lobbySkillLevelConfig;
         if(!empty($lobbySkillLevel)){
-            $values->bind['level'] = $lobbySkillLevel;
-            $accessor->executeBind('UPDATE PlayerSkill SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+            $accessor->executeBind('UPDATE PlayerSkill SET `Level` = `LevelBackup` WHERE PlayerID IN '.$values->values, $values->bind);
         }
         
         PlayerPool::Instance()->DeleteAll($playerIDs);
