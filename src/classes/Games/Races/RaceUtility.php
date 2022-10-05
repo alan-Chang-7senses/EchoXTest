@@ -7,10 +7,10 @@ use Consts\EnvVar;
 use Consts\Sessions;
 use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
+use Games\Pools\PlayerPool;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
-
 /**
  * Description of RaceUtility
  *
@@ -123,4 +123,34 @@ class RaceUtility {
         return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
     }
 
+    /**
+     * 結束競賽狀態後恢復角色等級
+     * 除完賽、棄賽、清理問題賽局外，請勿使用。
+     * @param int $lobby
+     * @param array $playerIDs
+     * @return void
+     */
+    public static function FinishRestoreLevel(int $lobby, array $playerIDs) : void {
+        
+        $config = ConfigGenerator::Instance();
+        $lobbyPlayerLevelConfig = RaceValue::LobbyPlayerLevelConfig[$lobby];
+        $lobbySkillLevelConfig = RaceValue::LobbySkillLevelConfig[$lobby];
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $values = $accessor->valuesForWhereIn($playerIDs);
+        
+        $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
+        if(!empty($lobbyPlayerLevel)){
+            $values->bind['level'] = $lobbyPlayerLevel;
+            $accessor->executeBind('UPDATE PlayerLevel SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        $lobbySkillLevel = $config->$lobbySkillLevelConfig;
+        if(!empty($lobbySkillLevel)){
+            $values->bind['level'] = $lobbySkillLevel;
+            $accessor->executeBind('UPDATE PlayerSkill SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        PlayerPool::Instance()->DeleteAll($playerIDs);
+    }
 }
