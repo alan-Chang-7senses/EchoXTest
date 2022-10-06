@@ -109,9 +109,9 @@ class RaceVerifyHandler {
     public function LaunchOthersSkill(array $others, stdClass $racePlayerIDs): array {
         $result = [];
         foreach ($others as $other) {
-            $playerID = $other->{'id'}; //$playerID
+            $playerID = $other['id']; //$playerID
             $racePlayerID = $racePlayerIDs->{$playerID};
-            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateOtherSkill, $other->s, 0);
+            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateOtherSkill, $other['s'], 0);
         }
         return $result;
     }
@@ -139,6 +139,7 @@ class RaceVerifyHandler {
 
         if ($verifyState == RaceVerifyValue::StatePlayerValue ||
                 $verifyState == RaceVerifyValue::StateReachEnd) {
+            $distance = max($distance, 0);
             $this->raceVerifyInfo->clientDistance = round($distance, RaceVerifyValue::Decimals);
         }
 
@@ -195,7 +196,7 @@ class RaceVerifyHandler {
 
     private function AccumulateDistance() {
         $timeSpan = $GLOBALS[Globals::TIME_BEGIN] - $this->raceVerifyInfo->updateTime;
-        $moveDistane = round($this->raceVerifyInfo->speed * $timeSpan, RaceVerifyValue::Decimals);
+        $moveDistane = max(0, round($this->raceVerifyInfo->speed * $timeSpan, RaceVerifyValue::Decimals));
         $this->raceVerifyInfo->serverDistance += $moveDistane;
     }
 
