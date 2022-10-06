@@ -47,7 +47,7 @@ Content Type: `application/json`
 | randomPurchase | array | 儲值商店隨機[物品](#purchase)(可空) |
 | fixCounters | array | 一般商店固定[物品](#counters)(可空) |
 | randomCounters | array | 一般商店隨機[物品](#counters)(可空) |
-
+<br>
 
 #### <span id="purchase">儲值商店商品內容</span>
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
@@ -58,7 +58,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | amount | int | 物品數量 |
 | IAP | string | ios product |
 | IAB | string | android product |
-|
+<br>
 
 #### <span id="counters">一般商店商品內容</span>
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
@@ -71,7 +71,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | price | int | 售價 |
 | currency | int | [貨幣](#Currency)種類 |
 | discount | int | 折扣 |
-|
+<br>
 
 ## <span id="UIStyle">介面類型</span>
 | 編碼 | 定義 |
@@ -80,7 +80,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 2 | 固定商品 8 件、隨機商品 4 件 |
 | 3 | 固定商品 4 件、隨機商品 8 件 |
 | 4 | 固定商品 0 件、隨機商品 12 件 |
-|
+<br>
 
 ## <span id="Currency">貨幣</span>
 | 編碼 | 定義 |
@@ -91,6 +91,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 4 | 火星幣賽入場券 |
 | 5 | PT幣賽入場券 |
 | 6 | 群體賽入場券 |
+<br>
 
 ### Example
 

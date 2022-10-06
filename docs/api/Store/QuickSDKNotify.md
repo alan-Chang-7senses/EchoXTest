@@ -36,7 +36,7 @@ Content Type: `application/x-www-form-urlencoded`
 | actRate| 充值折扣，取值範圍0~1(不包含0），默認為1表示不折扣；如值為0.2表示多發20%的元寶| 
 | extrasParams| 遊戲下單時傳遞的擴展參數，將原樣返回。${\color{red}(前端需加送tradeID)}$|
 | sign| 簽名值，遊戲應根據簽名約定，本地計算後與此值進行比對| 
-
+<br>
 
 ## Response
 

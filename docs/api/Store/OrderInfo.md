@@ -1,4 +1,4 @@
-# 商店 - 儲值驗證
+# 商店 - 訂單資訊
 
 ## 介紹
 
@@ -7,7 +7,7 @@
 
 ## URL
 
-http(s)://`域名`/Store/PurchaseVerify/
+http(s)://`域名`/Store/OrderInfo/
 
 ## Method
 
@@ -24,8 +24,7 @@ Content Type: `application/x-www-form-urlencoded`
 | tradeID | int |  交易序號 |
 | buyStatus | int | 購買狀態(1:購買, 2:取消、儲值取消) |
 | XXX | int | Quick驗證資訊 |
-|
-
+<br>
 
 ## Response
 
@@ -36,6 +35,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+<br>
 
 ### Example
 

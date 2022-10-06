@@ -36,6 +36,7 @@ Content Type: `application/json`
 | refreshRemain | int | 剩餘刷新次數 |
 | randomPurchase | array | 儲值商店隨機[物品](StoreInfo.md##purchase)(可空) |
 | randomCounters | array | 一般商店隨機[物品](StoreInfo.md##counters)(可空) |
+<br>
 
 ### Example
 

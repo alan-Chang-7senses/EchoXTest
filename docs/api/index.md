@@ -68,7 +68,7 @@
 	- 商店:
 		- [商店資訊](Store/GetInfos.md)
 		- [商品購買](Store/BuyGoods.md)
-		- [儲值商品紀錄](Store/PurchaseVerify.md)	
+		- [訂單資訊](Store/OrderInfo.md)	
 		- [QuickSDK儲值回調通知](Store/QuickSDKNotify.md)	
 		- [商店刷新](Store/Refresh.md)
 	- 公告：（須知）
