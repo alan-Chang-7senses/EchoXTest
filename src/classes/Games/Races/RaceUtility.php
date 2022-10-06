@@ -126,28 +126,16 @@ class RaceUtility {
     /**
      * 結束競賽狀態後恢復角色等級
      * 除完賽、棄賽、清理問題賽局外，請勿使用。
-     * @param int $lobby
      * @param array $playerIDs
      * @return void
      */
-    public static function FinishRestoreLevel(int $lobby, array $playerIDs) : void {
-        
-        $config = ConfigGenerator::Instance();
-        $lobbyPlayerLevelConfig = RaceValue::LobbyPlayerLevelConfig[$lobby];
-        $lobbySkillLevelConfig = RaceValue::LobbySkillLevelConfig[$lobby];
+    public static function FinishRestoreLevel(array $playerIDs) : void {
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
+        
         $values = $accessor->valuesForWhereIn($playerIDs);
-        
-        $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
-        if(!empty($lobbyPlayerLevel)){
-            $accessor->executeBind('UPDATE PlayerLevel SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
-        }
-        
-        $lobbySkillLevel = $config->$lobbySkillLevelConfig;
-        if(!empty($lobbySkillLevel)){
-            $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
-        }
+        $accessor->executeBind('UPDATE PlayerLevel SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
+        $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
         
         PlayerPool::Instance()->DeleteAll($playerIDs);
     }

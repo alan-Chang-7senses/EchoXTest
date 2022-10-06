@@ -57,7 +57,7 @@ class LeaveRace extends BaseRace{
             return $racePlayerID;
         });
         
-        RaceUtility::FinishRestoreLevel($userInfo->lobby, [$userInfo->player]);
+        RaceUtility::FinishRestoreLevel([$userInfo->player]);
         
         UserPool::Instance()->Delete($this->userInfo->id);
         $racePool->Delete($raceID);

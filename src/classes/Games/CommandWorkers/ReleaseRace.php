@@ -20,26 +20,17 @@ class ReleaseRace extends BaseWorker{
     
     public function Process(): array {
         
-        $config = ConfigGenerator::Instance();
-        
-        $finishTimelimit = $this->finish ?? $config->TimelimitRaceFinish;
-        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
-        
-        
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
-//        $rows = $accessor->FromTable('Races')->WhereIn('Status', [RaceValue::StatusInit, RaceValue::StatusUpdate])
-//                ->OrderBy('RaceID', 'DESC')->Limit(100)->FetchAll();
+        $rows = $accessor->FromTable('Races')->WhereIn('Status', [RaceValue::StatusInit, RaceValue::StatusUpdate])
+                ->OrderBy('RaceID', 'DESC')->Limit(100)->FetchAll();
         
-        $rows = $accessor->executeBindFetchAll('SELECT Races.RaceID, Races.RacePlayerIDs, Races.CreateTime, RaceRooms.Lobby '
-                . ' FROM Races LEFT JOIN RaceRooms USING(RaceID) WHERE Races.`Status` IN (0, 1) ORDER BY RaceID DESC LIMIT 100', []);
-
-        $accessor->ClearAll();
+        $finishTimelimit = $this->finish ?? ConfigGenerator::Instance()->TimelimitRaceFinish;
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         $raceIDs = [];
         $racePlayerIDs = [];
-        $userIDs = [];
-        $lobbyPlayerIDs = [];
-        $playerIDsAll = [];
+        $playerIDs = [];
+        
         foreach($rows as $row){
             
             if($currentTime - $row->CreateTime < $finishTimelimit)
@@ -52,12 +43,7 @@ class ReleaseRace extends BaseWorker{
             
             $racePlayerIDsArr = get_object_vars(json_decode($row->RacePlayerIDs));
             $racePlayerIDs = array_merge($racePlayerIDs, array_values($racePlayerIDsArr));
-            
-            $playerIDs = array_keys($racePlayerIDsArr);
-            $playerIDsAll = array_merge($playerIDsAll, $playerIDs);
-            
-            if(!isset($lobbyPlayerIDs[$row->Lobby])) $lobbyPlayerIDs[$row->Lobby] = [];
-            $lobbyPlayerIDs[$row->Lobby] = array_merge($lobbyPlayerIDs[$row->Lobby], $playerIDs);
+            $playerIDs = array_merge($playerIDs, array_keys($racePlayerIDsArr));
         }
         
         if(empty($raceIDs)) return [
@@ -76,8 +62,7 @@ class ReleaseRace extends BaseWorker{
             'UpdateTime' => $currentTime,
         ]);
         
-        $userPool = UserPool::Instance();
-        foreach($userIDs as $userID) $userPool->Delete ($userID);
+        UserPool::Instance()->DeleteAll($userIDs);
         
         $accessor->ClearCondition()
                 ->FromTable('Races')->WhereIn('RaceID', $raceIDs)
@@ -86,25 +71,21 @@ class ReleaseRace extends BaseWorker{
                     'UpdateTime' => $currentTime,
                 ]);
         
-        $racePool = RacePool::Instance();
-        foreach($raceIDs as $raceID) $racePool->Delete($raceID);
+        RacePool::Instance()->DeleteAll($raceIDs);
+        RacePlayerPool::Instance()->DeleteAll($racePlayerIDs);
         
-        $racePlayerPool = RacePlayerPool::Instance();
-        foreach($racePlayerIDs as $racePlayerID) $racePlayerPool->Delete ($racePlayerID);
-        
-        foreach($lobbyPlayerIDs as $lobby => $playerIDs) 
-            RaceUtility::FinishRestoreLevel($lobby, $playerIDs);
+        RaceUtility::FinishRestoreLevel($playerIDs);
         
         sort($raceIDs);
         sort($userIDs);
         sort($racePlayerIDs);
-        sort($playerIDsAll);
+        sort($playerIDs);
         
         return [
             'race' => $raceIDs,
             'user' => $userIDs,
             'racePlayer' => $racePlayerIDs,
-            'player' => $playerIDsAll,
+            'player' => $playerIDs,
             'currentTime' => $currentTime,
         ];
     }
