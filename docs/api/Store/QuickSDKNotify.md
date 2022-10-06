@@ -1,10 +1,10 @@
-# Store - QuickSDK儲值通知
+# 商店 - QuickSDK儲值回調通知
 
 ## 介紹
 
 - 遊戲中儲值商店購買晶鑽。
 - 會由前端設定給QuickSDK的callbackURL；extrasParams加送tradeID
-- 購買前要先通知後端商品資訊，以資驗證， PurchaseVerify
+- 購買前要先通知後端商品資訊(/Store/PurchaseVerify)，以資驗證
 - QuickSDK回調此API時，回應SUCCESS為成功
 
 

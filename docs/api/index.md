@@ -66,11 +66,11 @@
 		- [完成競賽](Races/FinishRace.md)。
 		- [離開競賽](Races/LeaveRace.md)。
 	- 商店:
-		- [購買一般商品](Store/BuyGoods.md)	
-		- [購買一般商品](Store/BuyGoods.md)	
-		- [購買一般商品](Store/BuyGoods.md)	
-		- [購買一般商品](Store/BuyGoods.md)	
-		- [購買一般商品](Store/BuyGoods.md)
+		- [商店資訊](Store/GetInfos.md)
+		- [商品購買](Store/BuyGoods.md)
+		- [儲值商品紀錄](Store/PurchaseVerify.md)	
+		- [QuickSDK儲值回調通知](Store/QuickSDKNotify.md)	
+		- [商店刷新](Store/Refresh.md)
 	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。
