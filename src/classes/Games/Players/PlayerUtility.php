@@ -49,17 +49,17 @@ class PlayerUtility {
         return substr($dna, NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesLength);
     }
 
-    public static function AdaptValueByPoint(int $point) : int{
+    public static function AdaptValueByPoint(int $point, int $adaptType) : int{
         
         return match ($point) {
-            AdaptablilityLevel::ParamA => AdaptablilityLevel::ValueA,
-            AdaptablilityLevel::ParamB => AdaptablilityLevel::ValueB,
-            AdaptablilityLevel::ParamC => AdaptablilityLevel::ValueC,
-            AdaptablilityLevel::ParamD => AdaptablilityLevel::ValueD,
-            AdaptablilityLevel::ParamE => AdaptablilityLevel::ValueE,
-            AdaptablilityLevel::ParamF => AdaptablilityLevel::ValueF,
+            AdaptablilityLevel::ParamA => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamA],
+            AdaptablilityLevel::ParamB => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamB],
+            AdaptablilityLevel::ParamC => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamC],
+            AdaptablilityLevel::ParamD => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamD],
+            AdaptablilityLevel::ParamE => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamE],
+            AdaptablilityLevel::ParamF => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamF],
             default => match (true) {
-                $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::ValueS,
+                $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamS],
                 default => 0,
             },
         };

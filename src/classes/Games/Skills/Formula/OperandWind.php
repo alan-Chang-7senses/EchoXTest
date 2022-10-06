@@ -16,9 +16,9 @@ class OperandWind extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->factory->player->tailwind),
-            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->factory->player->crosswind),
-            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->factory->player->headwind),
+            // SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->factory->player->tailwind),
+            // SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->factory->player->crosswind),
+            // SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->factory->player->headwind),
             default => 0
         };
     }
