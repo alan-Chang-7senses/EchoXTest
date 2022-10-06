@@ -45,13 +45,13 @@ class AdaptablilityLevel {
         ],
         self::Climate => 
         [
-            self::ParamS => 105,
-            self::ParamA => 104,
+            self::ParamS => 107,
+            self::ParamA => 105,
             self::ParamB => 103,
-            self::ParamC => 102,
-            self::ParamD => 101,
-            self::ParamE => 100,
-            self::ParamF => 99,
+            self::ParamC => 101,
+            self::ParamD => 99,
+            self::ParamE => 97,
+            self::ParamF => 95,
         ],
         self::Terrian => 
         [
