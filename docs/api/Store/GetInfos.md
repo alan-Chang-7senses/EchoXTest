@@ -1,4 +1,4 @@
-# 購買 - 商店資訊
+# 商店 - 資訊
 
 ## 介紹
 
@@ -7,11 +7,11 @@
 
 ## URL
 
-http(s)://`域名`/Purchase/StoreInfos/
+http(s)://`域名`/Store/GetInfos/
 
 ## Method
 
-`POST`
+`GET`
 
 ## Request
 
@@ -30,7 +30,8 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| [stores](#storeData) | array | 商店資訊 |
+| currencies | array | 按[貨幣](#Currency)順序 |
+| stores | array | [商店資訊](#storeData) |
 
 
 #### <span id="storeData">商店資訊</span>
@@ -67,7 +68,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | name | string | 物品名稱 |
 | amount | int | 物品數量 |
 | remainInventory | int | 剩餘庫存數量(-1:不限 0:售罄) |
-| icon | string | 貨幣Icon代號 |
 | price | int | 售價 |
 | currency | int | [貨幣](#Currency)種類 |
 | discount | int | 折扣 |

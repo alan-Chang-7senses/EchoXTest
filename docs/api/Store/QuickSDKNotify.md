@@ -1,15 +1,16 @@
-# 購買 - 儲值QuickSDK Callback通知
+# Store - QuickSDK儲值通知
 
 ## 介紹
 
 - 遊戲中儲值商店購買晶鑽。
 - 會由前端設定給QuickSDK的callbackURL；extrasParams加送tradeID
+- 購買前要先通知後端商品資訊，以資驗證， PurchaseVerify
 - QuickSDK回調此API時，回應SUCCESS為成功
 
 
 ## URL
 
-http(s)://`域名`/Purchase/Notify/
+http(s)://`域名`/Store/QuickSDKNotify/
 
 ## Method
 
