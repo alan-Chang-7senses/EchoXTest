@@ -16,9 +16,9 @@ class OperandClimate extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->factory->player->sunny),
-            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->factory->player->aurora),
-            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->factory->player->sandDust),
+            // SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->factory->player->sunny),
+            // SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->factory->player->aurora),
+            // SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->factory->player->sandDust),
             default => 0
         };
     }
