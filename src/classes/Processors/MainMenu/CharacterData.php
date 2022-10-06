@@ -3,6 +3,7 @@
 namespace Processors\MainMenu;
 
 use Consts\ErrorCode;
+use Games\Consts\AdaptablilityLevel;
 use Games\Players\PlayerUtility;
 use Games\Pools\PlayerPool;
 use Games\Pools\SkillEffectPool;
@@ -60,22 +61,22 @@ class CharacterData extends BaseProcessor{
             $skills[] = $skill;
         }
         
-        $player->dune = PlayerUtility::AdaptValueByPoint($player->dune);
-        $player->craterLake = PlayerUtility::AdaptValueByPoint($player->craterLake);
-        $player->volcano = PlayerUtility::AdaptValueByPoint($player->volcano);
-        $player->tailwind = PlayerUtility::AdaptValueByPoint($player->tailwind);
-        $player->crosswind = PlayerUtility::AdaptValueByPoint($player->crosswind);
-        $player->headwind = PlayerUtility::AdaptValueByPoint($player->headwind);
-        $player->sunny = PlayerUtility::AdaptValueByPoint($player->sunny);
-        $player->aurora = PlayerUtility::AdaptValueByPoint($player->aurora);
-        $player->sandDust = PlayerUtility::AdaptValueByPoint($player->sandDust);
-        $player->flat = PlayerUtility::AdaptValueByPoint($player->flat);
-        $player->upslope = PlayerUtility::AdaptValueByPoint($player->upslope);
-        $player->downslope = PlayerUtility::AdaptValueByPoint($player->downslope);
+        $player->dune = PlayerUtility::AdaptValueByPoint($player->dune,AdaptablilityLevel::Enviroment);
+        $player->craterLake = PlayerUtility::AdaptValueByPoint($player->craterLake,AdaptablilityLevel::Enviroment);
+        $player->volcano = PlayerUtility::AdaptValueByPoint($player->volcano,AdaptablilityLevel::Enviroment);
+        $player->tailwind = PlayerUtility::AdaptValueByPoint($player->tailwind,AdaptablilityLevel::Wind);
+        $player->crosswind = PlayerUtility::AdaptValueByPoint($player->crosswind,AdaptablilityLevel::Wind);
+        $player->headwind = PlayerUtility::AdaptValueByPoint($player->headwind,AdaptablilityLevel::Wind);
+        $player->sunny = PlayerUtility::AdaptValueByPoint($player->sunny,AdaptablilityLevel::Climate);
+        $player->aurora = PlayerUtility::AdaptValueByPoint($player->aurora,AdaptablilityLevel::Climate);
+        $player->sandDust = PlayerUtility::AdaptValueByPoint($player->sandDust,AdaptablilityLevel::Climate);
+        $player->flat = PlayerUtility::AdaptValueByPoint($player->flat,AdaptablilityLevel::Terrian);
+        $player->upslope = PlayerUtility::AdaptValueByPoint($player->upslope,AdaptablilityLevel::Terrian);
+        $player->downslope = PlayerUtility::AdaptValueByPoint($player->downslope,AdaptablilityLevel::Terrian);
         
-        $player->mid = PlayerUtility::AdaptValueByPoint($player->mid);
-        $player->long = PlayerUtility::AdaptValueByPoint($player->long);
-        $player->short = PlayerUtility::AdaptValueByPoint($player->short);
+        // $player->mid = PlayerUtility::AdaptValueByPoint($player->mid);
+        // $player->long = PlayerUtility::AdaptValueByPoint($player->long);
+        // $player->short = PlayerUtility::AdaptValueByPoint($player->short);
         
         $player->skills = $skills;
         unset($player->dna);

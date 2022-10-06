@@ -5,6 +5,7 @@ namespace Games\Skills;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Sessions;
+use Games\Consts\AdaptablilityLevel;
 use Games\Consts\SkillValue;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Players\PlayerHandler;
@@ -153,21 +154,21 @@ class SkillEffectFormula {
     }
 
     
-    private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune); }
-    private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake); }
-    private function ValueVolcano() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->volcano); }
+    private function ValueDune() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->dune,AdaptablilityLevel::Enviroment); }
+    private function ValueCraterLake() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->craterLake,AdaptablilityLevel::Enviroment); }
+    private function ValueVolcano() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->volcano,AdaptablilityLevel::Enviroment); }
 
-    private function ValueTailwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->tailwind); }
-    private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind); }
-    private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind); }
+    private function ValueTailwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->tailwind,AdaptablilityLevel::Wind); }
+    private function ValueHeadwind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->headwind,AdaptablilityLevel::Wind); }
+    private function ValueCrosswind() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->crosswind,AdaptablilityLevel::Wind); }
     
-    private function ValueSunny() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny); }
-    private function ValueAurora() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora); }
-    private function ValueSandDust() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust); }
+    private function ValueSunny() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sunny,AdaptablilityLevel::Climate); }
+    private function ValueAurora() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->aurora,AdaptablilityLevel::Climate); }
+    private function ValueSandDust() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->sandDust,AdaptablilityLevel::Climate); }
     
-    private function ValueFloat() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->flat); }
-    private function ValueUpslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->upslope); }
-    private function ValueDownslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->downslope); }
+    private function ValueFloat() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->flat,AdaptablilityLevel::Terrian); }
+    private function ValueUpslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->upslope,AdaptablilityLevel::Terrian); }
+    private function ValueDownslope() : float{ return PlayerUtility::AdaptValueByPoint($this->playerInfo->downslope,AdaptablilityLevel::Terrian); }
     
     private function ValueSun() : float{
         
