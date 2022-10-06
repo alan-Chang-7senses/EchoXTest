@@ -109,9 +109,9 @@ class RaceVerifyHandler {
     public function LaunchOthersSkill(array $others, stdClass $racePlayerIDs): array {
         $result = [];
         foreach ($others as $other) {
-            $playerID = $other->{'id'}; //$playerID
+            $playerID = $other['id']; //$playerID
             $racePlayerID = $racePlayerIDs->{$playerID};
-            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateOtherSkill, $other->s, 0);
+            $result[$playerID] = $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateOtherSkill, $other['s'], 0);
         }
         return $result;
     }
