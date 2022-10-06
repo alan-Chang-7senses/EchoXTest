@@ -64,11 +64,13 @@ class RankUpPage extends BaseProcessor{
         $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($dustItemID,$dustAmount,$dustRequireAmount);
         $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($crystalItemID,$crystalAmount,$crystalRequireAmount);
 
+        
+        $results->requireCoin = 
         [
-            $results->requireCoin = 
             'requireAmount' => $chargeRequire,
             'isEnough' => $userInfo->coin >= $chargeRequire,
         ];
+        
 
         $results->canRankUp = (PlayerValue::RankMaxLevel[$playerInfo->rank] == $playerInfo->level
                     && $dustAmount >= $dustRequireAmount
