@@ -1,8 +1,9 @@
 <?php
 
-use Games\Exceptions\PurchaseException;
+use Games\Exceptions\StoreException;
 
-
-$lang[PurchaseException::PurchaseError] = 'An error occurred during the purchase process!';
+$lang[StoreException::Error] = 'An error occurred when use store!';
+$lang[StoreException::NotEnoughCurrency] = 'not enough currencies!';
+$lang[StoreException::StoreRefreshed] = 'Store has been refreshed';
 
 return $lang;
