@@ -7,6 +7,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
+use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
@@ -46,10 +47,6 @@ class Ready extends BaseRace{
         $userCount = count($users);
         if(!is_array($users) || $userCount > $config->AmountRacePlayerMax || $userCount == 0) throw new RaceException(RaceException::IncorrectPlayerNumber);
         DataGenerator::ExistProperties($users[0], ['id', 'ranking', 'trackNumber', 'rhythm']);
-
-        $trackType = InputHelper::post('trackType');
-        $trackShape = InputHelper::post('trackShape');
-        $direction = InputHelper::post('direction');
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('Users')->WhereEqual('Room', $this->userInfo->room)->FetchStyleAssoc()->FetchAll();
@@ -150,10 +147,10 @@ class Ready extends BaseRace{
                 'UserID' => $userInfo->id,
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $readyRaceInfo->raceNumber,
-                'Direction' => $direction,
+                'Direction' => SceneValue::East,
                 'Energy' => implode(',', $energy),
-                'TrackType' => $trackType,
-                'TrackShape' => $trackShape,
+                'TrackType' => SceneValue::Flat,
+                'TrackShape' => SceneValue::Straight,
                 'Rhythm' => $readyRaceInfo->rhythm,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
