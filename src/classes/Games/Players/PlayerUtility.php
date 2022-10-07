@@ -49,7 +49,7 @@ class PlayerUtility {
         return substr($dna, NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesLength);
     }
 
-    public static function AdaptValueByPoint(int $point, int $adaptType) : int{
+    public static function AdaptValueByPoint(int $point, int $adaptType) : int|float{
         
         return match ($point) {
             AdaptablilityLevel::ParamA => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamA],
