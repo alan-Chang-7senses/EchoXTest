@@ -22,7 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| storeID | string | 商店編號 |
+| storeID | int | 商店編號 |
 
 ## Response
 
@@ -34,8 +34,8 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | refreshRemain | int | 剩餘刷新次數 |
-| randomPurchase | array | 儲值商店隨機[物品](StoreInfo.md##purchase)(可空) |
-| randomCounters | array | 一般商店隨機[物品](StoreInfo.md##counters)(可空) |
+| randomPurchase | array | 隨機[儲值商店商品](StoreInfo.md##purchase)(可空) |
+| randomCounters | array | 隨機[一般商店商品](StoreInfo.md##counters)(可空) |
 <br>
 
 ### Example

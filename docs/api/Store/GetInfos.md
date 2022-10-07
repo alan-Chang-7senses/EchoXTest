@@ -2,7 +2,7 @@
 
 ## 介紹
 
-- 遊戲中各種商城的資訊，堤供貨幣交易、資源兌換的需求。
+- 遊戲中各種商城的資訊，提供貨幣交易、資源兌換的需求。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
@@ -35,6 +35,7 @@ Content Type: `application/json`
 
 
 #### <span id="storeData">商店資訊</span>
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | storeID | int | 商店索引 |
@@ -43,13 +44,13 @@ Content Type: `application/json`
 | refreshTime | int | 剩餘刷新時間(s) |
 | refreshCost | int | 刷新費用 |
 | refreshCurrency | int | 刷新費用之[貨幣](#Currency) |
-| fixPurchase | array | 儲值商店固定[物品](#purchase)(可空) |
-| randomPurchase | array | 儲值商店隨機[物品](#purchase)(可空) |
-| fixCounters | array | 一般商店固定[物品](#counters)(可空) |
-| randomCounters | array | 一般商店隨機[物品](#counters)(可空) |
+| fixPurchase | array | 固定[儲值商店商品](#purchase)(可空) |
+| randomPurchase | array | 隨機[儲值商店商品](#purchase)(可空) |
+| fixCounters | array | 固定[一般商店商品](#counters)(可空) |
+| randomCounters | array | 隨機[一般商店商品](#counters)(可空) |
 <br>
 
-#### <span id="purchase">儲值商店商品內容</span>
+#### <span id="purchase">儲值商店商品</span>
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
@@ -60,7 +61,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | IAB | string | android product |
 <br>
 
-#### <span id="counters">一般商店商品內容</span>
+#### <span id="counters">一般商店商品</span>
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
@@ -73,7 +74,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | discount | int | 折扣 |
 <br>
 
-## <span id="UIStyle">介面類型</span>
+#### <span id="UIStyle">介面類型</span>
 | 編碼 | 定義 |
 |:-:|:-:|
 | 1 | 固定商品 12 件、隨機商品 0 件 |
@@ -82,7 +83,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 4 | 固定商品 0 件、隨機商品 12 件 |
 <br>
 
-## <span id="Currency">貨幣</span>
+#### <span id="Currency">貨幣</span>
 | 編碼 | 定義 |
 |:-:|:-:|
 | 1 | 火星幣 |
