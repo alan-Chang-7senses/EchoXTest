@@ -5,22 +5,23 @@ namespace Games\Pools;
 use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
 use Consts\EnvVar;
-use Consts\Sessions;
 use Games\Accessors\PVEAccessor;
+use Games\Consts\PVEValue;
 use Games\PVE\Holders\UserPVEInfoHolder;
 use Games\PVE\PVELevelHandler;
+use Games\PVE\UserPVEHandler;
 use stdClass;
 
 class UserPVEPool extends PoolAccessor
 {       
     private static UserPVEPool $instance;
+    protected string $keyPrefix = 'userPVE_';
     
     public static function Instance() : UserPVEPool {
         if(empty(self::$instance)) self::$instance = new UserPVEPool();
         return self::$instance;
     }
     
-    protected string $keyPrefix = 'userPVE_';
     public function FromDB(int|string $id): UserPVEInfoHolder|stdClass|false
     {
         $holder = new UserPVEInfoHolder();
@@ -33,37 +34,40 @@ class UserPVEPool extends PoolAccessor
         foreach($rows as $row)
         {
             $pveInfo = (new PVELevelHandler($row->LevelID))->GetInfo();
-
             $holder->clearLevelInfo[$pveInfo->chapterID][$row->LevelID] = $row->MedalAmount;
+            if($row->Status == PVEValue::LevelStatusProcessing)
+            {
+                $holder->currentProcessingLevel =  $row->LevelID;
+            }
         }        
         return $holder;
     } 
 
-    protected function SaveClearLevel(stdClass $data, array $values) : stdClass{
+    protected function SaveLevel(stdClass $data, array $values) : stdClass{
         
         $bind = [];
         foreach($values as $key => $value){
             $bind[ucfirst($key)] = $value;
         }
-        $levelInfo = (new PVELevelHandler($bind['LevelID']))->GetInfo();
-        $medalAmount = isset($bind['MedalAmount']) ? $bind['MedalAmount'] : 1;
-        $userID = isset($bind['UserID']) ? $bind['UserID'] : $_SESSION[Sessions::UserID];
         // 將從快取取出的stdClass型別轉換成array
-        if($data->clearLevelInfo instanceof stdClass)
+        UserPVEHandler::LevelInfoToArray($data);
+        $levelInfo = (new PVELevelHandler($bind['LevelID']))->GetInfo();
+        $medalAmount = isset($data->clearLevelInfo[$levelInfo->chapterID][$levelInfo->levelID]) ? 
+                            $data->clearLevelInfo[$levelInfo->chapterID][$levelInfo->levelID] : 
+                            0;
+        //新的獎牌數量必須比較多才會以新的數量存檔。                            
+        if(isset($bind['MedalAmount']) && $medalAmount < $bind['MedalAmount'])
         {
-            $infoTemp = [];
-            foreach($data->clearLevelInfo as $chapterID => $chapterInfo)
-            {
-                foreach($chapterInfo as $levelID => $medal)
-                {
-                    $infoTemp[$chapterID][$levelID] = $medal;
-                }
-            }
-            $data->clearLevelInfo = $infoTemp;
+            $medalAmount = $bind['MedalAmount'];
         }
-        $data->clearLevelInfo[$levelInfo->chapterID][$levelInfo->levelID] = $medalAmount;
-        
-        (new PVEAccessor())->AddClearInfo($userID,$levelInfo->levelID,$medalAmount);        
+        $bind['MedalAmount'] = $medalAmount;
+        $data->clearLevelInfo[$levelInfo->chapterID][$levelInfo->levelID] = $bind['MedalAmount'];
+
+        $data->currentProcessingLevel = $bind['Status'] == PVEValue::LevelStatusProcessing ? 
+                                        $bind['LevelID'] :
+                                        null;
+        //取代的話會造成有不該刷新的值被刷新                                        
+        (new PVEAccessor())->AddLevelInfo($bind);
         return $data;
     }
 }

@@ -44,7 +44,7 @@ class LevelListPage extends BaseProcessor
         foreach($chapterInfo->levels as $levelID)
         {
             $levelInfo = (new PVELevelHandler($levelID))->GetInfo();
-            //是否有通關過。沒通關過不會有資料
+            //是否有通關過。
             $medalAount = $userPVEHandler->HasClearedLevel($chapterID,$levelInfo->levelID) ?
                           $userPVEInfo->clearLevelInfo[$chapterID][$levelID] :
                           0;
@@ -71,7 +71,7 @@ class LevelListPage extends BaseProcessor
             $sceneHandler = new SceneHandler($levelInfo->sceneID);            
             $climate = $sceneHandler->GetClimate();
             $canRush = PVEValue::LevelMedalMax == $medalAount;//且vip等級大於1
-            //TODO：要判斷VIP是否可以快速掃蕩
+            //VIP系統暫時不做。先判斷獎牌數量即可
             $levels[] = 
             [
                 'id' => $levelInfo->levelID,

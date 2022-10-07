@@ -10,8 +10,9 @@ class UserPVEInfoHolder extends stdClass
     /**已通關關卡資訊。
      * 結構：chapterID =>
      *       [
-     *          levelID => medalAmount
+     *          levelID => medalAmount'
      *       ]
      */
     public array $clearLevelInfo;
+    public int|null $currentProcessingLevel;
 }

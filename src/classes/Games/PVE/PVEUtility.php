@@ -2,6 +2,7 @@
 
 namespace Games\PVE;
 
+use Consts\Sessions;
 use Games\Pools\ItemInfoPool;
 use Games\Users\RewardHandler;
 use stdClass;
@@ -44,5 +45,11 @@ class PVEUtility
             $rt[] = self::GetItemInfo($itemID);
         }
         return $rt;
+    }
+
+    public static function GetUserProcessingLevelID() : int|null
+    {
+        $userPVEInfo = (new UserPVEHandler($_SESSION[Sessions::UserID]))->GetInfo();
+        return $userPVEInfo->currentProcessingLevel;
     }
 }

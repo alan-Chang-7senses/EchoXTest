@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `UserPVELevel` (
   `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者ID',
   `LevelID` int(11) NOT NULL DEFAULT 0 COMMENT '關卡ID',
   `MedalAmount` tinyint(4) NOT NULL DEFAULT 0 COMMENT '獲得獎牌數量',
-  `Time` int(11) NOT NULL DEFAULT 0 COMMENT '通關時間',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '通關當下時間',
   PRIMARY KEY (`Serial`),
   UNIQUE KEY `UserID_LevelID` (`UserID`,`LevelID`) USING BTREE,
   KEY `MedalAmount` (`MedalAmount`)

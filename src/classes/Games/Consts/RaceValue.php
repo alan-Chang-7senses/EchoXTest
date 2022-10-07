@@ -111,6 +111,7 @@ class RaceValue {
     const LobbyStudy = 3;
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
+    const LobbyPVE = 6;
     
     const RoomIdle = 0;
     const RoomMatching = 1;

@@ -2,10 +2,12 @@
 
 namespace Games\PVE;
 
+use Games\Accessors\PVEAccessor;
+use Games\Consts\PVEValue;
 use Games\Pools\UserPVEPool;
-use Games\PVE\Holders\PVELevelInfoHolder;
 use Games\PVE\Holders\UserPVEInfoHolder;
 use Games\Users\RewardHandler;
+use Processors\EliteTest\FastestList;
 use stdClass;
 
 class UserPVEHandler
@@ -24,61 +26,38 @@ class UserPVEHandler
 
     public function GetInfo() : UserPVEInfoHolder|stdClass
     {
-        $this->ClearLevelInfoToArray();
+        self::LevelInfoToArray($this->info);
         return $this->info;
     }
-    public function SaveClearLevel(int $levelID,int $medalAmount) : UserPVEInfoHolder|stdClass
+    public function SaveLevel(array $bind) : UserPVEInfoHolder|stdClass
     {
-        $bind = ['userID' => $this->id, 'levelID' => $levelID, 'medalAmount' => $medalAmount];
-        $this->pool->Save($this->id, 'ClearLevel', $bind);
+        $bind['userID'] = $this->id;
+        $this->pool->Save($this->id, 'Level', $bind);
         return $this->ResetInfo();
     }
     private function ResetInfo() : UserPVEInfoHolder|stdClass
     {
         $this->info = $this->pool->{$this->id};
-        $this->ClearLevelInfoToArray();
+        self::LevelInfoToArray($this->info);
         return $this->info;
     }
 
-    private function ClearLevelInfoToArray()
+    public static function LevelInfoToArray(stdClass $info) : void
     {        
-        if($this->info->clearLevelInfo instanceof stdClass)
+        if($info->clearLevelInfo instanceof stdClass)
         {
             $infoTemp = [];
-            foreach($this->info->clearLevelInfo as $chapterID => $chapterInfo)
+            foreach($info->clearLevelInfo as $chapterID => $chapterInfo)
             {
-                foreach($chapterInfo as $levelID => $medal)
+                foreach($chapterInfo as $levelID => $medalAmount)
                 {
-                    $infoTemp[$chapterID][$levelID] = $medal;
+                    $infoTemp[$chapterID][$levelID] = $medalAmount;
                 }
             }
-            $this->info->clearLevelInfo = $infoTemp;
+            $info->clearLevelInfo = $infoTemp;
         }
     }
 
-    //紀錄成績、獲取獎勵
-    public function ClearLevelAndGetReward(int $levelID,int $medalAmount) : array
-    {
-        // 獎牌數量可以從Raceplayer去判斷。讓流程傳入。
-        $levelInfo = (new PVELevelHandler($levelID))->GetInfo();
-        $susRewardHandler = new RewardHandler($levelInfo->sustainRewardID);
-        $susReward = $susRewardHandler->GetItems(); 
-        $info = $this->GetInfo();
-        //已通過關
-        if(isset($info->clearLevelInfo[$levelInfo->chapterID])
-            && isset($info->clearLevelInfo[$levelInfo->chapterID][$levelID]))
-        {
-            $preMedalAmount = $this->info->clearLevelInfo[$levelInfo->chapterID][$levelID];
-            if($preMedalAmount < $medalAmount)$this->SaveClearLevel($levelID,$medalAmount);
-            $rt = []; //避免獎勵重複鍵值
-            $rt[] = $susReward;
-            return $rt;            
-        }
-        $firstRewardHandler = new RewardHandler($levelInfo->firstRewardID);
-        $this->SaveClearLevel($levelID,$medalAmount);
-        $firstReward = $firstRewardHandler->GetItems();
-        return array_merge($firstReward,$susReward);        
-    }
 
     /**
      * @return int 目前解鎖的所有章節
@@ -95,6 +74,19 @@ class UserPVEHandler
     public function HasClearedLevel(int $chapterID,int $levelID) : bool
     {
         $info = $this->GetInfo();
-        return isset($info->clearLevelInfo[$chapterID][$levelID]);
+        if(isset($info->clearLevelInfo[$chapterID][$levelID]))
+        {
+            $medalAmount = $info->clearLevelInfo[$chapterID][$levelID];
+            return $medalAmount > 0;
+        }
+        return false;
+    }
+
+    public function GetLevelMedalAmount(int $levelID) : int
+    {
+        $chapterID = (new PVELevelHandler($levelID))->GetInfo()->chapterID;
+        if(!$this->HasClearedLevel($chapterID,$levelID))return 0;
+        $info = $this->GetInfo();
+        return $info->clearLevelInfo[$chapterID][$levelID];
     }
 }

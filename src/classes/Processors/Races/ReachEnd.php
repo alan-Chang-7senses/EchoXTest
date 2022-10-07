@@ -42,10 +42,10 @@ class ReachEnd extends BaseRace{
         $racePlayerID = $raceInfo->racePlayers->{$player};
         
         //驗證是否作弊，踢出比賽回到大廳
-        if (RaceVerifyHandler::Instance()->ReachEnd($racePlayerID, $distance) == RaceVerifyValue::VerifyCheat)
-        {            
-            throw new RaceException(RaceException::UserCheat);
-        }
+        // if (RaceVerifyHandler::Instance()->ReachEnd($racePlayerID, $distance) == RaceVerifyValue::VerifyCheat)
+        // {            
+        //     throw new RaceException(RaceException::UserCheat);
+        // }
         
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
