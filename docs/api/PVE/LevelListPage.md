@@ -74,7 +74,6 @@ Content Type: `application/json`
 | windDirection | int | [風向](../codes/scene.md#windDirection) |
 | windSpeed | int | 風速 |
 | lighting | int | [照明（明暗）](../codes/scene.md#lighting) |
-| [botInfo](#botInfo) | array | 機器人(AI)資訊 |
 | isUnlock | bool | 是否解鎖 |
 | powerRequired | int | 需求電力 |
 | hasCleared | bool | 是否已過關 |
@@ -83,11 +82,11 @@ Content Type: `application/json`
 | canRush | bool | 可否使用快速通關 |
 <br>
 
-#### <span id="botInfo">botInfo 機器人(AI)內容 </span>
+<!-- #### <span id="botInfo">botInfo 機器人(AI)內容 </span>
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | aiUserID | int | 機器人使用者ID |
-| trackNumber | int | 機器人所在跑道編號 |
+| trackNumber | int | 機器人所在跑道編號 | -->
 
 <br>
 
@@ -231,20 +230,6 @@ Content Type: `application/json`
                 "windDirection": 4,
                 "windSpeed": 25,
                 "lighting": 2,
-                "botInfo": [
-                    {
-                        "aiUserID": "-1",
-                        "trackNumber": 1
-                    },
-                    {
-                        "aiUserID": "-2",
-                        "trackNumber": 2
-                    },
-                    {
-                        "aiUserID": "-3",
-                        "trackNumber": 3
-                    }
-                ],
                 "isUnlock": true,
                 "powerRequired": 0,
                 "hasCleared": true,
@@ -339,20 +324,6 @@ Content Type: `application/json`
                 "windDirection": 4,
                 "windSpeed": 25,
                 "lighting": 2,
-                "botInfo": [
-                    {
-                        "aiUserID": "-1",
-                        "trackNumber": 1
-                    },
-                    {
-                        "aiUserID": "-2",
-                        "trackNumber": 2
-                    },
-                    {
-                        "aiUserID": "-3",
-                        "trackNumber": 3
-                    }
-                ],
                 "isUnlock": true,
                 "powerRequired": 0,
                 "hasCleared": true,
@@ -447,20 +418,6 @@ Content Type: `application/json`
                 "windDirection": 4,
                 "windSpeed": 25,
                 "lighting": 2,
-                "botInfo": [
-                    {
-                        "aiUserID": "-1",
-                        "trackNumber": 1
-                    },
-                    {
-                        "aiUserID": "-2",
-                        "trackNumber": 2
-                    },
-                    {
-                        "aiUserID": "-3",
-                        "trackNumber": 3
-                    }
-                ],
                 "isUnlock": true,
                 "powerRequired": 0,
                 "hasCleared": false,

@@ -3,15 +3,9 @@
 namespace Games\PVE;
 
 use Consts\Sessions;
-use Games\Accessors\RaceRoomsAccessor;
-use Games\Consts\ItemValue;
-use Games\Consts\PVEValue;
-use Games\Pools\ItemInfoPool;
-use Games\Races\RaceHandler;
-use Games\Races\RacePlayerHandler;
+use Games\Players\PlayerHandler;
+use Games\Players\PlayerUtility;
 use Games\Users\RewardHandler;
-use Games\Users\UserHandler;
-use Games\Users\UserUtility;
 
 class PVERacingUtility
 {
@@ -33,6 +27,22 @@ class PVERacingUtility
         $firstRewardHandler = new RewardHandler($levelInfo->firstRewardID);
         $firstReward = array_values($firstRewardHandler->GetItems());
         return array_merge($firstReward,$susReward);        
+    }
+    
+    public static function GetBotInfo(int $playerID) : array
+    {
+        $playerHandler = new PlayerHandler($playerID);
+        $playerInfo = $playerHandler->GetInfo();
+        $player = clone $playerInfo;
+        PlayerUtility::PartcodeAllDNA($player->dna);
+        $info = 
+        [
+            'id' => $player->id,
+            'name' => $player->name,
+            'dna' => $player->dna,
+        ];
+        
+        return $info;    
     }
 
     

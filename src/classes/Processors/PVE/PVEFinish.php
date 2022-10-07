@@ -62,8 +62,7 @@ class PVEFinish extends BaseRace
         $bind = ['levelID' => $levelID, 'Status' => PVEValue::LevelStatusIdle];
 
         // //獎牌不為0，且獎牌大於原先獎牌數量，才存檔獎牌。
-        // if(!empty($medalAmount) && $medalAmount > $userPVEHandler->GetLevelMedalAmount($levelID))
-        $bind['medalAmount'] = $medalAmount;
+        $bind['medalAmount'] = $medalAmount ?? 0;
 
         //save會自動判斷獎牌數。
         $userPVEHandler->SaveLevel($bind);

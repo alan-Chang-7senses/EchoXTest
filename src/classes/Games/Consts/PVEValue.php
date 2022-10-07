@@ -14,4 +14,6 @@ class PVEValue
     const RankingSecond = 2;
     const RankingThird = 3;
 
+    const LevelUnlockMedalAmount = 3;
+
 }

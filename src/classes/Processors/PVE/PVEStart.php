@@ -10,8 +10,12 @@ use Games\Accessors\UserAccessor;
 use Games\Consts\PVEValue;
 use Games\Consts\RaceValue;
 use Games\Exceptions\PVEException;
+use Games\Exceptions\UserException;
+use Games\Players\PlayerUtility;
 use Games\Pools\UserPool;
 use Games\PVE\PVELevelHandler;
+use Games\PVE\PVERacingUtility;
+use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -28,16 +32,22 @@ class PVEStart extends BaseProcessor
         //玩家正在PVE、PVP。不予開始PVE
         $userID = $_SESSION[Sessions::UserID];
         $userPVEHandler = new UserPVEHandler($userID);
+        $userHandler = new UserHandler($userID);
         $userPVEInfo = $userPVEHandler->GetInfo();
+
         if($userPVEInfo->currentProcessingLevel !== null)
         throw new PVEException(PVEException::UserInPVE);
 
-        $userHandler = new UserHandler($userID);
-        // $userInfo = $userHandler->GetInfo();
-        
-        // $pveAccessor = new PVEAccessor();
         $pveHandler = new PVELevelHandler($levelID);
         $pveLevelInfo = $pveHandler->GetInfo();
+        $userHandler->HandlePower(0);
+
+        if($pveLevelInfo->power > $userHandler->GetInfo()->power)
+        throw new UserException(UserException::UserPowerNotEnough);
+
+        $isUnlock = $userPVEHandler->IsChapterUnlock($pveLevelInfo->chapterID) && $userPVEHandler->IsLevelUnLock($pveLevelInfo);
+        if(!$isUnlock) throw new PVEException(PVEException::LevelLock);
+
         $seats = [];
         $seats[] = $userID;
         $seats = array_merge($seats,array_keys((array)$pveLevelInfo->aiInfo));
@@ -60,6 +70,14 @@ class PVEStart extends BaseProcessor
         $userPVEHandler->SaveLevel(['levelID' => $levelID, 'status' => PVEValue::LevelStatusProcessing]);
 
         $result = new ResultData(ErrorCode::Success);
+        $result->botInfos = [];
+        foreach((array)$pveLevelInfo->aiInfo as $aiID => $trackNumber)
+        {
+            $temp = PVERacingUtility::GetBotInfo($aiID);
+            $temp['TrackNumber'] = $trackNumber;
+            $result->botInfos[] = $temp;
+        }
+
         //還需要傳詳細資料：如AI DNA等
         return $result;
     }

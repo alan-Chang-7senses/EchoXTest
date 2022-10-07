@@ -10,4 +10,7 @@ class ActionPointValue
     const CausePVENormal = 3;
     const CausePVERush = 4;        
 
+    const Powerlimit = 200;
+    const PowerRate = 400;
+
 }

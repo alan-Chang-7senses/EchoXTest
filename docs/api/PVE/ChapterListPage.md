@@ -42,7 +42,7 @@ Content Type: `application/json`
 | id | int | 章節編號 |
 | icon | string | 章節圖示代號 |
 | name | string | 章節名稱代號 |
-| available | bool | 是否解鎖 |
+| unlock | bool | 是否解鎖 |
 <br>
 
 ### Example
@@ -57,19 +57,19 @@ Content Type: `application/json`
                 "id": "1",
                 "icon": "222",
                 "name": "111",
-                "available": true
+                "unlock": true
             },
             {
                 "id": "2",
                 "icon": "222",
                 "name": "222",
-                "available": true
+                "unlock": true
             },
             {
                 "id": "3",
                 "icon": "333",
                 "name": "333",
-                "available": false
+                "unlock": false
             }
         ]
     }

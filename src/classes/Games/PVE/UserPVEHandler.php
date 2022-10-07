@@ -2,12 +2,9 @@
 
 namespace Games\PVE;
 
-use Games\Accessors\PVEAccessor;
 use Games\Consts\PVEValue;
 use Games\Pools\UserPVEPool;
 use Games\PVE\Holders\UserPVEInfoHolder;
-use Games\Users\RewardHandler;
-use Processors\EliteTest\FastestList;
 use stdClass;
 
 class UserPVEHandler
@@ -44,39 +41,26 @@ class UserPVEHandler
 
     public static function LevelInfoToArray(stdClass $info) : void
     {        
-        if($info->clearLevelInfo instanceof stdClass)
+        if(!empty($info->levelProcess) && $info->levelProcess instanceof stdClass)
         {
             $infoTemp = [];
-            foreach($info->clearLevelInfo as $chapterID => $chapterInfo)
+            foreach($info->levelProcess as $chapterID => $chapterInfo)
             {
                 foreach($chapterInfo as $levelID => $medalAmount)
                 {
                     $infoTemp[$chapterID][$levelID] = $medalAmount;
                 }
             }
-            $info->clearLevelInfo = $infoTemp;
+            $info->levelProcess = $infoTemp;
         }
-    }
-
-
-    /**
-     * @return int 目前解鎖的所有章節
-     * @return bool 若尚未進行過PVE。回傳false
-     */
-    public function GetChapterProcess() : array | bool
-    {
-       if(empty($this->GetInfo()->clearLevelInfo))return false; 
-       $chapterIDs = array_keys($this->GetInfo()->clearLevelInfo);
-    //    sort($chapterIDs);
-       return $chapterIDs;
     }
 
     public function HasClearedLevel(int $chapterID,int $levelID) : bool
     {
         $info = $this->GetInfo();
-        if(isset($info->clearLevelInfo[$chapterID][$levelID]))
+        if(isset($info->levelProcess[$chapterID][$levelID]))
         {
-            $medalAmount = $info->clearLevelInfo[$chapterID][$levelID];
+            $medalAmount = $info->levelProcess[$chapterID][$levelID];
             return $medalAmount > 0;
         }
         return false;
@@ -87,6 +71,44 @@ class UserPVEHandler
         $chapterID = (new PVELevelHandler($levelID))->GetInfo()->chapterID;
         if(!$this->HasClearedLevel($chapterID,$levelID))return 0;
         $info = $this->GetInfo();
-        return $info->clearLevelInfo[$chapterID][$levelID];
+        return $info->levelProcess[$chapterID][$levelID];
+    }
+
+    public function GetChapterMedalAmount(int $chapterID) : int
+    {
+        $info = $this->GetInfo();
+        if(!isset($info->levelProcess[$chapterID]))return 0;
+        return array_sum($info->levelProcess[$chapterID]);
+    }
+
+    public function IsLevelUnLock(stdClass $levelInfo) : bool
+    {
+        if(empty($levelInfo->preLevels))return true;
+        foreach($levelInfo->preLevels as $preLevel)
+        {
+            $preLevelInfo = (new PVELevelHandler($preLevel))->GetInfo();
+            if($this->GetLevelMedalAmount($preLevelInfo->levelID) < PVEValue::LevelUnlockMedalAmount)
+            return false;
+        }
+        return true;
+    }
+
+    public function IsChapterUnlock(int $chapterID) : bool
+    {
+        $chapterInfo = PVEChapterData::GetChapterInfo($chapterID);
+        if(!empty($chapterInfo->preChapters))
+        {
+            foreach($chapterInfo->preChapters as $preChapter)
+            {
+                $preChapterInfo = PVEChapterData::GetChapterInfo($preChapter);
+                foreach($preChapterInfo->levels as $level)
+                {
+                    $levelInfo = (new PVELevelHandler($level))->GetInfo();
+                    $isPerfectClear = $this->GetLevelMedalAmount($levelInfo->levelID) == PVEValue::LevelUnlockMedalAmount;
+                    if(!$isPerfectClear)return false;
+                }
+            }
+        }
+        return true;
     }
 }

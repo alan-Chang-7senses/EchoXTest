@@ -34,7 +34,7 @@ class ChapterListPage extends BaseProcessor
                 'id' => $id,
                 'icon' => $chapter->icon,
                 'name' => $chapter->name,
-                'available' => isset($userPVEInfo->clearLevelInfo[$id]),
+                'unlock' => $userPVEHandler->IsChapterUnlock($id),
             ];
         }        
         return $result;

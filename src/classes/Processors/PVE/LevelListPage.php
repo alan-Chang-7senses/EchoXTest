@@ -29,15 +29,14 @@ class LevelListPage extends BaseProcessor
 
         $chapterInfo = PVEChapterData::GetChapterInfo($chapterID);
         $userPVEHandler = new UserPVEHandler($userID);
-        $userPVEInfo = $userPVEHandler->GetInfo();
         $result = new ResultData(ErrorCode::Success);
 
         $userHandler = new UserHandler($userID);
         $userHandler->HandlePower(0);
 
         //章節未解鎖
-        if(!isset($userPVEInfo->clearLevelInfo[$chapterID]))
-        throw new PVEException(PVEException::ChapterLock,['ChapterID' => $chapterID]);
+        if(!$userPVEHandler->IsChapterUnlock($chapterID))
+        throw new PVEException(PVEException::ChapterLock,['chapterID' => $chapterID]);
 
         $levels = [];
         //各等階獎牌數量。加上玩家目前此章節獎牌數量。
@@ -45,25 +44,18 @@ class LevelListPage extends BaseProcessor
         {
             $levelInfo = (new PVELevelHandler($levelID))->GetInfo();
             //是否有通關過。
-            $medalAount = $userPVEHandler->HasClearedLevel($chapterID,$levelInfo->levelID) ?
-                          $userPVEInfo->clearLevelInfo[$chapterID][$levelID] :
-                          0;
-            //是否已通過前置關卡                                
-            $isUnlock = true;
-            if(!empty($levelInfo->preLevels))
-            {
-                foreach($levelInfo->preLevels as $preLevel)
-                if(!$userPVEHandler->HasClearedLevel($chapterID,$preLevel))$isUnlock = false;
-            }
-            $botInfo = [];
-            foreach($levelInfo->aiInfo as $aiID => $trackNumber)
-            {
-                $botInfo[] = 
-                [
-                    'aiUserID' => $aiID,
-                    'trackNumber' => $trackNumber,
-                ];
-            }
+            $medalAount = $userPVEHandler->GetLevelMedalAmount($levelID);
+            //是否已通過前置關卡
+            $isUnlock = $userPVEHandler->IsLevelUnLock($levelInfo);
+            // $botInfo = [];
+            // foreach($levelInfo->aiInfo as $aiID => $trackNumber)
+            // {
+            //     $botInfo[] = 
+            //     [
+            //         'aiUserID' => $aiID,
+            //         'trackNumber' => $trackNumber,
+            //     ];
+            // }
             
             $firstRewards = PVEUtility::GetItemInfos($levelInfo->firstRewardItemIDs);
             $sustainRewards = PVEUtility::GetItemInfos($levelInfo->sustainRewardItemIDs);
@@ -86,7 +78,7 @@ class LevelListPage extends BaseProcessor
                 'windDirection' => $climate->windDirection,
                 'windSpeed' => $climate->windSpeed,
                 'lighting' => $climate->lighting,
-                'botInfo' => $botInfo,
+                // 'botInfo' => $botInfo,
                 'isUnlock' => $isUnlock,
                 'powerRequired' => $levelInfo->power,
                 'hasCleared' => $userPVEHandler->HasClearedLevel($chapterID,$levelID),
@@ -134,7 +126,7 @@ class LevelListPage extends BaseProcessor
         $player->skillHole = $playerInfo->skillHole;
         
 
-        $userMedalAmount = array_sum($userPVEInfo->clearLevelInfo[$chapterID]);
+        $userMedalAmount = $userPVEHandler->GetChapterMedalAmount($chapterID);
         $result->name = $chapterInfo->name;
         $result->chapterMedal = $userMedalAmount;
         $result->currentPower = $userHandler->GetInfo()->power;

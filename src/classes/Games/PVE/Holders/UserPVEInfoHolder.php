@@ -13,6 +13,6 @@ class UserPVEInfoHolder extends stdClass
      *          levelID => medalAmount'
      *       ]
      */
-    public array $clearLevelInfo;
+    public array $levelProcess;
     public int|null $currentProcessingLevel;
 }
