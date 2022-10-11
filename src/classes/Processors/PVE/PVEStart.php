@@ -7,6 +7,7 @@ use Consts\Globals;
 use Consts\Sessions;
 use Games\Accessors\RaceRoomsAccessor;
 use Games\Accessors\UserAccessor;
+use Games\Consts\ActionPointValue;
 use Games\Consts\PVEValue;
 use Games\Consts\RaceValue;
 use Games\Exceptions\PVEException;
@@ -37,15 +38,15 @@ class PVEStart extends BaseProcessor
 
         $pveHandler = new PVELevelHandler($levelID);
         $pveLevelInfo = $pveHandler->GetInfo();
-        if($userHandler->HandlePower(-$pveLevelInfo->power) === false)
-        throw new UserException(UserException::UserPowerNotEnough);
-
         
-
-
+        
+        
+        
         $isUnlock = $userPVEHandler->IsChapterUnlock($pveLevelInfo->chapterID) && $userPVEHandler->IsLevelUnLock($pveLevelInfo);
         if(!$isUnlock) throw new PVEException(PVEException::LevelLock);
-
+        
+        if($userHandler->HandlePower(-$pveLevelInfo->power,ActionPointValue::CausePVENormal,$levelID) === false)
+        throw new UserException(UserException::UserPowerNotEnough);
 
         $seats = [];
         $seats[] = $userID;
