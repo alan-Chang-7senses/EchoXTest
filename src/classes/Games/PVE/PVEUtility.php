@@ -52,4 +52,24 @@ class PVEUtility
         $userPVEInfo = (new UserPVEHandler($_SESSION[Sessions::UserID]))->GetInfo();
         return $userPVEInfo->currentProcessingLevel;
     }
+
+    public static function HandleRewardReturnValue(array $rewards) : array
+    {
+        $temp = [];
+        foreach($rewards as $reward)
+        {
+            $temp[$reward->ItemID] = $reward->Amount;
+        }
+        $rt = [];
+        foreach($temp as $itemID => $amount)
+        {
+            $rt = 
+            [
+                'itemID' => $itemID,
+                'icon' => ItemInfoPool::Instance()->{$itemID}->Icon,
+                'amount' => $amount,
+            ];
+        }
+        return $rt;
+    }
 }

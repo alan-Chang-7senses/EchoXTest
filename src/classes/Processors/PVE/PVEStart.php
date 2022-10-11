@@ -10,12 +10,11 @@ use Games\Accessors\UserAccessor;
 use Games\Consts\PVEValue;
 use Games\Consts\RaceValue;
 use Games\Exceptions\PVEException;
+use Games\Exceptions\RaceException;
 use Games\Exceptions\UserException;
-use Games\Players\PlayerUtility;
 use Games\Pools\UserPool;
 use Games\PVE\PVELevelHandler;
 use Games\PVE\PVERacingUtility;
-use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -26,27 +25,27 @@ class PVEStart extends BaseProcessor
 {
     public function Process(): ResultData
     {
-        //未解鎖、體力不足。不予開始PVE
         $levelID = InputHelper::post('levelID');
         $version = InputHelper::post('version');
-        //玩家正在PVE、PVP。不予開始PVE
         $userID = $_SESSION[Sessions::UserID];
         $userPVEHandler = new UserPVEHandler($userID);
         $userHandler = new UserHandler($userID);
         $userPVEInfo = $userPVEHandler->GetInfo();
 
-        if($userPVEInfo->currentProcessingLevel !== null)
-        throw new PVEException(PVEException::UserInPVE);
+        if($userPVEInfo->currentProcessingLevel !== null || $userHandler->GetInfo()->race !== RaceValue::NotInRace)
+        throw new RaceException(RaceException::UserInRace);
 
         $pveHandler = new PVELevelHandler($levelID);
         $pveLevelInfo = $pveHandler->GetInfo();
-        $userHandler->HandlePower(0);
-
-        if($pveLevelInfo->power > $userHandler->GetInfo()->power)
+        if($userHandler->HandlePower(-$pveLevelInfo->power) === false)
         throw new UserException(UserException::UserPowerNotEnough);
+
+        
+
 
         $isUnlock = $userPVEHandler->IsChapterUnlock($pveLevelInfo->chapterID) && $userPVEHandler->IsLevelUnLock($pveLevelInfo);
         if(!$isUnlock) throw new PVEException(PVEException::LevelLock);
+
 
         $seats = [];
         $seats[] = $userID;

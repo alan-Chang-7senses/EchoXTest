@@ -7,7 +7,6 @@ use Games\Consts\ItemValue;
 use Games\Consts\PVEValue;
 use Games\Consts\RaceValue;
 use Games\Exceptions\PVEException;
-use Games\Pools\ItemInfoPool;
 use Games\PVE\PVERacingUtility;
 use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
@@ -47,15 +46,7 @@ class PVEFinish extends BaseRace
         if(!empty($items))
         {       
             UserUtility::AddItems($userInfo->id,$items,ItemValue::CausePVEClearLevel);
-            $items = array_map(function($value)
-            {
-                // $value = (array)$value;
-                return [
-                    'id' => $value->ItemID,
-                    'icon' => ItemInfoPool::Instance()->{$value->ItemID}->Icon,
-                    'amount' => $value->Amount,
-                ];                
-            },$items);
+            $items = PVEUtility::HandleRewardReturnValue($items);
         }
         $result = new ResultData(ErrorCode::Success);
         $userPVEHandler = new UserPVEHandler($this->userInfo->id);
@@ -67,6 +58,7 @@ class PVEFinish extends BaseRace
         //save會自動判斷獎牌數。
         $userPVEHandler->SaveLevel($bind);
 
+        
 
         $result->isCleared = $isLevelClear;
         $result->items = $items;

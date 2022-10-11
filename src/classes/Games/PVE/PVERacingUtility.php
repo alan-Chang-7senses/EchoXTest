@@ -10,7 +10,7 @@ use Games\Users\RewardHandler;
 class PVERacingUtility
 {
         
-    //紀錄成績、獲取獎勵
+    //獲取獎勵
     public static function GetLevelReward(int $levelID) : array
     {
         $userID = $_SESSION[Sessions::UserID];

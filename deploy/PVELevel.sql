@@ -28,9 +28,9 @@ CREATE TABLE IF NOT EXISTS `PVELevel` (
 
 CREATE TABLE IF NOT EXISTS `PVEChapter` (
   `ChapterID` int(11) NOT NULL COMMENT '章節編號',
+  `PreChapter` varchar(50) NOT NULL DEFAULT '' COMMENT '前置章節',
   `Name` varchar(50) NOT NULL DEFAULT '' COMMENT '章節名稱',
   `Icon` varchar(50) NOT NULL DEFAULT '' COMMENT '章節圖示',
-  `PreChapter` varchar(50) NOT NULL DEFAULT '' COMMENT '前置關卡',
   `MedalAmountFirst` smallint(6) NOT NULL DEFAULT 0 COMMENT '第一階段獎勵獎牌數量',
   `RewardIDFirst` int(11) NOT NULL DEFAULT 0 COMMENT '第一階段獎勵編號',
   `MedalAmountSecond` smallint(6) NOT NULL DEFAULT 0 COMMENT '第二階段獎勵獎牌數量',
@@ -42,15 +42,16 @@ CREATE TABLE IF NOT EXISTS `PVEChapter` (
 
 USE `koa_main`;
 
--- 傾印  資料表 koa_main.UserPVELevel 結構
 CREATE TABLE IF NOT EXISTS `UserPVELevel` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者ID',
   `LevelID` int(11) NOT NULL DEFAULT 0 COMMENT '關卡ID',
   `MedalAmount` tinyint(4) NOT NULL DEFAULT 0 COMMENT '獲得獎牌數量',
-  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '通關當下時間',
+  `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '關卡進度。0閒置、1進行中',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '通關時間',
   PRIMARY KEY (`Serial`),
   UNIQUE KEY `UserID_LevelID` (`UserID`,`LevelID`) USING BTREE,
-  KEY `MedalAmount` (`MedalAmount`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COMMENT='使用者PVE通關狀態';
+  KEY `MedalAmount` (`MedalAmount`),
+  KEY `Process` (`Status`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='使用者PVE關卡狀態';
 

@@ -10,4 +10,5 @@ class PVEException extends NormalException
     const LevelLock = 7002;
     const UserNotInPVE = 7003;
     const UserInPVE = 7004;
+    const LevelCannotRush = 7005;
 }
