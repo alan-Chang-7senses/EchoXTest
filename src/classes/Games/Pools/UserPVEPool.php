@@ -70,7 +70,7 @@ class UserPVEPool extends PoolAccessor
         $data->currentProcessingLevel = $bind['Status'] == PVEValue::LevelStatusProcessing ? 
                                         $bind['LevelID'] :
                                         null;
-        //取代的話會造成有不該刷新的值被刷新                                        
+        //取代的話會造成有不該刷新的值被刷新。所以所有欄位的資料都需要有                                        
         (new PVEAccessor())->AddLevelInfo($bind);
         return $data;
     }
