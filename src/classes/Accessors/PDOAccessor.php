@@ -309,7 +309,7 @@ class PDOAccessor {
             
             if(is_subclass_of($ex, 'Exceptions\NormalException')){
                 $normalException = get_class($ex);
-                throw new $normalException($ex->getCode(), [], $ex);
+                throw new $normalException($ex->getCode(), $ex->GetBind(), $ex);
             }else throw new Exception($ex->getMessage(), $ex->getCode(), $ex);
         }
         
