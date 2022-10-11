@@ -41,6 +41,7 @@ Content Type: `application/json`
 | [rewardSecond](#rewards) | array | 章節第二階段獎勵內容 |
 | medalAmountThird | int | 章節第三階段獎勵所需獎牌數量 |
 | [rewardThrid](#rewards) | array | 章節第三階段獎勵內容 |
+| [rewardAcepptedInfo](#rewardAcepptedInfo) | object | 各階段獎牌獎勵的領取狀態 |
 | [levels](#levels) | array | 各關卡資訊集合 |
 
 
@@ -57,6 +58,14 @@ Content Type: `application/json`
 | stackLimit | int | 堆疊上限 |
 | icon | string | 物品圖示代號 |
 | source | array | 來源／出處 代號陣列 |
+<br>
+
+#### <span id="rewardAcepptedInfo">rewards 各階段獎牌獎勵的領取狀態內容 </span>
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| firstReward | bool | 第一階段獎勵是否已領取 |
+| secondReward | bool | 第二階段獎勵是否已領取 |
+| thirdReward | bool | 第三階段獎勵是否已領取 |
 <br>
 
 #### <span id="levels">levels 各關卡內容 </span>
@@ -82,11 +91,6 @@ Content Type: `application/json`
 | canRush | bool | 可否使用快速通關 |
 <br>
 
-<!-- #### <span id="botInfo">botInfo 機器人(AI)內容 </span>
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| aiUserID | int | 機器人使用者ID |
-| trackNumber | int | 機器人所在跑道編號 | -->
 
 <br>
 
@@ -97,9 +101,9 @@ Content Type: `application/json`
             "message": ""
         },
         "name": "",
-        "chapterMedal": 4,
+        "chapterMedal": 8,
         "currentPower": 300,
-        "medalAmountFirst": 0,
+        "medalAmountFirst": 3,
         "rewardFirst": [
             {
                 "itemID": 1111,
@@ -138,7 +142,7 @@ Content Type: `application/json`
                 ]
             }
         ],
-        "medalAmountSecond": 0,
+        "medalAmountSecond": 6,
         "rewardSecond": [
             {
                 "itemID": 1111,
@@ -177,7 +181,7 @@ Content Type: `application/json`
                 ]
             }
         ],
-        "medalAmountThird": 0,
+        "medalAmountThird": 9,
         "rewardThrid": [
             {
                 "itemID": 1111,
@@ -216,13 +220,18 @@ Content Type: `application/json`
                 ]
             }
         ],
+        "rewardAcepptedInfo": {
+            "firstReward": false,
+            "secondReward": true,
+            "thirdReward": false
+        },
         "levels": [
             {
                 "id": 101,
                 "name": "",
                 "description": "",
                 "recommendLevel": 0,
-                "currentMedalAmount": 1,
+                "currentMedalAmount": 3,
                 "scene": 1001,
                 "sceneName": "9001",
                 "enviroment": 1,
@@ -235,81 +244,43 @@ Content Type: `application/json`
                 "hasCleared": true,
                 "firstReward": [
                     {
-                        "itemID": 1111,
-                        "itemName": "8104",
-                        "description": "8604",
+                        "itemID": -3,
+                        "itemName": "8134",
+                        "description": "8634",
                         "itemType": 1,
                         "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0004",
-                        "source": [
-                            "pvp3"
-                        ]
-                    },
-                    {
-                        "itemID": 1121,
-                        "itemName": "8106",
-                        "description": "8606",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0006",
-                        "source": [
-                            "s012"
-                        ]
-                    },
-                    {
-                        "itemID": 1131,
-                        "itemName": "8108",
-                        "description": "8608",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0008",
-                        "source": [
-                            "s010"
-                        ]
+                        "stackLimit": 2147483647,
+                        "icon": "ItemIcon_0028",
+                        "source": []
                     }
                 ],
                 "sustainReward": [
                     {
-                        "itemID": 1112,
-                        "itemName": "8105",
-                        "description": "8605",
-                        "itemType": 1,
+                        "itemID": 2013,
+                        "itemName": "8113",
+                        "description": "8613",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0005",
+                        "icon": "ItemIcon_0012",
                         "source": [
-                            "s008"
+                            "s004"
                         ]
                     },
                     {
-                        "itemID": 1122,
-                        "itemName": "8107",
-                        "description": "8607",
-                        "itemType": 1,
+                        "itemID": 2017,
+                        "itemName": "8114",
+                        "description": "8614",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0007",
+                        "icon": "ItemIcon_0016",
                         "source": [
-                            "s009"
-                        ]
-                    },
-                    {
-                        "itemID": 1132,
-                        "itemName": "8109",
-                        "description": "8609",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0009",
-                        "source": [
-                            "s011"
+                            "s005"
                         ]
                     }
                 ],
-                "canRush": false
+                "canRush": true
             },
             {
                 "id": 102,
@@ -329,77 +300,39 @@ Content Type: `application/json`
                 "hasCleared": true,
                 "firstReward": [
                     {
-                        "itemID": 1111,
-                        "itemName": "8104",
-                        "description": "8604",
+                        "itemID": -3,
+                        "itemName": "8134",
+                        "description": "8634",
                         "itemType": 1,
                         "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0004",
-                        "source": [
-                            "pvp3"
-                        ]
-                    },
-                    {
-                        "itemID": 1121,
-                        "itemName": "8106",
-                        "description": "8606",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0006",
-                        "source": [
-                            "s012"
-                        ]
-                    },
-                    {
-                        "itemID": 1131,
-                        "itemName": "8108",
-                        "description": "8608",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0008",
-                        "source": [
-                            "s010"
-                        ]
+                        "stackLimit": 2147483647,
+                        "icon": "ItemIcon_0028",
+                        "source": []
                     }
                 ],
                 "sustainReward": [
                     {
-                        "itemID": 1112,
-                        "itemName": "8105",
-                        "description": "8605",
-                        "itemType": 1,
+                        "itemID": 2013,
+                        "itemName": "8113",
+                        "description": "8613",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0005",
+                        "icon": "ItemIcon_0012",
                         "source": [
-                            "s008"
+                            "s004"
                         ]
                     },
                     {
-                        "itemID": 1122,
-                        "itemName": "8107",
-                        "description": "8607",
-                        "itemType": 1,
+                        "itemID": 2017,
+                        "itemName": "8114",
+                        "description": "8614",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0007",
+                        "icon": "ItemIcon_0016",
                         "source": [
-                            "s009"
-                        ]
-                    },
-                    {
-                        "itemID": 1132,
-                        "itemName": "8109",
-                        "description": "8609",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0009",
-                        "source": [
-                            "s011"
+                            "s005"
                         ]
                     }
                 ],
@@ -410,7 +343,7 @@ Content Type: `application/json`
                 "name": "",
                 "description": "",
                 "recommendLevel": 0,
-                "currentMedalAmount": 0,
+                "currentMedalAmount": 2,
                 "scene": 1001,
                 "sceneName": "9001",
                 "enviroment": 1,
@@ -420,80 +353,42 @@ Content Type: `application/json`
                 "lighting": 2,
                 "isUnlock": true,
                 "powerRequired": 0,
-                "hasCleared": false,
+                "hasCleared": true,
                 "firstReward": [
                     {
-                        "itemID": 1111,
-                        "itemName": "8104",
-                        "description": "8604",
+                        "itemID": -3,
+                        "itemName": "8134",
+                        "description": "8634",
                         "itemType": 1,
                         "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0004",
-                        "source": [
-                            "pvp3"
-                        ]
-                    },
-                    {
-                        "itemID": 1121,
-                        "itemName": "8106",
-                        "description": "8606",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0006",
-                        "source": [
-                            "s012"
-                        ]
-                    },
-                    {
-                        "itemID": 1131,
-                        "itemName": "8108",
-                        "description": "8608",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0008",
-                        "source": [
-                            "s010"
-                        ]
+                        "stackLimit": 2147483647,
+                        "icon": "ItemIcon_0028",
+                        "source": []
                     }
                 ],
                 "sustainReward": [
                     {
-                        "itemID": 1112,
-                        "itemName": "8105",
-                        "description": "8605",
-                        "itemType": 1,
+                        "itemID": 2013,
+                        "itemName": "8113",
+                        "description": "8613",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0005",
+                        "icon": "ItemIcon_0012",
                         "source": [
-                            "s008"
+                            "s004"
                         ]
                     },
                     {
-                        "itemID": 1122,
-                        "itemName": "8107",
-                        "description": "8607",
-                        "itemType": 1,
+                        "itemID": 2017,
+                        "itemName": "8114",
+                        "description": "8614",
+                        "itemType": 2,
                         "useType": 0,
                         "stackLimit": 99999,
-                        "icon": "ItemIcon_0007",
+                        "icon": "ItemIcon_0016",
                         "source": [
-                            "s009"
-                        ]
-                    },
-                    {
-                        "itemID": 1132,
-                        "itemName": "8109",
-                        "description": "8609",
-                        "itemType": 1,
-                        "useType": 0,
-                        "stackLimit": 99999,
-                        "icon": "ItemIcon_0009",
-                        "source": [
-                            "s011"
+                            "s005"
                         ]
                     }
                 ],
@@ -501,7 +396,7 @@ Content Type: `application/json`
             }
         ],
         "player": {
-            "level": 1,
+            "level": 40,
             "id": 202,
             "idName": "202",
             "name": "202",
@@ -535,13 +430,13 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 112,
-                            "formulaValue": 4.5044,
+                            "formulaValue": 5.0564,
                             "allRankFormulaValue": [
-                                0.9008800000000001,
-                                1.8017600000000003,
-                                2.70264,
-                                3.6035200000000005,
-                                4.5044
+                                1.01128,
+                                2.02256,
+                                3.0338399999999996,
+                                4.04512,
+                                5.0564
                             ]
                         }
                     ]
@@ -575,13 +470,13 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 112,
-                            "formulaValue": 0.9008800000000001,
+                            "formulaValue": 1.01128,
                             "allRankFormulaValue": [
-                                0.9008800000000001,
-                                1.8017600000000003,
-                                2.70264,
-                                3.6035200000000005,
-                                4.5044
+                                1.01128,
+                                2.02256,
+                                3.0338399999999996,
+                                4.04512,
+                                5.0564
                             ]
                         }
                     ]
@@ -615,13 +510,13 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 111,
-                            "formulaValue": 2.2522,
+                            "formulaValue": 2.5282,
                             "allRankFormulaValue": [
-                                2.2522,
-                                4.5044,
-                                6.7566,
-                                9.0088,
-                                11.261
+                                2.5282,
+                                5.0564,
+                                7.5846,
+                                10.1128,
+                                12.640999999999998
                             ]
                         }
                     ]
@@ -655,24 +550,24 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 115,
-                            "formulaValue": 3.3783,
+                            "formulaValue": 3.7923,
                             "allRankFormulaValue": [
-                                3.3783,
-                                6.7566,
-                                10.1349,
-                                13.5132,
-                                16.8915
+                                3.7923,
+                                7.5846,
+                                11.376900000000001,
+                                15.1692,
+                                18.961499999999997
                             ]
                         },
                         {
                             "type": 201,
-                            "formulaValue": 3.04047,
+                            "formulaValue": 3.4130700000000003,
                             "allRankFormulaValue": [
-                                3.04047,
-                                6.08094,
-                                9.121410000000001,
-                                12.16188,
-                                15.202350000000001
+                                3.4130700000000003,
+                                6.8261400000000005,
+                                10.239210000000002,
+                                13.652280000000001,
+                                17.06535
                             ]
                         }
                     ]
@@ -706,13 +601,13 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 112,
-                            "formulaValue": 3.3783,
+                            "formulaValue": 3.7923,
                             "allRankFormulaValue": [
-                                3.3783,
-                                6.7566,
-                                10.1349,
-                                13.5132,
-                                16.8915
+                                3.7923,
+                                7.5846,
+                                11.376900000000001,
+                                15.1692,
+                                18.961499999999997
                             ]
                         }
                     ]
@@ -746,13 +641,13 @@ Content Type: `application/json`
                     "effects": [
                         {
                             "type": 112,
-                            "formulaValue": 3.3783,
+                            "formulaValue": 3.7923,
                             "allRankFormulaValue": [
-                                3.3783,
-                                6.7566,
-                                10.1349,
-                                13.5132,
-                                16.8915
+                                3.7923,
+                                7.5846,
+                                11.376900000000001,
+                                15.1692,
+                                18.961499999999997
                             ]
                         }
                     ]

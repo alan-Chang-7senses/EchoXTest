@@ -14,6 +14,10 @@ class PVEValue
     const RankingSecond = 2;
     const RankingThird = 3;
 
+    const ChapterRewardFirst = 0;
+    const ChapterRewardSecond = 1;
+    const ChapterRewardThird = 2;
+
     const LevelUnlockMedalAmount = 3;
 
 }

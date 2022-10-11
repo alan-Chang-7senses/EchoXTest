@@ -2,8 +2,11 @@
 
 namespace Games\Accessors;
 
+use Consts\ErrorCode;
 use Consts\Globals;
+use Consts\Sessions;
 use Games\Consts\PVEValue;
+use PDOException;
 
 class PVEAccessor extends BaseAccessor
 {
@@ -50,6 +53,39 @@ class PVEAccessor extends BaseAccessor
         ->WhereEqual('Status',PVEValue::LevelStatusProcessing)
         ->Fetch();
     }
+
+    public function rowsChapterRewardRecordByUserID(int $userID,int $chapterID) : mixed
+    {
+        return $this->MainAccessor()
+                    ->FromTable('UserPVEChapter')
+                    ->WhereEqual('UserID', $userID)
+                    ->WhereEqual('ChapterID',$chapterID)
+                    ->FetchAll();
+    }
+
+    /**增加章節獎勵領賞紀錄。已領過獎將回傳false */
+    public function AddChapterRewardInfo(int $chapterID, int $chapterRewardID) : bool
+    {
+        $userID = $_SESSION[Sessions::UserID];
+        try
+        {
+            $this->MainAccessor()
+                 ->FromTable('UserPVEChapter')
+                 ->Add(
+                    [
+                        'UserID' => $userID,
+                        'ChapterID' => $chapterID,
+                        'ChapterRewardID' => $chapterRewardID,   
+                    ]);
+        }
+        catch(PDOException $e)
+        {
+            if($e->errorInfo[0] == ErrorCode::PDODuplicate)
+            return false;
+        }
+        return true;
+    }
+
 
     // public function AddPVERoom(int $levelID,array $seats) : bool|int
     // {

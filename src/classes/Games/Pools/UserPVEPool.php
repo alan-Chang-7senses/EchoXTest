@@ -12,6 +12,9 @@ use Games\PVE\PVELevelHandler;
 use Games\PVE\UserPVEHandler;
 use stdClass;
 
+/**
+ * 關卡相關資料。
+ */
 class UserPVEPool extends PoolAccessor
 {       
     private static UserPVEPool $instance;

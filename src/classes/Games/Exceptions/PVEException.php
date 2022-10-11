@@ -11,4 +11,5 @@ class PVEException extends NormalException
     const UserNotInPVE = 7003;
     const UserInPVE = 7004;
     const LevelCannotRush = 7005;
+    const ChapterRewardNotAvailible = 7006;
 }

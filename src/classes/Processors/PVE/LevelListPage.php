@@ -10,6 +10,7 @@ use Games\Players\PlayerHandler;
 use Games\PVE\PVEChapterData;
 use Games\PVE\PVELevelHandler;
 use Games\PVE\PVEUtility;
+use Games\PVE\UserPVEChapterHandler;
 use Games\PVE\UserPVEHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
@@ -47,15 +48,6 @@ class LevelListPage extends BaseProcessor
             $medalAount = $userPVEHandler->GetLevelMedalAmount($levelID);
             //是否已通過前置關卡
             $isUnlock = $userPVEHandler->IsLevelUnLock($levelInfo);
-            // $botInfo = [];
-            // foreach($levelInfo->aiInfo as $aiID => $trackNumber)
-            // {
-            //     $botInfo[] = 
-            //     [
-            //         'aiUserID' => $aiID,
-            //         'trackNumber' => $trackNumber,
-            //     ];
-            // }
             
             $firstRewards = PVEUtility::GetItemInfos($levelInfo->firstRewardItemIDs);
             $sustainRewards = PVEUtility::GetItemInfos($levelInfo->sustainRewardItemIDs);
@@ -136,6 +128,7 @@ class LevelListPage extends BaseProcessor
         $result->rewardSecond = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDSecond));
         $result->medalAmountThird = $chapterInfo->medalAmountThird;
         $result->rewardThrid = PVEUtility::GetItemsInfoByRewardHandler(new RewardHandler($chapterInfo->rewardIDThrid));
+        $result->rewardAcepptedInfo = (new UserPVEChapterHandler($userID))->GetChapterRewardProcess($chapterID);
         $result->levels = $levels;
         $result->player = $player;
 
