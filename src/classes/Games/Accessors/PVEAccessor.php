@@ -57,7 +57,7 @@ class PVEAccessor extends BaseAccessor
     public function rowsChapterRewardRecordByUserID(int $userID,int $chapterID) : mixed
     {
         return $this->MainAccessor()
-                    ->FromTable('UserPVEChapter')
+                    ->FromTable('UserPVEChapterReward')
                     ->WhereEqual('UserID', $userID)
                     ->WhereEqual('ChapterID',$chapterID)
                     ->FetchAll();
@@ -70,7 +70,7 @@ class PVEAccessor extends BaseAccessor
         try
         {
             $this->MainAccessor()
-                 ->FromTable('UserPVEChapter')
+                 ->FromTable('UserPVEChapterReward')
                  ->Add(
                     [
                         'UserID' => $userID,

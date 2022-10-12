@@ -43,7 +43,7 @@ class PVEStart extends BaseProcessor
         
         
         $isUnlock = $userPVEHandler->IsChapterUnlock($pveLevelInfo->chapterID) && $userPVEHandler->IsLevelUnLock($pveLevelInfo);
-        if(!$isUnlock) throw new PVEException(PVEException::LevelLock);
+        if(!$isUnlock) throw new PVEException(PVEException::LevelLock,['levelID' => $levelID]);
         
         if($userHandler->HandlePower(-$pveLevelInfo->power,ActionPointValue::CausePVENormal,$levelID) === false)
         throw new UserException(UserException::UserPowerNotEnough);
@@ -67,7 +67,7 @@ class PVEStart extends BaseProcessor
             'RaceRoomSeats' => json_encode($seats),
         ]);
         UserPool::Instance()->Delete($userID);
-        $userPVEHandler->SaveLevel(['levelID' => $levelID, 'status' => PVEValue::LevelStatusProcessing]);
+        $userPVEHandler->SaveLevel(['levelID' => $levelID, 'status' => PVEValue::LevelStatusProcessing,'raceRoomID' => $roomInfo->RaceRoomID]);
 
         $result = new ResultData(ErrorCode::Success);
         $result->botInfos = [];

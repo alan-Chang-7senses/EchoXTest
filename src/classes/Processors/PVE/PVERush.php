@@ -10,7 +10,7 @@ use Games\Consts\PVEValue;
 use Games\Exceptions\PVEException;
 use Games\Exceptions\UserException;
 use Games\PVE\PVELevelHandler;
-use Games\PVE\PVERacingUtility;
+use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
 use Games\Users\UserHandler;
 use Games\Users\UserUtility;
@@ -34,20 +34,20 @@ class PVERush extends BaseProcessor
         $pveLevelInfo = (new PVELevelHandler($levelID))->GetInfo();
         $requiredPower = $pveLevelInfo->power * $rushCount;
         $userHandler = new UserHandler($userID);
-        $userHandler->HandlePower(0);
 
         //體力不足
-        if($userHandler->GetInfo()->power < $requiredPower)
+        if(!$userHandler->HandlePower(-$requiredPower,ActionPointValue::CausePVERush,$levelID))
         throw new UserException(UserException::UserPowerNotEnough);        
         $rewards = [];
 
         for($i = 0; $i < $rushCount; ++$i)
         {
-            $rewards = array_merge(PVERacingUtility::GetLevelReward($levelID),$rewards);
+            $rewards = array_merge(PVEUtility::GetLevelReward($levelID),$rewards);
         }
-
+        
         UserUtility::AddItems($userID,$rewards,ItemValue::CausePVEClearLevel);
-        $userHandler->HandlePower(-$requiredPower,ActionPointValue::CausePVERush,$levelID);
+        $rewards = PVEUtility::HandleRewardReturnValue($rewards);
+        
 
         $result = new ResultData(ErrorCode::Success);
         $result->rewards = $rewards;

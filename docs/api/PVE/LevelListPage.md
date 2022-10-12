@@ -43,6 +43,7 @@ Content Type: `application/json`
 | [rewardThrid](#rewards) | array | 章節第三階段獎勵內容 |
 | [rewardAcepptedInfo](#rewardAcepptedInfo) | object | 各階段獎牌獎勵的領取狀態 |
 | [levels](#levels) | array | 各關卡資訊集合 |
+| [player](#player) | array | 玩家當前角色資訊 |
 
 
 <br>
@@ -91,6 +92,62 @@ Content Type: `application/json`
 | canRush | bool | 可否使用快速通關 |
 <br>
 
+#### <span id="player">player 玩家當前角色內容 </span>
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| level | int | 當前等級 |
+| id | int | 角色編號 |
+| idName | string | 給前端顯示的角色編號字串 |
+| name | string | 角色暱稱，由使用者命名，若未編輯則與角色編號相同 |
+| [skills](#skills) | array | 角色持有的技能清單陣列 |
+| skillHole | array | 技能插槽陣列<br>陣列長度為插槽數量，陣列元素值為技能編號 |
+<br>
+#### <span id="skills">skills 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| id | int | 技能編號 |
+| name | string | 技能名稱代號 |
+| icon | string | 技能Icon代號 |
+| description | string | 技能敘述代號 |
+| level | int | 技能等級 |
+| slot | int | 所在插槽位置，0 為未裝備，1 為第一個插槽 |
+| energy | array | 使用條件能量值，陣列元素依序為 紅、黃、藍、綠 |
+| cooldown | float | 冷卻時間（秒） |
+| duration | float | 時效性<br>0 = 單次效果<br>大於 0 = 時效秒數<br>-1 = 持續到比賽結束 |
+| ranks | array | 技能星級 1 ~ 5 的 N 值陣列 |
+| maxDescription | string | 滿星效果敘述代號 |
+| maxCondition | int | [滿星效果條件](../codes/skill.md#maxCondition) |
+| maxConditionValue | int | 滿星效果條件值 |
+| attackedDesc | string | 被攻擊敘述代號 |
+| [effects](#effects) | array | 技能效果陣列 |
+| [maxEffects](#maxEffects) | array | 滿星技能效果陣列 |
+<br>
+
+##### <span id="effects">effects 技能效果內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| type | int | [效果類型](../codes/skill.md#effectType) |
+| formulaValue | float | 公式計算結果的效果值 |
+| allRankFormulaValue | array | 各等級公式計算結果的效果值 |
+
+<br>
+
+##### <span id="maxEffects">maxEffects 滿星技能效果內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| type | int | [滿星效果類型](../codes/skill.md#maxEffectType) |
+| target | int | [作用對象](../codes/skill.md#target) |
+| formulaValue | float | 公式計算結果的效果值 |
+| allRankFormulaValue | array | 各等級公式計算結果的效果值 |
 
 <br>
 
@@ -101,7 +158,7 @@ Content Type: `application/json`
             "message": ""
         },
         "name": "",
-        "chapterMedal": 8,
+        "chapterMedal": 5,
         "currentPower": 300,
         "medalAmountFirst": 3,
         "rewardFirst": [
@@ -222,7 +279,7 @@ Content Type: `application/json`
         ],
         "rewardAcepptedInfo": {
             "firstReward": false,
-            "secondReward": true,
+            "secondReward": false,
             "thirdReward": false
         },
         "levels": [
@@ -287,7 +344,7 @@ Content Type: `application/json`
                 "name": "",
                 "description": "",
                 "recommendLevel": 0,
-                "currentMedalAmount": 3,
+                "currentMedalAmount": 2,
                 "scene": 1001,
                 "sceneName": "9001",
                 "enviroment": 1,
@@ -336,14 +393,14 @@ Content Type: `application/json`
                         ]
                     }
                 ],
-                "canRush": true
+                "canRush": false
             },
             {
                 "id": 103,
                 "name": "",
                 "description": "",
                 "recommendLevel": 0,
-                "currentMedalAmount": 2,
+                "currentMedalAmount": 0,
                 "scene": 1001,
                 "sceneName": "9001",
                 "enviroment": 1,
@@ -351,9 +408,9 @@ Content Type: `application/json`
                 "windDirection": 4,
                 "windSpeed": 25,
                 "lighting": 2,
-                "isUnlock": true,
+                "isUnlock": false,
                 "powerRequired": 0,
-                "hasCleared": true,
+                "hasCleared": false,
                 "firstReward": [
                     {
                         "itemID": -3,

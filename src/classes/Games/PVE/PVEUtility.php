@@ -58,12 +58,14 @@ class PVEUtility
         $temp = [];
         foreach($rewards as $reward)
         {
-            $temp[$reward->ItemID] = $reward->Amount;
+            $temp[$reward->ItemID] = isset($temp[$reward->ItemID]) ? 
+                                    $temp[$reward->ItemID] + $reward->Amount :
+                                    $reward->Amount;
         }
         $rt = [];
         foreach($temp as $itemID => $amount)
         {
-            $rt = 
+            $rt[] = 
             [
                 'itemID' => $itemID,
                 'icon' => ItemInfoPool::Instance()->{$itemID}->Icon,
@@ -72,4 +74,24 @@ class PVEUtility
         }
         return $rt;
     }
+        //獲取獎勵
+    public static function GetLevelReward(int $levelID) : array
+    {
+        $userID = $_SESSION[Sessions::UserID];
+        $userPVEHandler = new UserPVEHandler($userID);
+        $levelInfo = (new PVELevelHandler($levelID))->GetInfo();
+        $susRewardHandler = new RewardHandler($levelInfo->sustainRewardID);
+        $susReward = array_values($susRewardHandler->GetItems()); 
+
+        //已通關過。
+        if($userPVEHandler->HasClearedLevel($levelInfo->chapterID,$levelID))
+        {
+            return $susReward;
+        }
+        $firstRewardHandler = new RewardHandler($levelInfo->firstRewardID);
+        $firstReward = array_values($firstRewardHandler->GetItems());
+        return array_merge($firstReward,$susReward);        
+    }
+
+
 }

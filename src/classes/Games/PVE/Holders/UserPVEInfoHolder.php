@@ -15,4 +15,5 @@ class UserPVEInfoHolder extends stdClass
      */
     public array $levelProcess;
     public int|null $currentProcessingLevel;
+    public int $raceRoomID;
 }

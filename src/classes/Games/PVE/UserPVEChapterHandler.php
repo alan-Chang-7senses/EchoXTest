@@ -49,7 +49,7 @@ class UserPVEChapterHandler
     public function IsRewardAccepted(int $chapterID, int $chapterRewardID) : bool
     {
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rt = $accessor->FromTable('UserPVEChapter',$chapterID)
+        $rt = $accessor->FromTable('UserPVEChapterReward',$chapterID)
                  ->WhereEqual('UserID',$_SESSION[Sessions::UserID])
                  ->WhereEqual('ChapterID',$chapterID)
                  ->WhereEqual('ChapterRewardID',$chapterRewardID)

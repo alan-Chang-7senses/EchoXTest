@@ -2,33 +2,11 @@
 
 namespace Games\PVE;
 
-use Consts\Sessions;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
-use Games\Users\RewardHandler;
 
 class PVERacingUtility
-{
-        
-    //獲取獎勵
-    public static function GetLevelReward(int $levelID) : array
-    {
-        $userID = $_SESSION[Sessions::UserID];
-        $userPVEHandler = new UserPVEHandler($userID);
-        $levelInfo = (new PVELevelHandler($levelID))->GetInfo();
-        $susRewardHandler = new RewardHandler($levelInfo->sustainRewardID);
-        $susReward = array_values($susRewardHandler->GetItems()); 
-
-        //已通關過。
-        if($userPVEHandler->HasClearedLevel($levelInfo->chapterID,$levelID))
-        {
-            return $susReward;
-        }
-        $firstRewardHandler = new RewardHandler($levelInfo->firstRewardID);
-        $firstReward = array_values($firstRewardHandler->GetItems());
-        return array_merge($firstReward,$susReward);        
-    }
-    
+{   
     public static function GetBotInfo(int $playerID) : array
     {
         $playerHandler = new PlayerHandler($playerID);
@@ -43,11 +21,7 @@ class PVERacingUtility
         ];
         
         return $info;    
-    }
-
-    
-
-
+    }    
     // private static function ReleasePVERaceRoom(UserHandler $userHandler)
     // {
     //     $userInfo = $userHandler->GetInfo();

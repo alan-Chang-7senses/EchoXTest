@@ -48,10 +48,21 @@ CREATE TABLE IF NOT EXISTS `UserPVELevel` (
   `LevelID` int(11) NOT NULL DEFAULT 0 COMMENT '關卡ID',
   `MedalAmount` tinyint(4) NOT NULL DEFAULT 0 COMMENT '獲得獎牌數量',
   `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '關卡進度。0閒置、1進行中',
+  `RaceRoomID` int(11) NOT NULL DEFAULT 0 COMMENT '競賽房間編號',
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '通關時間',
   PRIMARY KEY (`Serial`),
   UNIQUE KEY `UserID_LevelID` (`UserID`,`LevelID`) USING BTREE,
   KEY `MedalAmount` (`MedalAmount`),
   KEY `Process` (`Status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='使用者PVE關卡狀態';
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COMMENT='使用者PVE通關狀態';
+
+CREATE TABLE IF NOT EXISTS `UserPVEChapterReward` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `ChapterID` int(11) NOT NULL DEFAULT 0 COMMENT '章節編號',
+  `ChapterRewardID` tinyint(4) NOT NULL DEFAULT 0 COMMENT '章節獎勵編號',
+  PRIMARY KEY (`Serial`),
+  UNIQUE KEY `ChapterID` (`ChapterID`,`ChapterRewardID`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='玩家PVE章節領獎資訊';
 

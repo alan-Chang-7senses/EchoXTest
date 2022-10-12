@@ -46,7 +46,9 @@
 		- [離開房間](PVP/LeaveRoom.md)。
 	- PVE：
 		- [章節列表頁面](PVE/ChapterListPage.md)。
-		- [關卡列表頁面](PVE/LevelListPage.md)。	
+		- [關卡列表頁面](PVE/LevelListPage.md)。
+		- [取得章節獎牌獎勵](PVE/PVEMedalReward.md)。
+		- [一鍵通關](PVE/PVERush.md)。	
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。

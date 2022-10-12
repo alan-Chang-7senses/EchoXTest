@@ -7,6 +7,7 @@ use Accessors\PoolAccessor;
 use Consts\EnvVar;
 use Games\Accessors\PVEAccessor;
 use Games\Consts\PVEValue;
+use Games\Consts\RaceValue;
 use Games\PVE\Holders\UserPVEInfoHolder;
 use Games\PVE\PVELevelHandler;
 use Games\PVE\UserPVEHandler;
@@ -39,6 +40,7 @@ class UserPVEPool extends PoolAccessor
         {
             $pveInfo = (new PVELevelHandler($row->LevelID))->GetInfo();
             $holder->levelProcess[$pveInfo->chapterID][$row->LevelID] = $row->MedalAmount;
+            $holder->raceRoomID = $row->RaceRoomID;
             if($row->Status == PVEValue::LevelStatusProcessing)
             {
                 $holder->currentProcessingLevel =  $row->LevelID;
@@ -70,6 +72,8 @@ class UserPVEPool extends PoolAccessor
         $data->currentProcessingLevel = $bind['Status'] == PVEValue::LevelStatusProcessing ? 
                                         $bind['LevelID'] :
                                         null;
+        if(!isset($bind['RaceRoomID']))$bind['RaceRoomID'] = RaceValue::NotInRoom;
+        $data->raceRoomID = $bind['RaceRoomID'];
         //取代的話會造成有不該刷新的值被刷新。所以所有欄位的資料都需要有                                        
         (new PVEAccessor())->AddLevelInfo($bind);
         return $data;
