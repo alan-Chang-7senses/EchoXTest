@@ -12,6 +12,8 @@ use Games\Exceptions\RaceException;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
+use Games\Pools\RaceVerifyPool;
+use Games\Pools\RaceVerifyScenePool;
 use Games\Pools\SingleRankingRewardPool;
 use Games\Pools\UserPool;
 use Games\Races\RaceUtility;
@@ -53,20 +55,50 @@ class FinishRace extends BaseRace{
         if($playerCount < RaceValue::RacePlayerMin) throw new RaceException(RaceException::IncorrectPlayerNumber);
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function() use ($accessor, $raceInfo){
+        $accessor->Transaction(function() use ($accessor, $racePlayersArr){
             
-            $racePlayerPool = RacePlayerPool::Instance();
+            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values($racePlayersArr))->ForUpdate()->FetchAll();
             
-            $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_values((array)$raceInfo->racePlayers))
-                    ->ForUpdate()->FetchAll();
+            $raceVerifyScenePool = RaceVerifyScenePool::Instance();
+            $raceVerifyPool = RaceVerifyPool::Instance();
             
             $duration = [];
-            foreach($rows as $row) $duration[$row->RacePlayerID] = $row->FinishTime - $row->StartTime;
+            $finishTime = [];
+            foreach($rows as $row){
+                
+                if($row->FinishTime == 0){
+                    $totalDistance = $raceVerifyScenePool->{$this->userInfo->scene}->{$row->TrackNumber}->total;
+                    $raceVerifyInfo = $raceVerifyPool->{$row->RacePlayerID};
+                    $row->FinishTime = $raceVerifyInfo->updateTime + ($totalDistance - $raceVerifyInfo->serverDistance) / $raceVerifyInfo->speed;
+                    $finishTime[$row->RacePlayerID] = $row->FinishTime;
+                }
+                $duration[$row->RacePlayerID] = $row->FinishTime - $row->StartTime;
+            }
+            
+            if(count($finishTime) == count($rows)) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $row->PlayerID]);
+            
             asort($duration);
+            
+            $racePlayerPool = RacePlayerPool::Instance();
+            $currentTime = $GLOBALS[Globals::TIME_BEGIN];
             $ranking = 0;
-            $accessor->PrepareName('RacePlayerRanking');
             foreach(array_keys($duration) as $id){
-                $accessor->ClearCondition()->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => ++$ranking]);
+                
+                $accessor->ClearCondition();
+                
+                if(isset($finishTime[$id])){
+                    $accessor->PrepareName('RacePlayerFinishg');
+                    $accessor->WhereEqual('RacePlayerID', $id)->Modify([
+                        'Ranking' => ++$ranking,
+                        'UpdateTime' => $currentTime,
+                        'FinishTime' => $finishTime[$id],
+                    ]);
+                    
+                } else{
+                    $accessor->PrepareName('RacePlayerRanking');
+                    $accessor->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => ++$ranking]);
+                }
+                
                 $racePlayerPool->Delete($id);
             }
         });
@@ -81,7 +113,7 @@ class FinishRace extends BaseRace{
         foreach ($raceInfo->racePlayers as $racePlayerID) {
             
             $racePlayerInfo = $racePlayerPool->$racePlayerID;
-            if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
+//            if($racePlayerInfo->status != RaceValue::StatusReach) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $racePlayerInfo->player]);
             if($racePlayerInfo->ranking > $playerCount) throw new RaceException (RaceException::RankingNoMatch, [
                 '[player]' => $racePlayerInfo->player,
                 '[ranking]' => $racePlayerInfo->ranking,
