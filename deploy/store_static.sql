@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `StoreCounters` (
   `CIndex` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '索引值',
   `GroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '群組',
   `CounterID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '專櫃Id',
-  `ItemID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '商品Id',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `Inventory` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '庫存',
   `Price` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '售價',
@@ -32,12 +32,24 @@ CREATE TABLE IF NOT EXISTS `StoreCounters` (
   KEY `GroupID` (`GroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='一般商店';
 
--- 正在傾印表格  koa_static.StoreCounters 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.StoreCounters 的資料：~3 rows (近似值)
 /*!40000 ALTER TABLE `StoreCounters` DISABLE KEYS */;
 INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount`, `Inventory`, `Price`, `Currency`, `Promotion`) VALUES
-	(1, 1, 0, 0, 0, 0, 0, 0, 0),
-	(2, 1, 0, 0, 0, 0, 0, 0, 0),
-	(3, 0, 0, 0, 0, 0, 0, 0, 0);
+	(1, 1, 1001, 1001, 1, 3, 100, 1, 3),
+	(2, 1, 1001, 1001, 1, 3, 100, 1, 3),
+	(3, 1, 1001, 1001, 1, 3, 100, 1, 3),
+	(4, 1, 1001, 1001, 1, 3, 100, 1, 3),
+	(5, 1, 1001, 1001, 1, 3, 100, 1, 3),
+	(6, 2, 2001, 1001, 2, 3, 100, 1, 3),
+	(7, 2, 2001, 1001, 3, 3, 100, 1, 3),
+	(8, 2, 2001, 1001, 4, 3, 100, 1, 3),
+	(9, 2, 2001, 1001, 1, 3, 100, 1, 3),
+	(10, 2, 2001, 1001, 1, 3, 100, 1, 3),
+	(11, 2, 2002, 1001, 1, 3, 100, 1, 3),
+	(12, 2, 2002, 1001, 1, 3, 100, 1, 3),
+	(13, 2, 2002, 1001, 1, 3, 100, 1, 3),
+	(14, 2, 2002, 1001, 1, 3, 100, 1, 3),
+	(15, 2, 2002, 1001, 1, 3, 100, 1, 3);
 /*!40000 ALTER TABLE `StoreCounters` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StoreData 結構
@@ -57,10 +69,10 @@ CREATE TABLE IF NOT EXISTS `StoreData` (
 -- 正在傾印表格  koa_static.StoreData 的資料：~4 rows (近似值)
 /*!40000 ALTER TABLE `StoreData` DISABLE KEYS */;
 INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `StoreType`, `UIStyle`, `FixedGroup`, `StochasticGroup`, `RefreshCount`, `RefreshCost`, `RefreshCostCurrency`) VALUES
-	(1, 1, 1, 1, 0, 0, 0, 0, 0),
-	(2, 1, 2, 2, 0, 0, 0, 0, 0),
-	(3, 1, 2, 3, 0, 0, 6, 1, 1),
-	(4, 1, 2, 4, 0, 0, 10, 1, 2);
+	(1, 1, 1, 1, 1, 0, 0, 0, 0),
+	(2, 1, 2, 2, 1, 2, 6, 50, 1),
+	(3, 1, 2, 3, 3, 4, 3, 100, 2),
+	(4, 1, 2, 4, 5, 6, 3, 200, 2);
 /*!40000 ALTER TABLE `StoreData` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StorePurchase 結構
@@ -68,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `StorePurchase` (
   `PIndex` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '索引值',
   `GroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '群組',
   `PurchaseID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '課金Id',
-  `ItemID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '商品Id',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `IAP` varchar(20) NOT NULL DEFAULT '0' COMMENT '蘋果商品',
   `IAB` varchar(20) NOT NULL DEFAULT '0' COMMENT '安卓商品',
@@ -76,8 +88,17 @@ CREATE TABLE IF NOT EXISTS `StorePurchase` (
   KEY `GroupID` (`GroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值商店';
 
--- 正在傾印表格  koa_static.StorePurchase 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.StorePurchase 的資料：~8 rows (近似值)
 /*!40000 ALTER TABLE `StorePurchase` DISABLE KEYS */;
+INSERT INTO `StorePurchase` (`PIndex`, `GroupID`, `PurchaseID`, `ItemID`, `Amount`, `IAP`, `IAB`) VALUES
+	(1, 1, 1001, -3, 1, 'com.petarush.IAP30', 'exampleSku30'),
+	(2, 1, 1001, -3, 1, 'com.petarush.IAP60', 'exampleSku60'),
+	(3, 1, 1001, -3, 1, 'com.petarush.IAP90', 'exampleSku90'),
+	(4, 1, 1001, -3, 1, 'com.petarush.IAP120', 'exampleSku120'),
+	(5, 1, 1001, -3, 1, 'com.petarush.IAP150', 'exampleSku150'),
+	(6, 1, 1001, -3, 1, 'com.petarush.IAP180', 'exampleSku180'),
+	(7, 1, 1001, -3, 1, 'com.petarush.IAP210', 'null'),
+	(8, 1, 1001, -3, 1, 'com.petarush.IAP240', '');
 /*!40000 ALTER TABLE `StorePurchase` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
