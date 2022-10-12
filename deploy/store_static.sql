@@ -34,8 +34,10 @@ CREATE TABLE IF NOT EXISTS `StoreCounters` (
 
 -- 正在傾印表格  koa_static.StoreCounters 的資料：~0 rows (近似值)
 /*!40000 ALTER TABLE `StoreCounters` DISABLE KEYS */;
-INSERT INTO `StoreCounters` (`StoreIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount`, `Inventory`, `Price`, `Currency`, `Promotion`) VALUES
-	(1, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount`, `Inventory`, `Price`, `Currency`, `Promotion`) VALUES
+	(1, 1, 0, 0, 0, 0, 0, 0, 0),
+	(2, 1, 0, 0, 0, 0, 0, 0, 0),
+	(3, 0, 0, 0, 0, 0, 0, 0, 0);
 /*!40000 ALTER TABLE `StoreCounters` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StoreData 結構
