@@ -175,6 +175,8 @@ class FinishRace extends BaseRace{
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);
         
+        RaceUtility::FinishRestoreLevel(array_column($users, 'player'));
+        
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         foreach($users as $user){    
             if(UserUtility::IsNonUser($user['id'])) continue;
