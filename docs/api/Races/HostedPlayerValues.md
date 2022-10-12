@@ -59,6 +59,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | h | float | H值 |
 | s | float | S值 |
+| energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
 | distance | float | Server移動距離 |
 
 ### Example
@@ -69,5 +70,12 @@ Content Type: `application/json`
 	        "message": ""
 	    },
 	    "h": 1.0774688179425564,
-	    "s": 1.4908666666666668
+	    "s": 1.4908666666666668,
+    	"energy": [
+    	    0,
+    	    0,
+    	    0,
+    	    0
+    	],
+	    "distance": 3447.71
 	}
