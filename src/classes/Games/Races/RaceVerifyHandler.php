@@ -14,10 +14,10 @@ use Games\Pools\RaceVerifyPool;
 use Games\Pools\RaceVerifyScenePool;
 use Games\Pools\UserPool;
 use Games\Races\Holders\RaceVerifyHolder;
+use Games\Races\RaceUtility;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use stdClass;
-
 /*
  * Description of RaceVerifyHandler
  */
@@ -258,6 +258,8 @@ class RaceVerifyHandler {
             }
         });
 
+        RaceUtility::FinishRestoreLevel([$userInfo->player]);
+        
         UserPool::Instance()->Delete($userInfo->id);
         RacePool::Instance()->Delete($userInfo->race);
         RacePlayerPool::Instance()->Delete($this->raceVerifyInfo->racePlayerID);

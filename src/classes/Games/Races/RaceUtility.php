@@ -125,7 +125,7 @@ class RaceUtility {
 
     /**
      * 結束競賽狀態後恢復角色等級
-     * 除完賽、棄賽、清理問題賽局外，請勿使用。
+     * 除完賽、棄賽、清理問題賽局、作弊出局外，請勿使用。
      * @param array $playerIDs
      * @return void
      */
