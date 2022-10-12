@@ -58,6 +58,7 @@ Content Type: `application/json`
 | h | float | H值 |
 | s | float | S值 |
 | energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
+| distance | float | Server移動距離 |
 
 ### Example
 
@@ -73,5 +74,6 @@ Content Type: `application/json`
     	    0,
     	    0,
     	    0
-    	]
+    	],
+	    "distance": 3447.71
 	}

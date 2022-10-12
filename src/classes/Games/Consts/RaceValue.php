@@ -37,6 +37,7 @@ class RaceValue {
     const StatusFinish = 3;
     const StatusGiveUp = 4;
     const StatusStart = 5;
+    const StatusRelease = 6;
     
     const StepFinishSuccess = 3;
 
@@ -112,6 +113,22 @@ class RaceValue {
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
     const LobbyPVE = 6;
+    
+    const LobbyPlayerLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinPlayerLevel',
+        self::LobbyPT => 'LobbyPTPlayerLevel',
+        self::LobbyStudy => 'LobbyStudyPlayerLevel',
+        self::LobbyCoinB => 'LobbyCoinPlayerLevel',
+        self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
+    ];
+    
+    const LobbySkillLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinSkillLevel',
+        self::LobbyPT => 'LobbyPTSkillLevel',
+        self::LobbyStudy => 'LobbyStudySkillLevel',
+        self::LobbyCoinB => 'LobbyCoinSkillLevel',
+        self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
+    ];
     
     const RoomIdle = 0;
     const RoomMatching = 1;
