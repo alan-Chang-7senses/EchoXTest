@@ -126,10 +126,10 @@ class RaceVerifyHandler {
             return RaceVerifyValue::VerifyNoInfo;
         }
 
-        if ($this->raceVerifyInfo->isCheat == RaceVerifyValue::VerifyCheat) {
-            // 玩家已經離開比賽了,不處理作弊檢查
-            return RaceVerifyValue::VerifyCheat;
-        }
+//        if ($this->raceVerifyInfo->isCheat == RaceVerifyValue::VerifyCheat) {
+//            // 玩家已經離開比賽了,不處理作弊檢查
+//            return RaceVerifyValue::VerifyCheat;
+//        }
 
         $this->raceVerifyInfo->verifyState = $verifyState;
 
@@ -157,7 +157,7 @@ class RaceVerifyHandler {
 
         if ($isCheat == RaceVerifyValue::VerifyCheat) {
             if ($this->raceVerifyInfo->isCheat == RaceVerifyValue::VerifyNotCheat) {
-                $this->raceVerifyInfo->isCheat = RaceVerifyValue::VerifyCheat;
+                //$this->raceVerifyInfo->isCheat = RaceVerifyValue::VerifyCheat;
                 $this->HandleCheatUser();
             }
         }
@@ -222,6 +222,10 @@ class RaceVerifyHandler {
         //把玩家踢出比賽
         $racePlayerHandler = new RacePlayerHandler($this->raceVerifyInfo->racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
+        if (($racePlayerInfo->user != $_SESSION[Sessions::UserID]) || //如果是託管,先不踢出
+                ($racePlayerInfo->status == RaceValue::StatusGiveUp)) { //已經離開比賽
+            return;
+        }
 
         $handler = new UserHandler($racePlayerInfo->user);
         $userInfo = $handler->GetInfo();
@@ -229,7 +233,7 @@ class RaceVerifyHandler {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function () use ($accessor, $userInfo) {
 
-            $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+            $currentTime = (float) $GLOBALS[Globals::TIME_BEGIN];
 
             $race = $accessor->FromTable('Races')->WhereEqual('RaceID', $userInfo->race)->ForUpdate()->Fetch();
             $racePlayerIDs = json_decode($race->RacePlayerIDs);
@@ -238,19 +242,20 @@ class RaceVerifyHandler {
             $accessor->Modify(['RacePlayerIDs' => json_encode($racePlayerIDs)]);
 
             if (!empty($racePlayerID)) {
+
                 $accessor->ClearCondition()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
                     'Status' => RaceValue::StatusGiveUp,
                     'UpdateTime' => $currentTime,
                 ]);
-            }
 
-            $accessor->ClearCondition();
-            $accessor->FromTable('Users')->WhereEqual('UserID', $userInfo->id, 'id')->Modify([
-                'Race' => RaceValue::NotInRace,
-                'Lobby' => RaceValue::NotInLobby,
-                'Room' => RaceValue::NotInRoom,
-                'UpdateTime' => $currentTime,
-            ]);
+                $accessor->ClearCondition();
+                $accessor->FromTable('Users')->WhereEqual('UserID', $userInfo->id, 'id')->Modify([
+                    'Race' => RaceValue::NotInRace,
+                    'Lobby' => RaceValue::NotInLobby,
+                    'Room' => RaceValue::NotInRoom,
+                    'UpdateTime' => $currentTime,
+                ]);
+            }
         });
 
         UserPool::Instance()->Delete($userInfo->id);
