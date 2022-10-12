@@ -7,10 +7,10 @@ use Consts\EnvVar;
 use Consts\Sessions;
 use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
+use Games\Pools\PlayerPool;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
-
 /**
  * Description of RaceUtility
  *
@@ -123,4 +123,20 @@ class RaceUtility {
         return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
     }
 
+    /**
+     * 結束競賽狀態後恢復角色等級
+     * 除完賽、棄賽、清理問題賽局、作弊出局外，請勿使用。
+     * @param array $playerIDs
+     * @return void
+     */
+    public static function FinishRestoreLevel(array $playerIDs) : void {
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        
+        $values = $accessor->valuesForWhereIn($playerIDs);
+        $accessor->executeBind('UPDATE PlayerLevel SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
+        $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
+        
+        PlayerPool::Instance()->DeleteAll($playerIDs);
+    }
 }
