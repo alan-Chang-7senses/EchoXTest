@@ -1634,8 +1634,8 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sende
 	(29, 10, 0, 'Item collection', 'You don\'t have enough vacant slots in your bag,please make some space and try again.', 'Sender: Direct Team', ''),
 	(30, 10, 2, 'Item collection', 'You don\'t have enough vacant slots in your bag,please make some space and try again.', 'Sender: Direct Team', ''),
 	(31, 10, 12, '道具領取', '由於物品數量已超過上限，請整理背包後再從附件領取。', '寄件人：研發團隊', ''),
-	(32, 11, 12, '測試數值變更通知', '親愛的玩家~您好！\n\n為求遊戲的平衡性，在 2022 年 10 月份的測試期間，開發團隊將會持續觀察競賽紀錄，視情況固定於每日下午14:00 進行針對 Peta 的適應力數值與技能效果數值進行調整測試。\n\n測試期間，玩家若有發現技能的數值有所改變，或是自己的 Peta 在特定的天氣環境下，跑得更快或更慢，皆屬於正常情形。\n\n最後提醒大家，開發團隊將於獅子週的測試結束後，會調整各部位的技能關係，讓每一隻純種獅子 Peta 同時具有攻擊技能與受擊技能，使其在競賽策略上將會有更好的平衡性。', '寄件人：研發團隊', ''),
-	(33, 11, 2, 'Skill Effect Modified in PetaRush Demo Version', 'Dear player,\nTo keep the game balance, we will observe each gaming process and modify Petas’ adaption and skill if necessary.\nThe modification is expected to be executed at 14:00 (GMT+8) every day for all of October 2022.\nTherefore, it’s normal if you find out the skill effect may be changed or Peta’s speed may fluctuate under a certain environment.\nBefore you finish reading this letter, here is a friendly reminder for you.\nTo achieve a better game balance in PetaRush, we will modify the skill of each part of Peta.\nThe Peta Genesis lion will hence be given the attack skill and on-hit skill both.\nThis modification is expected to be executed after the lion week.', 'Sender: Direct Team', '');
+	(32, 11, 12, 'DEMO4 測試說明', '親愛的玩家~您好！\n為求遊戲的平衡性，DEMO4的測試，是以與Demi-Holim NFT合作的Demi Peta為主，\n玩家可以從本次測試的技能與外觀的關係，一窺預定在10/18解盲的Demi Peta的一部分技能組合。\n在這次DEMO4的技能，都暫時用英數縮寫做為技能名稱，待測試結束後會公布正式的技能名稱。\n如之前所公告的，PetaRush在10月份密集的做大量DEMO測試，是因為要調整數值平衡，也會視情況固定於每日下午14:00進行針對競賽數值做平衡調整。\n過去，已經調整「天氣適應力的影響效果較強」以及「干擾技能效果的數值提高」與「被妨礙技能條件的效果數值提高」。\n在本次的測試，則是將「增益效果的上坡、平地、下坡、順風、側風、逆風的適應力數值提升」，因為這些效果要Peta在特定的位置上才會有用，所以期待本次的調整，可以讓抓對位置施放的Peta會跑的更快、體力消耗更少。\nPetaRush開發團隊敬上', '寄件人：研發團隊', ''),
+	(33, 11, 2, 'Demo 4 Notification', 'We are glad to announce that the PetaRush Demo 4 features the Demi-Holim NFT. This is to ensure the game balance in the future after they go live! Additionally, it offers you a sneak peek at what powerful skills Demi Peta may have once the blind box reveals itself on Oct 18th!\nHere are a few things we hope you know before the gameplay,\nFirst, the skill names you see at Demo version are the abbreviations combines with English characters and numbers. We will announce their official names at the end of Demo version gameplay. Please look forward to it!\nSecond, we have announced that the PetaRush team will change skill effects at 14:00 every day to ensure the game balance. Before, we have optimized the following skills, “Decrease the impact of Peta’s adaption to weathers,” “Increase attack skill effects,” and “Increase on-hit skill effects.” This time, we will optimize the skills brings bonus effects to the landscapes (Uphill, Downhill, and Flat) and wind directions (Tailwind, Headwind, and Crosswind.) Since we have noticed these skills require Peta to be in the specific environment, we hope Petas can earn more effects once they successfully activate the skills under such restricted conditions.', 'Sender: Direct Team', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
@@ -1662,7 +1662,7 @@ CREATE TABLE IF NOT EXISTS `RaceSceneVerify` (
   PRIMARY KEY (`SceneID`,`TrackNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='比賽場景驗證表';
 
--- 正在傾印表格  koa_static.RaceSceneVerify 的資料：8 rows
+-- 正在傾印表格  koa_static.RaceSceneVerify 的資料：~8 rows (近似值)
 /*!40000 ALTER TABLE `RaceSceneVerify` DISABLE KEYS */;
 INSERT INTO `RaceSceneVerify` (`SceneID`, `TrackNumber`, `BeginDistance`, `TotalDistance`) VALUES
 	(1001, 1, 0, 1286.5),
@@ -3324,7 +3324,7 @@ CREATE TABLE IF NOT EXISTS `VIPPrivilege` (
   PRIMARY KEY (`VIPRank`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='VIP用戶權限表';
 
--- 正在傾印表格  koa_static.VIPPrivilege 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_static.VIPPrivilege 的資料：~16 rows (近似值)
 /*!40000 ALTER TABLE `VIPPrivilege` DISABLE KEYS */;
 INSERT INTO `VIPPrivilege` (`VIPRank`, `Diamond`, `PowerLimit`, `PowerRate`, `UCGChain`, `TicketCoin`, `TicketCoinLimit`, `TicketQualifying`, `TicketQualifyingLimit`, `TicketMaxLevel`, `TicketMaxLevelLimit`, `FreePlayer`, `PVESpeedRun`) VALUES
 	(0, 0, 100, 1200, 0, 1, 3, 0, 0, 0, 0, NULL, 0),
