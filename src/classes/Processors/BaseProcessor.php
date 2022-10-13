@@ -7,11 +7,11 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Predefined;
 use Consts\Sessions;
-use Exception;
 use Exceptions\NormalException;
 use Games\Accessors\GameLogAccessor;
 use Helpers\LogHelper;
 use Holders\ResultData;
+use Throwable;
 /**
  * Description of BaseProcessor
  *
@@ -39,14 +39,12 @@ abstract class BaseProcessor {
     
     public function __destruct() {
         
-        restore_error_handler();
-        
         try{
             
             $this->RecordLog();
             (new GameLogAccessor())->AddBaseProcess();
             
-        } catch (Exception $ex) {
+        } catch (Throwable $ex) {
 
             LogHelper::Save($ex);
         }
