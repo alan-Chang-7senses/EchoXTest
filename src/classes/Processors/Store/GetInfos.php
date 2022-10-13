@@ -10,7 +10,10 @@ use Processors\BaseProcessor;
 class GetInfos extends BaseProcessor {
 
     public function Process(): ResultData {
+        
+        
                
+       
         return new ResultData(ErrorCode::Success);
     }
 
