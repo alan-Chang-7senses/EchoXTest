@@ -28,12 +28,12 @@ class CurrentPlayer extends BaseProcessor{
     public function Process(): ResultData {
         
         $action = InputHelper::post('action');
+        $playerID = InputHelper::post('player');
         
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userInfo = $userHandler->GetInfo();
-        if($action == self::ActionAssign && $userInfo->race != RaceValue::NotInRace) throw new RaceException(RaceException::UserInRace);
+        if(($action == self::ActionAssign || empty($playerID)) && $userInfo->race != RaceValue::NotInRace) throw new RaceException(RaceException::UserInRace);
 
-        $playerID = InputHelper::post('player');
         if(empty($playerID)){
             $playerID = $userInfo->players[0];
             $action = self::ActionAssign;
