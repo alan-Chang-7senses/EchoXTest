@@ -8,6 +8,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
+use Consts\ResposeType;
 use Exception;
 use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
@@ -24,7 +25,7 @@ use Holders\ResultData;
 class callback extends BaseProcessor{
     
     protected bool $mustSigned = false;
-    protected bool $resposeJson = false;
+    protected int $resposeType = ResposeType::UniWebView;
 
     public function Process(): ResultData {
         
