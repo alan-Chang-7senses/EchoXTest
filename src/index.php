@@ -8,6 +8,16 @@ spl_autoload_register(function($className){
     if(file_exists($file)) require $file;
 });
 
+set_error_handler(function($errno, $message){
+    
+    if($errno == E_NOTICE || $errno == E_WARNING){
+//        throw new ErrorException($message, $errno, $errno, $file, $line);
+        throw new Error($message, $errno);
+    }
+    
+    return false;
+});
+
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;

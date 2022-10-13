@@ -39,6 +39,8 @@ abstract class BaseProcessor {
     
     public function __destruct() {
         
+        restore_error_handler();
+        
         try{
             
             $this->RecordLog();
