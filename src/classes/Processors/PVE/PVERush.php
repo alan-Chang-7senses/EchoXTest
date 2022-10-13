@@ -3,12 +3,16 @@
 namespace Processors\PVE;
 
 use Consts\ErrorCode;
+use Consts\Globals;
 use Consts\Sessions;
+use Games\Accessors\PVEAccessor;
 use Games\Consts\ActionPointValue;
 use Games\Consts\ItemValue;
 use Games\Consts\PVEValue;
+use Games\Consts\SyncRate;
 use Games\Exceptions\PVEException;
 use Games\Exceptions\UserException;
+use Games\Players\SyncRateUtility;
 use Games\PVE\PVELevelHandler;
 use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
@@ -47,6 +51,9 @@ class PVERush extends BaseProcessor
         
         UserUtility::AddItems($userID,$rewards,ItemValue::CausePVEClearLevel);
         $rewards = PVEUtility::HandleRewardReturnValue($rewards);
+        $playerID = $userHandler->GetInfo()->player;
+        $syncIncrease = SyncRateUtility::GainSync($playerID,SyncRate::PVE,$rushCount);
+        (new PVEAccessor())->AddPVEClearedLog($playerID,$levelID,$rewards,1,$syncIncrease,$GLOBALS[Globals::TIME_BEGIN],$rushCount);
         
 
         $result = new ResultData(ErrorCode::Success);

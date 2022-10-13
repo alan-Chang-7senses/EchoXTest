@@ -4,10 +4,13 @@ namespace Processors\PVE;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Accessors\PVEAccessor;
 use Games\Consts\ItemValue;
 use Games\Consts\PVEValue;
 use Games\Consts\RaceValue;
+use Games\Consts\SyncRate;
 use Games\Exceptions\PVEException;
+use Games\Players\SyncRateUtility;
 use Games\PVE\PVEUtility;
 use Games\PVE\UserPVEHandler;
 use Games\PVP\RaceRoomsHandler;
@@ -63,8 +66,16 @@ class PVEFinish extends BaseProcessor
         // //獎牌不為0，且獎牌大於原先獎牌數量，才存檔獎牌。
         $bind['medalAmount'] = $medalAmount ?? 0;
 
+        $syncIncrease = SyncRateUtility::GainSync($racePlayerInfo->player,SyncRate::PVE);
+        $pveAccessor = new PVEAccessor();
+        $row = $pveAccessor->rowCurrentProcessingLevelByUserID($userInfo->id);
+        $startTime = $row->UpdateTime;
+        
         //save會自動判斷獎牌數。
         $userPVEHandler->SaveLevel($bind);
+
+        if($isLevelClear)
+        $pveAccessor->AddPVEClearedLog($racePlayerInfo->player,$levelID,$items,$racePlayerInfo->ranking,$syncIncrease,$startTime);
 
         $result->isCleared = $isLevelClear;
         $result->items = $items;

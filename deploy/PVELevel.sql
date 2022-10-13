@@ -66,3 +66,27 @@ CREATE TABLE IF NOT EXISTS `UserPVEChapterReward` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='玩家PVE章節領獎資訊';
 
+ALTER TABLE `PlayerNFT`
+ADD COLUMN `TradeCount` smallint(6) NOT NULL DEFAULT 0 COMMENT '被交易次數';
+
+INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
+	('LobbyPVEPlayerLevel', '0', 'PVE指定角色等級(0=不指定)'),
+	('LobbyPVESkillLevel', '0', 'PVE指定技能等級(0=不指定)');
+
+USE `koa_log`;
+
+-- 傾印  資料表 koa_log.PVECleared 結構
+CREATE TABLE IF NOT EXISTS `PVECleared` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL DEFAULT 0,
+  `PlayerID` int(11) NOT NULL DEFAULT 0,
+  `LevelID` int(11) NOT NULL DEFAULT 0,
+  `Items` text NOT NULL DEFAULT '',
+  `SyncRate` int(11) NOT NULL DEFAULT 0,
+  `Ranking` tinyint(4) NOT NULL DEFAULT 0,
+  `ClearCount` smallint(6) NOT NULL DEFAULT 0,
+  `StartTime` int(11) NOT NULL DEFAULT 0,
+  `FinishTime` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Serial`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='PVE通關紀錄。';

@@ -120,6 +120,7 @@ class RaceValue {
         self::LobbyStudy => 'LobbyStudyPlayerLevel',
         self::LobbyCoinB => 'LobbyCoinPlayerLevel',
         self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
+        self::LobbyPVE => 'LobbyPVEPlayerLevel',
     ];
     
     const LobbySkillLevelConfig = [
@@ -128,6 +129,7 @@ class RaceValue {
         self::LobbyStudy => 'LobbyStudySkillLevel',
         self::LobbyCoinB => 'LobbyCoinSkillLevel',
         self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
+        self::LobbyPVE => 'LobbyPVESkillLevel',
     ];
     
     const RoomIdle = 0;

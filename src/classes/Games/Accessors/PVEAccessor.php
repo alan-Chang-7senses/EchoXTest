@@ -86,6 +86,23 @@ class PVEAccessor extends BaseAccessor
         return true;
     }
 
+    public function AddPVEClearedLog(int $playerID, int $levelID, mixed $items,int $ranking, int $sync, float $startTime, int $clearCount = 1)
+    {
+        $bind = 
+        [
+            'UserID' => $_SESSION[Sessions::UserID],
+            'PlayerID' => $playerID,
+            'LevelID' => $levelID,
+            'Items' => json_encode($items),
+            'SyncRate' => $sync,
+            'Ranking' => $ranking,
+            'StartTime' => (int)$startTime,
+            'ClearCount' => $clearCount,
+            'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
+        ];
+        $this->LogAccessor()->FromTable('PVECleared')->Add($bind);
+    }
+
 
     // public function AddPVERoom(int $levelID,array $seats) : bool|int
     // {

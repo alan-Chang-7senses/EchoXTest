@@ -13,9 +13,9 @@ class SyncRate {
     const Max = 10000;
     const Min = 0;
 
-    const PVEMultiplier = 0.1;
-    const PVPMultiplier = 2;
-    const ExpeditionMultiplier = 1;
+    const PVEMultiplier = 1;
+    const PVPMultiplier = 20;
+    const ExpeditionMultiplier = 10;
 
     const PVP = 0;
     const PVE = 1;

@@ -44,5 +44,6 @@ Content Type: `application/json`
             "message": ""
         }
         "power": 20,
-        "timeTillFull": 27570
+        "timeTillFull": 27570,
+        "rate": 400
     }

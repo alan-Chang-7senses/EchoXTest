@@ -25,7 +25,6 @@ class ChapterListPage extends BaseProcessor
         $result->power = $userInfo->power;
         $result->chapters = [];
         $userPVEHandler = new UserPVEHandler($userID);
-        $userPVEInfo = $userPVEHandler->GetInfo();
         
         foreach($chapterData as $id => $chapter)
         {
