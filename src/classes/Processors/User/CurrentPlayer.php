@@ -34,6 +34,11 @@ class CurrentPlayer extends BaseProcessor{
         if($action == self::ActionAssign && $userInfo->race != RaceValue::NotInRace) throw new RaceException(RaceException::UserInRace);
 
         $playerID = InputHelper::post('player');
+        if(empty($playerID)){
+            $playerID = $userInfo->players[0];
+            $action = self::ActionAssign;
+        }
+        
         if(!in_array($playerID, $userInfo->players)) throw new UserException(UserException::NotHoldPlayer, ['[player]' => $playerID]);
         
         if($action == self::ActionAssign) $userHandler->SaveData(['player' => $playerID]);
