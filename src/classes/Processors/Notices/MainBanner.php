@@ -21,7 +21,7 @@ class MainBanner extends BaseProcessor{
         $lang = InputHelper::post('lang');
         
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $rows = $accessor->SelectExpr('ImageURL AS image, PageURL AS page')->FromTable('MainBanner')->WhereEqual('Status', NoticeValue::StatusEnabled)->WhereEqual('Lang', $lang)->OrderBy('Serial')->FetchAll();
+        $rows = $accessor->SelectExpr('PageType AS type, ImageURL AS image, PageURL AS page')->FromTable('MainBanner')->WhereEqual('Status', NoticeValue::StatusEnabled)->WhereEqual('Lang', $lang)->OrderBy('Serial')->FetchAll();
         
         $result = new ResultData(ErrorCode::Success);
         $result->banner = $rows;
