@@ -106,6 +106,10 @@ class RaceValue {
     /**彎道x體力耗盡 後係數 */
     const MinusHPCurveBack = 0.25;
 
+    /**體力充沛S基數 */
+    const SValueBasePositiveHP = 0;
+    const SValueBaseMinusHP = 0;
+
     const LobbyNone = 0;
     const LobbyCoin = 1;
     const LobbyPT = 2;
