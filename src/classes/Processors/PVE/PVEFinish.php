@@ -66,7 +66,7 @@ class PVEFinish extends BaseProcessor
         // //獎牌不為0，且獎牌大於原先獎牌數量，才存檔獎牌。
         $bind['medalAmount'] = $medalAmount ?? 0;
 
-        $syncIncrease = SyncRateUtility::GainSync($racePlayerInfo->player,SyncRate::PVE);
+        $syncIncrease = $isLevelClear ? SyncRateUtility::GainSync($racePlayerInfo->player,SyncRate::PVE) : 0;
         $pveAccessor = new PVEAccessor();
         $row = $pveAccessor->rowCurrentProcessingLevelByUserID($userInfo->id);
         $startTime = $row->UpdateTime;

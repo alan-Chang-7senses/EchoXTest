@@ -40,6 +40,21 @@ CREATE TABLE IF NOT EXISTS `PVEChapter` (
   PRIMARY KEY (`ChapterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PVE章節資訊';
 
+INSERT INTO `PVELevel` (`LevelID`, `ChapterID`, `PreLevel`, `RecommendLevel`, `Power`, `LevelName`, `Description`, `SceneID`, `UserTrackNumber`, `FirstRewardID`, `SustainRewardID`, `FirstItemIDs`, `SustainItemIDs`, `FirstAI`, `FirstAITrackNumber`, `SecondAI`, `SecondAITrackNumber`, `ThirdAI`, `ThirdAITrackNumber`) VALUES
+	(101, 1, '', 1, 0, '101', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(102, 1, '101', 1, 0, '102', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(103, 1, '101,102', 1, 0, '103', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(203, 2, '', 1, 0, '203', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(204, 2, '203', 1, 0, '204', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(3003, 3, '203', 1, 0, '3003', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(3004, 3, '3003', 1, 0, '3004', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3);
+  
+INSERT INTO `PVEChapter` (`ChapterID`, `PreChapter`, `Name`, `Icon`, `MedalAmountFirst`, `RewardIDFirst`, `MedalAmountSecond`, `RewardIDSecond`, `MedalAmountThird`, `RewardIDThrid`) VALUES
+	(1, '', '1111', '', 3, 1, 6, 1, 9, 1),
+	(2, '1', '2222', '', 3, 1, 6, 1, 9, 1),
+	(3, '1,2', '3333', '', 3, 1, 6, 1, 9, 1);
+
+
 USE `koa_main`;
 
 CREATE TABLE IF NOT EXISTS `UserPVELevel` (

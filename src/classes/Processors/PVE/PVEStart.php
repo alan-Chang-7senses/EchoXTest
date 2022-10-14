@@ -27,7 +27,7 @@ class PVEStart extends BaseProcessor
     public function Process(): ResultData
     {
         $levelID = InputHelper::post('levelID');
-        $version = InputHelper::post('version');
+        // $version = InputHelper::post('version');
         $userID = $_SESSION[Sessions::UserID];
         $userPVEHandler = new UserPVEHandler($userID);
         $userHandler = new UserHandler($userID);
@@ -52,7 +52,7 @@ class PVEStart extends BaseProcessor
         $seats[] = $userID;
         $seats = array_merge($seats,array_keys((array)$pveLevelInfo->aiInfo));
         $raceRoomAccessor = new RaceRoomsAccessor();
-        $roomInfo = $raceRoomAccessor->AddNewRoom(RaceValue::LobbyPVE,$version,0,0);
+        $roomInfo = $raceRoomAccessor->AddNewRoom(RaceValue::LobbyPVE,1.5,0,0);
 
         $userAccessor = new UserAccessor();
         $userAccessor->ModifyUserValuesByID($userID,
@@ -74,7 +74,7 @@ class PVEStart extends BaseProcessor
         foreach((array)$pveLevelInfo->aiInfo as $aiID => $trackNumber)
         {
             $temp = PVERacingUtility::GetBotInfo($aiID);
-            $temp['TrackNumber'] = $trackNumber;
+            $temp['trackNumber'] = $trackNumber;
             $result->botInfos[] = $temp;
         }
 
