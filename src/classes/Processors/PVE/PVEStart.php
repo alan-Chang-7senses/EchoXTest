@@ -31,9 +31,8 @@ class PVEStart extends BaseProcessor
         $userID = $_SESSION[Sessions::UserID];
         $userPVEHandler = new UserPVEHandler($userID);
         $userHandler = new UserHandler($userID);
-        $userPVEInfo = $userPVEHandler->GetInfo();
 
-        if($userPVEInfo->currentProcessingLevel !== null || $userHandler->GetInfo()->race !== RaceValue::NotInRace)
+        if($userHandler->GetInfo()->race !== RaceValue::NotInRace)
         throw new RaceException(RaceException::UserInRace);
 
         $pveHandler = new PVELevelHandler($levelID);
