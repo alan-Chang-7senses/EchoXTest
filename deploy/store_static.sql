@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `StoreCounters` (
   KEY `GroupID` (`GroupID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='一般商店';
 
--- 正在傾印表格  koa_static.StoreCounters 的資料：~3 rows (近似值)
+-- 正在傾印表格  koa_static.StoreCounters 的資料：~15 rows (近似值)
 /*!40000 ALTER TABLE `StoreCounters` DISABLE KEYS */;
 INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount`, `Inventory`, `Price`, `Currency`, `Promotion`) VALUES
 	(1, 1, 1001, 1001, 1, 3, 100, 1, 3),
@@ -63,7 +63,8 @@ CREATE TABLE IF NOT EXISTS `StoreData` (
   `RefreshCount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '每日刷新次數',
   `RefreshCost` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '刷新費用',
   `RefreshCostCurrency` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '刷新費用之貨幣',
-  PRIMARY KEY (`StoreID`)
+  PRIMARY KEY (`StoreID`),
+  KEY `IsOpen` (`IsOpen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商店資訊';
 
 -- 正在傾印表格  koa_static.StoreData 的資料：~4 rows (近似值)
@@ -72,7 +73,8 @@ INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `StoreType`, `UIStyle`, `FixedGrou
 	(1, 1, 1, 1, 1, 0, 0, 0, 0),
 	(2, 1, 2, 2, 1, 2, 6, 50, 1),
 	(3, 1, 2, 3, 3, 4, 3, 100, 2),
-	(4, 1, 2, 4, 5, 6, 3, 200, 2);
+	(4, 1, 2, 4, 5, 6, 3, 200, 2),
+	(5, 0, 0, 0, 0, 0, 0, 0, 0);
 /*!40000 ALTER TABLE `StoreData` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StorePurchase 結構
@@ -92,12 +94,12 @@ CREATE TABLE IF NOT EXISTS `StorePurchase` (
 /*!40000 ALTER TABLE `StorePurchase` DISABLE KEYS */;
 INSERT INTO `StorePurchase` (`PIndex`, `GroupID`, `PurchaseID`, `ItemID`, `Amount`, `IAP`, `IAB`) VALUES
 	(1, 1, 1001, -3, 1, 'com.petarush.IAP30', 'exampleSku30'),
-	(2, 1, 1001, -3, 1, 'com.petarush.IAP60', 'exampleSku60'),
+	(2, 1, 1002, -3, 1, 'com.petarush.IAP60', 'exampleSku60'),
 	(3, 1, 1001, -3, 1, 'com.petarush.IAP90', 'exampleSku90'),
 	(4, 1, 1001, -3, 1, 'com.petarush.IAP120', 'exampleSku120'),
-	(5, 1, 1001, -3, 1, 'com.petarush.IAP150', 'exampleSku150'),
+	(5, 1, 1003, -3, 1, 'com.petarush.IAP150', 'exampleSku150'),
 	(6, 1, 1001, -3, 1, 'com.petarush.IAP180', 'exampleSku180'),
-	(7, 1, 1001, -3, 1, 'com.petarush.IAP210', 'null'),
+	(7, 1, 1003, -3, 1, 'com.petarush.IAP210', 'null'),
 	(8, 1, 1001, -3, 1, 'com.petarush.IAP240', '');
 /*!40000 ALTER TABLE `StorePurchase` ENABLE KEYS */;
 

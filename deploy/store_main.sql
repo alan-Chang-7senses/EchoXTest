@@ -19,14 +19,16 @@ USE `koa_main`;
 
 -- 傾印  資料表 koa_main.StoreInfos 結構
 CREATE TABLE IF NOT EXISTS `StoreInfos` (
-  `StoreInfoID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店資訊編號',
+  `StoreInfoID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '商店資訊編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
   `FixTradIDs` varchar(50) DEFAULT NULL COMMENT '固定商品',
   `RandomTradIDs` varchar(50) DEFAULT NULL COMMENT '隨機商品',
-  `RemainTimes` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
+  `RemainRefreshTimes` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間'
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`StoreInfoID`),
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
 -- 正在傾印表格  koa_main.StoreInfos 的資料：~0 rows (近似值)
@@ -35,13 +37,14 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
 
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
-  `Serial` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `PIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '儲值商店索引',
   `OrderID` varchar(50) DEFAULT NULL COMMENT '訂單編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間'
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
 
 -- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~0 rows (近似值)
@@ -50,13 +53,15 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
 
 -- 傾印  資料表 koa_main.StoreTrades 結構
 CREATE TABLE IF NOT EXISTS `StoreTrades` (
-  `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
+  `TradeID` int(10) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `StoreType` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
   `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
-  `RemainInventory` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
+  `RemainInventory` int(10) NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間'
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`TradeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
 -- 正在傾印表格  koa_main.StoreTrades 的資料：~0 rows (近似值)
