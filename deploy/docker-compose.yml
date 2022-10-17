@@ -50,6 +50,9 @@ services:
             SSO_CLIEND_SECRET: msrqEmF7Wk4shu2c5kI7y35UawpOyJz8rEx8uuSc
             APP_URI: http://localhost:37001
             
+            NFT_CLIENTID: 1745180808770445313
+            NFT_APISECRET: 7e3luSeepds7Pb4yHpzSe5bP687T0VrWAA4kMyfALyMfdx9F
+            
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
 #            XDEBUG_CLIENT_PORT: 9003
     memcached:
