@@ -17,3 +17,16 @@
 | 10 | 俄語 |
 | 11 | 泰語 |
 | 12 | 繁體中文 |
+
+## <span id="bannerTarget">Banner 目標類型</span>
+
+| 編碼 | 定義 |
+|:-:|:-:|
+| 1 | 網頁 |
+| 2 | UI 畫面 |
+
+## <span id="uiID">UI 畫面代號</span>
+
+| 編碼 | 定義 |
+|:-:|:-:|
+| ReceiveTicket | 票劵領取畫面 |
