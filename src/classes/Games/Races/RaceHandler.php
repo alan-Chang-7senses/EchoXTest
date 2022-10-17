@@ -90,29 +90,26 @@ class RaceHandler {
         if($racePlayer->trackShape == SceneValue::Straight){
             
             if($racePlayer->hp > 0){
-
                 $result = $climatAccelerations * 
                 ((RaceValue::PositiveHPStraightFront * $player->breakOut + RaceValue::PositiveHPStraightBack * $player->velocity) / $slope) *
-                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
+                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4) + RaceValue::SValueBasePositiveHP;
             }else{
 
                 $result = $climatAccelerations * 
                 ((RaceValue::MinusHPStraightFront * $player->breakOut + RaceValue::MinusHPStraightBack * $player->will) / $slope) *
-                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
+                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4) + RaceValue::SValueBaseMinusHP;
             }
             
         }else{
-            
             if($racePlayer->hp > 0){
 
                 $result = $climatAccelerations * 
                 ((RaceValue::PositiveHPCurveFront * $player->velocity + RaceValue::PositiveHPCurveBack * $player->breakOut) / $slope) *
-                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
+                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4) + RaceValue::SValueBasePositiveHP;
             }else{
-                
                 $result = $climatAccelerations * 
                 ((RaceValue::MinusHPCurveFront * $player->velocity + RaceValue::MinusHPCurveBack * $player->will) / $slope) *
-                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4);
+                (($envValue + $climateValue + $sunValue + $terrainValue + $windValue) / 100 - 4) + RaceValue::SValueBaseMinusHP;
             }
         }
         

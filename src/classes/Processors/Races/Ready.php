@@ -224,6 +224,7 @@ class Ready extends BaseRace{
         }
         
         $result = new ResultData(ErrorCode::Success);
+        $result->id = intval($raceID);
         $result->scene = $scene;
         $result->users = $readyUserInfos;
                 

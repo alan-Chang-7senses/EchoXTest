@@ -44,6 +44,13 @@
 		- [創建房間](PVP/CreateRoom.md)。
 		- [加入房間](PVP/JoinRoom.md)。		
 		- [離開房間](PVP/LeaveRoom.md)。
+	- PVE：
+		- [章節列表頁面](PVE/ChapterListPage.md)。
+		- [關卡列表頁面](PVE/LevelListPage.md)。
+		- [取得章節獎牌獎勵](PVE/PVEMedalReward.md)。
+		- [一鍵通關](PVE/PVERush.md)。
+		- [PVE開始](PVE/PVEStart.md)。
+		- [PVE結束](PVE/PVEFinish.md)。	
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。
@@ -69,6 +76,7 @@
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。
 		- [相容版本](Notices/Versions.md)。
+		- [主畫面 Banner](Notices/MainBanner.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。

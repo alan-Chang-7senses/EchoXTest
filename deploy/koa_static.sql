@@ -1400,8 +1400,8 @@ CREATE TABLE IF NOT EXISTS `HintText` (
 -- 正在傾印表格  koa_static.HintText 的資料：~2 rows (近似值)
 /*!40000 ALTER TABLE `HintText` DISABLE KEYS */;
 INSERT INTO `HintText` (`Serial`, `HintID`, `Lang`, `Title`, `Content`) VALUES
-	(1, 1, 2, 'hint', 'The peta gold coin competition entry ticket will be given one at 0:00 am and 12:00 noon, and will not be issued when the number exceeds 100.'),
-	(2, 1, 12, '小提示', 'peta金幣賽入場卷，凌晨0點、中午12點會給一張，當身上數量超過100張便不再發放。');
+	(1, 1, 2, 'hint', '●The peta gold coin competition entry ticket will be given one at 0:00 am and 12:00 noon, and will not be issued when the number exceeds 100.\r\n●When the countdown time reaches zero, you can collect the ticket.\r\n●If you have more than the upper limit, you will not be able to get the ticket'),
+	(2, 1, 12, '小提示', '●peta金幣賽入場卷，凌晨0點、中午12點會給一張，當身上數量超過100張便不再發放。\n●當倒數時間歸零時，可以領取票卷。\n●若身上擁有的數量超出上限，無法領取票卷');
 /*!40000 ALTER TABLE `HintText` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.ItemCharge 結構
@@ -1637,6 +1637,98 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sende
 	(32, 11, 12, 'DEMO4 測試說明', '親愛的玩家~您好！\n為求遊戲的平衡性，DEMO4的測試，是以與Demi-Holim NFT合作的Demi Peta為主，\n玩家可以從本次測試的技能與外觀的關係，一窺預定在10/18解盲的Demi Peta的一部分技能組合。\n在這次DEMO4的技能，都暫時用英數縮寫做為技能名稱，待測試結束後會公布正式的技能名稱。\n如之前所公告的，PetaRush在10月份密集的做大量DEMO測試，是因為要調整數值平衡，也會視情況固定於每日下午14:00進行針對競賽數值做平衡調整。\n過去，已經調整「天氣適應力的影響效果較強」以及「干擾技能效果的數值提高」與「被妨礙技能條件的效果數值提高」。\n在本次的測試，則是將「增益效果的上坡、平地、下坡、順風、側風、逆風的適應力數值提升」，因為這些效果要Peta在特定的位置上才會有用，所以期待本次的調整，可以讓抓對位置施放的Peta會跑的更快、體力消耗更少。\nPetaRush開發團隊敬上', '寄件人：研發團隊', ''),
 	(33, 11, 2, 'Demo 4 Notification', 'We are glad to announce that the PetaRush Demo 4 features the Demi-Holim NFT. This is to ensure the game balance in the future after they go live! Additionally, it offers you a sneak peek at what powerful skills Demi Peta may have once the blind box reveals itself on Oct 18th!\nHere are a few things we hope you know before the gameplay,\nFirst, the skill names you see at Demo version are the abbreviations combines with English characters and numbers. We will announce their official names at the end of Demo version gameplay. Please look forward to it!\nSecond, we have announced that the PetaRush team will change skill effects at 14:00 every day to ensure the game balance. Before, we have optimized the following skills, “Decrease the impact of Peta’s adaption to weathers,” “Increase attack skill effects,” and “Increase on-hit skill effects.” This time, we will optimize the skills brings bonus effects to the landscapes (Uphill, Downhill, and Flat) and wind directions (Tailwind, Headwind, and Crosswind.) Since we have noticed these skills require Peta to be in the specific environment, we hope Petas can earn more effects once they successfully activate the skills under such restricted conditions.', 'Sender: Direct Team', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.MainBanner 結構
+CREATE TABLE IF NOT EXISTS `MainBanner` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Status` tinyint(3) NOT NULL DEFAULT 0 COMMENT '狀態(1=啟用)',
+  `Lang` tinyint(4) NOT NULL DEFAULT 1 COMMENT '語言',
+  `ImageURL` varchar(255) NOT NULL COMMENT '圖片網址',
+  `PageType` tinyint(4) NOT NULL DEFAULT 1 COMMENT '頁面類型',
+  `PageURL` varchar(255) NOT NULL COMMENT '頁面網址',
+  PRIMARY KEY (`Serial`),
+  KEY `Status_Lang` (`Status`,`Lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='主畫面廣告看板';
+
+-- 正在傾印表格  koa_static.MainBanner 的資料：~14 rows (近似值)
+/*!40000 ALTER TABLE `MainBanner` DISABLE KEYS */;
+INSERT INTO `MainBanner` (`Serial`, `Status`, `Lang`, `ImageURL`, `PageType`, `PageURL`) VALUES
+	(1, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_01_en.png', 1, 'https://www.metasens.com/activity/peta'),
+	(2, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_01_tc.png', 1, 'https://www.metasens.com/zh_tw/activity/peta'),
+	(3, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_02.png', 1, 'https://www.metasens.com/en_us/activity/demipeta'),
+	(4, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_02.png', 1, 'https://www.metasens.com/zh_tw/activity/demipeta'),
+	(5, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_03.png', 1, 'https://www.metasens.com/en_us/activity/phantabear3d'),
+	(6, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_03.png', 1, 'https://www.metasens.com/zh_tw/activity/phantabear3d'),
+	(7, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_04_en.png', 2, 'ReceiveTicket'),
+	(8, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_04_tc.png', 2, 'ReceiveTicket'),
+	(9, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_05_en.png', 1, 'https://chr2.io/petarush/ranking/?lang=en'),
+	(10, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_05_tc.png', 1, 'https://chr2.io/petarush/ranking/?lang=tc'),
+	(11, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_06_en.png', 1, 'https://chr2.io/petarush/announcement/?lang=en&id=5'),
+	(12, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_06_tc.png', 1, 'https://chr2.io/petarush/announcement/?lang=tc&id=5'),
+	(13, 1, 2, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_07_en.png', 1, 'https://discord.com/invite/petarush'),
+	(14, 1, 12, 'https://petarush-cdn.metasens.com/petarush/Images/MainBanner/banner_07_tc.png', 1, 'https://discord.com/invite/petarush');
+/*!40000 ALTER TABLE `MainBanner` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.PVEChapter 結構
+CREATE TABLE IF NOT EXISTS `PVEChapter` (
+  `ChapterID` int(11) NOT NULL COMMENT '章節編號',
+  `PreChapter` varchar(50) NOT NULL DEFAULT '' COMMENT '前置章節',
+  `Name` varchar(50) NOT NULL DEFAULT '' COMMENT '章節名稱',
+  `Icon` varchar(50) NOT NULL DEFAULT '' COMMENT '章節圖示',
+  `MedalAmountFirst` smallint(6) NOT NULL DEFAULT 0 COMMENT '第一階段獎勵獎牌數量',
+  `RewardIDFirst` int(11) NOT NULL DEFAULT 0 COMMENT '第一階段獎勵編號',
+  `MedalAmountSecond` smallint(6) NOT NULL DEFAULT 0 COMMENT '第二階段獎勵獎牌數量',
+  `RewardIDSecond` int(11) NOT NULL DEFAULT 0 COMMENT '第二階段獎勵編號',
+  `MedalAmountThird` smallint(6) NOT NULL DEFAULT 0 COMMENT '第三階段獎勵獎牌數量',
+  `RewardIDThrid` int(11) NOT NULL DEFAULT 0 COMMENT '第三階段獎勵編號',
+  PRIMARY KEY (`ChapterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PVE章節資訊';
+
+-- 正在傾印表格  koa_static.PVEChapter 的資料：~3 rows (近似值)
+/*!40000 ALTER TABLE `PVEChapter` DISABLE KEYS */;
+INSERT INTO `PVEChapter` (`ChapterID`, `PreChapter`, `Name`, `Icon`, `MedalAmountFirst`, `RewardIDFirst`, `MedalAmountSecond`, `RewardIDSecond`, `MedalAmountThird`, `RewardIDThrid`) VALUES
+	(1, '', '1111', '', 3, 1, 6, 1, 9, 1),
+	(2, '1', '2222', '', 3, 1, 6, 1, 9, 1),
+	(3, '1,2', '3333', '', 3, 1, 6, 1, 9, 1);
+/*!40000 ALTER TABLE `PVEChapter` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.PVELevel 結構
+CREATE TABLE IF NOT EXISTS `PVELevel` (
+  `LevelID` int(11) NOT NULL DEFAULT 0 COMMENT '關卡ID',
+  `ChapterID` int(11) NOT NULL DEFAULT 0 COMMENT '關卡所在章節編號',
+  `PreLevel` varchar(50) NOT NULL DEFAULT '' COMMENT '前置關卡',
+  `RecommendLevel` int(11) NOT NULL DEFAULT 0 COMMENT '推薦角色等級',
+  `Power` int(11) NOT NULL DEFAULT 0 COMMENT '需求電力',
+  `LevelName` varchar(50) NOT NULL DEFAULT '' COMMENT '關卡名稱字碼',
+  `Description` varchar(50) NOT NULL DEFAULT '' COMMENT '關卡簡介字碼',
+  `SceneID` int(11) NOT NULL DEFAULT 0 COMMENT '使用場景ID',
+  `UserTrackNumber` tinyint(4) NOT NULL DEFAULT 0 COMMENT '用戶所在跑道',
+  `FirstRewardID` int(11) NOT NULL DEFAULT 0 COMMENT '初次過關獎勵',
+  `SustainRewardID` int(11) NOT NULL DEFAULT 0 COMMENT '固定過關獎勵',
+  `FirstItemIDs` varchar(50) NOT NULL DEFAULT '0' COMMENT '初次過關獎勵(前端顯示需求)',
+  `SustainItemIDs` varchar(50) NOT NULL DEFAULT '0' COMMENT '固定過關獎勵(前端顯示需求)',
+  `FirstAI` int(11) DEFAULT NULL COMMENT '第一隻機器人',
+  `FirstAITrackNumber` tinyint(4) DEFAULT NULL COMMENT '第一隻機器人所在跑道',
+  `SecondAI` int(11) DEFAULT NULL COMMENT '第二隻機器人',
+  `SecondAITrackNumber` tinyint(4) unsigned DEFAULT NULL COMMENT '第二隻機器人所在跑道',
+  `ThirdAI` int(11) DEFAULT NULL COMMENT '第三隻機器人',
+  `ThirdAITrackNumber` tinyint(4) DEFAULT NULL COMMENT '第三隻機器人所在跑道',
+  PRIMARY KEY (`LevelID`),
+  KEY `SceneID` (`SceneID`),
+  KEY `ChapterID` (`ChapterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PVE關卡資訊';
+
+-- 正在傾印表格  koa_static.PVELevel 的資料：~7 rows (近似值)
+/*!40000 ALTER TABLE `PVELevel` DISABLE KEYS */;
+INSERT INTO `PVELevel` (`LevelID`, `ChapterID`, `PreLevel`, `RecommendLevel`, `Power`, `LevelName`, `Description`, `SceneID`, `UserTrackNumber`, `FirstRewardID`, `SustainRewardID`, `FirstItemIDs`, `SustainItemIDs`, `FirstAI`, `FirstAITrackNumber`, `SecondAI`, `SecondAITrackNumber`, `ThirdAI`, `ThirdAITrackNumber`) VALUES
+	(101, 1, '', 1, 0, '101', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(102, 1, '101', 1, 0, '102', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(103, 1, '101,102', 1, 0, '103', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(203, 2, '', 1, 0, '203', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(204, 2, '203', 1, 0, '204', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(3003, 3, '203', 1, 0, '3003', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3),
+	(3004, 3, '3003', 1, 0, '3004', '', 1001, 1, 1, 2, '-3', '2013,   2017', -1, 1, -2, 2, -3, 3);
+/*!40000 ALTER TABLE `PVELevel` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.QualifyingArena 結構
 CREATE TABLE IF NOT EXISTS `QualifyingArena` (

@@ -23,14 +23,17 @@ class APRecoverUtility
         return $rt;
     }
 
-    /**取得最大體力與回復頻率 */
+    /**取得最大體力與回復頻率。VIP目前已暫停使用。帶入固定值 */
     public static function GetMaxAPAmountAndRecoverRate(int $userID) : stdClass
     {
-        $userInfo = (new UserHandler($userID))->GetInfo();
-        $vipInfo = VIPPrivilegeData::GetVIPInfoByDiamond($userInfo->accumulateDiamond);
+        // $userInfo = (new UserHandler($userID))->GetInfo();
+        // $vipInfo = VIPPrivilegeData::GetVIPInfoByDiamond($userInfo->accumulateDiamond);
+        // $rt->maxAP = $vipInfo->PowerLimit;
+        // $rt->rate = $vipInfo->PowerRate;
+        
         $rt = new stdClass();
-        $rt->maxAP = $vipInfo->PowerLimit;
-        $rt->rate = $vipInfo->PowerRate;
+        $rt->maxAP = ActionPointValue::Powerlimit;
+        $rt->rate = ActionPointValue::PowerRate;
         return $rt;
     }
 

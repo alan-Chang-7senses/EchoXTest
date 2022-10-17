@@ -78,4 +78,14 @@ class PlayerUtility {
         if(strlen($playerID) == PlayerValue::LengthNFTID) return 'NFT'. intval(substr($playerID, 3));
         return (string)$playerID;
     }
+
+    public static function PartcodeAllDNA(PlayerDnaHolder|stdClass $dna)
+    {
+        $dna->head = PlayerUtility::PartCodeByDNA($dna->head);
+        $dna->body = PlayerUtility::PartCodeByDNA($dna->body);
+        $dna->hand = PlayerUtility::PartCodeByDNA($dna->hand);
+        $dna->leg = PlayerUtility::PartCodeByDNA($dna->leg);
+        $dna->back = PlayerUtility::PartCodeByDNA($dna->back);
+        $dna->hat = PlayerUtility::PartCodeByDNA($dna->hat);
+    }
 }

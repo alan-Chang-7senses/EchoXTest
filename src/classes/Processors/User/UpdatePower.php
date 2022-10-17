@@ -21,10 +21,12 @@ class UpdatePower extends BaseProcessor
         $lastUpdateTime = $row === false ? 0 : $row->PowerUpdateTime;
         $userHandler->HandlePower(0);
         $time =  APRecoverUtility::GetFullAPTime($userID,$lastUpdateTime);
+        $rate = APRecoverUtility::GetMaxAPAmountAndRecoverRate($userID)->rate;
         
         $results = new ResultData(ErrorCode::Success);
-        $results->power = $userHandler->GetInfo()->power;
+        $results->power = $userHandler->GetInfo()->power;        
         $results->timeTillFull = $time;
+        $results->rate = $rate;
         return $results;        
     }
 }
