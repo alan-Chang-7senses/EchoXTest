@@ -65,4 +65,7 @@ class EnvVar {
     const SSOClientID = 'SSO_CLIEND_ID';
     const SSOClientSecret = 'SSO_CLIEND_SECRET';
     const APPUri = 'APP_URI';
+    
+    const NFTClientID = 'NFT_CLIENTID';
+    const NFTAPISecret = 'NFT_APISECRET';
 }
