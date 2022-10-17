@@ -52,10 +52,6 @@ class UserPool extends PoolAccessor{
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
         $holder->players = array_column($rows, 'PlayerID');
 
-        // $accessor = new PDOAccessor(EnvVar::DBMain);
-        // $row = $accessor->FromTable('UserDiamond')->WhereEqual('UserID',$id)->Fetch();
-        // $holder->accumulateDiamond = $row === false ? 0 : $row->AccumulateDiamond;
-
         return $holder;
     }
     
@@ -71,20 +67,6 @@ class UserPool extends PoolAccessor{
         
         (new UserAccessor())->ModifyUserValuesByID($data->id, $bind);
         
-        return $data;
-    }
-
-    protected function SaveAccumulateDiamond(stdClass $data, int $amount)
-    {
-        $bind = 
-        [
-            'UserID' => $data->id,
-            'AccumulateDiamond' => $amount,
-            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
-        ];
-        $data->accumulateDiamond = $amount;        
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('UserDiamond')->Add($bind,true);
         return $data;
     }
 

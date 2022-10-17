@@ -38,6 +38,8 @@ class ItemValue
     const CauseRankUp = 5;
     const CauseSkillUpgrade = 6;
     const CauseCreateUser = 7;
+    const CausePVEClearLevel = 8;
+    const CausePVEMedalReward = 9;
 
     const ActionObtain = 1;
     const ActionUsed = 2;

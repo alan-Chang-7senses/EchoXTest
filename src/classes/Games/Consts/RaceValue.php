@@ -117,6 +117,7 @@ class RaceValue {
     const LobbyStudy = 3;
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
+    const LobbyPVE = 6;
     
     const LobbyPlayerLevelConfig = [
         self::LobbyCoin => 'LobbyCoinPlayerLevel',
@@ -124,6 +125,7 @@ class RaceValue {
         self::LobbyStudy => 'LobbyStudyPlayerLevel',
         self::LobbyCoinB => 'LobbyCoinPlayerLevel',
         self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
+        self::LobbyPVE => 'LobbyPVEPlayerLevel',
     ];
     
     const LobbySkillLevelConfig = [
@@ -132,6 +134,7 @@ class RaceValue {
         self::LobbyStudy => 'LobbyStudySkillLevel',
         self::LobbyCoinB => 'LobbyCoinSkillLevel',
         self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
+        self::LobbyPVE => 'LobbyPVESkillLevel',
     ];
     
     const RoomIdle = 0;
