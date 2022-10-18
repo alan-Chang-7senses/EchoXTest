@@ -21,9 +21,14 @@ class SyncRateUtility
     {
         $rawSync = match($type)
         {
-            SyncRate::PVP => SyncRate::PVPMultiplier * max(self::GetPlayerTradeCount($playerID),1),
-            SyncRate::PVE => SyncRate::PVEMultiplier * max(self::GetPlayerTradeCount($playerID),1),
-            SyncRate::Expedition => SyncRate::ExpeditionMultiplier * max(self::GetPlayerTradeCount($playerID),1),
+            SyncRate::PVP => 
+            SyncRate::PVPMultiplier * sqrt(sqrt(max(self::GetPlayerTradeCount($playerID),1))),
+
+            SyncRate::PVE =>
+            SyncRate::PVEMultiplier * sqrt(sqrt(max(self::GetPlayerTradeCount($playerID),1))),
+            
+            SyncRate::Expedition => 
+            SyncRate::ExpeditionMultiplier * sqrt(sqrt(max(self::GetPlayerTradeCount($playerID),1))),
         };
 
         $expCalculator = new ExpBonusCalculator($rawSync);
