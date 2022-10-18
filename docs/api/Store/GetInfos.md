@@ -38,8 +38,9 @@ Content Type: `application/json`
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| storeID | int | 商店索引 |
-| UIStyle | int | [介面類型](#UIStyle) |
+| storeInfoID | int | 商店索引 |
+| uiStyle | int | [介面類型](#UIStyle) |
+| autoRefreshTime | int | 自動刷新刷新剩餘時間(s) |
 | refreshRemain | int | 剩餘刷新次數 |
 | refreshTime | int | 剩餘刷新時間(s) |
 | refreshCost | int | 刷新費用 |
@@ -97,8 +98,26 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    }
+		"error": {
+			"code": 0,
+			"message": ""
+		},
+		"stores": [
+			{
+				"storeInfoID": 1,
+				"fix": []
+			},
+			{
+				"storeInfoID": 2,
+				"fix": []
+			},
+			{
+				"storeInfoID": 3,
+				"fix": []
+			},
+			{
+				"storeInfoID": 4,
+				"fix": []
+			}
+		]
 	}
