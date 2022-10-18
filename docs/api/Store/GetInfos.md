@@ -56,8 +56,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | tradID | int | 交易序號 |
-| name | string | 物品名稱 |
+| itemID | int | 物品編號 |
 | amount | int | 物品數量 |
+| icon | string | Icon 圖號 |
+| name | string | 物品名稱 |
 | IAP | string | ios product |
 | IAB | string | android product |
 <br>
@@ -67,12 +69,14 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | tradID | int | 交易序號 |
-| name | string | 物品名稱 |
+| itemID | int | 物品編號 |
 | amount | int | 物品數量 |
+| icon | string | Icon 圖號 |
+| name | string | 物品名稱 |
 | remainInventory | int | 剩餘庫存數量(-1:不限 0:售罄) |
 | price | int | 售價 |
 | currency | int | [貨幣](#Currency)種類 |
-| discount | int | 折扣 |
+| promotion | int | 折扣 |
 <br>
 
 #### <span id="UIStyle">介面類型</span>
@@ -102,22 +106,125 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			"code": 0,
 			"message": ""
 		},
+		"currencies": [
+			0,
+			0
+		],
 		"stores": [
 			{
 				"storeInfoID": 1,
-				"fix": []
+				"uiStyle": 1,
+				"autoRefreshTime": 85908,
+				"refreshRemain": 0,
+				"resetRefreshTime": 28308,
+				"refreshCost": 0,
+				"refreshCurrency": 0,
+				"fixPurchase": [
+					{
+						"tradID": 1,
+						"itemID": -3,
+						"amount": 1,
+						"icon": "ItemIcon_0028",
+						"name": "8134",
+						"IAP": "com.petarush.IAP150",
+						"IAB": "exampleSku150"
+					},
+					{
+						"tradID": 7,
+						"itemID": -3,
+						"amount": 1,
+						"icon": "ItemIcon_0028",
+						"name": "8134",
+						"IAP": "com.petarush.IAP60",
+						"IAB": "exampleSku60"
+					},
+					{
+						"tradID": 2,
+						"itemID": -3,
+						"amount": 1,
+						"icon": "ItemIcon_0028",
+						"name": "8134",
+						"IAP": "com.petarush.IAP240",
+						"IAB": ""
+					}
+				],
+				"randomPurchase": [],
+				"fixCounters": [],
+				"randomCounters": []
 			},
 			{
 				"storeInfoID": 2,
-				"fix": []
+				"uiStyle": 2,
+				"autoRefreshTime": 85908,
+				"refreshRemain": 6,
+				"resetRefreshTime": 28308,
+				"refreshCost": 50,
+				"refreshCurrency": 1,
+				"fixPurchase": [],
+				"randomPurchase": [],
+				"fixCounters": [
+					{
+						"tradID": 4,
+						"itemID": 1001,
+						"amount": 1,
+						"icon": "ItemIcon_1001",
+						"name": "8101",
+						"remainInventory": 3,
+						"price": 100,
+						"currency": 1,
+						"promotion": 3
+					}
+				],
+				"randomCounters": [
+					{
+						"tradID": 5,
+						"itemID": 1001,
+						"amount": 1,
+						"icon": "ItemIcon_1001",
+						"name": "8101",
+						"remainInventory": 3,
+						"price": 100,
+						"currency": 1,
+						"promotion": 3
+					},
+					{
+						"tradID": 6,
+						"itemID": 1001,
+						"amount": 1,
+						"icon": "ItemIcon_1001",
+						"name": "8101",
+						"remainInventory": 3,
+						"price": 100,
+						"currency": 1,
+						"promotion": 3
+					}
+				]
 			},
 			{
 				"storeInfoID": 3,
-				"fix": []
+				"uiStyle": 3,
+				"autoRefreshTime": 85908,
+				"refreshRemain": 3,
+				"resetRefreshTime": 28308,
+				"refreshCost": 100,
+				"refreshCurrency": 2,
+				"fixPurchase": [],
+				"randomPurchase": [],
+				"fixCounters": [],
+				"randomCounters": []
 			},
 			{
 				"storeInfoID": 4,
-				"fix": []
+				"uiStyle": 4,
+				"autoRefreshTime": 85908,
+				"refreshRemain": 3,
+				"resetRefreshTime": 28308,
+				"refreshCost": 200,
+				"refreshCurrency": 2,
+				"fixPurchase": [],
+				"randomPurchase": [],
+				"fixCounters": [],
+				"randomCounters": []
 			}
 		]
 	}
