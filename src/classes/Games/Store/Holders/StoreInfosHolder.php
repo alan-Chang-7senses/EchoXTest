@@ -27,7 +27,7 @@ class StoreInfosHolder extends stdClass {
     public string $randomTradIDs;
 
     /** @var int 剩餘刷新次數 */
-    public int $remainRefreshTimes;
+    public int $refreshRemainAmounts;
 
     /** @var int 建立時間 */
     public int $createTime;

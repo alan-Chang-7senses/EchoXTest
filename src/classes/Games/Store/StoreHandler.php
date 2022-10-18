@@ -6,9 +6,13 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
 use Games\Consts\StoreValue;
+use Games\Pools\ItemInfoPool;
+use Games\Pools\Store\StoreCountersPool;
+use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StoreTradesHolder;
+use stdClass;
 
 /*
  * Description of StoreHandler
@@ -31,10 +35,10 @@ class StoreHandler {
     public function UpdatePurchaseTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
 
         $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : null;
-        
+
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
-        $storeTradeIDs = [];        
+        $storeTradeIDs = [];
         $count = 0;
         foreach ($items as $item) {
             if ($count >= $amount) {
@@ -63,7 +67,7 @@ class StoreHandler {
 
     public function UpdateCountersTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : null;
-        
+
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StoreCounters WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.CounterID ORDER BY RAND()", []);
         $storeTradeIDs = [];
@@ -101,7 +105,7 @@ class StoreHandler {
                 "StoreID" => $storinfo->storeID,
                 "FixTradIDs" => $storinfo->fixTradIDs,
                 "RandomTradIDs" => $storinfo->randomTradIDs,
-                "RemainRefreshTimes" => $storinfo->remainRefreshTimes,
+                "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
                 "CreateTime" => $nowtime,
                 "UpdateTime" => $nowtime
             ]);
@@ -110,7 +114,7 @@ class StoreHandler {
             $accessor->FromTable('StoreInfos')->WhereEqual("StoreInfoID", $storinfo->storeInfoID)->Modify([
                 "FixTradIDs" => $storinfo->fixTradIDs,
                 "RandomTradIDs" => $storinfo->randomTradIDs,
-                "RemainRefreshTimes" => $storinfo->remainRefreshTimes,
+                "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
                 "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
             ]);
             return $storinfo->storeInfoID;
@@ -124,7 +128,7 @@ class StoreHandler {
 
         foreach ($tradIDs as $tradID) {
             StoreTradesPool::Instance()->Save($tradID, 'Update', [
-                "Status" => StoreValue::TradeIdle,
+                "Status" => StoreValue::TradeStatusIdle,
             ]);
         }
     }
@@ -136,7 +140,7 @@ class StoreHandler {
 
             // 找空閒的位置
             $rowStoreTrade = $accessor->FromTable('StoreTrades')->
-                    WhereEqual('Status', StoreValue::TradeIdle)->
+                    WhereEqual('Status', StoreValue::TradeStatusIdle)->
                     Fetch();
             $accessor->ClearCondition();
 
@@ -145,7 +149,7 @@ class StoreHandler {
             } else {
                 $accessor->FromTable('StoreTrades')->Add([
                     "UserID" => $this->userID,
-                    "Status" => StoreValue::TradeInUse,
+                    "Status" => StoreValue::TradeStatusInUse,
                     "StoreType" => $tradeHolder->storeType,
                     "CPIndex" => $tradeHolder->cPIndex,
                     "RemainInventory" => $tradeHolder->remainInventory,
@@ -157,7 +161,7 @@ class StoreHandler {
 
         StoreTradesPool::Instance()->Save($tradeHolder->tradeID, 'Update', [
             "UserID" => $this->userID,
-            "Status" => StoreValue::TradeInUse,
+            "Status" => StoreValue::TradeStatusInUse,
             "StoreType" => $tradeHolder->storeType,
             "CPIndex" => $tradeHolder->cPIndex,
             "RemainInventory" => $tradeHolder->remainInventory
@@ -166,8 +170,56 @@ class StoreHandler {
         return $tradeHolder->tradeID;
     }
 
-    public function CheckRefresh(int $datetime): bool {
-        return true;
+    public function GetTrades(int $storeType, string|null $tradIDArrays): array {
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : [];
+        $result = [];
+        foreach ($tradIDs as $tradID) {
+            $storeTradesHolder = StoreTradesPool::Instance()->{$tradID};
+            $tradeInfo = new stdClass();
+            $tradeInfo->tradID = $tradID;
+
+            if ($storeTradesHolder->storeType != $storeType) {
+                //error
+                continue;
+            }
+
+            if ($storeTradesHolder->status != StoreValue::TradeStatusInUse) {
+                //error
+                continue;
+            }
+
+            if ($storeType == StoreValue::Purchase) {
+                $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
+                $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
+
+                $tradeInfo->itemID = $storePurchaseHolder->itemID;
+                $tradeInfo->amount = $storePurchaseHolder->amount;
+                $tradeInfo->icon = $itemInfo->Icon;
+                $tradeInfo->name = $itemInfo->ItemName;
+                $tradeInfo->IAP = $storePurchaseHolder->iAP;
+                $tradeInfo->IAB = $storePurchaseHolder->iAB;
+            } else if ($storeType == StoreValue::Counters) {
+                $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
+                $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
+
+                $tradeInfo->itemID = $storeCountersHolder->itemID;
+                $tradeInfo->amount = $storeCountersHolder->amount;
+                $tradeInfo->icon = $itemInfo->Icon;
+                $tradeInfo->name = $itemInfo->ItemName;
+                $tradeInfo->remainInventory = $storeTradesHolder->remainInventory;
+                $tradeInfo->price = $storeCountersHolder->price;
+                $tradeInfo->currency = $storeCountersHolder->currency;
+                $tradeInfo->promotion = $storeCountersHolder->promotion;
+            } else {
+                //error
+                continue;
+            }
+
+
+            $result[] = $tradeInfo;
+        }
+
+        return $result;
     }
 
 }

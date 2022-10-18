@@ -42,6 +42,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | uiStyle | int | [介面類型](#UIStyle) |
 | autoRefreshTime | int | 自動刷新剩餘時間(s) |
 | refreshRemain | int | 剩餘刷新次數 |
+| refreshMax | int | 每日刷新次數 |
 | resetRefreshTime | int | 剩餘刷新次數重置時間(s) |
 | refreshCost | int | 刷新費用 |
 | refreshCurrency | int | 刷新費用之[貨幣](#Currency) |
@@ -114,9 +115,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 1,
 				"uiStyle": 1,
-				"autoRefreshTime": 85908,
+				"autoRefreshTime": 85116,
 				"refreshRemain": 0,
-				"resetRefreshTime": 28308,
+				"refreshMax": 0,
+				"resetRefreshTime": 27516,
 				"refreshCost": 0,
 				"refreshCurrency": 0,
 				"fixPurchase": [
@@ -155,9 +157,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 2,
 				"uiStyle": 2,
-				"autoRefreshTime": 85908,
+				"autoRefreshTime": 85116,
 				"refreshRemain": 6,
-				"resetRefreshTime": 28308,
+				"refreshMax": 6,
+				"resetRefreshTime": 27516,
 				"refreshCost": 50,
 				"refreshCurrency": 1,
 				"fixPurchase": [],
@@ -203,9 +206,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 3,
 				"uiStyle": 3,
-				"autoRefreshTime": 85908,
+				"autoRefreshTime": 85116,
 				"refreshRemain": 3,
-				"resetRefreshTime": 28308,
+				"refreshMax": 3,
+				"resetRefreshTime": 27516,
 				"refreshCost": 100,
 				"refreshCurrency": 2,
 				"fixPurchase": [],
@@ -216,9 +220,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 4,
 				"uiStyle": 4,
-				"autoRefreshTime": 85908,
+				"autoRefreshTime": 85116,
 				"refreshRemain": 3,
-				"resetRefreshTime": 28308,
+				"refreshMax": 3,
+				"resetRefreshTime": 27516,
 				"refreshCost": 200,
 				"refreshCurrency": 2,
 				"fixPurchase": [],
