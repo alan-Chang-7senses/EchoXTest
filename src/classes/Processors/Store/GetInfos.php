@@ -13,6 +13,7 @@ use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\UserBagHandler;
+use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -26,16 +27,21 @@ class GetInfos extends BaseProcessor {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
+        $userHandler = new UserHandler($this->userID);
+        $info = $userHandler->GetInfo();
+
         //get currency
         $userBagHandler = new UserBagHandler($userID);
         $responseCurrencies = [];
         foreach (StoreValue::CurrencyItemID as $currencyItemID) {
+            
+            $info->diamond;
             $responseCurrencies[] = $userBagHandler->GetItemAmount($currencyItemID);
         }
 
         //get store
-        $storHandler = new StoreHandler($userID);
-        $storeIDs = $storHandler->GetStoreDatas();
+        $storeHandler = new StoreHandler($userID);
+        $storeIDs = $storeHandler->GetStoreDatas();
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $resposeStores = [];
         foreach ($storeIDs as $storeID) {
@@ -83,23 +89,23 @@ class GetInfos extends BaseProcessor {
             if ($autoRefreshTime->needRefresh) {
 
                 if ($storeDataHolder->storeType == StoreValue::Purchase) {
-                    $storeInfosHolder->fixTradIDs = $storHandler->UpdatePurchaseTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storHandler->UpdatePurchaseTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                    $storeInfosHolder->fixTradIDs = $storHandler->UpdateCountersTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }
-                $storeInfosHolder->storeInfoID = $storHandler->UpdateStoreInfo($storeInfosHolder);
+                $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
             } else if ($resetRefreshTime->needRefresh) {
-                $storHandler->UpdateStoreInfo($storeInfosHolder);
+                $storeHandler->UpdateStoreInfo($storeInfosHolder);
             }
 
             //response
             $resposeStore = new stdClass();
             $resposeStore->storeInfoID = $storeInfosHolder->storeInfoID;
-            $resposeStore->uiStyle =  $storeDataHolder->uIStyle;
+            $resposeStore->uiStyle = $storeDataHolder->uIStyle;
             $resposeStore->autoRefreshTime = $autoRefreshTime->remainSeconds;
             $resposeStore->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
             $resposeStore->refreshMax = $storeDataHolder->refreshCount;
@@ -112,11 +118,11 @@ class GetInfos extends BaseProcessor {
             $resposeStore->randomCounters = [];
 
             if ($storeDataHolder->storeType == StoreValue::Purchase) {
-                $resposeStore->fixPurchase = $storHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->fixTradIDs);
-                $resposeStore->randomPurchase = $storHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->randomTradIDs);
+                $resposeStore->fixPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->fixTradIDs);
+                $resposeStore->randomPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->randomTradIDs);
             } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                $resposeStore->fixCounters = $storHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->fixTradIDs);
-                $resposeStore->randomCounters = $storHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->randomTradIDs);
+                $resposeStore->fixCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->fixTradIDs);
+                $resposeStore->randomCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->randomTradIDs);
             }
             $resposeStores[] = $resposeStore;
         }
