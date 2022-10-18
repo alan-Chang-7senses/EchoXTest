@@ -9,7 +9,7 @@ namespace Games\Consts;
  */
 class SyncRate {
     
-    const Divisor = 10000;
+    const Divisor = 1000000;
     const Max = self::Divisor;
     const Min = 0;
 
