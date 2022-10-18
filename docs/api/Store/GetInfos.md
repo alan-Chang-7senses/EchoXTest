@@ -40,9 +40,9 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | storeInfoID | int | 商店索引 |
 | uiStyle | int | [介面類型](#UIStyle) |
-| autoRefreshTime | int | 自動刷新刷新剩餘時間(s) |
+| autoRefreshTime | int | 自動刷新剩餘時間(s) |
 | refreshRemain | int | 剩餘刷新次數 |
-| refreshTime | int | 剩餘刷新時間(s) |
+| resetRefreshTime | int | 剩餘刷新次數重置時間(s) |
 | refreshCost | int | 刷新費用 |
 | refreshCurrency | int | 刷新費用之[貨幣](#Currency) |
 | fixPurchase | array | 固定[儲值商店商品](#purchase)(可空) |
