@@ -48,6 +48,22 @@ CREATE TABLE IF NOT EXISTS `PowerLog` (
   KEY `Cause` (`Cause`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='電力消耗log';
 
+-- 傾印  資料表 koa_log.PVECleared 結構
+CREATE TABLE IF NOT EXISTS `PVECleared` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT,
+  `UserID` int(11) NOT NULL DEFAULT 0,
+  `PlayerID` int(11) NOT NULL DEFAULT 0,
+  `LevelID` int(11) NOT NULL DEFAULT 0,
+  `Items` text NOT NULL DEFAULT '',
+  `SyncRate` int(11) NOT NULL DEFAULT 0,
+  `Ranking` tinyint(4) NOT NULL DEFAULT 0,
+  `ClearCount` smallint(6) NOT NULL DEFAULT 0,
+  `StartTime` int(11) NOT NULL DEFAULT 0,
+  `FinishTime` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Serial`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PVE通關紀錄。';
+
 -- 傾印  資料表 koa_log.SeasonRankingReward 結構
 CREATE TABLE IF NOT EXISTS `SeasonRankingReward` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
