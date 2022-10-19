@@ -46,6 +46,7 @@ abstract class BaseLaunchSkill extends BaseRace{
         $playerHandlerSelf = new PlayerHandler($playerSelf);
         $playerInfo = $playerHandlerSelf->GetInfo();
         if(!$playerHandlerSelf->HasSkill($skillID)) throw new PlayerException(PlayerException::NoSuchSkill, ['[player]' => $playerInfo->id, '[skillID]' => $skillID]);
+        if(!in_array($skillID, $playerInfo->skillHole)) throw new PlayerException(PlayerException::NoEquipSkill, ['[player]' => $playerInfo->id, '[skillID]' => $skillID]);
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
