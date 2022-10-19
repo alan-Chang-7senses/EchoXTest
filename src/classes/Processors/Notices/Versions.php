@@ -17,6 +17,8 @@ class Versions extends BaseProcessor{
     const Disable = 0;
     const Enabled = 1;
     
+    protected bool $mustSigned = false;
+    
     public function Process(): ResultData {
         
         $version = getenv(EnvVar::AppVersion);

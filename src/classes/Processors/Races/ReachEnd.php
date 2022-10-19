@@ -50,25 +50,27 @@ class ReachEnd extends BaseRace{
         if($raceInfo->status == RaceValue::StatusFinish) throw new RaceException(RaceException::Finished);
         
         $accessor->ClearAll();
-        $accessor->Transaction(function() use ($accessor, $racePlayerID){
+        $reach = $accessor->Transaction(function() use ($accessor, $racePlayerID){
             
             $row = $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
             if($row->Status == RaceValue::StatusReach) throw new RaceException (RaceException::PlayerReached);
             
-            $accessor->ClearCondition();
-            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
+            $accessor->Modify([
                 'Status' => RaceValue::StatusReach,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
                 'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
             ]);
+            
+            $reach['total'] = $accessor->ClearCondition()->SelectExpr('COUNT(*) AS cnt')->WhereEqual('RaceID', $this->userInfo->race)->Fetch()->cnt;
+            $reach['ranking'] = $row->Ranking;
+            
+            return $reach;
         });
         
         RacePlayerPool::Instance()->Delete($racePlayerID);
         
         $result = new ResultData(ErrorCode::Success);
-                
-
-
+        $result->reach = $reach;
         return $result;
     }
 }

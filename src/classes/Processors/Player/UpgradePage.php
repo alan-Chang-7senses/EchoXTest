@@ -10,6 +10,7 @@ use Games\Players\Exp\PlayerEXP;
 use Games\Players\PlayerAbility;
 use Games\Players\PlayerHandler;
 use Games\Players\UpgradeData;
+use Games\Pools\ItemInfoPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -49,9 +50,14 @@ class UpgradePage extends BaseProcessor
         });
         foreach ($upgradeData as $item) {
             $amount = $userBagHandler->GetItemAmount($item->ItemID);
+            $itemInfo = ItemInfoPool::Instance()->{ $item->ItemID};
             $itemData[$item->ItemID]['amount'] = $amount;
             $itemData[$item->ItemID]['cost'] = $item->Charge;
             $itemData[$item->ItemID]['exp'] = $item->EffectValue;
+            $itemData[$item->ItemID]['description'] = $itemInfo->Description;
+            $itemData[$item->ItemID]['itemName'] = $itemInfo->ItemName;
+            $itemData[$item->ItemID]['icon'] = $itemInfo->Icon;
+
             $expTotal += $item->EffectValue * $amount;
             //一鍵添加
             $i++;

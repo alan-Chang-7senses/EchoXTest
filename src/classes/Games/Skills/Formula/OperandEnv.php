@@ -16,9 +16,9 @@ class OperandEnv extends BaseOperand{
         if(empty($this->factory->maxEffect)) return 0;
         
         return match ($this->factory->maxEffect->TypeValue){
-            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->factory->player->dune),
-            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->factory->player->craterLake),
-            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->factory->player->volcano),
+            // SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->factory->player->dune),
+            // SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->factory->player->craterLake),
+            // SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->factory->player->volcano),
             default => 0
         };
     }

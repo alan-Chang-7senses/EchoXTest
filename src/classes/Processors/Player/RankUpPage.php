@@ -9,6 +9,7 @@ use Games\Consts\UpgradeValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Players\UpgradeUtility;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -59,24 +60,17 @@ class RankUpPage extends BaseProcessor{
             'maxLevel' => PlayerValue::RankMaxLevel[$playerInfo->rank + UpgradeValue::RankUnit],
             'skillLevelMax' => UpgradeValue::SkillLevelLimit[$playerInfo->rank + UpgradeValue::RankUnit],
         ];
-        $results->requireItemDust = 
-        [
-            'itemID' => $dustItemID,
-            'amount' => $dustAmount,
-            'requireAmount' => $dustRequireAmount,
-        ];
-        $results->requireItemCrystal = 
-        [
-            'itemID' => $crystalItemID,
-            'amount' => $crystalAmount,
-            'requireAmount' => $crystalRequireAmount,
-        ];
+        $results->itemInfos = [];
+        $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($dustItemID,$dustAmount,$dustRequireAmount);
+        $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($crystalItemID,$crystalAmount,$crystalRequireAmount);
 
+        
         $results->requireCoin = 
         [
             'requireAmount' => $chargeRequire,
             'isEnough' => $userInfo->coin >= $chargeRequire,
         ];
+        
 
         $results->canRankUp = (PlayerValue::RankMaxLevel[$playerInfo->rank] == $playerInfo->level
                     && $dustAmount >= $dustRequireAmount

@@ -11,6 +11,7 @@ use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
 use Games\Pools\UserPool;
+use Games\Races\RaceUtility;
 use Holders\ResultData;
 /**
  * Description of LeaveRace
@@ -55,6 +56,8 @@ class LeaveRace extends BaseRace{
             
             return $racePlayerID;
         });
+        
+        RaceUtility::FinishRestoreLevel([$userInfo->player]);
         
         UserPool::Instance()->Delete($this->userInfo->id);
         $racePool->Delete($raceID);

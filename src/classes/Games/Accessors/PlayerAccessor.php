@@ -30,6 +30,12 @@ class PlayerAccessor extends BaseAccessor{
                 ->WhereEqual('UserID', $userID)->FetchStyle(PDO::FETCH_ASSOC)->FetchAll();
     }
 
+    public function rowHolderByPlayerID(int $playerID) : mixed
+    {
+        return $this->MainAccessor()->FromTable('PlayerHolder')
+        ->WhereEqual('PlayerID', $playerID)->Fetch();
+    }
+
     public function ModifyPlayerByPlayerID(int $id, array $bind) : bool{
         return $this->MainAccessor()->FromTableJoinUsing('PlayerNFT', 'PlayerHolder', 'INNER', 'PlayerID')
         ->FromTableJoinUsingNext('PlayerLevel', 'LEFT', 'PlayerID')

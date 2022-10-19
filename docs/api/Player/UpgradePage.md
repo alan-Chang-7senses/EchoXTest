@@ -71,6 +71,9 @@ levelData陣列中的第一個元素是當前等級
 | amount | int | 道具持有數量 |
 | cost | int | 道具花費手續費 |
 | exp | int | 道具提升經驗值量 |
+| description | string | 道具描述代號 |
+| itemName | string | 道具名稱代號 |
+| icon | string | 道具圖示代號 |
 | autoAmount | int | "一鍵添加"時該道具的數量 |
 
 
@@ -86,12 +89,15 @@ levelData陣列中的第一個元素是當前等級
 
 ### Example 道具內容
 
-    "1003": {
-        "amount": 0,
-        "cost": 14000,
-        "exp": 2100,
-        "autoAmount": 0
-    }
+        "1003": {
+            "amount": 0,
+            "cost": 14000,
+            "exp": 2520,
+            "description": "8603",
+            "itemName": "8103",
+            "icon": "ItemIcon_1003",
+            "autoAmount": 0
+        }
 
 
 ### Example 回傳結果
@@ -100,52 +106,61 @@ levelData陣列中的第一個元素是當前等級
             "code": 0,
             "message": ""
         },
-        "rank": 4,
-        "currentCoin": 548899,
-        "currentExp": 933075,
-        "maxLevel": 100,
+        "rank": 1,
+        "currentCoin": 46964900,
+        "currentExp": 0,
+        "maxLevel": 40,
         "levelData": [
             {
-                "level": 99,
+                "level": 1,
                 "values": {
-                    "velocity": 124.96,
-                    "stamina": 102.42,
-                    "breakOut": 97.94,
-                    "will": 102.67,
-                    "intelligent": 110.83
+                    "velocity": 112.61,
+                    "stamina": 112.61,
+                    "breakOut": 112.61,
+                    "will": 112.61,
+                    "intelligent": 112.61
                 },
-                "levelRequireExp": 927881
+                "levelRequireExp": 0
             },
             {
-                "level": 100,
+                "level": 2,
                 "values": {
-                    "velocity": 124.96,
-                    "stamina": 104.02,
-                    "breakOut": 97.94,
-                    "will": 102.67,
-                    "intelligent": 110.83
+                    "velocity": 112.61,
+                    "stamina": 112.61,
+                    "breakOut": 112.61,
+                    "will": 112.61,
+                    "intelligent": 114.33
                 },
-                "levelRequireExp": 957997
+                "levelRequireExp": 20
             }
         ],
         "itemData": {
             "1003": {
                 "amount": 0,
                 "cost": 14000,
-                "exp": 2100,
+                "exp": 2520,
+                "description": "8603",
+                "itemName": "8103",
+                "icon": "ItemIcon_1003",
                 "autoAmount": 0
             },
             "1002": {
-                "amount": 1000,
+                "amount": 0,
                 "cost": 5000,
-                "exp": 750,
-                "autoAmount": 33
+                "exp": 900,
+                "description": "8602",
+                "itemName": "8102",
+                "icon": "ItemIcon_1002",
+                "autoAmount": 0
             },
             "1001": {
-                "amount": 1000,
+                "amount": 0,
                 "cost": 1000,
-                "exp": 150,
-                "autoAmount": 2
+                "exp": 180,
+                "description": "8601",
+                "itemName": "8101",
+                "icon": "ItemIcon_1001",
+                "autoAmount": 0
             }
         }
     }
