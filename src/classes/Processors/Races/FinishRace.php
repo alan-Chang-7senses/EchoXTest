@@ -6,6 +6,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
+use Games\Consts\ItemValue;
 use Games\Consts\RaceValue;
 use Games\Consts\RewardValue;
 use Games\Exceptions\RaceException;
@@ -167,7 +168,7 @@ class FinishRace extends BaseRace{
             $rewardInfo = $rewards[$user['id']]->GetInfo();
             if($rewardInfo->Modes == RewardValue::ModeSelfSelect) continue;
             
-            UserUtility::AddItems($user['id'], $items[$user['id']]);
+            UserUtility::AddItems($user['id'], $items[$user['id']], ItemValue::CauseRace);
         }
         
         $accessor->Transaction(function() use ($accessor, $raceID, $racePlayersArr, $users){
