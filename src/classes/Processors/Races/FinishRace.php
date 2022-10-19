@@ -64,42 +64,38 @@ class FinishRace extends BaseRace{
             
             $duration = [];
             $finishTime = [];
+            $notEndPlayerIDs = [];
             foreach($rows as $row){
                 
-                if($row->FinishTime == 0){
-                    $totalDistance = $raceVerifyScenePool->{$this->userInfo->scene}->{$row->TrackNumber}->total;
-                    $raceVerifyInfo = $raceVerifyPool->{$row->RacePlayerID};
-                    $row->FinishTime = $raceVerifyInfo->updateTime + ($totalDistance - $raceVerifyInfo->serverDistance) / $raceVerifyInfo->speed;
-                    $finishTime[$row->RacePlayerID] = $row->FinishTime;
-                }
+                if($row->Status != RaceValue::StatusReach) $notEndPlayerIDs[] = $row->PlayerID;
+                
+                $totalDistance = $raceVerifyScenePool->{$this->userInfo->scene}->{$row->TrackNumber}->total;
+                $raceVerifyInfo = $raceVerifyPool->{$row->RacePlayerID};
+                $row->FinishTime = $raceVerifyInfo->updateTime + ($totalDistance - $raceVerifyInfo->serverDistance) / $raceVerifyInfo->speed;
+                
+                $finishTime[$row->RacePlayerID] = $row->FinishTime;
                 $duration[$row->RacePlayerID] = $row->FinishTime - $row->StartTime;
             }
             
-            if(count($finishTime) == count($rows)) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $row->PlayerID]);
+            if(count($notEndPlayerIDs) == count($rows)) throw new RaceException(RaceException::PlayerNotReached, ['[player]' => $notEndPlayerIDs[0]]);
             
             asort($duration);
             
             $racePlayerPool = RacePlayerPool::Instance();
             $currentTime = $GLOBALS[Globals::TIME_BEGIN];
             $ranking = 0;
-            foreach(array_keys($duration) as $id){
+            $accessor->PrepareName('RacePlayerFinish');
+            foreach(array_keys($duration) as $racePlayerID){
                 
                 $accessor->ClearCondition();
                 
-                if(isset($finishTime[$id])){
-                    $accessor->PrepareName('RacePlayerFinishg');
-                    $accessor->WhereEqual('RacePlayerID', $id)->Modify([
-                        'Ranking' => ++$ranking,
-                        'UpdateTime' => $currentTime,
-                        'FinishTime' => $finishTime[$id],
-                    ]);
-                    
-                } else{
-                    $accessor->PrepareName('RacePlayerRanking');
-                    $accessor->WhereEqual('RacePlayerID', $id)->Modify(['Ranking' => ++$ranking]);
-                }
+                $accessor->WhereEqual('RacePlayerID', $racePlayerID)->Modify([
+                    'Ranking' => ++$ranking,
+                    'UpdateTime' => $currentTime,
+                    'FinishTime' => $finishTime[$racePlayerID],
+                ]);
                 
-                $racePlayerPool->Delete($id);
+                $racePlayerPool->Delete($racePlayerID);
             }
         });
         
