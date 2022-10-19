@@ -23,6 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | lobby | int | [大廳](../codes/race.md#lobby) |
+| version | string |  Photon版號 |
 
 ## Response
 

@@ -10,7 +10,7 @@ class PlayerEXP
 {
 
     public const LevelUnit = 1;
-    private const ExpUnit = 1;
+    public const ExpUnit = 1;
 
     private const TestLevel = 100;
 

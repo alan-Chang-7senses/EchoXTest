@@ -7,12 +7,14 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Consts\RaceValue;
+use Games\Consts\RaceVerifyValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -39,6 +41,7 @@ abstract class BasePlayerValues extends BaseRace{
     public function Process(): ResultData {
         
         $hp = InputHelper::post('hp');
+        $distance = InputHelper::post('distance');
         
         $values = json_decode(InputHelper::post('values'));
         if($values === null) $values = new stdClass();
@@ -77,8 +80,10 @@ abstract class BasePlayerValues extends BaseRace{
             $values->Status = RaceValue::StatusUpdate;
             $values->UpdateTime = $GLOBALS[Globals::TIME_BEGIN];
             $accessor->Modify((array)$values);
+
         });
         
+
         RacePlayerPool::Instance()->Delete($racePlayerID);
         
         $playerHandler = new PlayerHandler($playerID);
@@ -92,6 +97,16 @@ abstract class BasePlayerValues extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
+        $result->energy = $racePlayerHandler->GetInfo()->energy;
+
+
+        $result->distance = RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance);        
+//        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance) == RaceVerifyValue::VerifyCheat) {
+//            if ($this->userInfo->player === $playerID)//API:PlayerValues;  HostPlayerValue:不處理
+//            {
+//                throw new RaceException(RaceException::UserCheat);
+//            }
+//        }
         
         return $result;
     }

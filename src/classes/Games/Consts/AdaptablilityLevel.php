@@ -17,11 +17,62 @@ class AdaptablilityLevel {
     const ParamE = 1;
     const ParamF = 0;
     
-    const ValueS = 115;
-    const ValueA = 110;
-    const ValueB = 105;
-    const ValueC = 100;
-    const ValueD = 95;
-    const ValueE = 90;
-    const ValueF = 85;
+    const Enviroment = 0;
+    const Climate = 1;
+    const Terrian = 2;
+    const Wind = 3;
+
+    //舊數值
+    const ValueS = 105;
+    const ValueA = 104;
+    const ValueB = 103;
+    const ValueC = 102;
+    const ValueD = 101;
+    const ValueE = 100;
+    const ValueF = 99;
+
+    const AdaptablilityValues = 
+    [
+        self::Enviroment => 
+        [
+            self::ParamS => 105,
+            self::ParamA => 104,
+            self::ParamB => 103,
+            self::ParamC => 102,
+            self::ParamD => 101,
+            self::ParamE => 100,
+            self::ParamF => 99,
+        ],
+        self::Climate => 
+        [
+            self::ParamS => 105,
+            self::ParamA => 104,
+            self::ParamB => 103,
+            self::ParamC => 102,
+            self::ParamD => 101,
+            self::ParamE => 100,
+            self::ParamF => 99,
+        ],
+        self::Terrian => 
+        [
+            self::ParamS => 105,
+            self::ParamA => 104,
+            self::ParamB => 103,
+            self::ParamC => 102,
+            self::ParamD => 101,
+            self::ParamE => 100,
+            self::ParamF => 99,
+        ],
+        self::Wind => 
+        [
+            self::ParamS => 105,
+            self::ParamA => 104,
+            self::ParamB => 103,
+            self::ParamC => 102,
+            self::ParamD => 101,
+            self::ParamE => 100,
+            self::ParamF => 99,
+        ],
+    ];
+
 }

@@ -25,9 +25,6 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | [users](#user1) | string | 參賽玩家所組成的 JSON 陣列字串。 |
-| trackType | int | [賽道類別](../codes/race.md#trackType) |
-| trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
-| direction | int | [角色方向](../codes/player.md#direction) |
 
 #### <span id="users1">users 內容</span>
 
@@ -66,6 +63,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| id | int | 賽局編號 |
 | [scene](#scene) | object | 場景資訊 |
 | [users](#users2) | array | 各玩家的角色競賽資料陣列 |
 
@@ -141,6 +139,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "code": 0,
 	        "message": ""
 	    },
+	    "id": 10,
 	    "scene": {
 	        "env": 1,
 	        "weather": 1,

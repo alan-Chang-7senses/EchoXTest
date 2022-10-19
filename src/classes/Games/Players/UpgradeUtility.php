@@ -6,6 +6,8 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Games\Consts\NFTDNA;
 use Games\Consts\UpgradeValue;
+use Games\Pools\ItemInfoPool;
+use stdClass;
 
 class UpgradeUtility
 {
@@ -43,6 +45,23 @@ class UpgradeUtility
             };
         }
         return $requireItemIDAmounts;
+    }
+
+    public static function GetUpgradeItemInfo($itemID,$holdAmount,$requiredAmount) : stdClass
+    {
+        $rt = new stdClass();
+        $itemInfo = ItemInfoPool::Instance()->{ $itemID};
+        $rt->itemID = $itemInfo->ItemID;
+        $rt->itemName = $itemInfo->ItemName;
+        $rt->description = $itemInfo->Description;
+        $rt->itemType = $itemInfo->ItemType;
+        $rt->useType = $itemInfo->UseType;
+        $rt->stackLimit = $itemInfo->StackLimit;
+        $rt->icon = $itemInfo->Icon;
+        $rt->source = $itemInfo->Source;
+        $rt->holdAmount = $holdAmount;
+        $rt->requiredAmount = $requiredAmount;
+        return $rt;
     }
 
 }

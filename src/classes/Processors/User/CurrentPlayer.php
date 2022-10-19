@@ -4,9 +4,11 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Exceptions\UserException;
+use Games\Players\Exp\PlayerEXP;
 use Games\Players\PlayerHandler;
 use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
@@ -66,10 +68,18 @@ class CurrentPlayer extends BaseProcessor{
                 'maxEffects' => $handler->GetMaxEffects()
             ];
         }
+
+        $currentExp = $playerInfo->exp;
+        $currentMax = PlayerEXP::GetLevelRequireExp($playerInfo->level + PlayerEXP::LevelUnit);
+        $currentRequire = PlayerEXP::GetLevelRequireExp($playerInfo->level);
+        $currentMax = $playerInfo->level == PlayerValue::LevelMax ? $currentRequire : $currentMax - PlayerEXP::ExpUnit;
         
         $result = new ResultData(ErrorCode::Success);
         $result->player = $player;
-        
+        $result->level = $playerInfo->level;
+        $result->currentExp = $currentExp;
+        $result->currentLevelExpMax = $currentMax;
+        $result->currentLevelExpMin = $currentRequire;
         return $result;
     }
 }

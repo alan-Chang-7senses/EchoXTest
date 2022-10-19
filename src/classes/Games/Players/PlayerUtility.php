@@ -49,17 +49,17 @@ class PlayerUtility {
         return substr($dna, NFTDNA::SpeciesAdaptOffset, NFTDNA::SpeciesLength);
     }
 
-    public static function AdaptValueByPoint(int $point) : int{
+    public static function AdaptValueByPoint(int $point, int $adaptType) : int|float{
         
         return match ($point) {
-            AdaptablilityLevel::ParamA => AdaptablilityLevel::ValueA,
-            AdaptablilityLevel::ParamB => AdaptablilityLevel::ValueB,
-            AdaptablilityLevel::ParamC => AdaptablilityLevel::ValueC,
-            AdaptablilityLevel::ParamD => AdaptablilityLevel::ValueD,
-            AdaptablilityLevel::ParamE => AdaptablilityLevel::ValueE,
-            AdaptablilityLevel::ParamF => AdaptablilityLevel::ValueF,
+            AdaptablilityLevel::ParamA => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamA],
+            AdaptablilityLevel::ParamB => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamB],
+            AdaptablilityLevel::ParamC => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamC],
+            AdaptablilityLevel::ParamD => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamD],
+            AdaptablilityLevel::ParamE => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamE],
+            AdaptablilityLevel::ParamF => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamF],
             default => match (true) {
-                $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::ValueS,
+                $point >= AdaptablilityLevel::ParamS => AdaptablilityLevel::AdaptablilityValues[$adaptType][AdaptablilityLevel::ParamS],
                 default => 0,
             },
         };
@@ -77,5 +77,15 @@ class PlayerUtility {
         if($playerID < PlayerValue::BotIDLimit) return 'Robot'.$playerID;
         if(strlen($playerID) == PlayerValue::LengthNFTID) return 'NFT'. intval(substr($playerID, 3));
         return (string)$playerID;
+    }
+
+    public static function PartcodeAllDNA(PlayerDnaHolder|stdClass $dna)
+    {
+        $dna->head = PlayerUtility::PartCodeByDNA($dna->head);
+        $dna->body = PlayerUtility::PartCodeByDNA($dna->body);
+        $dna->hand = PlayerUtility::PartCodeByDNA($dna->hand);
+        $dna->leg = PlayerUtility::PartCodeByDNA($dna->leg);
+        $dna->back = PlayerUtility::PartCodeByDNA($dna->back);
+        $dna->hat = PlayerUtility::PartCodeByDNA($dna->hat);
     }
 }

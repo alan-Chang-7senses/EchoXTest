@@ -32,6 +32,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | power | int | 更新後電力 |
 | timeTillFull | int | 距離滿電力剩餘秒數 |
+| rate | int | 用戶每一點體力回復需求秒數 |
 
 
 ### Example
@@ -43,5 +44,6 @@ Content Type: `application/json`
             "message": ""
         }
         "power": 20,
-        "timeTillFull": 27570
+        "timeTillFull": 27570,
+        "rate": 400
     }

@@ -40,18 +40,19 @@ class UpgradeSkillPage extends BaseProcessor{
             $skillHandler = new SkillHandler($skill->id);
             $skillInfo = $skillHandler->GetInfo();
             $skillLevel = $playerhandler->SkillLevel($skillInfo->id);
+            $skillHandler->playerHandler = $playerhandler;
             $hasReachedRankMax = $skillLevel >= $levelLimit;
             $chipID = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeChipID($skillInfo->id);            
-            $requireItems = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
-            $requireItemsHoldAmount = [];
+            $requireItemIDs = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
+            $itemInfos = [];
             $isEnough = false;
-            if($requireItems !== null)
+            if(!empty($requireItemIDs))
             {
                 $isEnough = true;
-                foreach($requireItems as $itemID => $amount)
+                foreach($requireItemIDs as $itemID => $amount)
                 {
                     $holdAmount = $userBagHandler->GetItemAmount($itemID);
-                    $requireItemsHoldAmount[$itemID] = $holdAmount;
+                    $itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($itemID,$holdAmount,$amount);
                     if($holdAmount < $amount)$isEnough = false;         
                 }
             }
@@ -61,10 +62,23 @@ class UpgradeSkillPage extends BaseProcessor{
                 'hasReachedLimit' => $hasReachedRankMax,
                 'requireCoin' => $hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel],
                 'isCoinEnough' =>$hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel] <= $userInfo->coin,
-                'requireItem' => $requireItems,
-                'itemHold' => $requireItemsHoldAmount,
+                'itemInfos' => $hasReachedRankMax ? null : $itemInfos,
                 'isRequireItemEnough' =>$hasReachedRankMax ? null : $isEnough,
-
+                'name' => $skillInfo->name,
+                'icon' => $skillInfo->icon,
+                'description' => $skillInfo->description,
+                'level' => $skill->level,
+                'slot' => $skill->slot,
+                'energy' => $skillInfo->energy,
+                'cooldown' => $skillInfo->cooldown,
+                'duration' => $skillInfo->duration,
+                'ranks' => $skillInfo->ranks,
+                'maxDescription' => $skillInfo->maxDescription,
+                'maxCondition' => $skillInfo->maxCondition,
+                'maxConditionValue' => $skillInfo->maxConditionValue,
+                'attackedDesc' => $skillInfo->attackedDesc,
+                'effects' => $skillHandler->GetEffects(),
+                'maxEffects' => $skillHandler->GetMaxEffects()
             ];
         }
         $results->skillsData = $skillDatas;

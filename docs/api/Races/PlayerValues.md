@@ -23,6 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | hp | float | 剩餘耐力 |
+| distance | float | 移動距離 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
 #### <span id="values">values 內容</span>
@@ -56,6 +57,8 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | h | float | H值 |
 | s | float | S值 |
+| energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
+| distance | float | Server移動距離 |
 
 ### Example
 
@@ -65,5 +68,12 @@ Content Type: `application/json`
 	        "message": ""
 	    },
 	    "h": 1.2308113391984357,
-	    "s": 6.295599999999999
+	    "s": 6.295599999999999,
+    	"energy": [
+    	    0,
+    	    0,
+    	    0,
+    	    0
+    	],
+	    "distance": 3447.71
 	}

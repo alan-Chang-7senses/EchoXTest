@@ -37,6 +37,7 @@ class RaceValue {
     const StatusFinish = 3;
     const StatusGiveUp = 4;
     const StatusStart = 5;
+    const StatusRelease = 6;
     
     const StepFinishSuccess = 3;
 
@@ -64,7 +65,7 @@ class RaceValue {
     
     const ClimateAccelerations = [
         SceneValue::Sunny => 1,
-        SceneValue::Aurora => 1.2,
+        SceneValue::Aurora => 1.1,
         SceneValue::SandDust => 1,
     ];
     const ClimateLoses = [
@@ -89,21 +90,26 @@ class RaceValue {
     const RetainStrength = 3;
 
     /**直線x體力充沛 前係數 */
-    const PositiveHPStraightFront = 0.86;
+    const PositiveHPStraightFront = 0.55;
     /**直線x體力充沛 後係數 */
-    const PositiveHPStraightBack = 0.25;
+    const PositiveHPStraightBack = 0.33;
     /**直線x體力耗盡 前係數 */
-    const MinusHPStraightFront = 0.3;
+    const MinusHPStraightFront = 0.25;
     /**直線x體力耗盡 後係數 */
     const MinusHPStraightBack = 0.25;
     /**彎道x體力充沛 前係數 */
-    const PositiveHPCurveFront = 0.86;
+    const PositiveHPCurveFront = 0.55;
     /**彎道x體力充沛 後係數 */
-    const PositiveHPCurveBack = 0.25;
+    const PositiveHPCurveBack = 0.33;
     /**彎道x體力耗盡 前係數 */
-    const MinusHPCurveFront = 0.3;
+    const MinusHPCurveFront = 0.25;
     /**彎道x體力耗盡 後係數 */
     const MinusHPCurveBack = 0.25;
+
+    /**體力充沛S基數 */
+    const SValueBasePositiveHP = 2.5;
+    /**體力耗盡S基數 */
+    const SValueBaseMinusHP = 0;
 
     const LobbyNone = 0;
     const LobbyCoin = 1;
@@ -111,6 +117,25 @@ class RaceValue {
     const LobbyStudy = 3;
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
+    const LobbyPVE = 6;
+    
+    const LobbyPlayerLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinPlayerLevel',
+        self::LobbyPT => 'LobbyPTPlayerLevel',
+        self::LobbyStudy => 'LobbyStudyPlayerLevel',
+        self::LobbyCoinB => 'LobbyCoinPlayerLevel',
+        self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
+        self::LobbyPVE => 'LobbyPVEPlayerLevel',
+    ];
+    
+    const LobbySkillLevelConfig = [
+        self::LobbyCoin => 'LobbyCoinSkillLevel',
+        self::LobbyPT => 'LobbyPTSkillLevel',
+        self::LobbyStudy => 'LobbyStudySkillLevel',
+        self::LobbyCoinB => 'LobbyCoinSkillLevel',
+        self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
+        self::LobbyPVE => 'LobbyPVESkillLevel',
+    ];
     
     const RoomIdle = 0;
     const RoomMatching = 1;

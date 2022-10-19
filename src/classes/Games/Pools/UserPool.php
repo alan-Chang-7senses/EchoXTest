@@ -2,7 +2,9 @@
 
 namespace Games\Pools;
 
+use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
+use Consts\EnvVar;
 use Consts\Globals;
 use Games\Accessors\ItemAccessor;
 use Games\Accessors\PlayerAccessor;
@@ -67,4 +69,5 @@ class UserPool extends PoolAccessor{
         
         return $data;
     }
+
 }

@@ -3,6 +3,7 @@
 namespace Games\Players;
 
 use Games\Accessors\PlayerAccessor;
+use Games\Consts\AdaptablilityLevel;
 use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Consts\SyncRate;
@@ -70,9 +71,9 @@ class PlayerHandler {
      */
     public function GetEnvValue(int $env) : float{
         return match ($env) {
-            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune) + $this->offsetDune,
-            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake) + $this->offsetCraterLake,
-            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano) + $this->offsetVolcano,
+            SceneValue::Dune => PlayerUtility::AdaptValueByPoint($this->info->dune,AdaptablilityLevel::Enviroment) + $this->offsetDune,
+            SceneValue::CraterLake => PlayerUtility::AdaptValueByPoint($this->info->craterLake,AdaptablilityLevel::Enviroment) + $this->offsetCraterLake,
+            SceneValue::Volcano => PlayerUtility::AdaptValueByPoint($this->info->volcano,AdaptablilityLevel::Enviroment) + $this->offsetVolcano,
             default => 0,
         };
     }
@@ -84,9 +85,9 @@ class PlayerHandler {
      */
     public function GetClimateValue(int $weather) : float{
         return match ($weather) {
-            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny) + $this->offsetSunny,
-            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora) + $this->offsetAurora,
-            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust) + $this->offsetSandDust,
+            SceneValue::Sunny => PlayerUtility::AdaptValueByPoint($this->info->sunny,AdaptablilityLevel::Climate) + $this->offsetSunny,
+            SceneValue::Aurora => PlayerUtility::AdaptValueByPoint($this->info->aurora,AdaptablilityLevel::Climate) + $this->offsetAurora,
+            SceneValue::SandDust => PlayerUtility::AdaptValueByPoint($this->info->sandDust,AdaptablilityLevel::Climate) + $this->offsetSandDust,
             default => 0,
         };
     }
@@ -107,9 +108,9 @@ class PlayerHandler {
      */
     public function GetTerrainValue(int $trackType) : float{
         return match ($trackType) {
-            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat) + $this->offsetFlat,
-            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope) + $this->offsetUpslope,
-            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope) + $this->offsetDownslope,
+            SceneValue::Flat => PlayerUtility::AdaptValueByPoint($this->info->flat,AdaptablilityLevel::Terrian) + $this->offsetFlat,
+            SceneValue::Upslope => PlayerUtility::AdaptValueByPoint($this->info->upslope,AdaptablilityLevel::Terrian) + $this->offsetUpslope,
+            SceneValue::Downslope => PlayerUtility::AdaptValueByPoint($this->info->downslope,AdaptablilityLevel::Terrian) + $this->offsetDownslope,
             default => 0,
         };
     }
@@ -121,9 +122,9 @@ class PlayerHandler {
      */
     public function GetWindValue(int $playerWindDirection) : int{
         return match ($playerWindDirection) {
-            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind) + $this->offsetTailwind,
-            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind) + $this->offsetCrosswind,
-            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind) + $this->offsetHeadwind,
+            SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind,AdaptablilityLevel::Wind) + $this->offsetTailwind,
+            SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind,AdaptablilityLevel::Wind) + $this->offsetCrosswind,
+            SceneValue::Headwind => PlayerUtility::AdaptValueByPoint($this->info->headwind,AdaptablilityLevel::Wind) + $this->offsetHeadwind,
             default => 0,
         };
     }
@@ -149,26 +150,6 @@ class PlayerHandler {
     public function SaveLevel(array $bind) : void{    
         $this->pool->Save($this->info->id, 'Level', $bind);
         $this->ResetInfo();
-    }
-    /**
-     * @param float $rawSync
-     * @param ExpBonus $bonuses 效果集合，沒有加成可以不用給。
-     */
-    public function GainSync(float $rawSync, ...$bonuses) : stdClass
-    {
-        $expCalculator = new ExpBonusCalculator($rawSync);                
-        foreach($bonuses as $bonus)
-        {
-            $expCalculator->AddBonus($bonus);
-        }
-        $rt = $expCalculator->Process();
-        $exp = ($rt->exp + $this->info->sync);
-        $exp = PlayerEXP::Clamp(SyncRate::Max / SyncRate::Divisor,SyncRate::Min,$exp);
-        // $this->SaveSync($exp);
-        (new PlayerAccessor())->ModifySyncByPlayerID($this->info->id,['SyncRate' => $exp]);
-        PlayerPool::Instance()->Delete($this->info->id);
-        $this->ResetInfo();
-        return $rt;        
     }
 
     /**

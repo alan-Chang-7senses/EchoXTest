@@ -62,4 +62,13 @@ abstract class PoolAccessor {
         if($res) unset ($this->$id);
         return $res;
     }
+    
+    public function DeleteAll(array $ids) : void{
+        $memcacheAccessor = MemcacheAccessor::Instance();
+        foreach($ids as $id){
+            $key = $this->keyPrefix.$id;
+            $res = $memcacheAccessor->delete($key);
+            if($res) unset ($this->$id);
+        }
+    }
 }

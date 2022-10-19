@@ -7,14 +7,17 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Accessors\RaceAccessor;
 use Games\Consts\RaceValue;
+use Games\Consts\SceneValue;
 use Games\Consts\SkillValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Pools\PlayerPool;
 use Games\PVP\RaceRoomsHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\OfflineRecoveryDataHandler;
 use Games\Races\RaceHandler;
 use Games\Races\RaceUtility;
+use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
 use Games\Skills\SkillHandler;
 use Games\Users\UserHandler;
@@ -46,10 +49,6 @@ class Ready extends BaseRace{
         if(!is_array($users) || $userCount > $config->AmountRacePlayerMax || $userCount == 0) throw new RaceException(RaceException::IncorrectPlayerNumber);
         DataGenerator::ExistProperties($users[0], ['id', 'ranking', 'trackNumber', 'rhythm']);
 
-        $trackType = InputHelper::post('trackType');
-        $trackShape = InputHelper::post('trackShape');
-        $direction = InputHelper::post('direction');
-
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('Users')->WhereEqual('Room', $this->userInfo->room)->FetchStyleAssoc()->FetchAll();
         $roomUserIDs = array_column($row, 'UserID');
@@ -57,6 +56,7 @@ class Ready extends BaseRace{
         $n = 1;
         $userHandlers = [];
         $readyRaceInfos = [];
+        $readyRacePlayerIDs = [];
         foreach($users as $user){
             
             if(isset($readyRaceInfos[$user->id])) continue;
@@ -74,6 +74,7 @@ class Ready extends BaseRace{
 
             $userHandlers[] = $handler;
             $readyRaceInfos[$userInfo->id] = $readyRaceInfo;
+            $readyRacePlayerIDs[] = $userInfo->player;
 
             ++$n;
         }
@@ -94,6 +95,8 @@ class Ready extends BaseRace{
         ]);
 
         RaceRoomsHandler::StartRace($this->userInfo->room, $raceID);
+        
+        $this->ConvertLevel($readyRacePlayerIDs);
 
         $racePlayerIDs = [];
         $playerSkills = [];
@@ -149,10 +152,10 @@ class Ready extends BaseRace{
                 'UserID' => $userInfo->id,
                 'PlayerID' => $userInfo->player,
                 'RaceNumber' => $readyRaceInfo->raceNumber,
-                'Direction' => $direction,
+                'Direction' => SceneValue::East,
                 'Energy' => implode(',', $energy),
-                'TrackType' => $trackType,
-                'TrackShape' => $trackShape,
+                'TrackType' => SceneValue::Flat,
+                'TrackShape' => SceneValue::Straight,
                 'Rhythm' => $readyRaceInfo->rhythm,
                 'Ranking' => $readyRaceInfo->ranking,
                 'TrackNumber' => $readyRaceInfo->trackNumber,
@@ -221,8 +224,36 @@ class Ready extends BaseRace{
         }
         
         $result = new ResultData(ErrorCode::Success);
+        $result->id = intval($raceID);
         $result->scene = $scene;
         $result->users = $readyUserInfos;
+                
+        RaceVerifyHandler::Instance()->Ready($readyUserInfos, $racePlayerIDs);
+
         return $result;
+    }
+    
+    private function ConvertLevel(array $playerIDs) : void{
+        
+        $config = ConfigGenerator::Instance();
+        $lobbyPlayerLevelConfig = RaceValue::LobbyPlayerLevelConfig[$this->userInfo->lobby];
+        $lobbySkillLevelConfig = RaceValue::LobbySkillLevelConfig[$this->userInfo->lobby];
+        
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $values = $accessor->valuesForWhereIn($playerIDs);
+        
+        $lobbyPlayerLevel = $config->$lobbyPlayerLevelConfig;
+        if(!empty($lobbyPlayerLevel)){
+            $values->bind['level'] = $lobbyPlayerLevel;
+            $accessor->executeBind('UPDATE PlayerLevel SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        $lobbySkillLevel = $config->$lobbySkillLevelConfig;
+        if(!empty($lobbySkillLevel)){
+            $values->bind['level'] = $lobbySkillLevel;
+            $accessor->executeBind('UPDATE PlayerSkill SET `LevelBackup` = `Level`, `Level` = :level WHERE PlayerID IN '.$values->values, $values->bind);
+        }
+        
+        PlayerPool::Instance()->DeleteAll($playerIDs);
     }
 }

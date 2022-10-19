@@ -25,7 +25,34 @@ Content Type: `application/x-www-form-urlencoded`
 | id | int | 技能 ID |
 | player | int | 發動技能的角色編號 |
 | launchMax | int | 是否發動滿星技能，0 = 否、1 = 是 |
+| [players](#players) | string | 角色資訊物件陣列的 JSON 字串<br>未提供此參數則不處理 |
 
+#### <span id="players"> players 內容</span>
+
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| id | int | 角色編號 |
+| hp | float | 剩餘耐力 |
+
+#### players 範例
+
+	[
+	    {
+	        "id": 1,
+	        "hp": 12.33
+	    },
+	    {
+	        "id": -1,
+	        "hp": 22.34
+	    },
+	    {
+	        "id": 100,
+	        "hp": 99.99
+	    }
+	]
+	
 ## Response
 
 Content Type: `application/json`
