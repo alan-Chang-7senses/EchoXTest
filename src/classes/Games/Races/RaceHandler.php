@@ -249,7 +249,7 @@ class RaceHandler {
         };
     }
 
-    private function IsRankingLead(int $currentRanking) : bool
+    public function IsRankingLead(int $currentRanking) : bool
     {
         return $currentRanking <= $this->GetTotalPlayCount() - $currentRanking;
     }
