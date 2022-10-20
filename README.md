@@ -88,6 +88,7 @@
 - SSO\_CLIEND\_ID：SSO 登入的環境 Client ID。
 - SSO\_CLIEND\_SECRET：SSO 登入的註冊安全碼。
 - APP\_URI：API 本身的環境網址。
+- NFT\_URI：NFT 串接環境網址。
 - NFT\_CLIENTID：NFT 串接環境的 Client ID。
 - NFT\_APISECRET：NFT 串接環境的 API Secret。
 
