@@ -10,5 +10,8 @@ class StoreException extends NormalException {
     const NotEnoughCurrency = 8002;
     const Refreshed = 8003;
     const OutofStock = 8004;
+    const NoRefreshCount = 8005;
+    const PurchaseCancelled = 8006;
+    const PurchaseIsComplete = 8007;
 
 }

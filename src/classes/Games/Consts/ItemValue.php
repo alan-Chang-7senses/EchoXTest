@@ -40,7 +40,8 @@ class ItemValue
     const CauseCreateUser = 7;
     const CausePVEClearLevel = 8;
     const CausePVEMedalReward = 9;
-
+    const CauseStore = 10;
+    
     const ActionObtain = 1;
     const ActionUsed = 2;
 }
