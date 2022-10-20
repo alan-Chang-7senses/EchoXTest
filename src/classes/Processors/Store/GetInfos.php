@@ -5,15 +5,13 @@ namespace Processors\Store;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Pools\Store\StoreDataPool;
-use Games\Store\Holders\StoreInfosHolder;
-use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\UserBagHandler;
-use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -27,21 +25,18 @@ class GetInfos extends BaseProcessor {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
-        $userHandler = new UserHandler($this->userID);
-        $info = $userHandler->GetInfo();
-
         //get currency
         $userBagHandler = new UserBagHandler($userID);
         $responseCurrencies = [];
-        foreach (StoreValue::CurrencyItemID as $currencyItemID) {
-            
-            $info->diamond;
-            $responseCurrencies[] = $userBagHandler->GetItemAmount($currencyItemID);
+        foreach (StoreValue::Currencies as $currency) {
+            $itemID = StoreUtility::GetCurrencyItemID($currency);
+            $responseCurrencies[] = $userBagHandler->GetItemAmount($itemID);
         }
 
         //get store
         $storeHandler = new StoreHandler($userID);
         $storeIDs = $storeHandler->GetStoreDatas();
+
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $resposeStores = [];
         foreach ($storeIDs as $storeID) {
@@ -56,27 +51,17 @@ class GetInfos extends BaseProcessor {
 
             $accessor->ClearCondition();
             $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID->StoreID)->Fetch();
-
-            $storeInfosHolder = new StoreInfosHolder();
-            $autoRefreshTime = new StoreRefreshTimeHolder();
-            $resetRefreshTime = new StoreRefreshTimeHolder();
+            $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);                
+            $storeInfosHolder->storeID = $storeID->StoreID;                
+            $updateTime = empty($rowStoreInfo) ? (int) $GLOBALS[Globals::TIME_BEGIN] : $storeInfosHolder->updateTime;
+            $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($updateTime);
+            $resetRefreshTime = StoreUtility::CheckResetTime($updateTime);
 
             if (empty($rowStoreInfo)) {
-                $storeInfosHolder->storeInfoID = StoreValue::NoStoreInfoID; //沒有資料,產出新的                                
-                $storeInfosHolder->storeID = $storeID->StoreID;
-                $storeInfosHolder->fixTradIDs = null;
-                $storeInfosHolder->randomTradIDs = null;
                 $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
                 $autoRefreshTime->needRefresh = true;
+                $resetRefreshTime->needRefresh = false;
             } else {
-                $storeInfosHolder->storeInfoID = $rowStoreInfo->StoreInfoID;
-                $storeInfosHolder->storeID = $storeID->StoreID;
-                $storeInfosHolder->fixTradIDs = $rowStoreInfo->FixTradIDs;
-                $storeInfosHolder->randomTradIDs = $rowStoreInfo->RandomTradIDs;
-                $storeInfosHolder->refreshRemainAmounts = $rowStoreInfo->RefreshRemainAmounts;
-
-                $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($rowStoreInfo->UpdateTime);
-                $resetRefreshTime = StoreUtility::CheckResetTime($rowStoreInfo->UpdateTime);
                 if ($resetRefreshTime->needRefresh) {
                     if ($storeInfosHolder->refreshRemainAmounts == $storeDataHolder->refreshCount) {
                         $resetRefreshTime->needRefresh = false;
@@ -99,7 +84,7 @@ class GetInfos extends BaseProcessor {
                 }
                 $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
             } else if ($resetRefreshTime->needRefresh) {
-                $storeHandler->UpdateStoreInfo($storeInfosHolder);
+                $storeHandler->UpdateStoreInfoRemain($storeInfosHolder);
             }
 
             //response

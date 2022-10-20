@@ -4,11 +4,10 @@ namespace Processors\Store;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\ItemException;
 use Games\Exceptions\StoreException;
-use Games\Pools\Store\StoreCountersPool;
+use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
@@ -19,24 +18,31 @@ use Holders\ResultData;
 use Processors\BaseProcessor;
 
 /*
- * Description of BuyGoods
+ * Description of PurchaseBuy
+ * 儲值購買 : 先確定可以購買，再建立訂單和第三方溝通
  */
 
-class BuyGoods extends BaseProcessor {
+class PurchaseBuy extends BaseProcessor {
 
     public function Process(): ResultData {
 
         $tradeID = InputHelper::post('tradeID');
+        $device = InputHelper::post('device');
 
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
 
         $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
-        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Counters)) {
+        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Purchase)) {
             throw new StoreException(StoreException::Error, ['[des]' => "params"]);
         }
+        
+        if (($device != StoreValue::Andriod) && ($device != StoreValue::iOS))
+        {
+            throw new StoreException(StoreException::Error, ['[des]' => "device"]);            
+        }
 
-        if ($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) {
+        if ($storeTradesHolder->remainInventory == StoreValue::InventoryDisplay) {
             throw new StoreException(StoreException::OutofStock);
         }
 
@@ -46,28 +52,16 @@ class BuyGoods extends BaseProcessor {
         }
 
         $userBagHandler = new UserBagHandler($userID);
-        $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
-        $additem = ItemUtility::GetBagItem($storeCountersHolder->itemID, $storeCountersHolder->amount);
+        $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
+        $additem = ItemUtility::GetBagItem($storePurchaseHolder->itemID, $storePurchaseHolder->amount);
         if ($userBagHandler->CheckAddStacklimit($additem) == false) {
             throw new ItemException(ItemException::UserItemStacklimitReached); //堆疊溢滿
         }
 
-        //扣錢
-        if ($storeCountersHolder->currency != StoreValue::CurrencyFree) {
-            $itemID = StoreUtility::GetCurrencyItemID($storeCountersHolder->currency);
-            if ($userBagHandler->DecItemByItemID($itemID, $storeCountersHolder->price, ItemValue::CauseStore) == false) {
-                throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠
-            }
-        }
-        if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
-            $storeTradesHolder->remainInventory--;
-            $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);            
-        }
-
-        //加物品
-        $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+        //建立訂單
+        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder);
         $result = new ResultData(ErrorCode::Success);
-        $result->remainInventory = $storeTradesHolder->remainInventory;
+        $result->orderID = $orderID;
         return $result;
     }
 
