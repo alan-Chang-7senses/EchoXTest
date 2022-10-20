@@ -74,7 +74,7 @@ class RankUpPage extends BaseProcessor{
 
         $results->canRankUp = (PlayerValue::RankMaxLevel[$playerInfo->rank] == $playerInfo->level
                     && $dustAmount >= $dustRequireAmount
-                    && $crystalAmount >= $dustRequireAmount
+                    && $crystalAmount >= $crystalRequireAmount
                     && $userInfo->coin >= $chargeRequire);
                         
         return $results;
