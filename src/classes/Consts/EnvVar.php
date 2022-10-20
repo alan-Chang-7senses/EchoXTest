@@ -65,4 +65,9 @@ class EnvVar {
     const SSOClientID = 'SSO_CLIEND_ID';
     const SSOClientSecret = 'SSO_CLIEND_SECRET';
     const APPUri = 'APP_URI';
+    
+    const CallBackKeyAndroidTest = 'CallBackKey_Android_Test';
+    const CallBackKeyAndroidProduct = 'CallBackKey_Android_Product';
+    const CallBackKeyIosTest = 'CallBackKey_Ios_Test';
+    const CallBackKeyIosProduct = 'CallBackKey_Ios_Product';
 }

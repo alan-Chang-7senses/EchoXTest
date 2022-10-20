@@ -49,7 +49,12 @@ services:
             SSO_CLIEND_ID: 95e7029a-b391-43d8-a77b-f23992906397
             SSO_CLIEND_SECRET: msrqEmF7Wk4shu2c5kI7y35UawpOyJz8rEx8uuSc
             APP_URI: http://localhost:37001
-            
+
+            CallBackKey_Android_Test: 93981875772716097886792684820569
+            CallBackKey_Android_Product: 36763072023944689925932845771454
+            CallBackKey_Ios_Test: 11037844153751881221082701761433
+            CallBackKey_Ios_Product: 65243409521923055344687908304410
+
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
 #            XDEBUG_CLIENT_PORT: 9003
     memcached:
