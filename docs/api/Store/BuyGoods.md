@@ -39,8 +39,9 @@ Content Type: `application/json`
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    }
+		"error": {
+			"code": 0,
+			"message": ""
+		},
+		"remainInventory": 2
 	}

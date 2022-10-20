@@ -22,7 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| storeID | int | 商店編號 |
+| storeInfoID | int | 商店編號 |
 
 ## Response
 
@@ -41,8 +41,34 @@ Content Type: `application/json`
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    }
+		"error": {
+			"code": 0,
+			"message": ""
+		},
+		"refreshRemain": 98,
+		"randomPurchase": [],
+		"randomCounters": [
+			{
+				"tradID": 23,
+				"itemID": 1001,
+				"amount": 1,
+				"icon": "ItemIcon_1001",
+				"name": "8101",
+				"remainInventory": 3,
+				"price": 100,
+				"currency": 1,
+				"promotion": 3
+			},
+			{
+				"tradID": 24,
+				"itemID": 1001,
+				"amount": 2,
+				"icon": "ItemIcon_1001",
+				"name": "8101",
+				"remainInventory": 3,
+				"price": 100,
+				"currency": 1,
+				"promotion": 3
+			}
+		]
 	}

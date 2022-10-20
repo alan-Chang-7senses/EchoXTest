@@ -38,7 +38,7 @@ Content Type: `application/json`
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| storeInfoID | int | 商店索引 |
+| storeInfoID | int | 商店編號 |
 | uiStyle | int | [介面類型](#UIStyle) |
 | autoRefreshTime | int | 自動刷新剩餘時間(s) |
 | refreshRemain | int | 剩餘刷新次數 |
