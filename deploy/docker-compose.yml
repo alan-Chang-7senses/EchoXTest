@@ -49,6 +49,10 @@ services:
             SSO_CLIEND_ID: 95e7029a-b391-43d8-a77b-f23992906397
             SSO_CLIEND_SECRET: msrqEmF7Wk4shu2c5kI7y35UawpOyJz8rEx8uuSc
             APP_URI: http://localhost:37001
+            
+            NFT_URI: https://blockchain-middleware.gamma.metasens.io/v1
+            NFT_CLIENTID: 1745180808770445313
+            NFT_APISECRET: 7e3luSeepds7Pb4yHpzSe5bP687T0VrWAA4kMyfALyMfdx9F
 
             CallBackKey_Android_Test: 93981875772716097886792684820569
             CallBackKey_Android_Product: 36763072023944689925932845771454
