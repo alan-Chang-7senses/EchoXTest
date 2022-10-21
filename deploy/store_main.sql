@@ -24,32 +24,30 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
   `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
   `FixTradIDs` varchar(50) DEFAULT NULL COMMENT '固定商品',
   `RandomTradIDs` varchar(50) DEFAULT NULL COMMENT '隨機商品',
-  `RemainRefreshTimes` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
+  `RefreshRemainAmounts` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`StoreInfoID`),
+  UNIQUE KEY `UserID_StoreID` (`UserID`,`StoreID`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
--- 正在傾印表格  koa_main.StoreInfos 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `StoreInfos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `StoreInfos` ENABLE KEYS */;
-
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
-  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
-  `PIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '儲值商店索引',
-  `OrderID` varchar(50) DEFAULT NULL COMMENT '訂單編號',
+  `Device` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '裝置',
+  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `OrderNo` varchar(50) DEFAULT '' COMMENT '訂單編號(同SDK)',
+  `UsdAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '美元計價的金額(SDK)',
+  `PayAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '支付金額',
+  `PayCurrency` varchar(50) DEFAULT '' COMMENT '支付的幣種',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`Serial`)
+  PRIMARY KEY (`OrderID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
-
--- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `StorePurchaseOrders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `StorePurchaseOrders` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.StoreTrades 結構
 CREATE TABLE IF NOT EXISTS `StoreTrades` (
@@ -59,14 +57,11 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
   `StoreType` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
   `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
   `RemainInventory` int(10) NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
-  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`TradeID`)
+  PRIMARY KEY (`TradeID`),
+  KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
--- 正在傾印表格  koa_main.StoreTrades 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `StoreTrades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `StoreTrades` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `StoreData` (
   KEY `IsOpen` (`IsOpen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商店資訊';
 
--- 正在傾印表格  koa_static.StoreData 的資料：~4 rows (近似值)
+-- 正在傾印表格  koa_static.StoreData 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `StoreData` DISABLE KEYS */;
 INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `StoreType`, `UIStyle`, `FixedGroup`, `StochasticGroup`, `RefreshCount`, `RefreshCost`, `RefreshCostCurrency`) VALUES
 	(1, 1, 1, 1, 1, 0, 0, 0, 0),
@@ -93,14 +93,14 @@ CREATE TABLE IF NOT EXISTS `StorePurchase` (
 -- 正在傾印表格  koa_static.StorePurchase 的資料：~8 rows (近似值)
 /*!40000 ALTER TABLE `StorePurchase` DISABLE KEYS */;
 INSERT INTO `StorePurchase` (`PIndex`, `GroupID`, `PurchaseID`, `ItemID`, `Amount`, `IAP`, `IAB`) VALUES
-	(1, 1, 1001, -3, 1, 'com.petarush.IAP30', 'exampleSku30'),
-	(2, 1, 1002, -3, 1, 'com.petarush.IAP60', 'exampleSku60'),
-	(3, 1, 1001, -3, 1, 'com.petarush.IAP90', 'exampleSku90'),
-	(4, 1, 1001, -3, 1, 'com.petarush.IAP120', 'exampleSku120'),
-	(5, 1, 1003, -3, 1, 'com.petarush.IAP150', 'exampleSku150'),
-	(6, 1, 1001, -3, 1, 'com.petarush.IAP180', 'exampleSku180'),
-	(7, 1, 1003, -3, 1, 'com.petarush.IAP210', 'null'),
-	(8, 1, 1001, -3, 1, 'com.petarush.IAP240', '');
+	(1, 1, 1001, -3, 1, '001', '001'),
+	(2, 1, 1001, -3, 1, '002', '002'),
+	(3, 1, 1002, -3, 1, '003', '003'),
+	(4, 1, 1002, -3, 1, '004', '004'),
+	(5, 1, 1003, -3, 1, '005', '005'),
+	(6, 1, 1004, -3, 1, '006', '006'),
+	(7, 1, 1005, -3, 1, '007', 'null'),
+	(8, 1, 1006, -3, 1, '008', '');
 /*!40000 ALTER TABLE `StorePurchase` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
