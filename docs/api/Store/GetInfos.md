@@ -84,8 +84,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 編碼 | 定義 |
 |:-:|:-:|
 | 1 | 固定商品 12 件、隨機商品 0 件 |
-| 2 | 固定商品 8 件、隨機商品 4 件 |
-| 3 | 固定商品 4 件、隨機商品 8 件 |
+| 2 | 固定商品 9 件、隨機商品 3 件 |
+| 3 | 固定商品 3 件、隨機商品 9 件 |
 | 4 | 固定商品 0 件、隨機商品 12 件 |
 <br>
 
@@ -108,17 +108,21 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			"message": ""
 		},
 		"currencies": [
+			799,
+			1003,
+			999,
 			0,
-			0
+			0,
+			1000
 		],
 		"stores": [
 			{
 				"storeInfoID": 1,
 				"uiStyle": 1,
-				"autoRefreshTime": 85116,
+				"autoRefreshTime": 84154,
 				"refreshRemain": 0,
 				"refreshMax": 0,
-				"resetRefreshTime": 27516,
+				"resetRefreshTime": 26554,
 				"refreshCost": 0,
 				"refreshCurrency": 0,
 				"fixPurchase": [
@@ -128,8 +132,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 						"amount": 1,
 						"icon": "ItemIcon_0028",
 						"name": "8134",
-						"IAP": "com.petarush.IAP150",
-						"IAB": "exampleSku150"
+						"IAP": "001",
+						"IAB": "001"
 					},
 					{
 						"tradID": 7,
@@ -137,8 +141,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 						"amount": 1,
 						"icon": "ItemIcon_0028",
 						"name": "8134",
-						"IAP": "com.petarush.IAP60",
-						"IAB": "exampleSku60"
+						"IAP": "002",
+						"IAB": "002"
 					},
 					{
 						"tradID": 2,
@@ -146,8 +150,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 						"amount": 1,
 						"icon": "ItemIcon_0028",
 						"name": "8134",
-						"IAP": "com.petarush.IAP240",
-						"IAB": ""
+						"IAP": "005",
+						"IAB": "005"
 					}
 				],
 				"randomPurchase": [],
@@ -157,10 +161,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 2,
 				"uiStyle": 2,
-				"autoRefreshTime": 85116,
-				"refreshRemain": 6,
+				"autoRefreshTime": 84154,
+				"refreshRemain": 4,
 				"refreshMax": 6,
-				"resetRefreshTime": 27516,
+				"resetRefreshTime": 26554,
 				"refreshCost": 50,
 				"refreshCurrency": 1,
 				"fixPurchase": [],
@@ -172,7 +176,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 						"amount": 1,
 						"icon": "ItemIcon_1001",
 						"name": "8101",
-						"remainInventory": 3,
+						"remainInventory": 2,
 						"price": 100,
 						"currency": 1,
 						"promotion": 3
@@ -193,7 +197,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 					{
 						"tradID": 6,
 						"itemID": 1001,
-						"amount": 1,
+						"amount": 3,
 						"icon": "ItemIcon_1001",
 						"name": "8101",
 						"remainInventory": 3,
@@ -206,10 +210,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 3,
 				"uiStyle": 3,
-				"autoRefreshTime": 85116,
+				"autoRefreshTime": 84154,
 				"refreshRemain": 3,
 				"refreshMax": 3,
-				"resetRefreshTime": 27516,
+				"resetRefreshTime": 26554,
 				"refreshCost": 100,
 				"refreshCurrency": 2,
 				"fixPurchase": [],
@@ -220,10 +224,10 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 			{
 				"storeInfoID": 4,
 				"uiStyle": 4,
-				"autoRefreshTime": 85116,
+				"autoRefreshTime": 84154,
 				"refreshRemain": 3,
 				"refreshMax": 3,
-				"resetRefreshTime": 27516,
+				"resetRefreshTime": 26554,
 				"refreshCost": 200,
 				"refreshCurrency": 2,
 				"fixPurchase": [],

@@ -1,13 +1,13 @@
-# 商店 - 訂單資訊
+# 商店 - 儲值取消
 
 ## 介紹
 
-- 遊戲中儲值的驗證，先記錄玩家購買的商品，儲值完成後再給予購買物品。
+- 遊戲中儲值狀態，取消訂單購買。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
 
-http(s)://`域名`/Store/OrderInfo/
+http(s)://`域名`/Store/PurchaseCancel/
 
 ## Method
 
@@ -21,9 +21,8 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| tradeID | int |  交易序號 |
-| buyStatus | int | 購買狀態(1:購買, 2:取消、儲值取消) |
-| XXX | int | Quick驗證資訊 |
+| orderID | int | 訂單序號 |
+
 <br>
 
 ## Response

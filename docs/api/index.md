@@ -75,9 +75,11 @@
 	- 商店:
 		- [商店資訊](Store/GetInfos.md)
 		- [商品購買](Store/BuyGoods.md)
-		- [訂單資訊](Store/OrderInfo.md)	
-		- [QuickSDK儲值回調通知](Store/QuickSDKNotify.md)	
 		- [商店刷新](Store/Refresh.md)
+		- [儲值購買](Store/PurchaseBuy.md)	
+		- [儲值取消](Store/PurchaseCancel.md)	
+		- [儲值刷新](Store/PurchaseRefresh.md)	
+		- [QuickSDK儲值回調通知](Store/PurchaseNotify.md)			
 	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。

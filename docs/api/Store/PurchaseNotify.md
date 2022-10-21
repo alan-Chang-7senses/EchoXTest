@@ -3,15 +3,12 @@
 ## 介紹
 
 - 遊戲中儲值商店購買晶鑽。
-- 會由前端設定給QuickSDK的callbackURL；extrasParams加送tradeID
-- 購買前要先通知後端商品資訊(/Store/PurchaseVerify)，以資驗證
-- QuickSDK回調此API時，回應SUCCESS為成功
-
+- 會由前端設定此API給 QuickSDK 的callbackURL；
+- 購買後QuickSDK會回調此API，回應SUCCESS為成功為完成購買。
 
 ## URL
 
-http(s)://`域名`/Store/QuickSDKNotify/
-
+http(s)://`域名`/Interfaces/QuickSDK/PurchaseNotify/
 ## Method
 
 `POST`
@@ -34,7 +31,7 @@ Content Type: `application/x-www-form-urlencoded`
 | usdAmount| 用戶支付的遊戲道具以美元計價的金額| 
 | payStatus| 支付狀態，為0表示成功，為1時遊戲不做處理| 
 | actRate| 充值折扣，取值範圍0~1(不包含0），默認為1表示不折扣；如值為0.2表示多發20%的元寶| 
-| extrasParams| 遊戲下單時傳遞的擴展參數，將原樣返回。${\color{red}(前端需加送tradeID)}$|
+| extrasParams| 遊戲下單時傳遞的擴展參數，將原樣返回。
 | sign| 簽名值，遊戲應根據簽名約定，本地計算後與此值進行比對| 
 <br>
 

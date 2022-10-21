@@ -1,13 +1,14 @@
-# 商店 - 商品購買
+# 商店 - 儲值刷新
 
 ## 介紹
 
-- 遊戲中一般商品的購買。
+- 儲值完成後，需等待QuickSDK完成訂單購買，並回調後端完成加入物品資訊。
+- 由此API得知訂單購買狀態，定期輪詢，若[錯誤碼](../response.md#error)為 8007 則為完成購買。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
 
-http(s)://`域名`/Store/BuyGoods/
+http(s)://`域名`/Store/PurchaseRefresh/
 
 ## Method
 
@@ -21,8 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| tradeID | int |  交易序號 |
-<br>
+| orderID | int | 訂單序號 |
 
 ## Response
 
@@ -45,12 +45,12 @@ Content Type: `application/json`
 			"message": ""
 		},
 		"currencies": [
-			699,
+			799,
 			1005,
 			999,
 			0,
 			0,
-			1001
+			1000
 		],
-		"remainInventory": 1
+		"remainInventory": -1
 	}

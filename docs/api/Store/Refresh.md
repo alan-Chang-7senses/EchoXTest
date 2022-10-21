@@ -33,6 +33,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| currencies | array | 按[貨幣](GetInfos.md#Currency)順序 |
 | refreshRemain | int | 剩餘刷新次數 |
 | randomPurchase | array | 隨機[儲值商店商品](StoreInfo.md##purchase)(可空) |
 | randomCounters | array | 隨機[一般商店商品](StoreInfo.md##counters)(可空) |
@@ -45,11 +46,19 @@ Content Type: `application/json`
 			"code": 0,
 			"message": ""
 		},
-		"refreshRemain": 98,
+		"refreshRemain": 4,
+		"currencies": [
+			799,
+			1003,
+			999,
+			0,
+			0,
+			1000
+		],
 		"randomPurchase": [],
 		"randomCounters": [
 			{
-				"tradID": 23,
+				"tradID": 5,
 				"itemID": 1001,
 				"amount": 1,
 				"icon": "ItemIcon_1001",
@@ -60,9 +69,9 @@ Content Type: `application/json`
 				"promotion": 3
 			},
 			{
-				"tradID": 24,
+				"tradID": 6,
 				"itemID": 1001,
-				"amount": 2,
+				"amount": 3,
 				"icon": "ItemIcon_1001",
 				"name": "8101",
 				"remainInventory": 3,
