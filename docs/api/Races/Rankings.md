@@ -4,6 +4,7 @@
 
 - 當角色排名變更時，由房主發出此功能來更新排名。
 - 已經到達終點的角色，排名不會變更。
+- 目前名次已改成Server計算。
 
 ## URL
 
@@ -19,31 +20,8 @@ Content Type: `application/x-www-form-urlencoded`
 
 ### 參數
 
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| [players](#players) | string | 參賽角色所組成的 JSON 陣列字串。 |
+無
 
-#### <span id="players">players 內容</span>
-
-_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
-
-| 名稱 | 類型 | 說明 |
-|:-:|:-:|:-:|
-| id | int | 角色編號 |
-| ranking | int | 排名 |
-
-#### players 範例
-
-	[
-		{
-			"id": 1010000000000015,
-			"ranking": 1
-		},
-		{
-			"id": 1010000000000003,
-			"ranking": 2
-		}
-	]
 
 ## Response
 
@@ -54,12 +32,24 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| [rankings]($rankings) | array | 排名狀態 |
+
+
+#### <span id="rankings">rankings 內容</span>
+| 鍵值(int) | 內容(int) |
+|:-:|:-:|
+| 角色編號(PlayerID) | 名次 |
 
 ### Example
-
 	{
 	    "error": {
 	        "code": 0,
 	        "message": ""
+	    },
+	    "rankings": {
+	        "-3": 1,
+	        "-2": 2,
+	        "-1": 3,
+	        "216": 4
 	    }
 	}

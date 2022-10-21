@@ -7,7 +7,6 @@ use Games\Pools\RaceVerifyPool;
 use Games\Pools\RaceVerifyScenePool;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Races\RaceHandler;
-use Games\Races\RaceVerifyHandler;
 use stdClass;
 
 /**蓄力 */
@@ -28,7 +27,10 @@ class RhythmAccumulate implements IRhythm
         $raceVerifySceneInfos = RaceVerifyScenePool::Instance()->{$raceHandler->GetInfo()->scene};
         $raceVerifySceneInfo = $raceVerifySceneInfos->{$this->racePlayerInfo->trackNumber};
         $totalDistance = $raceVerifySceneInfo->total - $raceVerifySceneInfo->begin;
-        $verifyInfo = RaceVerifyPool::Instance()->{$this->racePlayerInfo->id};
+        // $accessor = new PDOAccessor(EnvVar::DBMain);
+        // $verifyInfo = $accessor->FromTable('RaceVerify')->WhereEqual('RacePlayerID',$this->racePlayerInfo->id)
+        //             ->Fetch();
+        $verifyInfo = RaceVerifyPool::Instance()->{$this->racePlayerInfo->id}; 
         $currentDistance = $verifyInfo->serverDistance;
         $progress = $currentDistance / $totalDistance;
         return match(true)
