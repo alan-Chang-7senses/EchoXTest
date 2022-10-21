@@ -59,7 +59,7 @@ class Refresh extends BaseProcessor {
                 throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠
             }
         }
-        
+
         $storeInfosHolder->refreshRemainAmounts--;
         $storeHandler = new StoreHandler($userID);
         if ($storeDataHolder->storeType == StoreValue::Purchase) {
@@ -72,6 +72,7 @@ class Refresh extends BaseProcessor {
         //response
         $result = new ResultData(ErrorCode::Success);
         $result->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
+        $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->randomPurchase = [];
         $result->randomCounters = [];
         if ($storeDataHolder->storeType == StoreValue::Purchase) {
@@ -81,4 +82,5 @@ class Refresh extends BaseProcessor {
         }
         return $result;
     }
+
 }

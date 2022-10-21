@@ -59,7 +59,7 @@ class PurchaseBuy extends BaseProcessor {
         }
 
         //建立訂單
-        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $device);
+        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $tradeID, $device);
         $result = new ResultData(ErrorCode::Success);
         $result->orderID = $orderID;
         return $result;

@@ -25,13 +25,6 @@ class GetInfos extends BaseProcessor {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
-        //get currency
-        $userBagHandler = new UserBagHandler($userID);
-        $responseCurrencies = [];
-        foreach (StoreValue::Currencies as $currency) {
-            $itemID = StoreUtility::GetCurrencyItemID($currency);
-            $responseCurrencies[] = $userBagHandler->GetItemAmount($itemID);
-        }
 
         //get store
         $storeHandler = new StoreHandler($userID);
@@ -51,8 +44,8 @@ class GetInfos extends BaseProcessor {
 
             $accessor->ClearCondition();
             $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID->StoreID)->Fetch();
-            $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);                
-            $storeInfosHolder->storeID = $storeID->StoreID;                
+            $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
+            $storeInfosHolder->storeID = $storeID->StoreID;
             $updateTime = empty($rowStoreInfo) ? (int) $GLOBALS[Globals::TIME_BEGIN] : $storeInfosHolder->updateTime;
             $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($updateTime);
             $resetRefreshTime = StoreUtility::CheckResetTime($updateTime);
@@ -111,9 +104,9 @@ class GetInfos extends BaseProcessor {
             }
             $resposeStores[] = $resposeStore;
         }
-
+        $userBagHandler = new UserBagHandler($userID);
         $result = new ResultData(ErrorCode::Success);
-        $result->currencies = $responseCurrencies;
+        $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->stores = $resposeStores;
 
         return $result;

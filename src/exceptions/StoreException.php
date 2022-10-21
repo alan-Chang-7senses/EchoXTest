@@ -9,6 +9,7 @@ $lang[StoreException::OutofStock] = 'Out of stock!';
 $lang[StoreException::NoRefreshCount] = 'no refresh count !';
 $lang[StoreException::PurchaseCancelled] = 'Purchase cancelled';
 $lang[StoreException::PurchaseIsComplete] = 'Purchase is complete !';
-
+$lang[StoreException::PurchaseFailure] = 'Payment Fail!';
+$lang[StoreException::PurchaseProcessing] = 'Purchasing in progress!';
 
 return $lang;

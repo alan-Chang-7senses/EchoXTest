@@ -22,6 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | tradeID | int | 交易序號 |
+
 <br>
 
 ## Response
@@ -34,6 +35,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | orderID | int | 訂單序號 |
+
 <br>
 
 ### Example

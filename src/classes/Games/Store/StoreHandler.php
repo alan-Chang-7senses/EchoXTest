@@ -232,13 +232,14 @@ class StoreHandler {
         return $result;
     }
 
-    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $device): int {
+    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $device): int {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
         $accessor->FromTable('StorePurchaseOrders')->Add([
             "UserID" => $this->userID,
+            "TradeID" => $tradeID,
             "Device" => $device,
             "ItemID" => $storePurchaseHolder->itemID,
             "Amount" => $storePurchaseHolder->amount,

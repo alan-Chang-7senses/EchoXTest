@@ -2,6 +2,8 @@
 
 namespace Processors\Store;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Consts\StoreValue;
@@ -22,23 +24,31 @@ class PurchaseRefresh extends BaseProcessor {
 
     public function Process(): ResultData {
 
-        $tradeID = InputHelper::post('tradeID');
+        $orderID = InputHelper::post('orderID');
 
         $userID = $_SESSION[Sessions::UserID];
-        $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
-        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Purchase)) {
-            throw new StoreException(StoreException::Error, ['[des]' => "params"]);
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $row = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->WhereEqual("UserID", $userID)->fetch();
+        if (empty($row)) {
+            throw new StoreException(StoreException::Error, ['[des]' => "no data"]);
         }
 
+        if ($row->Status == StoreValue::PurchaseQuickSDKFailure) {
+            throw new StoreException(StoreException::PurchaseFailure);
+        }
+
+        if ($row->Status == StoreValue::PurchaseStatusCancel) {
+            throw new StoreException(StoreException::PurchaseCancelled);
+        }
+
+        if ($row->Status == StoreValue::PurchaseStatusProcessing) {
+            throw new StoreException(StoreException::PurchaseProcessing);
+        }
+
+        $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
         $userBagHandler = new UserBagHandler($userID);
-        $responseCurrencies = [];
-        foreach (StoreValue::Currencies as $currency) {
-            $itemID = StoreUtility::GetCurrencyItemID($currency);
-            $responseCurrencies[] = $userBagHandler->GetItemAmount($itemID);
-        }
-
         $result = new ResultData(ErrorCode::Success);
-        $result->currencies = $responseCurrencies;
+        $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->remainInventory = $storeTradesHolder->remainInventory;
         return $result;
     }

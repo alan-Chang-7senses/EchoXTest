@@ -61,12 +61,13 @@ class BuyGoods extends BaseProcessor {
         }
         if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
             $storeTradesHolder->remainInventory--;
-            $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);            
+            $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);
         }
 
         //加物品
         $userBagHandler->AddItems($additem, ItemValue::CauseStore);
         $result = new ResultData(ErrorCode::Success);
+        $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->remainInventory = $storeTradesHolder->remainInventory;
         return $result;
     }

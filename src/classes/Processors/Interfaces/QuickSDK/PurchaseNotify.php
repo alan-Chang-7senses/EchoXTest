@@ -9,6 +9,7 @@ use Consts\ResposeType;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
+use Games\Pools\Store\StoreTradesPool;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\ItemUtility;
@@ -49,6 +50,7 @@ class PurchaseNotify extends BaseProcessor {
         $callbackKey = StoreUtility::GetCallbackkey($row->Device);
         $mysign = StoreUtility::GetMd5Sign($callbackKey);
         if ($mysign != $sign) { //簽名錯誤
+            //echo $mysign;
             return new ResultData(ErrorCode::VerifyError, "sign error");
         }
 
@@ -68,10 +70,16 @@ class PurchaseNotify extends BaseProcessor {
         }
 
         $userBagHandler = new UserBagHandler($userID);
+
+        $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
+        if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
+            $storeTradesHolder->remainInventory--;
+            $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);
+        }
         //加物品
         $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
         $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-        
+
         //更新訂單
         $storeHandler->FinishPurchaseOrder($orderID, $orderNo, $usdAmount, $payAmount, $payCurrency);
         return new ResultData(ErrorCode::Success);

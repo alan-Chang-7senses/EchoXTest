@@ -13,5 +13,7 @@ class StoreException extends NormalException {
     const NoRefreshCount = 8005;
     const PurchaseCancelled = 8006;
     const PurchaseIsComplete = 8007;
+    const PurchaseFailure = 8008;
+    const PurchaseProcessing = 8009;
 
 }

@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
 
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
+INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
+	('PvP_B_TicketId_3', '1001', '群體賽入場券的道具Id'),
+	('StoreAutoRefreshTime', '16:00:00+8:00', '每日自動刷新商店內容的時間'),
+	('StoreRefreshResetTime', '00:00:00+8:00', '每日重置刷新按鈕的時間');

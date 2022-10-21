@@ -10,6 +10,7 @@ use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
+use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
 use stdClass;
 
@@ -20,10 +21,10 @@ use stdClass;
 class StoreUtility {
 
     public static function GetMaxStoreAmounts(int $uitype): int {
-        return match ($uitype) {
+        return match ($uitype) {//(固定件數)
             StoreValue::UIType_12 => 12,
-            StoreValue::UIType_08 => 8,
-            StoreValue::UIType_04 => 4,
+            StoreValue::UIType_08 => 9,
+            StoreValue::UIType_04 => 3,
             StoreValue::UIType_00 => 0,
             default => StoreValue::UINoItems
         };
@@ -120,6 +121,15 @@ class StoreUtility {
         }
         $signKey .= $callbackkey;
         return md5($signKey);
+    }
+
+    public static function GetCurrency(UserBagHandler $userBagHandler): array {
+        $responseCurrencies = [];
+        foreach (StoreValue::Currencies as $currency) {
+            $itemID = StoreUtility::GetCurrencyItemID($currency);
+            $responseCurrencies[] = $userBagHandler->GetItemAmount($itemID);
+        }
+        return $responseCurrencies;
     }
 
 }
