@@ -41,7 +41,7 @@ class PurchaseCancel extends BaseProcessor {
 
         //取消訂單               
         $storeHandler = new StoreHandler($userID);
-        $storeHandler->CancelPurchaseOrder($orderID);
+        $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusCancel);
         return new ResultData(ErrorCode::Success);
     }
 

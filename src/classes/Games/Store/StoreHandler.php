@@ -227,11 +227,8 @@ class StoreHandler {
                 //error
                 continue;
             }
-
-
             $result[] = $tradeInfo;
         }
-
         return $result;
     }
 
@@ -252,11 +249,11 @@ class StoreHandler {
         return (int) $accessor->LastInsertID();
     }
 
-    public function CancelPurchaseOrder(int $orderID) {
+    public function UpdatePurchaseOrderStatus(int $orderID, int $status) {
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
-            "Status" => StoreValue::PurchaseStatusCancel,
+            "Status" => $status,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
@@ -265,8 +262,11 @@ class StoreHandler {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
-            "OrderNo" => $orderNO,
             "Status" => StoreValue::PurchaseStatusFinish,
+            "OrderNo" => $orderNO,
+            "UsdAmount" => $usdAmount,
+            "PayAmount" => $payAmount,
+            "PayCurrency" => $payCurrency,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
