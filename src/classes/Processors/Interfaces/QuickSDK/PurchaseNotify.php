@@ -1,11 +1,11 @@
 <?php
 
-namespace Processors\Store\QuickSDK;
+namespace Processors\Interfaces\QuickSDK;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
-use Consts\Sessions;
+use Consts\ResposeType;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Store\StoreUtility;
@@ -20,7 +20,12 @@ use Processors\BaseProcessor;
 
 class PurchaseNotify extends BaseProcessor {
 
+    protected bool $mustSigned = false;
+    protected int $resposeType = ResposeType::QuickSDKCallback;
+
     public function Process(): ResultData {
+
+
         $uid = InputHelper::post('uid');
         $cpOrderNo = InputHelper::post('cpOrderNo');
         $orderNo = InputHelper::post('orderNo');
@@ -31,23 +36,20 @@ class PurchaseNotify extends BaseProcessor {
         $extrasParams = InputHelper::post('extrasParams');
         $sign = InputHelper::post('sign');
 
-        $userID = $_SESSION[Sessions::UserID];
-
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $cpOrderNo)->WhereEqual("UserID", $userID)->fetch();
+        $row = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $cpOrderNo)->fetch();
         if (empty($row)) {
             throw new StoreException(StoreException::Error, ['[des]' => "no data"]);
         }
-
-        $callbackKey = StoreUtility::GetCallbackkey($row->Dev);
+        $callbackKey = StoreUtility::GetCallbackkey($row->Device);
         $mysign = StoreUtility::GetMd5Sign($callbackKey);
-
         if ($mysign != $sign) { //簽名錯誤
             $result = new ResultData(ErrorCode::VerifyError);
             $result->message = "sign error";
             return $result;
         }
 
+        $userID = $row->UserID;
         if ($payStatus == StoreValue::PaymentFailure) {
             //不用做任何事
             return new ResultData(ErrorCode::Success);

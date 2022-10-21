@@ -95,15 +95,17 @@ class StoreUtility {
         return $holder;
     }
 
-    public static function GetCallbackkey($device): string {
+    public static function GetCallbackkey(int $device): string {
 
         if (getenv(EnvVar::SysEnv) == Predefined::SysLocal) {
             return match ($device) {
-                StoreValue::iOS => getenv(EnvVar::CallBackKeyAndroidTest),
+                StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroidTest),
+                StoreValue::iOS => getenv(EnvVar::CallBackKeyIosTest),
             };
         } else {
             return match ($device) {
-                0 => getenv(EnvVar::CallBackKeyAndroidProduct),
+                StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroidProduct),
+                StoreValue::iOS => getenv(EnvVar::CallBackKeyIosProduct),
             };
         }
     }
