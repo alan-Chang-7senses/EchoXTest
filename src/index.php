@@ -8,12 +8,24 @@ spl_autoload_register(function($className){
     if(file_exists($file)) require $file;
 });
 
+set_error_handler(function($errno, $message){
+    
+    if($errno == E_NOTICE || $errno == E_WARNING){
+//        throw new ErrorException($message, $errno, $errno, $file, $line);
+        throw new Error($message, $errno);
+    }
+    
+    return false;
+});
+
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Consts\Predefined;
+use Consts\ResposeType;
 use Exceptions\NormalException;
+use Games\Accessors\GameLogAccessor;
 use Handlers\SessionToDBHandler;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -29,7 +41,7 @@ $GLOBALS[Globals::ROOT] = __DIR__.DS;
 $GLOBALS[Globals::TIME_BEGIN] = $t;
 $GLOBALS[Globals::RESULT_PROCESS] = false;
 $GLOBALS[Globals::RESULT_PROCESS_MESSAGE] = null;
-$GLOBALS[Globals::RESULT_RESPOSE_JSON] = true;
+$GLOBALS[Globals::RESULT_RESPOSE_TYPE] = ResposeType::JSON;
 
 session_start();
 //session_destroy();
@@ -80,12 +92,12 @@ if(getenv(EnvVar::ProcessTiming) == Predefined::ProcessTiming) $result->processT
 $resultData = json_encode ($result, JSON_UNESCAPED_UNICODE);
 $GLOBALS[Globals::RESULT_PROCESS_DATA] = $resultData;
 
-if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
+if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::JSON){
 
     header('Content-Type: application/json');
     echo $resultData;
     
-}else{
+}else if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::UniWebView){
     
     $script = empty($result->script) ? '' : '';
     
@@ -120,4 +132,4 @@ if($GLOBALS[Globals::RESULT_RESPOSE_JSON]){
 content;
 }
 
-if(!isset($obj))  (new Games\Accessors\GameLogAccessor())->AddBaseProcess();
+if(!isset($obj))  (new GameLogAccessor())->AddBaseProcess();
