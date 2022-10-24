@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `Announcement` (
   `FinishTime` int(11) NOT NULL DEFAULT 0 COMMENT '結束時間',
   PRIMARY KEY (`Serial`,`ID`),
   KEY `Lang` (`Lang`),
-  KEY `PublishTime` (`PublishTime`),
-  KEY `FinishTime` (`FinishTime`)
+  KEY `PublishTime` (`PublishTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告看板資料集合';
 
