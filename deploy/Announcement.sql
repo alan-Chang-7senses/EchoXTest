@@ -1,5 +1,4 @@
 
-CREATE DATABASE IF NOT EXISTS `koa_static` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_static`;
 
 -- 傾印  資料表 koa_static.Announcement 結構
