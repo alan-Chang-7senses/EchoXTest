@@ -30,3 +30,11 @@
 | 編碼 | 定義 |
 |:-:|:-:|
 | ReceiveTicket | 票劵領取畫面 |
+
+## <span id="announcementType">announcementType 遊戲公告類型</span>
+(暫定)
+<br>
+| 編碼 | 定義 |
+|:-:|:-:|
+| 1 | 活動 |
+| 2 | 公告 |
