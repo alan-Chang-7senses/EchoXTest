@@ -1,4 +1,4 @@
-# 主介面 - 遊戲公告
+# 通知 - 遊戲公告
 
 ## 介紹
  - 獲取當前時間內所有需要顯示之公告資訊。
@@ -6,7 +6,7 @@
 
 ## URL
 
-http(s)://`域名`/MainMenu/Announcement/
+http(s)://`域名`/Notices/Announcement/
 
 ## Method
 

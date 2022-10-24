@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\MainMenu;
+namespace Processors\Notices;
 
 use Consts\ErrorCode;
 use Consts\Globals;

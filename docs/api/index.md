@@ -77,11 +77,11 @@
 		- [提示文字](Notices/HintText.md)。
 		- [相容版本](Notices/Versions.md)。
 		- [主畫面 Banner](Notices/MainBanner.md)。
+		- [遊戲公告](Notices/Announcement.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
-		- [遊戲公告](MainMenu/Announcement.md)。
 	- 信箱:
 		- [查詢信件](Mails/GetMails.md)。
 		- [信件已讀/領獎](Mails/ReceiveMailsRewards.md)。
