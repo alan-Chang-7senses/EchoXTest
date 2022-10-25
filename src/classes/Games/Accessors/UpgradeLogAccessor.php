@@ -21,7 +21,7 @@ class UpgradeLogAccessor extends BaseAccessor
     }
     public function AddUpgradeRankLog(int $playerID,int $coinCost,int $rankAdd)
     {
-        $this->LogAccessor()->FromTable('UpgradeLevel')->Add(
+        $this->LogAccessor()->FromTable('UpgradeRank')->Add(
         [
             'UserID' => $_SESSION[Sessions::UserID],
             'PlayerID' => $playerID,
@@ -32,7 +32,7 @@ class UpgradeLogAccessor extends BaseAccessor
     }
     public function AddUpgradeSkill(int $playerID,int $coinCost,int $skillID,int $skillRankAdd)
     {
-        $this->LogAccessor()->FromTable('UpgradeLevel')->Add(
+        $this->LogAccessor()->FromTable('UpgradeSkill')->Add(
         [
             'UserID' => $_SESSION[Sessions::UserID],
             'PlayerID' => $playerID,
