@@ -97,18 +97,11 @@ class StoreUtility {
     }
 
     public static function GetCallbackkey(int $device): string {
-
-        if (getenv(EnvVar::SysEnv) == Predefined::SysLocal) {
-            return match ($device) {
-                StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroidTest),
-                StoreValue::iOS => getenv(EnvVar::CallBackKeyIosTest),
-            };
-        } else {
-            return match ($device) {
-                StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroidProduct),
-                StoreValue::iOS => getenv(EnvVar::CallBackKeyIosProduct),
-            };
-        }
+        return match ($device) {
+            StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroid),
+            StoreValue::iOS => getenv(EnvVar::CallBackKeyiOS),
+            default => ""
+        };
     }
 
     public static function GetMd5Sign($callbackkey) {

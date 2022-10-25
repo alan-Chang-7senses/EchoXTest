@@ -70,8 +70,6 @@ class EnvVar {
     const NFTClientID = 'NFT_CLIENTID';
     const NFTAPISecret = 'NFT_APISECRET';
     
-    const CallBackKeyAndroidTest = 'CallBackKey_Android_Test';
-    const CallBackKeyAndroidProduct = 'CallBackKey_Android_Product';
-    const CallBackKeyIosTest = 'CallBackKey_Ios_Test';
-    const CallBackKeyIosProduct = 'CallBackKey_Ios_Product';
+    const CallBackKeyAndroid = 'CallBackKey_Android';
+    const CallBackKeyiOS = 'CallBackKey_iOS';
 }
