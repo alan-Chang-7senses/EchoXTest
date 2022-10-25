@@ -4,7 +4,7 @@ namespace Processors\Player;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Accessors\GameLogAccessor;
+use Games\Accessors\UpgradeLogAccessor;
 use Games\Consts\ItemValue;
 use Games\Consts\PlayerValue;
 use Games\Consts\UpgradeValue;
@@ -87,8 +87,9 @@ class RankUp extends BaseProcessor{
             $itemTemp->Amount = $crystalAmount;
             $userBagHandler->DecItems($itemTemp,ItemValue::CauseRankUp);
         }
-        (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$charge,null,null,UpgradeValue::RankUnit);
-        $results = new ResultData(ErrorCode::Success);        
+        // (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$charge,null,null,UpgradeValue::RankUnit);
+        (new UpgradeLogAccessor())->AddUpgradeRankLog($playerID,$charge,UpgradeValue::RankUnit);
+        $results = new ResultData(ErrorCode::Success);
         return $results;
     }
 }
