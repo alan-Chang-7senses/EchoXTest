@@ -22,6 +22,7 @@ use Games\Players\Holders\PlayerSkillHolder;
 use Games\Players\PlayerAbility;
 use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Players\PlayerUtility;
+use Games\Players\SyncRateUtility;
 use stdClass;
 /**
  * 透過角色ID做為 property 可直接對角色相關資料進行存取
@@ -66,7 +67,7 @@ class PlayerPool extends PoolAccessor {
         $holder->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
         $holder->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
 
-        PlayerAbility::ApplySyncRateBonus($holder,$holder->sync);
+        SyncRateUtility::ApplySyncRateBonus($holder,$holder->sync);
         
         $holder->dna = new PlayerDnaHolder();
         $holder->dna->head = $player->HeadDNA;

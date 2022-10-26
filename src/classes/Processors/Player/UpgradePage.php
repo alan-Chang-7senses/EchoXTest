@@ -10,6 +10,7 @@ use Games\Players\Exp\PlayerEXP;
 use Games\Players\PlayerAbility;
 use Games\Players\PlayerHandler;
 use Games\Players\UpgradeData;
+use Games\Players\UpgradeUtility;
 use Games\Pools\ItemInfoPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
@@ -98,7 +99,7 @@ class UpgradePage extends BaseProcessor
         for ($i = $playerInfo->level; $i <= $targetLevel; $i++) {
             $levelTemp = new stdClass();
             $levelTemp->level = $i;
-            $levelTemp->values = PlayerAbility::GetAbilityValueByLevel($playerID, $i);
+            $levelTemp->values = UpgradeUtility::GetAbilityValueByLevel($playerID, $i);
             $levelTemp->levelRequireExp = PlayerEXP::GetLevelRequireExp($i);
             $levelData[] = $levelTemp;
         }
