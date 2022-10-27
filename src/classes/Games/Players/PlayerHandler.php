@@ -143,14 +143,6 @@ class PlayerHandler {
         $this->info = $this->pool->{$this->info->id};
     }
     
-    public function SaveSync(float|int $bind) : void{    
-        $this->pool->Save($this->info->id, 'Sync', $bind);
-        $this->ResetInfo();
-    }
-    public function SaveLevel(array $bind) : void{    
-        $this->pool->Save($this->info->id, 'Level', $bind);
-        $this->ResetInfo();
-    }
 
     /**
      * @param int|float $rawExp
