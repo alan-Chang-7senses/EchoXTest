@@ -69,4 +69,7 @@ class EnvVar {
     const NFTUri = 'NFT_URI';
     const NFTClientID = 'NFT_CLIENTID';
     const NFTAPISecret = 'NFT_APISECRET';
+    
+    const CallBackKeyAndroid = 'CallBackKey_Android';
+    const CallBackKeyiOS = 'CallBackKey_iOS';
 }

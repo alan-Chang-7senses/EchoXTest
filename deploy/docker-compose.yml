@@ -53,7 +53,10 @@ services:
             NFT_URI: https://blockchain-middleware.gamma.metasens.io/v1
             NFT_CLIENTID: 1745180808770445313
             NFT_APISECRET: 7e3luSeepds7Pb4yHpzSe5bP687T0VrWAA4kMyfALyMfdx9F
-            
+
+            CallBackKey_Android: '93981875772716097886792684820569'
+            CallBackKey_iOS: '11037844153751881221082701761433'
+
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
 #            XDEBUG_CLIENT_PORT: 9003
     memcached:
