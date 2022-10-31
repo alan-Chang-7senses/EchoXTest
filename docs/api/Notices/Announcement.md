@@ -47,8 +47,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | graphURL | string | 公告圖片在GCP的網址 |
-| type | int | 公告類別 |
-| title | string | [公告類別](../codes/other.md#announcementtype-遊戲公告類型) |
+| type | int | [公告類別](../codes/other.md#announcementtype-遊戲公告類型) |
+| title | string | 標題 |
 | announceTime | string | 公告時間 |
 | content | string | 公告內文 |
 
