@@ -9,11 +9,10 @@ use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePlayerPool;
+use Games\Pools\RaceVerifyPool;
+use Games\Pools\RaceVerifyScenePool;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
-use Generators\ConfigGenerator;
-use Generators\DataGenerator;
-use Helpers\InputHelper;
 use Holders\ResultData;
 /**
  * Description of UpdateRanking
@@ -24,10 +23,6 @@ class Rankings extends BaseRace{
     
     public function Process(): ResultData {
         
-        $players = json_decode(InputHelper::post('players'));
-        if(!is_array($players) || count($players) > ConfigGenerator::Instance()->AmountRacePlayerMax) throw new RaceException(RaceException::IncorrectPlayerNumber);
-        DataGenerator::ExistProperties($players[0], ['id', 'ranking']);
-        
         $raceHandler = new RaceHandler($this->userInfo->race);
         
         $raceInfo = $raceHandler->GetInfo();
@@ -36,30 +31,51 @@ class Rankings extends BaseRace{
         $rankings = [];
         $offsides = [];
         $takenOvers = [];
-        foreach ($players as $player){
-            if(!property_exists($raceInfo->racePlayers, $player->id)) continue;
-            
-            $racePlayerID = $raceInfo->racePlayers->{$player->id};
-            $rankings[$racePlayerID] = $player->ranking;
-
-            $rph = new RacePlayerHandler($racePlayerID);
-            $rpInfo = $rph->GetInfo();
-            $offside = $rpInfo->ranking - $player->ranking;                        
-            if($offside > 0) $offsides[$racePlayerID] = $rpInfo->offside + $offside;
-            elseif($offside < 0) $takenOvers[$racePlayerID] = $rpInfo->takenOver + (-$offside);                         
+        $progress = [];
+        foreach($raceInfo->racePlayers as $racePlayerID)
+        {
+            $racePlayerInfo = (new RacePlayerHandler($racePlayerID))->GetInfo();
+            $raceVerifySceneInfos = RaceVerifyScenePool::Instance()->{$raceInfo->scene};
+            $raceVerifySceneInfo = $raceVerifySceneInfos->{$racePlayerInfo->trackNumber};
+            $totalDistance = $raceVerifySceneInfo->total - $raceVerifySceneInfo->begin;
+            // $verifyInfo = $accessor->FromTable('RaceVerify')->WhereEqual('RacePlayerID',$racePlayerInfo->id)
+            //         ->Fetch(); 
+            $verifyInfo = RaceVerifyPool::Instance()->{$racePlayerInfo->id}; 
+            $currentDistance = $verifyInfo->serverDistance;
+            $progress[$racePlayerInfo->id] = $currentDistance / $totalDistance;
         }
-        
-        asort($rankings);
-        $keys = array_keys($rankings);
-        $n = 1;
-        foreach ($keys as $racePlayerID){
-            $rankings[$racePlayerID] = $n++;
+
+        uasort($progress,function($a, $b)
+        {
+            if($a < $b)return 1;
+            return -1;
+        });
+        $rank = 1;
+        foreach(array_keys($progress) as $racePlayer)
+        {
+            $rankings[$racePlayer] = $rank;
+            $rank++;
+        }
+        //給前端使用
+        $rankingsResult = [];
+
+
+        foreach ($rankings as $racePlayerID => $rank){
+
+            $racePlayerHandler = new RacePlayerHandler($racePlayerID);
+            $racePlayerInfo = $racePlayerHandler->GetInfo();
+            $offside = $racePlayerInfo->ranking - $rank;                        
+            if($offside > 0) $offsides[$racePlayerID] = $racePlayerInfo->offside + $offside;
+            elseif($offside < 0) $takenOvers[$racePlayerID] = $racePlayerInfo->takenOver + (-$offside);                         
+
+            $rankingsResult[$racePlayerInfo->player] = $rank;
         }
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function() use ($accessor, $rankings, $offsides, $takenOvers){            
-
+            
             $rows = $accessor->FromTable('RacePlayer')->WhereIn('RacePlayerID', array_keys($rankings))->ForUpdate()->FetchAll();
+            
             foreach($rows as $row){
                 
                 if($row->Status == RaceValue::StatusReach) continue;
@@ -74,7 +90,7 @@ class Rankings extends BaseRace{
 
                 $accessor->ClearCondition();
                 $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $row->RacePlayerID)->Modify($binds);
-                
+
             }
         });
         
@@ -84,6 +100,9 @@ class Rankings extends BaseRace{
         }
         
         $result = new ResultData(ErrorCode::Success);
+        $result->rankings = $rankingsResult;
+
+
         return $result;
     }
 }

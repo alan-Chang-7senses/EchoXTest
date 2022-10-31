@@ -2,14 +2,12 @@
 
 namespace Processors\Player;
 
-use Accessors\PDOAccessor;
-use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Accessors\GameLogAccessor;
 use Games\Accessors\PlayerAccessor;
+use Games\Accessors\UpgradeLogAccessor;
 use Games\Consts\ItemValue;
-use Games\Consts\NFTDNA;
 use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;
 use Games\Exceptions\PlayerException;
@@ -83,7 +81,8 @@ class UpgradeSkill extends BaseProcessor{
         }
         $userBagHandler->DecItems($itemsToDelete,ItemValue::CauseSkillUpgrade); 
 
-       (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillRankUnit,-$charge,null,null,null);
+    //    (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillRankUnit,-$charge,null,null,null);
+       (new UpgradeLogAccessor())->AddUpgradeSkill($playerID,$charge,$skillID,UpgradeValue::SkillRankUnit);
         
        $results = new ResultData(ErrorCode::Success);
        return $results;

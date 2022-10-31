@@ -4,7 +4,8 @@ namespace Processors\Player;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Accessors\GameLogAccessor;
+// use Games\Accessors\GameLogAccessor;
+use Games\Accessors\UpgradeLogAccessor;
 use Games\Consts\ItemValue;
 use Games\Consts\UpgradeValue;
 use Games\Exceptions\ItemException;
@@ -102,7 +103,8 @@ class UpgradeItem extends BaseProcessor{
         $results->level = $playerHandler->GetInfo()->level;
         $results->hasUpgrade = $previousLevel < $playerHandler->GetInfo()->level;
         $bonus = empty($results->bonus) ? [UpgradeValue::BonuSuccessID] : $results->bonus;
-        (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$costTotal,$bonus,$expRt->gainAmount,null);
+        // (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$costTotal,$bonus,$expRt->gainAmount,null);
+        (new UpgradeLogAccessor)->AddUpgradeLevelLog($playerID,$costTotal,$bonus,$expRt->gainAmount);
         return $results;
     }
 }
