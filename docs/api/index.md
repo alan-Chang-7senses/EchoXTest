@@ -85,6 +85,7 @@
 		- [提示文字](Notices/HintText.md)。
 		- [相容版本](Notices/Versions.md)。
 		- [主畫面 Banner](Notices/MainBanner.md)。
+		- [遊戲公告](Notices/Announcement.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
