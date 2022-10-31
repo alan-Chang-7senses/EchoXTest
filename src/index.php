@@ -96,7 +96,12 @@ if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::JSON){
 
     header('Content-Type: application/json');
     echo $resultData;
-    
+}else if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::QuickSDKCallback){
+    if ($result->error->code == ErrorCode::Success){   
+        echo "SUCCESS";
+    }else    {
+        echo "FAILURE";
+    }
 }else if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::UniWebView){
     
     $script = empty($result->script) ? '' : '';
