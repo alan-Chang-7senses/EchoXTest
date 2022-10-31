@@ -19,11 +19,16 @@ class SyncRateUtility
      */
     public static function GainSync(int $playerID, int $type, int $count = 1, ...$bonuses) : int
     {
-        $rawSync = match($type)
+        $rawSync = (int)match($type)
         {
-            SyncRate::PVP => SyncRate::PVPMultiplier * max(self::GetPlayerTradeCount($playerID),1),
-            SyncRate::PVE => SyncRate::PVEMultiplier * max(self::GetPlayerTradeCount($playerID),1),
-            SyncRate::Expedition => SyncRate::ExpeditionMultiplier * max(self::GetPlayerTradeCount($playerID),1),
+            SyncRate::PVP => 
+            SyncRate::PVPMultiplier * self::GetN(self::GetPlayerTradeCount($playerID)),
+ 
+            SyncRate::PVE =>
+            SyncRate::PVEMultiplier * self::GetN(self::GetPlayerTradeCount($playerID)),
+
+            SyncRate::Expedition => 
+            SyncRate::ExpeditionMultiplier * self::GetN(self::GetPlayerTradeCount($playerID)),
         };
 
         $expCalculator = new ExpBonusCalculator($rawSync);
@@ -48,6 +53,11 @@ class SyncRateUtility
         // $this->ResetInfo();
         return $syncIncrease;        
 
+    }
+
+    private static function GetN(int $tradeCount) : float
+    {
+        return number_format(sqrt(sqrt(max($tradeCount,1))),2);
     }
 
     public static function GetPlayerTradeCount(int $playerID) : int
