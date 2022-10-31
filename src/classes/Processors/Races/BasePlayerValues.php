@@ -15,6 +15,7 @@ use Games\Pools\RacePlayerPool;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RaceVerifyHandler;
+use Games\Races\Rhythm\RhythmGetter;
 use Games\Scenes\SceneHandler;
 use Generators\DataGenerator;
 use Helpers\InputHelper;
@@ -45,7 +46,7 @@ abstract class BasePlayerValues extends BaseRace{
         
         $values = json_decode(InputHelper::post('values'));
         if($values === null) $values = new stdClass();
-        DataGenerator::ValidProperties($values, $this->validValues);
+        // DataGenerator::ValidProperties($values, $this->validValues);
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
@@ -70,6 +71,7 @@ abstract class BasePlayerValues extends BaseRace{
         if(isset($values->ranking))unset($values->ranking);
         $values->hp = $hp * RaceValue::DivisorHP;
         $racePlayerID = $raceInfo->racePlayers->{$playerID};
+        $values->rhythm = (new RhythmGetter((new PlayerHandler($playerID))->GetInfo()->habit,$racePlayerID))->GetRhythm();
 
         $accessor->Transaction(function() use ($accessor, $racePlayerID, $values){
             
@@ -98,16 +100,17 @@ abstract class BasePlayerValues extends BaseRace{
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
         $result->energy = $racePlayerHandler->GetInfo()->energy;
-
-
-        $result->distance = RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance);        
-//        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance) == RaceVerifyValue::VerifyCheat) {
-//            if ($this->userInfo->player === $playerID)//API:PlayerValues;  HostPlayerValue:不處理
-//            {
-//                throw new RaceException(RaceException::UserCheat);
-//            }
-//        }
         
+        
+        $result->distance = RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance);        
+        //        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance) == RaceVerifyValue::VerifyCheat) {
+            //            if ($this->userInfo->player === $playerID)//API:PlayerValues;  HostPlayerValue:不處理
+            //            {
+                //                throw new RaceException(RaceException::UserCheat);
+                //            }
+                //        }
+                
+        $result->rhythm = $racePlayerHandler->GetInfo()->rhythm;
         return $result;
     }
 }

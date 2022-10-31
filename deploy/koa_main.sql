@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~36 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~41 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AllPlayerLevel', '100', '強制指定所有角色等級(0=無效)'),
@@ -55,6 +55,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_B_StopMatch', '1800', '晉級賽結束配對時間(秒數)'),
 	('PvP_B_TicketId_1', '5100', '金幣賽入場券的道具Id'),
 	('PvP_B_TicketId_2', '5201', 'PT賽入場券的道具Id'),
+	('PvP_B_TicketId_3', '1001', '群體賽入場券的道具Id'),
 	('PvP_B_Treshold_1', '10', '火星幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_Treshold_2', '10', 'PT幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_WeeksPerSeacon', '2', '晉級賽每賽季有幾週'),
@@ -64,6 +65,8 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('RaceVerifyDistance', '10', '驗證比賽距離誤差值'),
 	('SeasonRankingRewardMailDay', '7', '賽季排行獎勵信件過期時間(日)'),
 	('SeasonRankingRewardMailID', '1', '賽季排行獎勵信件編號'),
+	('StoreAutoRefreshTime', '16:00:00+8:00', '每日自動刷新商店內容的時間'),
+	('StoreRefreshResetTime', '00:00:00+8:00', '每日重置刷新按鈕的時間'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
 	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
@@ -183,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   `PlayerID` bigint(20) NOT NULL,
   `UserID` int(10) NOT NULL DEFAULT 0,
   `Nickname` varchar(50) DEFAULT NULL COMMENT '角色暱稱',
-  `SyncRate` smallint(5) unsigned NOT NULL DEFAULT 0 COMMENT '同步率',
+  `SyncRate` mediumint(8) unsigned NOT NULL DEFAULT 0 COMMENT '同步率 X 1000000',
   PRIMARY KEY (`PlayerID`) USING BTREE,
   UNIQUE KEY `CharacterID_UserID` (`PlayerID`,`UserID`) USING BTREE,
   KEY `UserID` (`UserID`)
@@ -2017,7 +2020,8 @@ INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `Coi
 	(4, 4, 1001, 1001, 1663257600, 1663862400, 1663286402),
 	(5, 5, 1001, 1001, 1663862400, 1664467200, 1663891202),
 	(6, 6, 1001, 1001, 1664467200, 1665072000, 1664496002),
-	(7, 7, 1001, 1001, 1665072000, 1665676800, 1665100802);
+	(7, 7, 1001, 1001, 1665072000, 1665676800, 1665100802),
+	(8, 8, 1001, 1001, 1665676800, 1666281600, 1665705602);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.RaceBeginHours 結構
@@ -2340,6 +2344,51 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   KEY `SessionExpires` (`SessionExpires`),
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.StoreInfos 結構
+CREATE TABLE IF NOT EXISTS `StoreInfos` (
+  `StoreInfoID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '商店資訊編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
+  `FixTradIDs` varchar(50) DEFAULT NULL COMMENT '固定商品',
+  `RandomTradIDs` varchar(50) DEFAULT NULL COMMENT '隨機商品',
+  `RefreshRemainAmounts` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`StoreInfoID`),
+  UNIQUE KEY `UserID_StoreID` (`UserID`,`StoreID`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
+
+-- 傾印  資料表 koa_main.StorePurchaseOrders 結構
+CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
+  `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Device` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '裝置',
+  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
+  `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `OrderNo` varchar(50) DEFAULT '' COMMENT '訂單編號(同SDK)',
+  `UsdAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '美元計價的金額(SDK)',
+  `PayAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '支付金額',
+  `PayCurrency` varchar(50) DEFAULT '' COMMENT '支付的幣種',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`OrderID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
+
+-- 傾印  資料表 koa_main.StoreTrades 結構
+CREATE TABLE IF NOT EXISTS `StoreTrades` (
+  `TradeID` int(10) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `StoreType` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
+  `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
+  `RemainInventory` int(10) NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`TradeID`),
+  KEY `Status` (`Status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
 -- 傾印  資料表 koa_main.UserDiamond 結構
 CREATE TABLE IF NOT EXISTS `UserDiamond` (

@@ -72,11 +72,20 @@
 		- [抵達終點](Races/ReachEnd.md)。
 		- [完成競賽](Races/FinishRace.md)。
 		- [離開競賽](Races/LeaveRace.md)。
+	- 商店:
+		- [商店資訊](Store/GetInfos.md)
+		- [商品購買](Store/BuyGoods.md)
+		- [商店刷新](Store/Refresh.md)
+		- [儲值購買](Store/PurchaseBuy.md)	
+		- [儲值取消](Store/PurchaseCancel.md)	
+		- [儲值刷新](Store/PurchaseRefresh.md)	
+		- [QuickSDK儲值回調通知](Store/PurchaseNotify.md)			
 	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。
 		- [相容版本](Notices/Versions.md)。
 		- [主畫面 Banner](Notices/MainBanner.md)。
+		- [遊戲公告](Notices/Announcement.md)。
 	- 主介面：
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。

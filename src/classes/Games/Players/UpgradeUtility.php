@@ -4,8 +4,10 @@ namespace Games\Players;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Games\Consts\AbilityFactor;
 use Games\Consts\NFTDNA;
 use Games\Consts\UpgradeValue;
+use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Pools\ItemInfoPool;
 use stdClass;
 
@@ -63,5 +65,23 @@ class UpgradeUtility
         $rt->requiredAmount = $requiredAmount;
         return $rt;
     }
+    
+    public static function GetAbilityValueByLevel(int $playerID, int $targetLevel) : stdClass
+    {
+        $info = (new PlayerBaseValueHandler($playerID))->GetInfo();
+        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $sync = $playerInfo->sync;
+        $strengthLevel = $playerInfo->strengthLevel;
+        $baseInfo = new PlayerBaseInfoHolder($targetLevel,$strengthLevel,$info->strength,$info->agility,$info->constitution,$info->dexterity);
+        $res = new stdClass();
+        $res->velocity = PlayerAbility::GetAbilityValue(AbilityFactor::Velocity,$baseInfo);
+        $res->stamina = PlayerAbility::GetAbilityValue(AbilityFactor::Stamina,$baseInfo);
+        $res->breakOut = PlayerAbility::GetAbilityValue(AbilityFactor::BreakOut,$baseInfo);
+        $res->will = PlayerAbility::GetAbilityValue(AbilityFactor::Will,$baseInfo);
+        $res->intelligent = PlayerAbility::GetAbilityValue(AbilityFactor::Intelligent,$baseInfo);
+        SyncRateUtility::ApplySyncRateBonus($res,$sync);
+        return $res;
+    }
+    
 
 }
