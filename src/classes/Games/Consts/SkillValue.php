@@ -9,8 +9,8 @@ namespace Games\Consts;
  */
 class SkillValue {
     
-    const SkillH = 0.66;
-    const SkillS = 6.6;
+    const SkillH = 1.0;
+    const SkillS = 10;
     
     const DivisorCooldown = 100;
     const DivisorDuration = 100;
