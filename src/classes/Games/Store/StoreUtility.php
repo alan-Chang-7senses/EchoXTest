@@ -71,7 +71,7 @@ class StoreUtility {
         };
     }
 
-    public static function GetStoreInfosHolder(stdClass|null $row): StoreInfosHolder {
+    public static function GetStoreInfosHolder(stdClass|null|false $row): StoreInfosHolder {
         $holder = new StoreInfosHolder ();
 
         if (empty($row)) {
