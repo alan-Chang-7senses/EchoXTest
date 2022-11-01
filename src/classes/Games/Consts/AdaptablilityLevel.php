@@ -55,23 +55,23 @@ class AdaptablilityLevel {
         ],
         self::Terrian => 
         [
-            self::ParamS => 105,
-            self::ParamA => 104,
-            self::ParamB => 103,
+            self::ParamS => 103.5,
+            self::ParamA => 103,
+            self::ParamB => 102.5,
             self::ParamC => 102,
-            self::ParamD => 101,
-            self::ParamE => 100,
-            self::ParamF => 99,
+            self::ParamD => 101.5,
+            self::ParamE => 101,
+            self::ParamF => 100.5,
         ],
         self::Wind => 
         [
-            self::ParamS => 105,
-            self::ParamA => 104,
-            self::ParamB => 103,
+            self::ParamS => 103.5,
+            self::ParamA => 103,
+            self::ParamB => 102.5,
             self::ParamC => 102,
-            self::ParamD => 101,
-            self::ParamE => 100,
-            self::ParamF => 99,
+            self::ParamD => 101.5,
+            self::ParamE => 101,
+            self::ParamF => 100.5,
         ],
     ];
 
