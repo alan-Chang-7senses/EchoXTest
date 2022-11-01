@@ -98,8 +98,8 @@ class StoreUtility {
 
     public static function GetCallbackkey(int $device): string {
         return match ($device) {
-            StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroid),
-            StoreValue::iOS => getenv(EnvVar::CallBackKeyiOS),
+            StoreValue::Andriod => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
+            StoreValue::iOS => getenv(EnvVar::QuickSDKCallBackKeyiOS),
             default => ""
         };
     }
