@@ -71,7 +71,7 @@ class StoreUtility {
         };
     }
 
-    public static function GetStoreInfosHolder(stdClass|null $row): StoreInfosHolder {
+    public static function GetStoreInfosHolder(stdClass|null|false $row): StoreInfosHolder {
         $holder = new StoreInfosHolder ();
 
         if (empty($row)) {
@@ -98,8 +98,8 @@ class StoreUtility {
 
     public static function GetCallbackkey(int $device): string {
         return match ($device) {
-            StoreValue::Andriod => getenv(EnvVar::CallBackKeyAndroid),
-            StoreValue::iOS => getenv(EnvVar::CallBackKeyiOS),
+            StoreValue::Andriod => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
+            StoreValue::iOS => getenv(EnvVar::QuickSDKCallBackKeyiOS),
             default => ""
         };
     }
