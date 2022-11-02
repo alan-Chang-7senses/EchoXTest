@@ -12,6 +12,12 @@ class NFTQueryValue {
     const ContractSymbols = [
         'PETA'
     ];
+    const ContractUniverse = [
+        1
+    ];
+    const ContractPlanet = [
+        1,2
+    ];
     
     const StatusSuccess = 0;
     const StatusFailure = 1;
@@ -30,6 +36,7 @@ class NFTQueryValue {
         'WOOD' => PlayerAttr::Wood,
     ];
     
+
     const DNAPartHeadOffset = 0;
     const DNAPartHeadLength = 10;
     const DNAPartBodyOffset = 10;

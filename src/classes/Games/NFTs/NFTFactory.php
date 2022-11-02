@@ -5,6 +5,8 @@ namespace Games\NFTs;
 use Accessors\CurlAccessor;
 use Consts\EnvVar;
 use Games\Accessors\AccessorFactory;
+use Games\Consts\AbilityFactor;
+use Games\Consts\NFTDNA;
 use Games\Consts\NFTQueryValue;
 use Games\Exceptions\NFTException;
 use Games\NFTs\Holders\NFTUserHolder;
@@ -15,6 +17,7 @@ use Games\Players\PlayerUtility;
 use Games\NFTs\Holders\PartSkillHolder;
 use Games\Consts\PlayerValue;
 use Games\Players\Holders\PlayerDnaHolder;
+
 /**
  * Description of NFTFactory
  *
@@ -26,7 +29,7 @@ class NFTFactory {
     
     public function __construct(int $userID) {
         
-        $row = AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID', $userID);
+        $row = AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
         $this->userHolder = new NFTUserHolder($row->UserID, $row->Email, $row->Player);
     }
     
@@ -35,7 +38,8 @@ class NFTFactory {
         $curl = new CurlAccessor(getenv(EnvVar::NFTUri).'/queries/nfts/'.$email.'?'. http_build_query(['nftContractSymbols' => NFTQueryValue::ContractSymbols]));
         $curlReturn = $curl->ExecOptions([
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => ['Authorization: '. self::Authorization()]
+            // CURLOPT_HTTPHEADER => ['Authorization: '. self::Authorization()]
+            CURLOPT_HTTPHEADER => ['Authorization: '. NFTUtility::Authorization()]
         ]);
         
         $nfts = json_decode($curlReturn);
@@ -64,7 +68,7 @@ class NFTFactory {
         return $nfts->result;
     }
     
-    private function QueryMetadata(string $metadataURL) : string|false{
+    private function QueryMetadata(string $metadataURL) : mixed{
         
         $curl = new CurlAccessor($metadataURL);
         $curlReturn = $curl->ExecOption(CURLOPT_RETURNTRANSFER, true);
@@ -120,6 +124,20 @@ class NFTFactory {
         
         return $aliasCodes;
     }
+    private function SkillPurered(PlayerDnaHolder $dna) : string|false
+    {
+        $spieceCodes = [];
+        $spieceCodes[] = substr($dna->head,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $spieceCodes[] = substr($dna->body,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $spieceCodes[] = substr($dna->hand,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $spieceCodes[] = substr($dna->leg,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $spieceCodes[] = substr($dna->back,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $spieceCodes[] = substr($dna->hat,NFTDNA::DominantOffset, NFTDNA::SpeciesLength);
+        $needle = $spieceCodes[0];
+        foreach($spieceCodes as $code)if($code != $needle)return false;
+        $row = AccessorFactory::Static()->FromTable('SkillPurebred')->WhereEqual('SpeciesCode',$needle)->Fetch();
+        return empty($row->AliasCode) ? false : $row->AliasCode;
+    }
     
     private function CreatePlayer($playerID, $metadata) : void{
         
@@ -139,31 +157,69 @@ class NFTFactory {
         $playerDNAHolder->back = NFTUtility::MetadataDNAToPartDNA($metadataDNAHolder, NFTQueryValue::DNAPartBackOffset, NFTQueryValue::DNAPartBackLength);
         $playerDNAHolder->hat = NFTUtility::MetadataDNAToPartDNA($metadataDNAHolder, NFTQueryValue::DNAPartHatOffset, NFTQueryValue::DNAPartHatLength);
         
+        $row = AccessorFactory::Static()->FromTable('MetadataActivity')
+                               ->WhereEqual('ActivityName',$metadata->properties->activity_name)
+                               ->Fetch();
+        $isNative = $metadata->attributes->original == NFTQueryValue::NativeValue;
         $playerNFT = [
             'PlayerID' => $playerID,
             'TokenName' => $metadata->name,
-            'Constitution' => $metadata->attributes->attr_1,
-            'Strength' => $metadata->attributes->attr_2,
-            'Dexterity' => $metadata->attributes->attr_3,
-            'Agility' => $metadata->attributes->attr_4,
+            'Constitution' => $metadata->attributes->attr_1 * AbilityFactor::NFTDivisor,
+            'Strength' => $metadata->attributes->attr_2 * AbilityFactor::NFTDivisor,
+            'Dexterity' => $metadata->attributes->attr_3 * AbilityFactor::NFTDivisor,
+            'Agility' => $metadata->attributes->attr_4 * AbilityFactor::NFTDivisor,
             'Attribute' => NFTQueryValue::AttributesClass[$metadata->attributes->class],
-            'HeadDNA' => $playerDNAHolder->hand,
+            'HeadDNA' => $playerDNAHolder->head,
             'BodyDNA' => $playerDNAHolder->body,
             'HandDNA' => $playerDNAHolder->hand,
             'LegDNA' => $playerDNAHolder->leg,
             'BackDNA' => $playerDNAHolder->back,
             'HatDNA' => $playerDNAHolder->hat,
-            
+
+            'Native' => $isNative ? ($row->Native ?? NFTDNA::NativeNone) : NFTDNA::NativeNone,
+            'Source' => $row->Source ?? NFTDNA::SourcePromote,
+            'SkeletonType' => $row->SkeletonType ?? NFTDNA::SkeletonTypePeta,
             'StrengthLevel' => $metadata->properties->attribute_model,
+            'ExternalURL' => $metadata->external_url ?? '',
+            'Image' => $metadata->image ?? '',
+            'AnimationURL' => $metadata->animation_url ?? ''
+
+            // 'Achievement' => '', 還沒有成就
+            // 'TradeCount' => '',
         ];
-        
+
+        //部位技能
         $aliasCodes = [];
         $partSkillHolder = $this->PartSkill($playerDNAHolder);
         $aliasCodes = array_merge($aliasCodes, $partSkillHolder->aliasCodes);
-        
+        //詞綴技能
         $affixSkillAliasCodes = $this->AffixSkill($partSkillHolder);
         $aliasCodes = array_merge($aliasCodes, $affixSkillAliasCodes);
+
+        //原生種技能
+        if($isNative && !empty($row))
+        {
+            $nativeRow = AccessorFactory::Static()->FromTable('SkillNative')
+                                    ->WhereEqual('NativeCode',$row->Native)
+                                    ->Fetch();
+            if($nativeRow !== false) $aliasCodes[] = $nativeRow->AliasCode;                                    
+        }
+        //純種技能
+        $purebredSkillCode = $this->SkillPurered($playerDNAHolder);
+        if($purebredSkillCode !== false) $aliasCodes[] = $purebredSkillCode;
+        $aliasCodes = array_values(array_filter($aliasCodes));
+
         
+        $skillRows = AccessorFactory::Static()->selectExpr('`SkillID`')->FromTable('SkillInfo')
+                                        ->WhereIn('AliasCode',$aliasCodes)->FetchStyleAssoc()
+                                        ->FetchAll();
+        $skillBind = [];                                        
+        foreach($skillRows as $skillRow)$skillBind[] = ['PlayerID' => $playerID,'SkillID' => $skillRow['SkillID']];
+        $mainAccessor = AccessorFactory::Main();
+        $mainAccessor->FromTable('PlayerNFT')->Add($playerNFT);
+        $mainAccessor->ClearCondition()->FromTable('PlayerSkill')->Ignore(true)->AddAll($skillBind);
+        $mainAccessor->ClearCondition()->FromTable('PlayerLevel')->Add($playerLevel);
+        $mainAccessor->ClearCondition()->FromTable('PlayerHolder')->Add($playerHolder);
     }
     
     public function RefreshPlayers() : void{
@@ -191,18 +247,27 @@ class NFTFactory {
             }
         }
         
+
+        //TODO：舊角色不重創、不再持有的要刪除、不同宇宙星球的不創、免費Peta忽略。
         $rowsExistPlayer = $accessor->FromTable('PlayerHolder')->WhereIn('PlayerID', $playerIDs)->FetchStyleAssoc()->FetchAll();
         $existPlayerIDs = array_column($rowsExistPlayer, 'PlayerID');
-        $notExistPlayerIDs = array_column($playerIDs, $existPlayerIDs);
-        
-        foreach($notExistPlayerIDs as $playerIDs){
+        // $notExistPlayerIDs = array_column($playerIDs, $existPlayerIDs);
+    
+        $notExistPlayerIDs = [];
+        foreach($playerIDs as $playerID)if(!in_array($playerID,$existPlayerIDs))$notExistPlayerIDs[] = $playerID;
+        foreach($notExistPlayerIDs as $playerID){
             
             $metadata = $this->QueryMetadata($metadataURLs[$playerID]);
             
             if($metadata === false)
                 continue;
-            
+            if(!in_array($metadata->properties->universe,NFTQueryValue::ContractUniverse)
+               || !in_array($metadata->properties->planet,NFTQueryValue::ContractPlanet))
+                continue;
+
             $this->CreatePlayer($playerID, $metadata);
         }
+
+        //TODO：檢查並執行轉移所有權
     }
 }
