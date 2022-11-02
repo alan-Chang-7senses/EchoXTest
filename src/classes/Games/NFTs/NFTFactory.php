@@ -17,6 +17,9 @@ use Games\Players\PlayerUtility;
 use Games\NFTs\Holders\PartSkillHolder;
 use Games\Consts\PlayerValue;
 use Games\Players\Holders\PlayerDnaHolder;
+use Games\Pools\PlayerPool;
+use Games\Pools\UserPool;
+use Games\Users\UserHandler;
 
 /**
  * Description of NFTFactory
@@ -139,7 +142,7 @@ class NFTFactory {
         return empty($row->AliasCode) ? false : $row->AliasCode;
     }
     
-    private function CreatePlayer($playerID, $metadata) : void{
+    public function CreatePlayer($playerID, $metadata) : void{
         
         $playerHolder = [
             'PlayerID' => $playerID,
@@ -247,27 +250,18 @@ class NFTFactory {
             }
         }
         
-
-        //TODO：舊角色不重創、不再持有的要刪除、不同宇宙星球的不創、免費Peta忽略。
         $rowsExistPlayer = $accessor->FromTable('PlayerHolder')->WhereIn('PlayerID', $playerIDs)->FetchStyleAssoc()->FetchAll();
         $existPlayerIDs = array_column($rowsExistPlayer, 'PlayerID');
-        // $notExistPlayerIDs = array_column($playerIDs, $existPlayerIDs);
-    
-        $notExistPlayerIDs = [];
-        foreach($playerIDs as $playerID)if(!in_array($playerID,$existPlayerIDs))$notExistPlayerIDs[] = $playerID;
-        foreach($notExistPlayerIDs as $playerID){
+        $notExistPlayerIDs = array_column($playerIDs, $existPlayerIDs);
+        
+        foreach($notExistPlayerIDs as $playerIDs){
             
             $metadata = $this->QueryMetadata($metadataURLs[$playerID]);
             
             if($metadata === false)
                 continue;
-            if(!in_array($metadata->properties->universe,NFTQueryValue::ContractUniverse)
-               || !in_array($metadata->properties->planet,NFTQueryValue::ContractPlanet))
-                continue;
-
+            
             $this->CreatePlayer($playerID, $metadata);
         }
-
-        //TODO：檢查並執行轉移所有權
     }
 }
