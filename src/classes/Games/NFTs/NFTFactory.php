@@ -282,7 +282,8 @@ class NFTFactory {
             $this->CreatePlayer($playerID, $metadata);
         }
 
-        $currentPlayer = (new UserHandler($this->userHolder->userID))->GetInfo()->player;
+        $userInfo = (new UserHandler($this->userHolder->userID))->GetInfo();
+        $currentPlayer = $userInfo->player;
         if(in_array($currentPlayer,$noLongerHolds))$currentPlayerToClear = $currentPlayer;
 
         if(!empty($noLongerHolds))
@@ -299,7 +300,7 @@ class NFTFactory {
         if(!empty($currentPlayerToClear))
         {
             $accessor->ClearCondition()->FromTable('Users')
-                ->WhereEqual('UserID',$this->userHolder->userID)->Modify(['Player' => 0]);
+                ->WhereEqual('UserID',$this->userHolder->userID)->Modify(['Player' => $userInfo->players[0]]);
             UserPool::Instance()->Delete($this->userHolder->userID);    
         }
         if(!empty($changeholdPlayerIDs))
@@ -311,11 +312,16 @@ class NFTFactory {
             
             $rows = $accessor->ClearCondition()->FromTable('Users')
                         ->WhereIn('Player',$changeholdPlayerIDs)->FetchAll();
+            $accessor->ClearCondition()->PrepareName('RefreshOtherUserPlayer');            
             if($rows !== false)
-            {    
-                $accessor->ClearCondition()->FromTable('Users')
-                ->WhereIn('Player',$changeholdPlayerIDs)->Modify(['Player' => 0]);
-                foreach($rows as $row)UserPool::Instance()->Delete($row['UserID']);
+            {
+                foreach($rows as $row)
+                {
+                    $userInfo =(new UserHandler($row['UserID']))->GetInfo();
+                    $accessor->ClearCondition()->FromTable('Users')
+                    ->WhereEqual('UserID',$userInfo->id)->Modify(['Player' => $userInfo->players[0]]);
+                    UserPool::Instance()->Delete($userInfo->id);
+                }    
             }            
         }
     }
