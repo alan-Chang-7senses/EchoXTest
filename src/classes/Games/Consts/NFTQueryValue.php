@@ -16,8 +16,10 @@ class NFTQueryValue {
         1
     ];
     const ContractPlanet = [
-        1,2
+        1
     ];
+
+    
     
     const StatusSuccess = 0;
     const StatusFailure = 1;

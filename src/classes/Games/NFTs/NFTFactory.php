@@ -179,7 +179,7 @@ class NFTFactory {
             'BackDNA' => $playerDNAHolder->back,
             'HatDNA' => $playerDNAHolder->hat,
 
-            'Native' => $isNative ? ($row->Native ?? NFTDNA::NativeNone) : NFTDNA::NativeNone,
+            'Native' => $isNative ? ($row->Native ?? NFTDNA::NativeDefalut) : NFTDNA::NativeNone,
             'Source' => $row->Source ?? NFTDNA::SourcePromote,
             'SkeletonType' => $row->SkeletonType ?? NFTDNA::SkeletonTypePeta,
             'StrengthLevel' => $metadata->properties->attribute_model,
@@ -226,7 +226,7 @@ class NFTFactory {
     }
     
     public function RefreshPlayers() : void{
-        
+
         $nftsResult = $this->QueryNFTs($this->userHolder->email);
         if($nftsResult === false) return;
         
@@ -250,18 +250,73 @@ class NFTFactory {
             }
         }
         
-        $rowsExistPlayer = $accessor->FromTable('PlayerHolder')->WhereIn('PlayerID', $playerIDs)->FetchStyleAssoc()->FetchAll();
+        $rowsExistPlayer = $accessor->FromTable('PlayerHolder')
+                            ->WhereIn('PlayerID', $playerIDs)
+                            ->FetchStyleAssoc()->FetchAll();
         $existPlayerIDs = array_column($rowsExistPlayer, 'PlayerID');
-        $notExistPlayerIDs = array_column($playerIDs, $existPlayerIDs);
+        $rowsUserHoldPlayers = $accessor->ClearCondition()->FromTable('PlayerHolder')
+                                        ->WhereEqual('UserID', $this->userHolder->userID)
+                                        ->WhereGreater('PlayerID',PlayerValue::freePetaMaxPlayerID)
+                                        ->FetchStyleAssoc()
+                                        ->FetchAll();
+
+        $userHoldPlayers = array_column($rowsUserHoldPlayers, 'PlayerID');
+        //不存在DB，但在鏈上持有
+        $notExistPlayerIDs = array_diff($playerIDs,$existPlayerIDs);
+        //存在DB、鏈上持有、DB不持有
+        $changeholdPlayerIDs = array_diff($existPlayerIDs,$userHoldPlayers);
+        //存在DB、鏈上不持有、DB持有
+        $noLongerHolds = array_diff($userHoldPlayers,$playerIDs);
         
-        foreach($notExistPlayerIDs as $playerIDs){
+        
+        foreach($notExistPlayerIDs as $playerID){
             
             $metadata = $this->QueryMetadata($metadataURLs[$playerID]);
             
             if($metadata === false)
                 continue;
-            
+            if(!in_array($metadata->properties->universe,NFTQueryValue::ContractUniverse)
+               || !in_array($metadata->properties->planet,NFTQueryValue::ContractPlanet))
+                continue;
+
             $this->CreatePlayer($playerID, $metadata);
+        }
+
+        $currentPlayer = (new UserHandler($this->userHolder->userID))->GetInfo()->player;
+        if(in_array($currentPlayer,$noLongerHolds))$currentPlayerToClear = $currentPlayer;
+
+        if(!empty($noLongerHolds))
+        {
+            //將不持有的角色擁有者先暫時改為0
+            $whereValues = $accessor->ClearCondition()->valuesForWhereIn($noLongerHolds);
+            $whereValues->bind['UserID'] = $this->userHolder->userID;
+            $accessor->ClearCondition()->executeBind('UPDATE PlayerHolder SET UserID = 0 
+                                                    WHERE PlayerID IN '. $whereValues->values.
+                                                    'AND UserID = :UserID',$whereValues->bind);
+            foreach($noLongerHolds as $noLongerHold) PlayerPool::Instance()->Delete($noLongerHold);
+        }
+        
+        if(!empty($currentPlayerToClear))
+        {
+            $accessor->ClearCondition()->FromTable('Users')
+                ->WhereEqual('UserID',$this->userHolder->userID)->Modify(['Player' => 0]);
+            UserPool::Instance()->Delete($this->userHolder->userID);    
+        }
+        if(!empty($changeholdPlayerIDs))
+        {
+            $accessor->ClearCondition()->FromTable('PlayerHolder')
+            ->WhereIn('PlayerID',$changeholdPlayerIDs)
+            ->Modify(['UserID' => $this->userHolder->userID,'Nickname' => null, 'SyncRate' => 0]);
+            foreach($changeholdPlayerIDs as $changeholdPlayerID) PlayerPool::Instance()->Delete($changeholdPlayerID);                        
+            
+            $rows = $accessor->ClearCondition()->FromTable('Users')
+                        ->WhereIn('Player',$changeholdPlayerIDs)->FetchAll();
+            if($rows !== false)
+            {    
+                $accessor->ClearCondition()->FromTable('Users')
+                ->WhereIn('Player',$changeholdPlayerIDs)->Modify(['Player' => 0]);
+                foreach($rows as $row)UserPool::Instance()->Delete($row['UserID']);
+            }            
         }
     }
 }
