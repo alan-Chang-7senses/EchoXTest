@@ -10,12 +10,14 @@ class StoreValue {
 
     const NoStoreInfoID = 0; //沒有交易物品    
     const NoTradeID = 0; //沒有交易物品
-    //
+
     // 商店類型
     const None = 0;
-    const Purchase = 1;
-    const Counters = 2;
-    
+    const Counters = 1;
+    const AppleIAP = 2;
+    const GoogleIAB = 3;
+    const MyCard = 4;
+
     // 介面類型(UIType_固定商品數量)
     const UIType_12 = 1;
     const UIType_08 = 2;
@@ -48,7 +50,7 @@ class StoreValue {
     const InventoryNoLimit = -1;
     const InventoryDisplay = 0;
     
-    //交易資訊狀態, 0:閒置, 1:使用中
+    //商品資訊狀態, 0:閒置, 1:使用中
     const TradeStatusIdle = 0;
     const TradeStatusInUse = 1;
     
@@ -58,13 +60,17 @@ class StoreValue {
     const PurchaseStatusFinish = 2; //完成
     const PurchaseQuickSDKFailure = 3; //QuickSDK 付款失敗    
     
-    //付費狀態(sdk)
+    //付費狀態(Quick sdk)
     const PaymentSuccess = 0;
     const PaymentFailure = 1;
     
-    //手機平台
+    //裝置平台
     const NoDevice = 0;
     const Andriod = 1;
     const iOS = 2;
-
+    
+    //儲值平台
+    const PurchaseApple = 1;
+    const PurchaseGoogle = 2;
+    const PurchaseMyCard = 3;
 }

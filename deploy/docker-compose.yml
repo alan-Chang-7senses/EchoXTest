@@ -57,10 +57,10 @@ services:
             QuickSDK_CallBackKey_Android: '93981875772716097886792684820569'
             QuickSDK_CallBackKey_iOS: '11037844153751881221082701761433'
             
-            GOOGLE_APPLICATION_CREDENTIALS: '/configs/googlepurchase.json'
-            GOOGLE_APPNAME: 'petarushTest02'            
-            GOOGLE_APIKEY: 'AIzaSyAfI7Q6RJ7ogw0tXjHXHrbfe9qcneTMVvU'
-            GOOGLE_PACKAGENAME: 'com.mwc.test'
+            GOOGLE_APPLICATION_CREDENTIALS: /configs/googlepurchase.json
+            GOOGLE_APPNAME: petarushTest02            
+            GOOGLE_APIKEY: AIzaSyAfI7Q6RJ7ogw0tXjHXHrbfe9qcneTMVvU
+            GOOGLE_PACKAGENAME: com.mwc.test
 
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
 #            XDEBUG_CLIENT_PORT: 9003

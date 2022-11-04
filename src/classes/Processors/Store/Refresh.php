@@ -62,7 +62,7 @@ class Refresh extends BaseProcessor {
 
         $storeInfosHolder->refreshRemainAmounts--;
         $storeHandler = new StoreHandler($userID);
-        if ($storeDataHolder->storeType == StoreValue::Purchase) {
+        if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
             $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
         } else if ($storeDataHolder->storeType == StoreValue::Counters) {
             $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
@@ -73,13 +73,8 @@ class Refresh extends BaseProcessor {
         $result = new ResultData(ErrorCode::Success);
         $result->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
-        $result->randomPurchase = [];
-        $result->randomCounters = [];
-        if ($storeDataHolder->storeType == StoreValue::Purchase) {
-            $result->randomPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->randomTradIDs);
-        } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-            $result->randomCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->randomTradIDs);
-        }
+        $result->storetype = $storeDataHolder->storeType;
+        $result->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $storeInfosHolder->randomTradIDs);
         return $result;
     }
 

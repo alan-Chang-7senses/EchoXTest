@@ -33,7 +33,7 @@ class StoreHandler {
         return $items;
     }
 
-    public function UpdatePurchaseTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function UpdatePurchaseTrades(int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
@@ -52,7 +52,7 @@ class StoreHandler {
                 $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             }
 
-            $storeTradesHolder->storeType = StoreValue::Purchase;
+            $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
             $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
@@ -201,7 +201,7 @@ class StoreHandler {
                 continue;
             }
 
-            if ($storeType == StoreValue::Purchase) {
+            if (StoreUtility::IsPurchaseStore($storeType)) {
                 $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
                 $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
 
