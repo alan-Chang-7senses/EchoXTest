@@ -262,11 +262,11 @@ class NFTFactory {
 
         $userHoldPlayers = array_column($rowsUserHoldPlayers, 'PlayerID');
         //不存在DB，但在鏈上持有
-        $notExistPlayerIDs = array_diff($playerIDs,$existPlayerIDs);
+        $notExistPlayerIDs =  array_diff($playerIDs,$existPlayerIDs);
         //存在DB、鏈上持有、DB不持有
-        $changeholdPlayerIDs = array_diff($existPlayerIDs,$userHoldPlayers);
+        $changeholdPlayerIDs = array_values(array_diff($existPlayerIDs,$userHoldPlayers));
         //存在DB、鏈上不持有、DB持有
-        $noLongerHolds = array_diff($userHoldPlayers,$playerIDs);
+        $noLongerHolds = array_values(array_diff($userHoldPlayers,$playerIDs));
         
         
         foreach($notExistPlayerIDs as $playerID){
