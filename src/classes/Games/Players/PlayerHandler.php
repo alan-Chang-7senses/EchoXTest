@@ -120,7 +120,7 @@ class PlayerHandler {
      * @param int $playerWindDirection 角色對應場景風向
      * @return int
      */
-    public function GetWindValue(int $playerWindDirection) : int{
+    public function GetWindValue(int $playerWindDirection) : float{
         return match ($playerWindDirection) {
             SceneValue::Tailwind => PlayerUtility::AdaptValueByPoint($this->info->tailwind,AdaptablilityLevel::Wind) + $this->offsetTailwind,
             SceneValue::Crosswind => PlayerUtility::AdaptValueByPoint($this->info->crosswind,AdaptablilityLevel::Wind) + $this->offsetCrosswind,
