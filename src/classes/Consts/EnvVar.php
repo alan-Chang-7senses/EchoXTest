@@ -72,4 +72,10 @@ class EnvVar {
     
     const QuickSDKCallBackKeyAndroid = 'QuickSDK_CallBackKey_Android';
     const QuickSDKCallBackKeyiOS = 'QuickSDK_CallBackKey_iOS';
+
+    const GoogleAppName= 'GOOGLE_APPNAME';
+    const GoogleApiKey = 'GOOGLE_APIKEY';
+    const GooglePackagename = 'GOOGLE_PACKAGENAME';
+    
+
 }

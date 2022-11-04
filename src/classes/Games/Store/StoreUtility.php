@@ -4,7 +4,6 @@ namespace Games\Store;
 
 use Consts\EnvVar;
 use Consts\Globals;
-use Consts\Predefined;
 use DateTime;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
@@ -48,6 +47,12 @@ class StoreUtility {
             $result->remainSeconds = $checkTimeValue - $nowtime;
         }
         return $result;
+    }
+
+    public static function IsPurchaseStore(int $storeType): bool {
+        return (($storeType == StoreValue::AppleIAP) ||
+                ($storeType == StoreValue::GoogleIAB) ||
+                ($storeType == StoreValue::MyCard));
     }
 
     public static function CheckAutoRefreshTime(int $updateTime): StoreRefreshTimeHolder {
