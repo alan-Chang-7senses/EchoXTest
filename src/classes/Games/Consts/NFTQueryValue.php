@@ -16,7 +16,7 @@ class NFTQueryValue {
         1
     ];
     const ContractPlanet = [
-        1
+        1,2
     ];
 
     

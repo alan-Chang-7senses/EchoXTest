@@ -25,7 +25,8 @@ class BonusEnergyRunOut extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        // $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        $racePlayerID = $this->GetRacePlayerID();
         
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
@@ -39,7 +40,7 @@ class BonusEnergyRunOut extends BaseRace{
         $number = 0;
         $r = rand(1,100);
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $code = $accessor->FromTable('PlayerNFT')->WhereEqual('PlayerID',$this->userInfo->player)
+        $code = $accessor->FromTable('PlayerNFT')->WhereEqual('PlayerID',$racePlayerInfo->player)
                  ->Fetch()->Achievement;
 
         foreach((new EnergyRunOutBonus($code))->GetRunOutBonus() as $rewardEffect)

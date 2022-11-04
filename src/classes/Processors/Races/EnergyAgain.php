@@ -28,12 +28,14 @@ class EnergyAgain extends BaseRace{
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
         
-        $racePlayerHandler = new RacePlayerHandler($raceInfo->racePlayers->{$this->userInfo->player});
+        // $racePlayerHandler = new RacePlayerHandler($raceInfo->racePlayers->{$this->userInfo->player});
+        $racePlayerHandler = new RacePlayerHandler($this->GetRacePlayerID());
         $racePlayerInfo = $racePlayerHandler->GetInfo();
         
         if($racePlayerInfo->energyAgain >= RaceValue::EnergyAgainCount) throw new RaceException(RaceException::EnergyAgainOver);
         
-        $playerHandler = new PlayerHandler($this->userInfo->player);
+        // $playerHandler = new PlayerHandler($this->userInfo->player);
+        $playerHandler = new PlayerHandler($racePlayerInfo->player);
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         
         $playerInfo = $playerHandler->GetInfo();

@@ -36,8 +36,9 @@ class LeaveRace extends BaseRace{
             
             $race = $accessor->FromTable('Races')->WhereEqual('RaceID', $userInfo->race)->ForUpdate()->Fetch();
             $racePlayerIDs = json_decode($race->RacePlayerIDs);
-            $racePlayerID = $racePlayerIDs->{$userInfo->player};
-            unset($racePlayerIDs->{$userInfo->player});
+            // $racePlayerID = $racePlayerIDs->{$userInfo->player};
+            $racePlayerID = $this->GetRacePlayerID();
+            unset($racePlayerIDs->{$this->GetCurrentPlayerID()});
             $accessor->Modify(['RacePlayerIDs' => json_encode($racePlayerIDs)]);
             
             $accessor->ClearCondition();
@@ -57,7 +58,7 @@ class LeaveRace extends BaseRace{
             return $racePlayerID;
         });
         
-        RaceUtility::FinishRestoreLevel([$userInfo->player]);
+        RaceUtility::FinishRestoreLevel([$this->GetCurrentPlayerID()]);
         
         UserPool::Instance()->Delete($this->userInfo->id);
         $racePool->Delete($raceID);

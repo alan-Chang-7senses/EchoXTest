@@ -26,8 +26,9 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
-        
+        // $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        $racePlayerID = $this->GetRacePlayerID();
+
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
         
@@ -36,7 +37,7 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $row = $accessor->executeBindFetch('SELECT BonusID, Achievement
             FROM EnergyRunOutBonus t1, PlayerNFT t2
             WHERE t1.RacePlayerID = :racePlayerID
-            AND t2.PlayerID = :playerID;',['racePlayerID' => $racePlayerID, 'playerID' => $this->userInfo->player]);                        
+            AND t2.PlayerID = :playerID;',['racePlayerID' => $racePlayerID, 'playerID' => $racePlayerInfo->player]);                        
         if($row === false) throw new RaceException(RaceException::EnergyRunOutBonusNotExist);
 
 
@@ -51,7 +52,7 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerID);
         $racePlayerEffectHandler->AddAll($binds);
         
-        $playerHandler = new PlayerHandler($this->userInfo->player);
+        $playerHandler = new PlayerHandler($racePlayerInfo->player);
         
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         $raceHandler->SetPlayer($playerHandler);

@@ -111,7 +111,7 @@ class OfflineRecovery extends BaseRace {
 
         $result = new ResultData(ErrorCode::Success);
         $result->user = $this->userInfo->id;
-        $result->player = $this->userInfo->player;
+        $result->player = $this->GetCurrentPlayerID();
         $result->scene = $scene;
         $result->players = $players;
         
