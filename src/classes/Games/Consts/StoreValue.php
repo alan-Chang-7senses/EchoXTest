@@ -23,7 +23,7 @@ class StoreValue {
     const UIType_08 = 2;
     const UIType_04 = 3;
     const UIType_00 = 4;
-    const UINoItems = -1;
+    const UIUnset = -1;
     const UIMaxFixItems = 12;
     
     //貨幣(Currency) 1：火星幣2：寶石3：PT幣4：火星幣賽入場券5：PT幣賽入場券6：群體賽入場券"
@@ -66,7 +66,7 @@ class StoreValue {
     
     //裝置平台
     const NoDevice = 0;
-    const Andriod = 1;
+    const Android = 1;
     const iOS = 2;
     
     //儲值平台

@@ -33,7 +33,7 @@ class BuyGoods extends BaseProcessor {
 
         $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
         if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Counters)) {
-            throw new StoreException(StoreException::Error, ['[des]' => "params"]);
+            throw new StoreException(StoreException::Error, ['[cause]' => "params"]);
         }
 
         if ($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) {

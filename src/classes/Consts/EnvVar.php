@@ -73,9 +73,11 @@ class EnvVar {
     const QuickSDKCallBackKeyAndroid = 'QuickSDK_CallBackKey_Android';
     const QuickSDKCallBackKeyiOS = 'QuickSDK_CallBackKey_iOS';
 
+    const MycardSwitch = 'MYCARD_SWITCH';
+    const MycardVerifyUri = 'MYCARD_VERIFY_URI';
+    const MycardPaymentUri = 'MYCARD_PAYMENT_URI';
+    
     const GoogleAppName= 'GOOGLE_APPNAME';
     const GoogleApiKey = 'GOOGLE_APIKEY';
     const GooglePackagename = 'GOOGLE_PACKAGENAME';
-    
-
 }

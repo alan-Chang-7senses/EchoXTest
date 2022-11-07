@@ -34,7 +34,7 @@ class Refresh extends BaseProcessor {
         $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
 
         if ($userID != $storeInfosHolder->userID) {
-            throw new StoreException(StoreException::Error, ['[des]' => "users"]);
+            throw new StoreException(StoreException::Error, ['[cause]' => "users"]);
         }
 
         if ($storeInfosHolder->refreshRemainAmounts == StoreValue::RefreshRemainEmpty) {
@@ -49,7 +49,7 @@ class Refresh extends BaseProcessor {
         $storeDataHolder = StoreDataPool::Instance()->{$storeInfosHolder->storeID};
         $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
         if ($maxFixAmount == StoreValue::UINoItems) {
-            throw new StoreException(StoreException::Error, ['[des]' => "table"]);
+            throw new StoreException(StoreException::Error, ['[cause]' => "table"]);
         }
 
         if ($storeDataHolder->refreshCostCurrency != StoreValue::CurrencyFree) {

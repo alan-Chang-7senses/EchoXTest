@@ -6,12 +6,14 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
 use Games\Consts\StoreValue;
+use Games\Exceptions\StoreException;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\Store\StoreCountersPool;
 use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
+use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
 use stdClass;
 
@@ -94,6 +96,30 @@ class StoreHandler {
         return json_encode($storeTradeIDs);
     }
 
+    public function UpdateUserStoreInfos(int|string $device, StoreRefreshTimeHolder $autorefresh, stdClass|bool $rowinfo) {
+
+        $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        if ($rowinfo == false) {
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $accessor->FromTable('StoreUserInfos')->Add([
+                "UserID" => $this->userID,
+                "Device" => $device,
+                "AutoRefreshTime" => $nowTime
+            ]);
+        } else {
+
+            $updatetime = $autorefresh->needRefresh ? (int) $GLOBALS[Globals::TIME_BEGIN] : $rowinfo->AutoRefreshTime;
+            if (($updatetime != $autorefresh->updateTime) ||
+                    ($rowinfo->Device != $device)) {
+                $accessor = new PDOAccessor(EnvVar::DBMain);
+                $accessor->FromTable('StoreUserInfos')->WhereEqual("UserID", $this->userID)->Modify([
+                    "Device" => $device,
+                    "AutoRefreshTime" => $autorefresh->updateTime
+                ]);
+            }
+        }
+    }
+
     public function UpdateStoreInfo(StoreInfosHolder|stdClass $storinfo): int {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
@@ -117,15 +143,6 @@ class StoreHandler {
             ]);
             return $storinfo->storeInfoID;
         }
-    }
-
-    public function UpdateStoreInfoRemain(StoreInfosHolder|stdClass $storinfo): int {
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('StoreInfos')->WhereEqual("StoreInfoID", $storinfo->storeInfoID)->Modify([
-            "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
-            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
-        ]);
-        return $storinfo->storeInfoID;
     }
 
     private function ClearStoreTrade(array|null $tradIDs) {
@@ -203,16 +220,24 @@ class StoreHandler {
 
             if (StoreUtility::IsPurchaseStore($storeType)) {
                 $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
+                if ($storePurchaseHolder == false) {
+                    throw new StoreException(StoreException::Error, ['[cause]' => "PIndex ".$storeTradesHolder->cPIndex]);
+                }
+
                 $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
 
                 $tradeInfo->itemID = $storePurchaseHolder->itemID;
                 $tradeInfo->amount = $storePurchaseHolder->amount;
                 $tradeInfo->icon = $itemInfo->Icon;
                 $tradeInfo->name = $itemInfo->ItemName;
-                $tradeInfo->IAP = $storePurchaseHolder->iAP;
-                $tradeInfo->IAB = $storePurchaseHolder->iAB;
+                $tradeInfo->product = $storePurchaseHolder->productID;
             } else if ($storeType == StoreValue::Counters) {
                 $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
+
+                if ($storeCountersHolder == false) {
+                    throw new StoreException(StoreException::Error, ['[cause]' => "CIndex ".$storeTradesHolder->cPIndex]);
+                }
+
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
 
                 $tradeInfo->itemID = $storeCountersHolder->itemID;

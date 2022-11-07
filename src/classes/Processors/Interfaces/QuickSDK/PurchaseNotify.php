@@ -44,7 +44,7 @@ class PurchaseNotify extends BaseProcessor {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->fetch();
         if (empty($row)) {
-            throw new StoreException(StoreException::Error, ['[des]' => "no data"]);
+            throw new StoreException(StoreException::Error, ['[cause]' => "no data"]);
         }
 
         $callbackKey = StoreUtility::GetCallbackkey($row->Device);
