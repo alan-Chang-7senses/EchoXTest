@@ -324,5 +324,18 @@ class NFTFactory {
                 }    
             }            
         }
+
+        //紀錄當前、初次NFT角色數量
+        $accessor->ClearCondition()->executeBind(
+            'UPDATE Users SET
+                FirstNFTPlayerAmount = if(FirstNFTPlayerAmount IS NULL, :FirstNFTPlayerAmount,FirstNFTPlayerAmount),
+                NFTPlayerAmount = :NFTPlayerAmount
+             WHERE UserID = :UserID;',
+                [
+                    'FirstNFTPlayerAmount' => count($playerIDs),
+                    'NFTPlayerAmount' => count($playerIDs),
+                    'UserID' => $this->userHolder->userID,
+                ]);
+
     }
 }

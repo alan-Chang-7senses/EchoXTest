@@ -4,6 +4,10 @@ ALTER TABLE `PlayerNFT`
 	ADD COLUMN `Image` VARCHAR(255) NULL DEFAULT NULL  COMMENT '角色圖片',
 	ADD COLUMN `AnimationURL` VARCHAR(255) NULL DEFAULT NULL  COMMENT '角色音樂網址';
 
+ALTER TABLE `Users`
+	ADD COLUMN `NFTPlayerAmount` INT NOT NULL DEFAULT 0 COMMENT '使用者當前NFT角色持有數量' AFTER `UpdateTime`,
+	ADD COLUMN `FirstNFTPlayerAmount` INT NULL DEFAULT NULL COMMENT '使用者初次登入時持有NFT角色數量' AFTER `NFTPlayerAmount`;
+
 USE `koa_static`;
 
 CREATE TABLE IF NOT EXISTS `MetadataActivity` (
