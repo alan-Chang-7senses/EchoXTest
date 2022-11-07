@@ -16,7 +16,9 @@ use Games\NFTs\Holders\MetadataDNAHolder;
 use Games\Players\PlayerUtility;
 use Games\NFTs\Holders\PartSkillHolder;
 use Games\Consts\PlayerValue;
+use Games\Mails\MailsHandler;
 use Games\Players\Holders\PlayerDnaHolder;
+use Games\Pools\MetadataActivityPool;
 use Games\Pools\PlayerPool;
 use Games\Pools\UserPool;
 use Games\Users\UserHandler;
@@ -160,9 +162,7 @@ class NFTFactory {
         $playerDNAHolder->back = NFTUtility::MetadataDNAToPartDNA($metadataDNAHolder, NFTQueryValue::DNAPartBackOffset, NFTQueryValue::DNAPartBackLength);
         $playerDNAHolder->hat = NFTUtility::MetadataDNAToPartDNA($metadataDNAHolder, NFTQueryValue::DNAPartHatOffset, NFTQueryValue::DNAPartHatLength);
         
-        $row = AccessorFactory::Static()->FromTable('MetadataActivity')
-                               ->WhereEqual('ActivityName',$metadata->properties->activity_name)
-                               ->Fetch();
+        $row = MetadataActivityPool::Instance()->{$metadata->properties->activity_name};
         $isNative = $metadata->attributes->original == NFTQueryValue::NativeValue;
         $playerNFT = [
             'PlayerID' => $playerID,
@@ -280,6 +280,17 @@ class NFTFactory {
                 continue;
 
             $this->CreatePlayer($playerID, $metadata);
+            //TODO：發送獎勵信件(尚須企劃填表資料)。信件日期數？發的條件是來源標記還是原生種
+            $row = MetadataActivityPool::Instance()->{$metadata->properties->activity_name};
+            if($row === false)continue;
+            if($row->Source == NFTDNA::SourcePromote)continue;
+
+            $mailsHandler = new MailsHandler();
+            $mail = $mailsHandler->AddMail($this->userHolder->userID,1,7);
+            $item = new stdClass();
+            $item->Amount = $row->CreateRewardAmount;
+            $item->ItemID = $row->CreateRewardID ?? 0;
+            $mailsHandler->AddMailItems($mail,$item);
         }
 
         $userInfo = (new UserHandler($this->userHolder->userID))->GetInfo();
