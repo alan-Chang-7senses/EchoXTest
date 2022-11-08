@@ -17,13 +17,36 @@
 CREATE DATABASE IF NOT EXISTS `koa_main` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_main`;
 
+-- 傾印  資料表 koa_main.StoreInfos 結構
+CREATE TABLE IF NOT EXISTS `StoreInfos` (
+  `StoreInfoID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '商店資訊編號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
+  `FixTradIDs` varchar(50) DEFAULT NULL COMMENT '固定商品',
+  `RandomTradIDs` varchar(50) DEFAULT NULL COMMENT '隨機商品',
+  `RefreshRemainAmounts` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '剩餘刷新次數',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`StoreInfoID`),
+  UNIQUE KEY `UserID_StoreID` (`UserID`,`StoreID`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
+
+-- 正在傾印表格  koa_main.StoreInfos 的資料：~3 rows (近似值)
+/*!40000 ALTER TABLE `StoreInfos` DISABLE KEYS */;
+INSERT INTO `StoreInfos` (`StoreInfoID`, `UserID`, `StoreID`, `FixTradIDs`, `RandomTradIDs`, `RefreshRemainAmounts`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 1, '[1,2,3]', '[]', 0, 1667813935, 1667813935),
+	(2, 1, 2, '[4,5,6,7,8,9]', '[]', 6, 1667813935, 1667813935),
+	(3, 1, 4, '[10,11,12]', '[]', 3, 1667813935, 1667813935);
+/*!40000 ALTER TABLE `StoreInfos` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
   `ProductID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品ID',
-  `ItemID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品物品Id',
+  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品物品Id',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
@@ -36,9 +59,60 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
 
--- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~0 rows (近似值)
+-- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~7 rows (近似值)
 /*!40000 ALTER TABLE `StorePurchaseOrders` DISABLE KEYS */;
+INSERT INTO `StorePurchaseOrders` (`OrderID`, `UserID`, `TradeID`, `ProductID`, `ItemID`, `Amount`, `Plat`, `Status`, `Receipt`, `CreateTime`, `UpdateTime`) VALUES
+	(1, 1, 10, 3, -3, 1, 2, 1, '', 1667815405, 1667815405),
+	(2, 1, 10, 3, -3, 1, 2, 1, '', 1667815457, 1667815457),
+	(3, 1, 10, 3, -3, 1, 1, 0, '', 1667815933, 1667816507),
+	(4, 1, 10, 3, -3, 1, 1, 1, '', 1667815985, 1667815985),
+	(5, 1, 10, 3, -3, 1, 3, 1, 'dsfsd', 1667816042, 1667887013),
+	(6, 1, 10, 3, -3, 1, 3, 3, 'cdd', 1667889423, 1667889905),
+	(7, 1, 10, 3, -3, 1, 3, 1, 'cdd', 1667893513, 1667893521);
 /*!40000 ALTER TABLE `StorePurchaseOrders` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.StoreTrades 結構
+CREATE TABLE IF NOT EXISTS `StoreTrades` (
+  `TradeID` int(10) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `StoreID` int(10) unsigned NOT NULL DEFAULT 0,
+  `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `StoreType` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
+  `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
+  `RemainInventory` int(10) NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
+  `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`TradeID`),
+  KEY `Status` (`Status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
+
+-- 正在傾印表格  koa_main.StoreTrades 的資料：~12 rows (近似值)
+/*!40000 ALTER TABLE `StoreTrades` DISABLE KEYS */;
+INSERT INTO `StoreTrades` (`TradeID`, `UserID`, `StoreID`, `Status`, `StoreType`, `CPIndex`, `RemainInventory`, `UpdateTime`) VALUES
+	(1, 1, 1, 1, 1, 4, 3, 1667813935),
+	(2, 1, 1, 1, 1, 1, 3, 1667813935),
+	(3, 1, 1, 1, 1, 5, 3, 1667813935),
+	(4, 1, 2, 1, 2, 1, -1, 1667813935),
+	(5, 1, 2, 1, 2, 6, -1, 1667813935),
+	(6, 1, 2, 1, 2, 7, -1, 1667813935),
+	(7, 1, 2, 1, 2, 5, -1, 1667813935),
+	(8, 1, 2, 1, 2, 12, -1, 1667813935),
+	(9, 1, 2, 1, 2, 4, -1, 1667813935),
+	(10, 1, 4, 1, 4, 3, -1, 1667813935),
+	(11, 1, 4, 1, 4, 5, -1, 1667813935),
+	(12, 1, 4, 1, 4, 6, -1, 1667813935);
+/*!40000 ALTER TABLE `StoreTrades` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_main.StoreUserInfos 結構
+CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Device` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '使用裝置',
+  `AutoRefreshTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店自動刷新時間',
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
+
+-- 正在傾印表格  koa_main.StoreUserInfos 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreUserInfos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreUserInfos` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

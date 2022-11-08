@@ -52,6 +52,70 @@ INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount
 	(15, 2, 2005, 1001, 1, 3, 100, 1, 3);
 /*!40000 ALTER TABLE `StoreCounters` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_static.StoreData 結構
+CREATE TABLE IF NOT EXISTS `StoreData` (
+  `StoreID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
+  `IsOpen` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '是否開放',
+  `StoreType` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
+  `UIStyle` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '介面類型',
+  `FixedGroup` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '固定商品專櫃群組',
+  `StochasticGroup` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '隨機商品專櫃群組',
+  `RefreshCount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '每日刷新次數',
+  `RefreshCost` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '刷新費用',
+  `RefreshCostCurrency` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '刷新費用之貨幣',
+  PRIMARY KEY (`StoreID`),
+  KEY `IsOpen` (`IsOpen`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商店資訊';
+
+-- 正在傾印表格  koa_static.StoreData 的資料：~4 rows (近似值)
+/*!40000 ALTER TABLE `StoreData` DISABLE KEYS */;
+INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `StoreType`, `UIStyle`, `FixedGroup`, `StochasticGroup`, `RefreshCount`, `RefreshCost`, `RefreshCostCurrency`) VALUES
+	(1, 1, 1, 1, 1, 0, 0, 0, 0),
+	(2, 1, 2, 2, 1, 2, 6, 50, 1),
+	(3, 1, 3, 3, 2, 5, 3, 100, 2),
+	(4, 1, 4, 3, 1, 6, 3, 200, 2);
+/*!40000 ALTER TABLE `StoreData` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.StoreProductInfo 結構
+CREATE TABLE IF NOT EXISTS `StoreProductInfo` (
+  `ProductID` varchar(50) DEFAULT NULL COMMENT '商品Key',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '數量',
+  `Currency` varchar(50) DEFAULT NULL COMMENT '幣制'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值商店品項資訊';
+
+-- 正在傾印表格  koa_static.StoreProductInfo 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreProductInfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreProductInfo` ENABLE KEYS */;
+
+-- 傾印  資料表 koa_static.StorePurchase 結構
+CREATE TABLE IF NOT EXISTS `StorePurchase` (
+  `PIndex` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '索引值',
+  `GroupID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '群組',
+  `PurchaseID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '課金Id',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
+  `ProductID` varchar(20) NOT NULL DEFAULT '0' COMMENT '商品ProductID',
+  PRIMARY KEY (`PIndex`),
+  KEY `GroupID` (`GroupID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值商店';
+
+-- 正在傾印表格  koa_static.StorePurchase 的資料：~11 rows (近似值)
+/*!40000 ALTER TABLE `StorePurchase` DISABLE KEYS */;
+INSERT INTO `StorePurchase` (`PIndex`, `GroupID`, `PurchaseID`, `ItemID`, `Amount`, `ProductID`) VALUES
+	(1, 1, 1001, -3, 1, '001'),
+	(2, 1, 1001, -3, 1, '002'),
+	(3, 1, 1002, -3, 1, '003'),
+	(4, 1, 1002, -3, 1, '004'),
+	(5, 1, 1003, -3, 1, '005'),
+	(6, 1, 1004, -3, 1, '006'),
+	(7, 1, 1005, -3, 1, '007'),
+	(8, 1, 1006, -3, 1, '008'),
+	(9, 1, 1006, -3, 1, '008'),
+	(10, 1, 1006, -3, 1, '008'),
+	(11, 1, 1006, -3, 1, '008'),
+	(12, 1, 1006, -3, 1, '008');
+/*!40000 ALTER TABLE `StorePurchase` ENABLE KEYS */;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

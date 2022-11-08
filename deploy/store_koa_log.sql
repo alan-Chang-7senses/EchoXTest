@@ -17,15 +17,33 @@
 CREATE DATABASE IF NOT EXISTS `koa_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `koa_log`;
 
+-- 傾印  資料表 koa_log.MyCardPayment 結構
+CREATE TABLE IF NOT EXISTS `MyCardPayment` (
+  `OrderID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `PaymentType` varchar(50) DEFAULT NULL COMMENT '付費方式',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '支付金額',
+  `Currency` varchar(50) DEFAULT NULL COMMENT '支付的幣種',
+  `MyCardTradeNo` varchar(50) DEFAULT NULL COMMENT '交易序號',
+  `MyCardType` varchar(50) DEFAULT NULL COMMENT '通路代碼',
+  `PromoCode` varchar(50) DEFAULT NULL COMMENT '活動代碼',
+  `SerialId` varchar(50) DEFAULT NULL COMMENT '訂閱代碼',
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值資訊';
+
+-- 正在傾印表格  koa_log.MyCardPayment 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `MyCardPayment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MyCardPayment` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_log.Revenue 結構
 CREATE TABLE IF NOT EXISTS `Revenue` (
-  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `OrderID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '流水號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
+  `PlatInfo` varchar(50) DEFAULT NULL COMMENT '平台資訊',
   `PayAmount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '支付金額',
   `PayCurrency` varchar(50) DEFAULT NULL COMMENT '支付的幣種',
-  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
-  PRIMARY KEY (`Serial`)
+  `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值資訊';
 
 -- 正在傾印表格  koa_log.Revenue 的資料：~0 rows (近似值)
