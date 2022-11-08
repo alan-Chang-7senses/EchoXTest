@@ -48,7 +48,7 @@ class GetInfos extends BaseProcessor {
             if ($storeDataHolder == false) {
                 continue;
             }
-            
+
             if (($storeDataHolder->storeType == StoreValue::MyCard) &&
                     (getenv(EnvVar::MycardSwitch) != 'true')) {
                 continue;
@@ -81,11 +81,11 @@ class GetInfos extends BaseProcessor {
             if ($isNeedAutoRefresh) {
 
                 if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID->StoreID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeID->StoreID, $storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeID->StoreID, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeID->StoreID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }

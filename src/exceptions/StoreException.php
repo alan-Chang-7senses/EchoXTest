@@ -11,5 +11,6 @@ $lang[StoreException::PurchaseCancelled] = 'Purchase cancelled';
 $lang[StoreException::PurchaseIsComplete] = 'Purchase is complete !';
 $lang[StoreException::PurchaseFailure] = 'Payment Fail!';
 $lang[StoreException::PurchaseProcessing] = 'Purchasing in progress!';
+$lang[StoreException::ProductNotExist] = 'Product does not exist!';
 
 return $lang;

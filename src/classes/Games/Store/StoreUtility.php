@@ -56,6 +56,14 @@ class StoreUtility {
                 ($storeType == StoreValue::MyCard));
     }
 
+    public static function GetPurchasePlat(int $storeType): int {
+        return match ($storeType) {
+            StoreValue::AppleIAP => StoreValue::PlatApple,
+            StoreValue::GoogleIAB => StoreValue::PlatGoogle,
+            StoreValue::MyCard => StoreValue::PlatMyCard
+        };
+    }
+
     public static function CheckAutoRefreshTime(int $updateTime): StoreRefreshTimeHolder {
         //商品更新,回傳剩餘時間
         return self::CheckTime($updateTime, ConfigGenerator::Instance()->StoreAutoRefreshTime);

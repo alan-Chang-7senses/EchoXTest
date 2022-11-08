@@ -70,7 +70,7 @@ class StoreValue {
     const iOS = 2;
     
     //儲值平台
-    const PurchaseApple = 1;
-    const PurchaseGoogle = 2;
-    const PurchaseMyCard = 3;
+    const PlatApple = 1;
+    const PlatGoogle = 2;
+    const PlatMyCard = 3;
 }

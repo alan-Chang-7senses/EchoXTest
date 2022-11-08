@@ -35,7 +35,7 @@ class StoreHandler {
         return $items;
     }
 
-    public function UpdatePurchaseTrades(int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
@@ -54,6 +54,7 @@ class StoreHandler {
                 $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             }
 
+            $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
@@ -66,7 +67,7 @@ class StoreHandler {
         return json_encode($storeTradeIDs);
     }
 
-    public function UpdateCountersTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StoreCounters WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.CounterID ORDER BY RAND()", []);
@@ -84,6 +85,7 @@ class StoreHandler {
                 $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             }
 
+            $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = StoreValue::Counters;
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
@@ -173,6 +175,7 @@ class StoreHandler {
             } else {
                 $accessor->FromTable('StoreTrades')->Add([
                     "UserID" => $this->userID,
+                    "StoreID" => $tradeHolder->storeID,
                     "Status" => StoreValue::TradeStatusInUse,
                     "StoreType" => $tradeHolder->storeType,
                     "CPIndex" => $tradeHolder->cPIndex,
@@ -205,6 +208,11 @@ class StoreHandler {
         $result = [];
         foreach ($tradIDs as $tradID) {
             $storeTradesHolder = StoreTradesPool::Instance()->{$tradID};
+
+            if ($storeTradesHolder == false) {
+                throw new StoreException(StoreException::Error);
+            }
+
             $tradeInfo = new stdClass();
             $tradeInfo->tradID = $tradID;
 
@@ -221,7 +229,7 @@ class StoreHandler {
             if (StoreUtility::IsPurchaseStore($storeType)) {
                 $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
                 if ($storePurchaseHolder == false) {
-                    throw new StoreException(StoreException::Error, ['[cause]' => "PIndex ".$storeTradesHolder->cPIndex]);
+                    throw new StoreException(StoreException::Error, ['[cause]' => "PIndex " . $storeTradesHolder->cPIndex]);
                 }
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
@@ -235,7 +243,7 @@ class StoreHandler {
                 $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
 
                 if ($storeCountersHolder == false) {
-                    throw new StoreException(StoreException::Error, ['[cause]' => "CIndex ".$storeTradesHolder->cPIndex]);
+                    throw new StoreException(StoreException::Error, ['[cause]' => "CIndex " . $storeTradesHolder->cPIndex]);
                 }
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
@@ -257,7 +265,7 @@ class StoreHandler {
         return $result;
     }
 
-    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $device): int {
+    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): int {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
@@ -265,10 +273,12 @@ class StoreHandler {
         $accessor->FromTable('StorePurchaseOrders')->Add([
             "UserID" => $this->userID,
             "TradeID" => $tradeID,
-            "Device" => $device,
+            "ProductID" => $storePurchaseHolder->productID,
             "ItemID" => $storePurchaseHolder->itemID,
             "Amount" => $storePurchaseHolder->amount,
+            "Plat" => $plat,
             "Status" => StoreValue::PurchaseStatusProcessing,
+            "Receipt" => "",
             "CreateTime" => $nowtime,
             "UpdateTime" => $nowtime
         ]);
