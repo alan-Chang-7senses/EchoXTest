@@ -3,7 +3,10 @@
 namespace Processors\Interfaces\Metasens;
 
 use Consts\ErrorCode;
+use Consts\Globals;
+use Consts\Sessions;
 use Exception;
+use Games\NFTs\NFTFactory;
 use Games\NFTs\NFTUtility;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -40,7 +43,10 @@ class NFTEvent extends BaseProcessor{
     }
     
     private function nftCreated(stdClass $payload) : void{
-        
+        $userID = $_SESSION[Sessions::UserID];
+        $nftFactory = new NFTFactory($_SESSION[Sessions::UserID]);
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+
     }
     
     private function nftMetadataChanged(stdClass $payload) : void{

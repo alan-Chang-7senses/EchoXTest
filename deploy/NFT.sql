@@ -9,6 +9,9 @@ ALTER TABLE `Users`
 	ADD COLUMN `FirstNFTPlayerAmount` INT NULL DEFAULT NULL COMMENT '使用者初次登入時持有NFT角色數量' AFTER `NFTPlayerAmount`;
 	ADD INDEX `FirstNFTPlayerAmount` (`FirstNFTPlayerAmount`);
 
+INSERT INTO `koa_main`.`Configs` (`Name`, `Value`, `Comment`) VALUES ('NewNFTRewardMailID', '0', 'NFT創角獎勵之信件編號(0為空)');
+INSERT INTO `koa_main`.`Configs` (`Name`, `Value`, `Comment`) VALUES ('NewNFTRewardMailExpireDate', '0', 'NFT創角獎勵信件之領取期限(0為空)');
+
 USE `koa_static`;
 
 CREATE TABLE IF NOT EXISTS `MetadataActivity` (

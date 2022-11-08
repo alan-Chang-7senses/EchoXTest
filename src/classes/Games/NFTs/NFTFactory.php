@@ -22,6 +22,7 @@ use Games\Pools\MetadataActivityPool;
 use Games\Pools\PlayerPool;
 use Games\Pools\UserPool;
 use Games\Users\UserHandler;
+use Generators\ConfigGenerator;
 
 /**
  * Description of NFTFactory
@@ -285,8 +286,11 @@ class NFTFactory {
             if($row === false)continue;
             if($row->Source == NFTDNA::SourcePromote)continue;
 
+            $mailID = ConfigGenerator::Instance()->NewNFTRewardMailID;
+            $expireDate = ConfigGenerator::Instance()->NewNFTRewardMailExpireDate;
+            if(empty($mailID) || empty($expireDate))continue;
             $mailsHandler = new MailsHandler();
-            $mail = $mailsHandler->AddMail($this->userHolder->userID,1,7);
+            $mail = $mailsHandler->AddMail($this->userHolder->userID,$mailID,$expireDate);
             $item = new stdClass();
             $item->Amount = $row->CreateRewardAmount;
             $item->ItemID = $row->CreateRewardID ?? 0;
