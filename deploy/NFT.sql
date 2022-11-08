@@ -25,11 +25,14 @@ CREATE TABLE IF NOT EXISTS `MetadataActivity` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='NFT Metadata 的 Activity 對應表';
 
 INSERT INTO `MetadataActivity` (`ActivityName`, `Source`, `Native`, `SkeletonType`, `CreateRewardID`, `CreateRewardAmount`) VALUES
-	('peta-empower-demiholim', 0, 0, 1, NULL, 0),
-	('peta-empower-phantabear', 0, 0, 2, NULL, 0),
-	('peta-giveaway', 0, 0, 1, NULL, 0),
-	('peta-speciale-1', 0, 0, 1, NULL, 0),
-	('peta-speciale-2', 0, 0, 1, NULL, 0),
+	('peta-airdrop-1 ', 0, 0, 1, 0, 0),
+	('peta-airdrop-2', 0, 0, 1, 0, 0),
+	('peta-empower-demiholim', 0, 0, 1, 0, 0),
+	('peta-empower-phantabear ', 0, 0, 2, 0, 0),
+	('peta-giveaway ', 0, 0, 1, 0, 0),
+	('peta-public', 1, 1, 1, 5201, 30),
+	('peta-speciale-1 ', 0, 0, 1, 0, 0),
+	('peta-speciale-2', 0, 0, 1, 0, 0),
 	('peta-whitelist-1', 1, 1, 1, 5201, 30),
 	('peta-whitelist-2', 1, 1, 1, 5201, 30),
 	('peta-whitelist-3', 1, 1, 1, 5201, 30);
