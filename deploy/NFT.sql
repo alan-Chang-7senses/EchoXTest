@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS `MetadataActivity` (
   `Source` tinyint(4) NOT NULL DEFAULT 0 COMMENT '來源標記',
   `Native` tinyint(4) NOT NULL DEFAULT 0 COMMENT '原生種標記',
   `SkeletonType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '骨架類別',
-  `CreateRewardID` int(11) DEFAULT NULL COMMENT '創角獎勵編號',
+  `CreateRewardItemID` int(11) DEFAULT NULL COMMENT '創角獎勵編號',
   `CreateRewardAmount` int(11) NOT NULL DEFAULT 0 COMMENT '創角獎勵數量',
   PRIMARY KEY (`ActivityName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='NFT Metadata 的 Activity 對應表';
 
-INSERT INTO `MetadataActivity` (`ActivityName`, `Source`, `Native`, `SkeletonType`, `CreateRewardID`, `CreateRewardAmount`) VALUES
+INSERT INTO `MetadataActivity` (`ActivityName`, `Source`, `Native`, `SkeletonType`, `CreateRewardItemID`, `CreateRewardAmount`) VALUES
 	('peta-airdrop-1 ', 0, 0, 1, 0, 0),
 	('peta-airdrop-2', 0, 0, 1, 0, 0),
 	('peta-empower-demiholim', 0, 0, 1, 0, 0),
