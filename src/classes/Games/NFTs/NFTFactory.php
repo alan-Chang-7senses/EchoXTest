@@ -293,7 +293,7 @@ class NFTFactory {
             $mail = $mailsHandler->AddMail($this->userHolder->userID,$mailID,$expireDate);
             $item = new stdClass();
             $item->Amount = $row->CreateRewardAmount;
-            $item->ItemID = $row->CreateRewardID ?? 0;
+            $item->ItemID = $row->CreateRewardItemID ?? 0;
             $mailsHandler->AddMailItems($mail,$item);
         }
 

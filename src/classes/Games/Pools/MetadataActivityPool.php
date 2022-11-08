@@ -27,7 +27,7 @@ class MetadataActivityPool extends PoolAccessor
         $holder->Source = $row->Source;
         $holder->Native = $row->Native;
         $holder->SkeletonType = $row->SkeletonType;
-        $holder->CreateRewardID = $row->CreateRewardID;
+        $holder->CreateRewardItemID = $row->CreateRewardItemID;
         $holder->CreateRewardAmount = $row->CreateRewardAmount;
         return $row;
     }
