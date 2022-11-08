@@ -10,7 +10,7 @@ ALTER TABLE `Users`
 	ADD INDEX `FirstNFTPlayerAmount` (`FirstNFTPlayerAmount`);
 
 INSERT INTO `koa_main`.`Configs` (`Name`, `Value`, `Comment`) VALUES ('NewNFTRewardMailID', '0', 'NFT創角獎勵之信件編號(0為空)');
-INSERT INTO `koa_main`.`Configs` (`Name`, `Value`, `Comment`) VALUES ('NewNFTRewardMailExpireDate', '0', 'NFT創角獎勵信件之領取期限(0為空)');
+INSERT INTO `koa_main`.`Configs` (`Name`, `Value`, `Comment`) VALUES ('NewNFTRewardMailExpireDate', '500', 'NFT創角獎勵信件之領取期限(0為空)');
 
 USE `koa_static`;
 
