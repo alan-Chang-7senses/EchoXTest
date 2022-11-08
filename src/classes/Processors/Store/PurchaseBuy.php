@@ -7,6 +7,7 @@ use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Exceptions\ItemException;
 use Games\Exceptions\StoreException;
+use Games\Pools\Store\StoreDataPool;
 use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\StoreHandler;
@@ -27,28 +28,29 @@ class PurchaseBuy extends BaseProcessor {
     public function Process(): ResultData {
 
         $tradeID = InputHelper::post('tradeID');
-        $device = InputHelper::post('device');
 
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
-
-        $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
-        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Purchase)) {
-            throw new StoreException(StoreException::Error, ['[des]' => "params"]);
+               
+        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
+            throw new StoreException(StoreException::Refreshed);
         }
         
-        if (($device != StoreValue::Andriod) && ($device != StoreValue::iOS))
-        {
-            throw new StoreException(StoreException::Error, ['[des]' => "device"]);            
+        $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
+        if (($userID != $storeTradesHolder->userID) || (StoreUtility::IsPurchaseStore($storeTradesHolder->storeType) == false)) {
+            throw new StoreException(StoreException::Error);
         }
+        
+        $plat = StoreUtility::GetPurchasePlat($storeTradesHolder->storeType); 
 
         if ($storeTradesHolder->remainInventory == StoreValue::InventoryDisplay) {
             throw new StoreException(StoreException::OutofStock);
         }
 
-        $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($storeTradesHolder->updateTime);
-        if ($autoRefreshTime->needRefresh) {
-            throw new StoreException(StoreException::Refreshed);
+        $storeDataHolder = StoreDataPool::Instance()->{$storeTradesHolder->storeID};
+        if ($storeDataHolder == false) {
+            throw new StoreException(StoreException::ProductNotExist);
         }
 
         $userBagHandler = new UserBagHandler($userID);
@@ -59,7 +61,7 @@ class PurchaseBuy extends BaseProcessor {
         }
 
         //建立訂單
-        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $tradeID, $device);
+        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $tradeID, $plat);
         $result = new ResultData(ErrorCode::Success);
         $result->orderID = $orderID;
         return $result;

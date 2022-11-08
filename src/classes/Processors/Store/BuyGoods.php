@@ -9,6 +9,7 @@ use Games\Consts\StoreValue;
 use Games\Exceptions\ItemException;
 use Games\Exceptions\StoreException;
 use Games\Pools\Store\StoreCountersPool;
+use Games\Pools\Store\StoreDataPool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
@@ -30,20 +31,25 @@ class BuyGoods extends BaseProcessor {
 
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
+        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
+            throw new StoreException(StoreException::Refreshed);
+        }
 
         $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
         if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Counters)) {
             throw new StoreException(StoreException::Error, ['[cause]' => "params"]);
         }
 
+        $storeDataHolder = StoreDataPool::Instance()->{$storeTradesHolder->storeID};
+        if ($storeDataHolder == false) {//商店關閉
+            throw new StoreException(StoreException::ProductNotExist);
+        }
+
         if ($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) {
             throw new StoreException(StoreException::OutofStock);
         }
 
-        $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($storeTradesHolder->updateTime);
-        if ($autoRefreshTime->needRefresh) {
-            throw new StoreException(StoreException::Refreshed);
-        }
 
         $userBagHandler = new UserBagHandler($userID);
         $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};

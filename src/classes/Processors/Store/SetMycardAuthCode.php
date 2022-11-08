@@ -1,0 +1,47 @@
+<?php
+
+namespace Processors\Store;
+
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
+use Consts\ErrorCode;
+use Consts\Globals;
+use Consts\Sessions;
+use Games\Consts\StoreValue;
+use Games\Exceptions\StoreException;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
+
+/*
+ * Description of SetMycardAuthCode
+ * 設定MyCardAuth
+ */
+
+class SetMycardAuthCode extends BaseProcessor {
+
+    public function Process(): ResultData {
+
+        $orderID = InputHelper::post('orderID');
+        $authCode = InputHelper::post('AuthCode');
+        $userID = $_SESSION[Sessions::UserID];
+
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $orderData = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->WhereEqual("UserID", $userID)->WhereEqual("Plat", StoreValue::PlatMyCard)->Fetch();
+        if ($orderData == false) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        if (!empty($orderData->Receipt) && ($orderData->Receipt == $authCode)) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        $accessor->Modify([
+            "Receipt" => $authCode,
+            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+        ]);
+
+        return new ResultData(ErrorCode::Success);
+    }
+
+}

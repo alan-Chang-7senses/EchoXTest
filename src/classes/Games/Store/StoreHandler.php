@@ -29,6 +29,37 @@ class StoreHandler {
         $this->userID = $userID;
     }
 
+    public function GetRefreshTime(): StoreRefreshTimeHolder {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->WhereEqual('UserID', $this->userID)->Fetch();
+        if ($rowStoreUserInfos == false) {
+            return null;
+        }
+
+        $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($rowStoreUserInfos->AutoRefreshTime);
+        return $autoRefreshTime;
+    }
+
+    public function AddRefreshTime(int|string $device) {
+
+        $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->FromTable('StoreUserInfos')->Add([
+            "UserID" => $this->userID,
+            "Device" => $device,
+            "AutoRefreshTime" => $nowTime
+        ]);
+    }
+
+    public function UpdateRefreshTime(StoreRefreshTimeHolder $autorefresh) {
+        if ($autorefresh->needRefresh) {
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $accessor->FromTable('StoreUserInfos')->WhereEqual("UserID", $this->userID)->Modify([
+                "AutoRefreshTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+            ]);
+        }
+    }
+
     public function GetStoreDatas(): array {
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
@@ -96,30 +127,6 @@ class StoreHandler {
         $this->ClearStoreTrade($tradIDs);
 
         return json_encode($storeTradeIDs);
-    }
-
-    public function UpdateUserStoreInfos(int|string $device, StoreRefreshTimeHolder $autorefresh, stdClass|bool $rowinfo) {
-
-        $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        if ($rowinfo == false) {
-            $accessor = new PDOAccessor(EnvVar::DBMain);
-            $accessor->FromTable('StoreUserInfos')->Add([
-                "UserID" => $this->userID,
-                "Device" => $device,
-                "AutoRefreshTime" => $nowTime
-            ]);
-        } else {
-
-            $updatetime = $autorefresh->needRefresh ? (int) $GLOBALS[Globals::TIME_BEGIN] : $rowinfo->AutoRefreshTime;
-            if (($updatetime != $autorefresh->updateTime) ||
-                    ($rowinfo->Device != $device)) {
-                $accessor = new PDOAccessor(EnvVar::DBMain);
-                $accessor->FromTable('StoreUserInfos')->WhereEqual("UserID", $this->userID)->Modify([
-                    "Device" => $device,
-                    "AutoRefreshTime" => $autorefresh->updateTime
-                ]);
-            }
-        }
     }
 
     public function UpdateStoreInfo(StoreInfosHolder|stdClass $storinfo): int {

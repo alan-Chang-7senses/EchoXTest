@@ -29,20 +29,19 @@ class GetInfos extends BaseProcessor {
         $device = InputHelper::get('device');
 
         $storeHandler = new StoreHandler($userID);
-
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->WhereEqual('UserID', $userID)->Fetch();
-        if ($rowStoreUserInfos == false) {
+        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        if ($autoRefreshTime == null) {
             $autoRefreshTime = StoreUtility::CheckAutoRefreshTime((int) $GLOBALS[Globals::TIME_BEGIN]);
             $autoRefreshTime->needRefresh = true;
+            $storeHandler->AddRefreshTime($device);
         } else {
-            $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($rowStoreUserInfos->AutoRefreshTime);
+            $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
-        $storeHandler->UpdateUserStoreInfos($device, $autoRefreshTime, $rowStoreUserInfos);
 
         //get store
         $storeIDs = $storeHandler->GetStoreDatas();
         $resposeStores = [];
+        $accessor = new PDOAccessor(EnvVar::DBMain);
         foreach ($storeIDs as $storeID) {
             $storeDataHolder = StoreDataPool::Instance()->{$storeID->StoreID};
             if ($storeDataHolder == false) {
@@ -76,7 +75,6 @@ class GetInfos extends BaseProcessor {
                     $isNeedAutoRefresh = false;
                 }
             }
-
 
             if ($isNeedAutoRefresh) {
 

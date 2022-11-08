@@ -28,7 +28,7 @@ class PurchaseCancel extends BaseProcessor {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->WhereEqual("UserID", $userID)->fetch();
         if (empty($row)) {
-            throw new StoreException(StoreException::Error,  ['[des]' => "no data"]);
+            throw new StoreException(StoreException::Error,  ['[cause]' => "no data"]);
         }
 
         if ($row->Status == StoreValue::PurchaseStatusCancel) {

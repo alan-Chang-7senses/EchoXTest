@@ -58,7 +58,7 @@ class StoreValue {
     const PurchaseStatusCancel = 0;
     const PurchaseStatusProcessing = 1; //儲值處理中
     const PurchaseStatusFinish = 2; //完成
-    const PurchaseQuickSDKFailure = 3; //QuickSDK 付款失敗    
+    const PurchaseStatusFailure = 3; //QuickSDK 付款失敗    
     
     //付費狀態(Quick sdk)
     const PaymentSuccess = 0;

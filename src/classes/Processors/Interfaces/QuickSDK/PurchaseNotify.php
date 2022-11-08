@@ -54,7 +54,7 @@ class PurchaseNotify extends BaseProcessor {
             return new ResultData(ErrorCode::VerifyError, "sign error");
         }
 
-        if (($row->Status != StoreValue::PurchaseStatusProcessing) && ($row->Status != StoreValue::PurchaseQuickSDKFailure)) {
+        if (($row->Status != StoreValue::PurchaseStatusProcessing) && ($row->Status != StoreValue::PurchaseStatusFailure)) {
             return new ResultData(ErrorCode::VerifyError, "status error");
         }
 
@@ -63,8 +63,8 @@ class PurchaseNotify extends BaseProcessor {
 
         if ($payStatus == StoreValue::PaymentFailure) {
             //不用做任何事, 變更狀態以便知道訂單失敗原因
-            if ($row->Status != StoreValue::PurchaseQuickSDKFailure) {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseQuickSDKFailure);
+            if ($row->Status != StoreValue::PurchaseStatusFailure) {
+                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
             }
             return new ResultData(ErrorCode::Success);
         }
