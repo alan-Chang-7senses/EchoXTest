@@ -2,12 +2,12 @@
 
 ## 介紹
 
-- 遊戲中儲值狀態，取消訂單購買。
+- 遊戲中MyCard儲值，取消訂單購買。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
 
-http(s)://`域名`/Store/PurchaseCancel/
+http(s)://`域名`/Store/MyCard/Cancel/
 
 ## Method
 

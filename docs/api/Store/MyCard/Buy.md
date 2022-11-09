@@ -7,7 +7,7 @@
 
 ## URL
 
-http(s)://`域名`/Store/PurchaseBuy/
+http(s)://`域名`/Store/MyCard/Buy/
 
 ## Method
 
@@ -35,6 +35,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | orderID | int | 訂單序號 |
+| AuthCode | string | MyCard 認證用 |
 
 <br>
 
@@ -45,5 +46,6 @@ Content Type: `application/json`
 			"code": 0,
 			"message": ""
 		},
-		"orderID": 2
+		"orderID": 19,
+		"AuthCode": "TestAuthcode"
 	}
