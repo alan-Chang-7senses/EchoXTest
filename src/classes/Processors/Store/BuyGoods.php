@@ -21,6 +21,7 @@ use Processors\BaseProcessor;
 
 /*
  * Description of BuyGoods
+ * 購買一般商店物品
  */
 
 class BuyGoods extends BaseProcessor {
@@ -31,13 +32,13 @@ class BuyGoods extends BaseProcessor {
 
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
-        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
         if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
             throw new StoreException(StoreException::Refreshed);
         }
 
         $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
-        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::Counters)) {
+        if (($userID != $storeTradesHolder->userID) || ($storeTradesHolder->storeType != StoreValue::TypeCounters)) {
             throw new StoreException(StoreException::Error, ['[cause]' => "params"]);
         }
 
@@ -49,7 +50,6 @@ class BuyGoods extends BaseProcessor {
         if ($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) {
             throw new StoreException(StoreException::OutofStock);
         }
-
 
         $userBagHandler = new UserBagHandler($userID);
         $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};

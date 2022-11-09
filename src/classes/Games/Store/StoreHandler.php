@@ -5,6 +5,7 @@ namespace Games\Store;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
+use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\ItemInfoPool;
@@ -13,8 +14,11 @@ use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
+use Games\Store\Holders\StorePurchaseOrdersHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
+use Games\Users\ItemUtility;
+use Games\Users\UserBagHandler;
 use stdClass;
 
 /*
@@ -29,24 +33,25 @@ class StoreHandler {
         $this->userID = $userID;
     }
 
-    public function GetRefreshTime(): StoreRefreshTimeHolder {
+    public function GetRefreshTime(): StoreRefreshTimeHolder|false {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->WhereEqual('UserID', $this->userID)->Fetch();
         if ($rowStoreUserInfos == false) {
-            return null;
+            return false;
         }
 
         $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($rowStoreUserInfos->AutoRefreshTime);
         return $autoRefreshTime;
     }
 
-    public function AddRefreshTime(int|string $device) {
+    public function AddRefreshTime(int|string $device, int|string $plat) {
 
         $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->FromTable('StoreUserInfos')->Add([
             "UserID" => $this->userID,
             "Device" => $device,
+            "Plat" => $plat,
             "AutoRefreshTime" => $nowTime
         ]);
     }
@@ -58,12 +63,6 @@ class StoreHandler {
                 "AutoRefreshTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
             ]);
         }
-    }
-
-    public function GetStoreDatas(): array {
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
-        return $items;
     }
 
     public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
@@ -117,7 +116,7 @@ class StoreHandler {
             }
 
             $storeTradesHolder->storeID = $storeID;
-            $storeTradesHolder->storeType = StoreValue::Counters;
+            $storeTradesHolder->storeType = StoreValue::TypeCounters;
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
             $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
@@ -246,7 +245,7 @@ class StoreHandler {
                 $tradeInfo->icon = $itemInfo->Icon;
                 $tradeInfo->name = $itemInfo->ItemName;
                 $tradeInfo->product = $storePurchaseHolder->productID;
-            } else if ($storeType == StoreValue::Counters) {
+            } else if ($storeType == StoreValue::TypeCounters) {
                 $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
 
                 if ($storeCountersHolder == false) {
@@ -301,17 +300,38 @@ class StoreHandler {
         ]);
     }
 
-    public function FinishPurchaseOrder(int $orderID, string $orderNO, string $usdAmount, string $payAmount, string $payCurrency) {
+    public function VerrifyProduct(stdclass|StorePurchaseOrdersHolder $storePurchaseOrdersHolder): bool {
 
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
-            "Status" => StoreValue::PurchaseStatusFinish,
-            "OrderNo" => $orderNO,
-            "UsdAmount" => $usdAmount,
-            "PayAmount" => $payAmount,
-            "PayCurrency" => $payCurrency,
-            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
-        ]);
+        if ($storePurchaseOrdersHolder->Status == StoreValue::PurchaseStatusFinish) {
+            return true;
+        }
+
+        if ($storePurchaseOrdersHolder->Status != StoreValue::PurchaseStatusProcessing) {
+            return false;
+        }
+
+        if (empty($storePurchaseOrdersHolder->Receipt)) {
+            return false;
+        }
+
+        if ($storePurchaseOrdersHolder->Plat == StoreValue::PlatMyCard) {
+            $result = PurchaseUtility::MyCardVerify($this->userID, $storePurchaseOrdersHolder->Receipt);
+        } else {
+            return false;
+        }
+
+        $orderID = $storePurchaseOrdersHolder->OrderID;
+
+        if ($result == StoreValue::PurchaseProcessSuccess) {
+            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
+            //加物品
+            $userBagHandler = new UserBagHandler($this->userID);
+            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
+            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+        } else if ($result == StoreValue::PurchaseProcessFailure) {
+            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
+        }
+        return true;
     }
 
 }

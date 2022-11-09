@@ -27,37 +27,40 @@ class GetInfos extends BaseProcessor {
 
         $userID = $_SESSION[Sessions::UserID];
         $device = InputHelper::get('device');
+        $plat = InputHelper::get('plat');
 
         $storeHandler = new StoreHandler($userID);
-        $autoRefreshTime = $storeHandler::GetRefreshTime();
-        if ($autoRefreshTime == null) {
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
+        if ($autoRefreshTime == false) {
             $autoRefreshTime = StoreUtility::CheckAutoRefreshTime((int) $GLOBALS[Globals::TIME_BEGIN]);
             $autoRefreshTime->needRefresh = true;
-            $storeHandler->AddRefreshTime($device);
+            $storeHandler->AddRefreshTime($device, $plat);
         } else {
             $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
 
         //get store
-        $storeIDs = $storeHandler->GetStoreDatas();
+        $accessorStatic = new PDOAccessor(EnvVar::DBStatic);
+        $storeDatas = $accessorStatic->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
+        
         $resposeStores = [];
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        foreach ($storeIDs as $storeID) {
-            $storeDataHolder = StoreDataPool::Instance()->{$storeID->StoreID};
+        foreach ($storeDatas as $storeData) {
+            $storeID = $storeData->StoreID;
+            $storeDataHolder = StoreDataPool::Instance()->{$storeID};
             if ($storeDataHolder == false) {
                 continue;
             }
 
-            if (($storeDataHolder->storeType == StoreValue::MyCard) &&
-                    (getenv(EnvVar::MycardSwitch) != 'true')) {
+            if (($storeDataHolder->storeType == StoreValue::TypeMyCard) &&
+                    (getenv(EnvVar::MyCardSwitch) != 'true')) {
                 continue;
             }
-
-            //互斥的平台
-            if (($device == StoreValue::iOS && $storeDataHolder->storeType == StoreValue::GoogleIAB) ||
-                    ($device == StoreValue::Android && $storeDataHolder->storeType == StoreValue::AppleIAP)) {
+            
+            $nowPlat = StoreUtility::GetPurchasePlat($storeDataHolder->storeType);
+            if (($nowPlat != StoreValue::PlatNone) && ($nowPlat != $plat)) {
                 continue;
-            }
+            }            
 
             $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
             if ($maxFixAmount == StoreValue::UIUnset) {
@@ -65,25 +68,18 @@ class GetInfos extends BaseProcessor {
             }
 
             $accessor->ClearCondition();
-            $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID->StoreID)->Fetch();
+            $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID)->Fetch();
             $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
-            $storeInfosHolder->storeID = $storeID->StoreID;
+            $storeInfosHolder->storeID = $storeID;
 
-            $isNeedAutoRefresh = true;
-            if (!empty($rowStoreInfo)) {
-                if ($autoRefreshTime->needRefresh == false) {
-                    $isNeedAutoRefresh = false;
-                }
-            }
-
-            if ($isNeedAutoRefresh) {
+            if ($autoRefreshTime->needRefresh || empty($rowStoreInfo)) {
 
                 if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID->StoreID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeID->StoreID, $storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
-                } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeID->StoreID, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeID->StoreID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }
@@ -92,7 +88,7 @@ class GetInfos extends BaseProcessor {
                 $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
             }
 
-            //response
+            //response Client
             $resposeStore = new stdClass();
 
             $resposeStore->storeInfoID = $storeInfosHolder->storeInfoID;
@@ -108,7 +104,6 @@ class GetInfos extends BaseProcessor {
 
             $resposeStores[] = $resposeStore;
         }
-
 
         $userBagHandler = new UserBagHandler($userID);
         $result = new ResultData(ErrorCode::Success);

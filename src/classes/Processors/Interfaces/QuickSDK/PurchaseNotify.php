@@ -81,7 +81,7 @@ class PurchaseNotify extends BaseProcessor {
         $userBagHandler->AddItems($additem, ItemValue::CauseStore);
 
         //更新訂單
-        $storeHandler->FinishPurchaseOrder($orderID, $orderNo, $usdAmount, $payAmount, $payCurrency);
+        //$storeHandler->FinishPurchaseOrder($orderID, $orderNo, $usdAmount, $payAmount, $payCurrency);
         return new ResultData(ErrorCode::Success);
     }
 

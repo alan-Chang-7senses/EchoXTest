@@ -51,16 +51,17 @@ class StoreUtility {
     }
 
     public static function IsPurchaseStore(int $storeType): bool {
-        return (($storeType == StoreValue::AppleIAP) ||
-                ($storeType == StoreValue::GoogleIAB) ||
-                ($storeType == StoreValue::MyCard));
+        return (($storeType == StoreValue::TypeAppleIAP) ||
+                ($storeType == StoreValue::TypeGoogleIAB) ||
+                ($storeType == StoreValue::TypeMyCard));
     }
 
     public static function GetPurchasePlat(int $storeType): int {
         return match ($storeType) {
-            StoreValue::AppleIAP => StoreValue::PlatApple,
-            StoreValue::GoogleIAB => StoreValue::PlatGoogle,
-            StoreValue::MyCard => StoreValue::PlatMyCard
+            StoreValue::TypeAppleIAP => StoreValue::PlatApple,
+            StoreValue::TypeGoogleIAB => StoreValue::PlatGoogle,
+            StoreValue::TypeMyCard => StoreValue::PlatMyCard,
+            default => StoreValue::PlatNone
         };
     }
 

@@ -19,6 +19,7 @@ use Processors\BaseProcessor;
 
 /*
  * Description of Refresh
+ * 刷新商店物品
  */
 
 class Refresh extends BaseProcessor {
@@ -29,11 +30,11 @@ class Refresh extends BaseProcessor {
         $storeInfoID = InputHelper::post('storeInfoID');
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
-        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
         if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
             throw new StoreException(StoreException::Refreshed);
         }
-        
+
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('StoreInfoID', $storeInfoID)->WhereEqual('UserID', $userID)->Fetch();
         if ($rowStoreInfo == false) {
@@ -46,11 +47,10 @@ class Refresh extends BaseProcessor {
         }
 
         $storeDataHolder = StoreDataPool::Instance()->{$storeInfosHolder->storeID};
-        if ($storeDataHolder == false)//商店關閉
-        {
-            throw new StoreException(StoreException::ProductNotExist);            
+        if ($storeDataHolder == false) {//商店關閉
+            throw new StoreException(StoreException::ProductNotExist);
         }
-        
+
         $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
         if ($maxFixAmount == StoreValue::UIUnset) {
             throw new StoreException(StoreException::Error, ['[cause]' => "table"]);
@@ -67,8 +67,8 @@ class Refresh extends BaseProcessor {
         $storeInfosHolder->refreshRemainAmounts--;
 
         if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-            $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
-        } else if ($storeDataHolder->storeType == StoreValue::Counters) {
+            $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeDataHolder->storeType, $storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+        } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
             $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
         }
         $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);

@@ -58,11 +58,15 @@ services:
             QuickSDK_CallBackKey_iOS: '11037844153751881221082701761433'
 
             MYCARD_SWITCH: 'true'
-            MYCARD_VERIFY_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2/TradeQuery
-            MYCARD_PAYMENT_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2/PaymentConfirm
+            MYCARD_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2
+            MYCARD_FACSERVICEID: 'hehesdk'
+            MYCARD_FACGAMEID: 'PetaRush'
+            MYCARD_FACGAMENAME: '遊戲測試'
+            MYCARD_SANDBOXMODE: 'true'
+            MYCARD_FACKEY: 'hehe123'
 
             GOOGLE_APPLICATION_CREDENTIALS: /configs/googlepurchase.json
-            GOOGLE_APPNAME: petarushTest02            
+            GOOGLE_APPNAME: petarushTest02
             GOOGLE_APIKEY: AIzaSyAfI7Q6RJ7ogw0tXjHXHrbfe9qcneTMVvU
             GOOGLE_PACKAGENAME: com.mwc.test
 

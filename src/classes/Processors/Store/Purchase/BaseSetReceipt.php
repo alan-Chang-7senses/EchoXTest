@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\Store;
+namespace Processors\Store\Purchase;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
@@ -14,16 +14,20 @@ use Holders\ResultData;
 use Processors\BaseProcessor;
 
 /*
- * Description of SetMycardAuthCode
- * 設定MyCardAuth
+ * Description of BasePurchaseSetReceipt
+ * 設定 MyCard AuthCode | Google Receipt
+ * 
  */
 
-class SetMycardAuthCode extends BaseProcessor {
+abstract class BaseSetReceipt extends BaseProcessor {
 
-    public function Process(): ResultData {
+    abstract function GetRecepit(): string;
+
+    protected function SetReceipt(): ResultData {
 
         $orderID = InputHelper::post('orderID');
-        $authCode = InputHelper::post('AuthCode');
+        $receipt = $this->GetRecepit();
+
         $userID = $_SESSION[Sessions::UserID];
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
@@ -32,12 +36,12 @@ class SetMycardAuthCode extends BaseProcessor {
             throw new StoreException(StoreException::Error);
         }
 
-        if (!empty($orderData->Receipt) && ($orderData->Receipt == $authCode)) {
+        if (!empty($orderData->Receipt) && ($orderData->Receipt == $receipt)) {
             throw new StoreException(StoreException::Error);
         }
 
         $accessor->Modify([
-            "Receipt" => $authCode,
+            "Receipt" => $receipt,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
 

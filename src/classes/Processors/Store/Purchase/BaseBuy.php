@@ -1,8 +1,7 @@
 <?php
 
-namespace Processors\Store;
+namespace Processors\Store\Purchase;
 
-use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Exceptions\ItemException;
@@ -15,34 +14,40 @@ use Games\Store\StoreUtility;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
 use Helpers\InputHelper;
-use Holders\ResultData;
 use Processors\BaseProcessor;
 
 /*
- * Description of PurchaseBuy
+ * Description of BaseBuy
  * 儲值購買 : 先確定可以購買，再建立訂單和第三方溝通
  */
 
-class PurchaseBuy extends BaseProcessor {
+abstract class BaseBuy extends BaseProcessor {
 
-    public function Process(): ResultData {
+    protected int $userID;    
+    protected int $tradeID;
+    protected int $nowPlat = StoreValue::PlatNone;
 
-        $tradeID = InputHelper::post('tradeID');
+    public function MakeOrder(): int {
 
-        $userID = $_SESSION[Sessions::UserID];
-        $storeHandler = new StoreHandler($userID);
-               
-        $autoRefreshTime = $storeHandler::GetRefreshTime();
+        $this->tradeID = InputHelper::post('tradeID');
+
+        $this->userID = $_SESSION[Sessions::UserID];
+        $storeHandler = new StoreHandler($this->userID);
+
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
         if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
             throw new StoreException(StoreException::Refreshed);
         }
-        
-        $storeTradesHolder = StoreTradesPool::Instance()->{$tradeID};
-        if (($userID != $storeTradesHolder->userID) || (StoreUtility::IsPurchaseStore($storeTradesHolder->storeType) == false)) {
+
+        $storeTradesHolder = StoreTradesPool::Instance()->{$this->tradeID};
+        if (($this->userID != $storeTradesHolder->userID) || (StoreUtility::IsPurchaseStore($storeTradesHolder->storeType) == false)) {
             throw new StoreException(StoreException::Error);
         }
-        
-        $plat = StoreUtility::GetPurchasePlat($storeTradesHolder->storeType); 
+
+        $plat = StoreUtility::GetPurchasePlat($storeTradesHolder->storeType);
+        if ($plat !== $this->nowPlat) {
+            throw new StoreException(StoreException::Error);
+        }
 
         if ($storeTradesHolder->remainInventory == StoreValue::InventoryDisplay) {
             throw new StoreException(StoreException::OutofStock);
@@ -53,7 +58,7 @@ class PurchaseBuy extends BaseProcessor {
             throw new StoreException(StoreException::ProductNotExist);
         }
 
-        $userBagHandler = new UserBagHandler($userID);
+        $userBagHandler = new UserBagHandler($this->userID);
         $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
         $additem = ItemUtility::GetBagItem($storePurchaseHolder->itemID, $storePurchaseHolder->amount);
         if ($userBagHandler->CheckAddStacklimit($additem) == false) {
@@ -61,10 +66,10 @@ class PurchaseBuy extends BaseProcessor {
         }
 
         //建立訂單
-        $orderID = $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $tradeID, $plat);
-        $result = new ResultData(ErrorCode::Success);
-        $result->orderID = $orderID;
-        return $result;
+        return $storeHandler->CreatPurchaseOrder($storePurchaseHolder, $this->tradeID, $plat);
+//        $result = new ResultData(ErrorCode::Success);
+//        $result->orderID = $orderID;
+//        return $result;
     }
 
 }

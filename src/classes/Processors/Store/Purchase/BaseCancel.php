@@ -1,6 +1,6 @@
 <?php
 
-namespace Processors\Store;
+namespace Processors\Store\Purchase;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
@@ -18,9 +18,9 @@ use Processors\BaseProcessor;
  * 儲值取消購買
  */
 
-class PurchaseCancel extends BaseProcessor {
+abstract class BaseCancel extends BaseProcessor {
 
-    public function Process(): ResultData {
+    protected function Cancel(): ResultData {
 
         $orderID = InputHelper::post('orderID');
 
