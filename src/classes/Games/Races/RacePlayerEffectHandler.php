@@ -4,6 +4,7 @@ namespace Games\Races;
 
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
@@ -11,6 +12,7 @@ use stdClass;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
 use Games\Players\PlayerUtility;
+use Games\Pools\RacePlayerPool;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 
@@ -85,10 +87,17 @@ class RacePlayerEffectHandler {
     }
     
     private static function AddHP(RacePlayerHandler $racePlayerHandler, float $value) {
-        
-        $hp = $racePlayerHandler->GetInfo()->hp + $value * RaceValue::DivisorHP;
-        if($hp <= RaceValue::ValueMinHP) $hp = RaceValue::ValueMinHP;
-        $racePlayerHandler->SaveData(['hp' => $hp]);
+
+        $accessor = AccessorFactory::Main();
+        $value = intval($value * RaceValue::DivisorHP);
+        $racePlayerID = $racePlayerHandler->GetInfo()->id;
+        $accessor->Transaction(function() use ($accessor,$racePlayerID,$value)
+        {
+            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            $accessor->executeBind('UPDATE RacePlayer SET HP = HP + :HP
+                                 WHERE RacePlayerID = :RacePlayerID',['HP' => $value,'RacePlayerID' => $racePlayerID]);
+        });
+        RacePlayerPool::Instance()->Delete($racePlayerID);
     }
 
     private static function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{

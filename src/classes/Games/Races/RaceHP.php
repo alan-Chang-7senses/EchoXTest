@@ -3,16 +3,13 @@
 namespace Games\Races;
 
 use Consts\Globals;
-use Consts\Sessions;
 use Games\Accessors\AccessorFactory;
-use Games\Races\Holders\RaceHPHolder;
+use Games\Pools\RacePlayerPool;
 use stdClass;
 
 class RaceHP
 {
     private static RaceHP $instance;
-    public int $currentUserID;
-    private RaceHPHolder |stdClass $hInfo;
 
     public static function Instance(): RaceHP {
         if (empty(self::$instance)) {
@@ -23,53 +20,100 @@ class RaceHP
 
     private function __construct()
     {
-        $this->currentUserID = $_SESSION[Sessions::UserID];
     }
-
-    private function GetInfo(int $racePlayerID) : stdClass
+    
+    public function Ready(array $readyUserInfos, array $racePlayerIDs) 
     {
-        return $this->hInfo = $this->hInfo ?? AccessorFactory::Main()
-                               ->FromTable('RaceHP')
-                               ->WhereEqual('RacePlayerID',$racePlayerID)
-                               ->Fetch();
-    }
-
-    
-    public function Ready(array $readyUserInfos, array $racePlayerIDs) {
         foreach ($readyUserInfos as $readyUserInfo) {
-            foreach ($readyUserInfos as $readyUserInfo) {
-                $playerID = $readyUserInfo['player'];
-                $racePlayerID = $racePlayerIDs[$playerID];
-    
-                $bind = 
-                [
-                    'RacePlayerID' => $racePlayerID,
-                    'HValue' => $readyUserInfo['hp'],
-                ];
+            $playerID = $readyUserInfo['player'];
+            $racePlayerID = $racePlayerIDs[$playerID];
 
-                AccessorFactory::Main()->FromTable('RaceHP')->Add($bind);
-            }
+            $bind = 
+            [
+                'RacePlayerID' => $racePlayerID,
+                'HValue' => $readyUserInfo['h'],
+            ];
+            AccessorFactory::Main()->FromTable('RaceHP')->Add($bind);
         }
+    
     }
 
     public function Start(array $racePlayerIDs) 
     {
-
-        foreach ($racePlayerIDs as $racePlayerID) {
-            if ($this->GetInfo($racePlayerID) === false) continue;
-            $this->Update($racePlayerID,[]);
-        }
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
+        $accessor = AccessorFactory::Main();
+        $accessor->FromTable('RaceHP')
+                ->WhereIn('RacePlayerID',$racePlayerIDs)
+                ->Modify(['UpdateTime' => $currentTime]);
     }
 
+    // public function EnergyAgain(int $racePlayerID): int {
+    //     return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateEnergyAgain, 0, 0);
+    // }
+
+    public function ApplyEnergyBonus(int $racePlayerID, float $newH){
+        $this->UpdateHP($racePlayerID,$newH);
+    }
+
+    // public function ReachEnd(int $racePlayerID, float $distance): int {
+    //     return $this->UpdatePlayer($racePlayerID, RaceVerifyValue::StateReachEnd, 0, $distance);
+    // }
+
+    public function LaunchSkill(int $racePlayerIDSelf, float $h)
+    {
+        $this->UpdateHP($racePlayerIDSelf,$h);
+    }
+
+    public function LaunchOthersSkill(array $others, stdClass $racePlayerIDs) 
+    {
+        // $result = [];
+        foreach ($others as $other) {
+            $playerID = $other['id']; //$playerID
+            $racePlayerID = $racePlayerIDs->{$playerID};
+            $result[$playerID] = $this->UpdateHP($racePlayerID, $other['h']);
+        }
+        // return $result;
+    }
+
+    public function PlayerValues(int $racePlayerID, float $newH) : int
+    {
+        $this->UpdateHP($racePlayerID,$newH);
+        $row = AccessorFactory::Main()->FromTable('RacePlayer')->WhereEqual('RacePlayerID',$racePlayerID)
+                               ->Fetch();
+        return $row->HP;
+    }
+
+    private function UpdateHP(int $racePlayerID, float $newH)
+    {
+        $row = AccessorFactory::Main()
+               ->executeBindFetch('SELECT t1.RacePlayerID ,t1.UpdateTime, t1.HValue, t2.HP
+               FROM RaceHP t1 JOIN RacePlayer t2 ON t1.RacePlayerID = t2.RacePlayerID
+               WHERE t1.RacePlayerID = :RacePlayerID;',['RacePlayerID' => $racePlayerID]);
+        if($row === false)return; //角色不在RaceHP表
+        if($row->UpdateTime == 0)return;
+        $timeSpan = max(0,$GLOBALS[Globals::TIME_BEGIN] - $row->UpdateTime);
+        $hpDiff = $row->HValue * $timeSpan;
+        $this->Update($racePlayerID,$newH,$hpDiff);
+        RacePlayerPool::Instance()->Delete($racePlayerID);
+    }
+
+
     
-    private function Update(int|string $racePlayerID, array $bind) {
+    private function Update(int|string $racePlayerID, float $newHValue, int $hpDiff) {
 
         $accessor = AccessorFactory::Main();
+        $bind = ['RacePlayerID' => $racePlayerID ,'HValue' => $newHValue,'HP' => $hpDiff];
         $accessor->Transaction(function () use ($accessor, $racePlayerID, $bind) {
 
-            $accessor->FromTable('RaceHP')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            $accessor->FromTableJoinUsing('RaceHP','RacePlayer','INNER','RacePlayerID')
+                     ->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
             $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
-            $accessor->ClearCondition()->FromTable('RaceHP')->WhereEqual('RacePlayerID', $racePlayerID)->Modify($bind);
+
+            $accessor->executeBind('UPDATE RaceHP t1 INNER JOIN RacePlayer t2 
+            ON t1.RacePlayerID = t2.RacePlayerID 
+            SET t1.HValue = :HValue, t2.HP = HP - :HP, t1.UpdateTime = :UpdateTime 
+            WHERE t1.RacePlayerID = :RacePlayerID',$bind);
+
         });
     }
 
