@@ -35,6 +35,13 @@ class ReachEnd extends BaseRace{
             
             $row = $accessor->FromTable('RacePlayer')->WhereEqual('RaceID', $this->userInfo->race)->WhereEqual('PlayerID', $player)->Fetch();
             if(!empty($row) && $row->Status == RaceValue::StatusGiveUp) return new ResultData (ErrorCode::Success);
+
+            $result = new ResultData(ErrorCode::Success);
+            $reach = [];
+            $reach['total'] = count((array)$raceInfo->racePlayers);
+            $reach['ranking'] = 0;
+            $result->reach = $reach;
+            return $result;
             
             throw new RaceException(RaceException::PlayerNotInThisRace, ['[player]' => $player]);
         }

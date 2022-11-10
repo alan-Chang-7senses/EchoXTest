@@ -65,6 +65,7 @@ class NFTDNA {
 
     /** 原生種標記 */
     const NativeNone = 0;
+    const NativeDefalut = 1;
     /** 純種部位數 */
     const PureredPartCount = 6;
 }
