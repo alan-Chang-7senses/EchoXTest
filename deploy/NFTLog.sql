@@ -18,3 +18,13 @@ CREATE TABLE IF NOT EXISTS `NFTOwnershipTransfer` (
   `LogTime` int(11) NOT NULL COMMENT '紀錄時間',
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='NFT所有權轉移紀錄';
+
+USE `koa_static`;
+
+INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sender`, `URL`) VALUES
+(34, 12, 0, 'Thank you for your support for Peta Rush', 'Thank you for your support for Peta Rush. We have prepared 30 "PT Tickets" as gifts to let you run free on Mars.', 'Sender: METASENSTeam', ''),
+	(35, 12, 2, 'Thank you for your support for Peta Rush', 'Thank you for your support for Peta Rush. We have prepared 30 "PT Tickets" as gifts to let you run free on Mars.', 'Sender: METASENS Team', ''),
+	(36, 12, 12, '感謝你對Peta Rush的支持', '感謝你對Peta Rush的支持，在此送上「PT劵」30張，讓你在火星上盡情的奔跑！', '寄件人：METASENS團隊', '');
+
+USE `Koa_main`;
+UPDATE `koa_main`.`Configs` SET `Value`='12' WHERE  `Name`='NewNFTRewardMailID';
