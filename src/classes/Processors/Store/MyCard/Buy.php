@@ -32,14 +32,12 @@ class Buy extends BaseBuy {
             throw new StoreException(StoreException::Error);
         }
 
-
         $productInfo = StoreProductInfoPool::Instance()->{$rowInfo->ProductID};
         if ($productInfo == false) {
             throw new StoreException(StoreException::Error);
         }
 
-
-        $authCode = MyCardUtility::GetAuth($orderID, $this->userID, $productInfo);
+        $authCode = MyCardUtility::AuthGlobal($orderID, $this->userID, $productInfo);
         $accessor->Modify(["Receipt" => $authCode]);
         $result = new ResultData(ErrorCode::Success);
         $result->orderID = $orderID;

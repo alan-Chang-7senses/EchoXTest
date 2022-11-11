@@ -8,8 +8,8 @@ use Processors\Store\Purchase\BaseRefresh;
 use stdClass;
 
 /*
- * Description of PurchaseRefresh
- * 更新目前購買格狀態，和貨幣資訊
+ * Description of MyCard Refresh
+ * 更新目前購買格狀態，和貨幣資訊，MyCard請款
  */
 
 class Refresh extends BaseRefresh {
@@ -17,8 +17,8 @@ class Refresh extends BaseRefresh {
     protected int $nowPlat = StoreValue::PlatMyCard;
 
     public function PurchaseVerify(stdClass $purchaseOrders): int {
-
-        return MyCardUtility::MyCardVerify($purchaseOrders->UserID, $purchaseOrders->Receipt);
+      
+        return MyCardUtility::Verify($purchaseOrders->UserID, $purchaseOrders->Receipt) ;
     }
 
 }

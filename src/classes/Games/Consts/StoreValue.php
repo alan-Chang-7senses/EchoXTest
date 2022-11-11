@@ -42,6 +42,7 @@ class StoreValue {
     const CurrencyMarsTicket = 4;
     const CurrencyPtTicket = 5;
     const CurrencyGroupTicket = 6;
+
     const Currencies = [
         self::CurrencyMars,
         self::CurrencyDiamond,
@@ -65,6 +66,7 @@ class StoreValue {
     const PurchaseStatusProcessing = 1;
     const PurchaseStatusFinish = 2;
     const PurchaseStatusFailure = 3;
+    const PurchaseStatusVerify = 4;
     //MyCard(他方)回應資訊
     const MyCardReturnSuccess = 1;
     const MyCardPaySuccess = 3;

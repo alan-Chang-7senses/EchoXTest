@@ -3,12 +3,11 @@
 namespace Games\Store;
 
 use Accessors\CurlAccessor;
-use Accessors\PDOAccessor;
 use Consts\EnvVar;
-use Consts\Globals;
 use Consts\HTTPCode;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
+use Games\Store\Holders\MyCardPaymentHolder;
 use Games\Store\Holders\StoreProductInfoHolder;
 use stdClass;
 
@@ -84,8 +83,40 @@ class MyCardUtility {
         return $result;
     }
 
-    public static function TradeQuery(string $userID, string $authcode): int {
+    public static function Verify(string $userID, string $authcode): int {
 
+        $myCardPaymentHolder = new MyCardPaymentHolder();
+
+        $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentHolder);
+        if ($tradeCheck != StoreValue::PurchaseProcessSuccess) {
+            return $tradeCheck;
+        }
+
+        $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentHolder);
+        if ($payCheck == StoreValue::PurchaseProcessSuccess) {
+            $accessor = new PDOAccessor(EnvVar::DBLog);
+            $row = $accessor->FromTable('MyCardPayment')->WhereEqual("OrderID", $myCardPaymentHolder->orderID)->Fetch();
+            if (empty($row)) {
+                $accessor->ClearCondition()->Add([
+                    "OrderID" => $myCardPaymentHolder->orderID,
+                    "UserID" => $userID,
+                    "PaymentType" => $myCardPaymentHolder->paymentType,
+                    "Amount" => $myCardPaymentHolder->amount,
+                    "Currency" => $myCardPaymentHolder->currency,
+                    "MyCardTradeNo" => $myCardPaymentHolder->myCardTradeNo,
+                    "MyCardType" => $myCardPaymentHolder->myCardType,
+                    "PromoCode" => $myCardPaymentHolder->promoCode,
+                    "SerialId" => $myCardPaymentHolder->serialId,
+                    "TradeSeq" => $myCardPaymentHolder->tradeSeq,
+                    "CreateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
+                ]);
+            }
+        }
+    }
+
+    private static function TradeQuery(string $authcode, MyCardPaymentHolder &$myCardPaymentHolder): int {
+
+        $myCardPaymentHolder->orderID = "1";
         $verifyCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/TradeQuery');
         $curlReturn = $verifyCurl->ExecOptions([
             CURLOPT_RETURNTRANSFER => true,
@@ -103,20 +134,15 @@ class MyCardUtility {
         $queryData = json_decode($curlReturn);
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             if ($queryData->PayResult == StoreValue::MyCardPaySuccess) {
+                $myCardPaymentHolder->orderID = $queryData->FacTradeSeq;
+                $myCardPaymentHolder->PaymentType = $queryData->PaymentType;
+                $myCardPaymentHolder->Amount = $queryData->Amount;
+                $myCardPaymentHolder->Currency = $queryData->Currency;
+                $myCardPaymentHolder->MyCardTradeNo = $queryData->MyCardTradeNo;
+                $myCardPaymentHolder->MyCardType = $queryData->MyCardType;
+                $myCardPaymentHolder->PromoCode = $queryData->PromoCode;
+                $myCardPaymentHolder->SerialId = $queryData->SerialId;
 
-                $accessor = new PDOAccessor(EnvVar::DBLog);
-                $accessor->FromTable('StorePurchaseOrders')->Add([
-                    "OrderID" => $queryData->FacTradeSeq,
-                    "UserID" => $userID,
-                    "PaymentType" => $queryData->PaymentType,
-                    "Amount" => $queryData->Amount,
-                    "Currency" => $queryData->Currency,
-                    "MyCardTradeNo" => $queryData->MyCardTradeNo,
-                    "MyCardType" => $queryData->MyCardType,
-                    "PromoCode" => $queryData->PromoCode,
-                    "SerialId" => $queryData->SerialId,
-                    "CreateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
-                ]);
                 return StoreValue::PurchaseProcessSuccess;
             } else {
                 return StoreValue::PurchaseProcessFailure;
@@ -126,7 +152,7 @@ class MyCardUtility {
         }
     }
 
-    public static function PaymentConfirm(string $authcode): int {
+    private static function PaymentConfirm(string $authcode, MyCardPaymentHolder &$myCardPaymentHolder): int {
 
         $paymentCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/PaymentConfirm');
         $paymentReturn = $paymentCurl->ExecOptions([
@@ -146,6 +172,7 @@ class MyCardUtility {
 
         if ($paymentData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             //付費紀錄
+            $myCardPaymentHolder->tradeSeq = $paymentData->TradeSeq;
             return StoreValue::PurchaseProcessSuccess;
         } else {//查詢失敗
             return StoreValue::PurchaseProcessFailure;

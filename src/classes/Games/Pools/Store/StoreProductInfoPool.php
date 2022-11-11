@@ -5,7 +5,7 @@ namespace Games\Pools\Store;
 use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
 use Consts\EnvVar;
-use Games\Store\Holders\StoreProductInfoHolder;
+use Games\Store\Models\StoreProductInfoModel;
 use stdClass;
 
 /**
@@ -28,18 +28,22 @@ class StoreProductInfoPool extends PoolAccessor {
     public function FromDB(int|string $id): stdClass|false {
 
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $row = $accessor->FromTable('StoreProductInfo')->WhereEqual("ProductID", $id)->Fetch();
-        if ($row == false) {
+        $rows = $accessor->FromTable('StoreProductInfo')->WhereEqual("ProductID", $id)->FetchAll();
+        if ($rows == false) {
             return false;
         }
 
-        $holder = new StoreProductInfoHolder ();
-        $holder->productID = $row->ProductID;
-        $holder->productName = $row->ProductName;
-        $holder->amount = $row->Amount;
-        $holder->currency = $row->Currency;
+        $result = new stdClass();
+        foreach ($rows as $row) {
+            $holder = new StoreProductInfoModel();
+            $holder->ProductID = $row->ProductID;
+            $holder->MultiNo = $row->MultiNo;
+            $holder->Price = $row->Price;
+            $holder->ISOCurrency = $row->ISOCurrency;            
+            $result->{$row->ISOCurrency} = $holder;
+        }
 
-        return $holder;
+        return $result;
     }
 
 }

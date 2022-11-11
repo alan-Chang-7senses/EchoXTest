@@ -11,6 +11,7 @@ use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\Store\StoreTradesPool;
+use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
@@ -43,27 +44,27 @@ abstract class BaseRefresh extends BaseProcessor {
         if (empty($row)) {
             throw new StoreException(StoreException::Error, ['[cause]' => "no data"]);
         }
+        $storeHandler = new StoreHandler($userID);
+
+        $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusVerify);
 
         $verifyResult = $this->PurchaseVerify($row);
         if ($verifyResult == StoreValue::PurchaseProcessRetry) {
+            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing);
             throw new StoreException(StoreException::PurchaseProcessing);
         } else if ($verifyResult == StoreValue::PurchaseProcessFailure) {
+            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
             throw new StoreException(StoreException::PurchaseFailure);
+        } else {
+            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
         }
 
         $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
         $userBagHandler = new UserBagHandler($userID);
-
-        $accessor->FromTable('StorePurchaseOrders')->Modify([
-            "Status" => StoreValue::PurchaseStatusFinish,
-            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
-        ]);
-
         //加物品
         $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
         $userBagHandler->AddItems($additem, ItemValue::CauseStore);
 
-        //
         $result = new ResultData(ErrorCode::Success);
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->remainInventory = $storeTradesHolder->remainInventory;

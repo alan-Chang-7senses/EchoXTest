@@ -57,7 +57,7 @@ class Refresh extends BaseProcessor {
         }
 
         if ($storeDataHolder->refreshCostCurrency != StoreValue::CurrencyFree) {
-            $itemID = StoreUtility::GetCurrencyItemID($storeDataHolder->refreshCostCurrency);
+            $itemID = $storeDataHolder->refreshCostCurrency;
             $userBagHandler = new UserBagHandler($userID);
             if ($userBagHandler->DecItemByItemID($itemID, $storeDataHolder->refreshCost, ItemValue::CauseStore) == false) {
                 throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠

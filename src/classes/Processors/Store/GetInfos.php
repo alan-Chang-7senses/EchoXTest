@@ -28,13 +28,14 @@ class GetInfos extends BaseProcessor {
         $userID = $_SESSION[Sessions::UserID];
         $device = InputHelper::get('device');
         $plat = InputHelper::get('plat');
+        $currency = InputHelper::get('currency');
 
         $storeHandler = new StoreHandler($userID);
         $autoRefreshTime = $storeHandler->GetRefreshTime();
         if ($autoRefreshTime == false) {
             $autoRefreshTime = StoreUtility::CheckAutoRefreshTime((int) $GLOBALS[Globals::TIME_BEGIN]);
             $autoRefreshTime->needRefresh = true;
-            $storeHandler->AddRefreshTime($device, $plat);
+            $storeHandler->AddRefreshTime($device, $plat, $currency);
         } else {
             $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
@@ -42,7 +43,7 @@ class GetInfos extends BaseProcessor {
         //get store
         $accessorStatic = new PDOAccessor(EnvVar::DBStatic);
         $storeDatas = $accessorStatic->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
-        
+
         $resposeStores = [];
         $accessor = new PDOAccessor(EnvVar::DBMain);
         foreach ($storeDatas as $storeData) {
@@ -56,11 +57,11 @@ class GetInfos extends BaseProcessor {
                     (getenv(EnvVar::MyCardSwitch) != 'true')) {
                 continue;
             }
-            
+
             $nowPlat = StoreUtility::GetPurchasePlat($storeDataHolder->storeType);
             if (($nowPlat != StoreValue::PlatNone) && ($nowPlat != $plat)) {
                 continue;
-            }            
+            }
 
             $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
             if ($maxFixAmount == StoreValue::UIUnset) {
@@ -99,8 +100,8 @@ class GetInfos extends BaseProcessor {
             $resposeStore->refreshCurrency = $storeDataHolder->refreshCostCurrency;
 
             $resposeStore->storetype = $storeDataHolder->storeType;
-            $resposeStore->fixItems = $storeHandler->GetTrades($storeDataHolder->storeType, $storeInfosHolder->fixTradIDs);
-            $resposeStore->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $storeInfosHolder->randomTradIDs);
+            $resposeStore->fixItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->fixTradIDs);
+            $resposeStore->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->randomTradIDs);
 
             $resposeStores[] = $resposeStore;
         }

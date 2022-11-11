@@ -10,6 +10,7 @@ use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\Store\StoreCountersPool;
+use Games\Pools\Store\StoreProductInfoPool;
 use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
@@ -44,7 +45,7 @@ class StoreHandler {
         return $autoRefreshTime;
     }
 
-    public function AddRefreshTime(int|string $device, int|string $plat) {
+    public function AddRefreshTime(int|string $device, int|string $plat, int|string $currency) {
 
         $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
         $accessor = new PDOAccessor(EnvVar::DBMain);
@@ -52,6 +53,7 @@ class StoreHandler {
             "UserID" => $this->userID,
             "Device" => $device,
             "Plat" => $plat,
+            "Currency" => $currency,
             "AutoRefreshTime" => $nowTime
         ]);
     }
@@ -209,7 +211,7 @@ class StoreHandler {
         ]);
     }
 
-    public function GetTrades(int $storeType, string|null $tradIDArrays): array {
+    public function GetTrades(int $storeType, string $currency, string|null $tradIDArrays): array {
         $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : [];
         $result = [];
         foreach ($tradIDs as $tradID) {
@@ -239,12 +241,24 @@ class StoreHandler {
                 }
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
-
                 $tradeInfo->itemID = $storePurchaseHolder->itemID;
                 $tradeInfo->amount = $storePurchaseHolder->amount;
                 $tradeInfo->icon = $itemInfo->Icon;
                 $tradeInfo->name = $itemInfo->ItemName;
                 $tradeInfo->product = $storePurchaseHolder->productID;
+
+                if ($storeType == StoreValue::TypeMyCard) {
+                    $storeProductInfoModels = StoreProductInfoPool::Instance()->{$storePurchaseHolder->productID};
+                    if ((!empty($storeProductInfoModels)) && (property_exists($storeProductInfoModels, $currency))) {
+                        $storeProductInfoModel = $storeProductInfoModels->{$currency};
+                        $tradeInfo->multiNo = $storeProductInfoModel->MultiNo;
+                        $tradeInfo->currency = $storeProductInfoModel->ISOCurrency;
+                        $tradeInfo->price = $storeProductInfoModel->Price;
+                    }else
+                    {
+                         throw new StoreException(StoreException::Error);
+                    }
+                }
             } else if ($storeType == StoreValue::TypeCounters) {
                 $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
 
@@ -300,38 +314,37 @@ class StoreHandler {
         ]);
     }
 
-    public function VerrifyProduct(stdclass|StorePurchaseOrdersHolder $storePurchaseOrdersHolder): bool {
-
-        if ($storePurchaseOrdersHolder->Status == StoreValue::PurchaseStatusFinish) {
-            return true;
-        }
-
-        if ($storePurchaseOrdersHolder->Status != StoreValue::PurchaseStatusProcessing) {
-            return false;
-        }
-
-        if (empty($storePurchaseOrdersHolder->Receipt)) {
-            return false;
-        }
-
-        if ($storePurchaseOrdersHolder->Plat == StoreValue::PlatMyCard) {
-            $result = PurchaseUtility::MyCardVerify($this->userID, $storePurchaseOrdersHolder->Receipt);
-        } else {
-            return false;
-        }
-
-        $orderID = $storePurchaseOrdersHolder->OrderID;
-
-        if ($result == StoreValue::PurchaseProcessSuccess) {
-            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
-            //加物品
-            $userBagHandler = new UserBagHandler($this->userID);
-            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
-            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-        } else if ($result == StoreValue::PurchaseProcessFailure) {
-            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
-        }
-        return true;
-    }
-
+//    public function VerrifyProduct(stdclass|StorePurchaseOrdersHolder $storePurchaseOrdersHolder): bool {
+//
+//        if ($storePurchaseOrdersHolder->Status == StoreValue::PurchaseStatusFinish) {
+//            return true;
+//        }
+//
+//        if ($storePurchaseOrdersHolder->Status != StoreValue::PurchaseStatusProcessing) {
+//            return false;
+//        }
+//
+//        if (empty($storePurchaseOrdersHolder->Receipt)) {
+//            return false;
+//        }
+//
+//        if ($storePurchaseOrdersHolder->Plat == StoreValue::PlatMyCard) {
+//            $result = PurchaseUtility::MyCardVerify($this->userID, $storePurchaseOrdersHolder->Receipt);
+//        } else {
+//            return false;
+//        }
+//
+//        $orderID = $storePurchaseOrdersHolder->OrderID;
+//
+//        if ($result == StoreValue::PurchaseProcessSuccess) {
+//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
+//            //加物品
+//            $userBagHandler = new UserBagHandler($this->userID);
+//            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
+//            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+//        } else if ($result == StoreValue::PurchaseProcessFailure) {
+//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
+//        }
+//        return true;
+//    }
 }
