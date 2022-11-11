@@ -80,7 +80,6 @@
 			- [儲值購買](Store/MyCard/Buy.md)	
 			- [儲值取消](Store/MyCard/Cancel.md)	
 			- [儲值刷新](Store/MyCard/Refresh.md)	
-			- [補儲](Store/MyCard/Restore.md)
 	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。
