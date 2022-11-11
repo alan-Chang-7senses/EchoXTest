@@ -43,7 +43,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | ranking | int | 名次 |
 | nickname | string | 角色暱稱 |
-| tokenName | string | 角色的 NFT 名稱 |
+| itemName | string | 角色的 NFT 名稱 |
 | leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
 | playCount | int | 參賽次數 |
 
@@ -53,7 +53,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | ranking | int | 名次 |
 | nickname | string | 角色暱稱 |
-| tokenName | string | 角色的 NFT 名稱 |
+| itemName | string | 角色的 NFT 名稱 |
 | leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
 | playCount | int | 參賽次數 |
 
@@ -71,28 +71,28 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        {
 	            "ranking": 1,
 	            "nickname": "1010000000000003",
-	            "tokenName": "1010000000000003",
+	            "itemName": "1010000000000003",
 	            "leadRate": 53.33,
 	            "playCount": 11
 	        },
 	        {
 	            "ranking": 2,
 	            "nickname": "1010000000000005",
-	            "tokenName": "1010000000000005",
+	            "itemName": "1010000000000005",
 	            "leadRate": 46.67,
 	            "playCount": 10
 	        },
 	        {
 	            "ranking": 3,
 	            "nickname": "1010000000000001",
-	            "tokenName": "1010000000000001",
+	            "itemName": "1010000000000001",
 	            "leadRate": 46.66,
 	            "playCount": 10
 	        },
 	        {
 	            "ranking": 4,
 	            "nickname": "1010000000000007",
-	            "tokenName": "1010000000000007",
+	            "itemName": "1010000000000007",
 	            "leadRate": 46.65,
 	            "playCount": 10
 	        }
@@ -100,7 +100,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	    "self": {
 	        "ranking": 3,
 	        "nickname": "1010000000000001",
-	        "tokenName": "1010000000000001",
+	        "itemName": "1010000000000001",
 	        "leadRate": 46.66,
             "playCount": 10
 	    }
