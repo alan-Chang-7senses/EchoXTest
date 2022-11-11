@@ -96,7 +96,7 @@ class RaceValue {
     /**直線x體力耗盡 前係數 */
     const MinusHPStraightFront = 0.25;
     /**直線x體力耗盡 後係數 */
-    const MinusHPStraightBack = 0.25;
+    const MinusHPStraightBack = 0.5;
     /**彎道x體力充沛 前係數 */
     const PositiveHPCurveFront = 0.55;
     /**彎道x體力充沛 後係數 */
@@ -104,7 +104,7 @@ class RaceValue {
     /**彎道x體力耗盡 前係數 */
     const MinusHPCurveFront = 0.25;
     /**彎道x體力耗盡 後係數 */
-    const MinusHPCurveBack = 0.25;
+    const MinusHPCurveBack = 0.5;
 
     /**體力充沛S基數 */
     const SValueBasePositiveHP = 2.5;
