@@ -4,6 +4,7 @@ namespace Games\Races;
 
 use Consts\Globals;
 use Games\Accessors\AccessorFactory;
+use Games\Consts\RaceValue;
 use Games\Pools\RacePlayerPool;
 use stdClass;
 
@@ -92,27 +93,34 @@ class RaceHP
         if($row === false)return; //角色不在RaceHP表
         if($row->UpdateTime == 0)return;
         $timeSpan = max(0,$GLOBALS[Globals::TIME_BEGIN] - $row->UpdateTime);
-        $hpDiff = $row->HValue * $timeSpan;
+        $hpDiff = intval(round($row->HValue * $timeSpan * RaceValue::DivisorHP));
         $this->Update($racePlayerID,$newH,$hpDiff);
         RacePlayerPool::Instance()->Delete($racePlayerID);
     }
 
 
     
-    private function Update(int|string $racePlayerID, float $newHValue, int $hpDiff) {
+    private function Update(int $racePlayerID, float $newHValue, int $hpDiff) {
 
         $accessor = AccessorFactory::Main();
-        $bind = ['RacePlayerID' => $racePlayerID ,'HValue' => $newHValue,'HP' => $hpDiff];
-        $accessor->Transaction(function () use ($accessor, $racePlayerID, $bind) {
+        $bind = ['RacePlayerID' => $racePlayerID ,'HValue' => $newHValue];
+        $accessor->Transaction(function () use ($accessor, $racePlayerID, $bind, $hpDiff) {
 
-            $accessor->FromTableJoinUsing('RaceHP','RacePlayer','INNER','RacePlayerID')
+            $row = $accessor->FromTableJoinUsing('RaceHP','RacePlayer','INNER','RacePlayerID')
                      ->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
             $bind['UpdateTime'] = $GLOBALS[Globals::TIME_BEGIN];
+            $bind['HP'] = max(0,$row->HP - $hpDiff);
+
 
             $accessor->executeBind('UPDATE RaceHP t1 INNER JOIN RacePlayer t2 
             ON t1.RacePlayerID = t2.RacePlayerID 
-            SET t1.HValue = :HValue, t2.HP = HP - :HP, t1.UpdateTime = :UpdateTime 
+            SET t1.HValue = :HValue, t2.HP = :HP, t1.UpdateTime = :UpdateTime 
             WHERE t1.RacePlayerID = :RacePlayerID',$bind);
+
+            // $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID',$racePlayerID)
+            //          ->Modify(['HP' => $row->HP - $bind['HP']]);
+            // $accessor->ClearCondition()->FromTable('RaceHP')->WhereEqual('RacePlayerID',$racePlayerID)
+            // ->Modify(['HValue' => $bind['HValue'],'UpdateTime' => $bind['UpdateTime']]);
 
         });
     }
