@@ -167,7 +167,7 @@ class NFTFactory {
         $isNative = $metadata->attributes->original == NFTQueryValue::NativeValue;
         $playerNFT = [
             'PlayerID' => $playerID,
-            'TokenName' => $metadata->name,
+            'ItemName' => $metadata->name,
             'Constitution' => $metadata->attributes->attr_1 * AbilityFactor::NFTDivisor,
             'Strength' => $metadata->attributes->attr_2 * AbilityFactor::NFTDivisor,
             'Dexterity' => $metadata->attributes->attr_3 * AbilityFactor::NFTDivisor,
