@@ -9,7 +9,7 @@ class NFTLogAccessor extends BaseAccessor
 {
     private array $createBinds = [];
     private array $transferBinds = [];
-    const AddLimitOneTime = 10;
+    const AddLimitOneTime = 20;
     
 
     public function AddCreatePlayerBind(int $playerID, string $metadataURL)
@@ -40,9 +40,8 @@ class NFTLogAccessor extends BaseAccessor
     {
         if(!empty($this->transferBinds))
         {
-            // $this->LogAccessor()->FromTable('NFTOwnershipTransfer')->AddAll($this->transferBinds);
             $accessor = AccessorFactory::Log();
-            $accessor->prepareName('PrepareNFTOwnershipTransfer');
+            // $accessor->prepareName('PrepareNFTOwnershipTransfer');
             $accessor->FromTable('NFTOwnershipTransfer');
             $this->AddLogsByPart($accessor,$this->transferBinds);
         }
@@ -50,7 +49,7 @@ class NFTLogAccessor extends BaseAccessor
         if(!empty($this->createBinds))
         {
             $accessor = AccessorFactory::Log();
-            $accessor->prepareName('PrepareNFTCreatePlayer');
+            // $accessor->prepareName('PrepareNFTCreatePlayer');
             $accessor->FromTable('NFTCreatePlayer');   
             $this->AddLogsByPart($accessor,$this->createBinds);
         }
@@ -67,7 +66,6 @@ class NFTLogAccessor extends BaseAccessor
             $bindTemps[] = $binds[$indexTemp + $i];
             $index++;
         }
-        // $this->LogAccessor()->FromTable($tableName)->AddAll($bindTemps);
         $accessor->AddAll($bindTemps);
         $this->AddLogsByPart($accessor,$binds,$index);
     }
