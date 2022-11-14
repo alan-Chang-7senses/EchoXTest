@@ -5,7 +5,6 @@ namespace Games\Store;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
-use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\ItemInfoPool;
@@ -15,11 +14,8 @@ use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
-use Games\Store\Holders\StorePurchaseOrdersHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
-use Games\Users\ItemUtility;
-use Games\Users\UserBagHandler;
 use stdClass;
 
 /*
@@ -218,7 +214,7 @@ class StoreHandler {
             $storeTradesHolder = StoreTradesPool::Instance()->{$tradID};
 
             if ($storeTradesHolder == false) {
-                throw new StoreException(StoreException::Error);
+                throw new StoreException(StoreException::Error, ['[cause]' => 'L217']);
             }
 
             $tradeInfo = new stdClass();
@@ -252,11 +248,10 @@ class StoreHandler {
                     if ((!empty($storeProductInfoModels)) && (property_exists($storeProductInfoModels, $currency))) {
                         $storeProductInfoModel = $storeProductInfoModels->{$currency};
                         $tradeInfo->multiNo = $storeProductInfoModel->MultiNo;
-                        $tradeInfo->currency = $storeProductInfoModel->ISOCurrency;
                         $tradeInfo->price = $storeProductInfoModel->Price;
                     }else
                     {
-                         throw new StoreException(StoreException::Error);
+                         throw new StoreException(StoreException::Error, ['[cause]' => 'L255 '.$storePurchaseHolder->productID]);
                     }
                 }
             } else if ($storeType == StoreValue::TypeCounters) {

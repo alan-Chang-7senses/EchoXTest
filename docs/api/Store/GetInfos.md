@@ -11,7 +11,7 @@ http(s)://`域名`/Store/GetInfos/
 
 ## Method
 
-`GET`
+`Post`
 
 ## Request
 
@@ -23,6 +23,7 @@ Content Type: `application/x-www-form-urlencoded`
 |:-:|:-:|:-:|
 | device | int | 裝置(1:iOS 2:Android) |
 | plat | int | 目前平台(1:Apple 2:Google 3:MyCard) |
+| currency | string | 目前幣別(ISO 4217), 3碼 |
 <br>
 
 ## Response

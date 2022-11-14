@@ -10,9 +10,6 @@ use stdClass;
  */
 class StoreProductInfoModel extends stdClass {
 
-    /** @var int 流水號 */
-    public int $Serial;
-
     /** @var string 商品Key */
     public string $ProductID;
 

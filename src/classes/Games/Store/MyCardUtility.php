@@ -3,12 +3,14 @@
 namespace Games\Store;
 
 use Accessors\CurlAccessor;
+use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\Globals;
 use Consts\HTTPCode;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
-use Games\Store\Holders\MyCardPaymentHolder;
-use Games\Store\Holders\StoreProductInfoHolder;
+use Games\Store\Models\MyCardPaymentModel;
+use Games\Store\Models\StoreProductInfoModel;
 use stdClass;
 
 /*
@@ -17,46 +19,46 @@ use stdClass;
 
 class MyCardUtility {
 
-    public static function AuthGlobal(string $orderID, string $userID, StoreProductInfoHolder|stdClass $productInfo): string {
+    public static function AuthGlobal(string $orderID, string $userID, StoreProductInfoModel|stdClass $productInfo): string {
 
-        $data = new stdClass();
-        $data->FacServiceId = getenv(EnvVar::MyCardFacserviceid);
-        $data->FacTradeSeq = $orderID;
-        $data->FacGameId = getenv(EnvVar::MyCardFacgameid);
-        $data->FacGameName = getenv(EnvVar::MyCardFacgamename);
-        $data->TradeType = "1"; //:Android SDK (手遊適用)
-        $data->ServerId = "";
-        $data->CustomerId = $userID;
-        $data->PaymentType = "";
-        $data->ItemCode = "";
-        $data->ProductName = $productInfo->productName;
-        $data->Amount = $productInfo->amount;
-        $data->Currency = $productInfo->currency;
-        $data->SandBoxMode = getenv(EnvVar::MyCardSandboxmode); //true/false
-        $data->FacReturnURL = "";
-        $data->FacKey = getenv(EnvVar::MyCardFackey);
-        $data->hash = self::Hash($data);
+        $requestData = new stdClass();
+        $requestData->FacServiceId = getenv(EnvVar::MyCardFacserviceid);
+        $requestData->FacTradeSeq = $orderID;
+        $requestData->FacGameId = getenv(EnvVar::MyCardFacgameid);
+        $requestData->FacGameName = getenv(EnvVar::MyCardFacgamename);
+        $requestData->TradeType = "1"; //:Android SDK (手遊適用)
+        $requestData->ServerId = "";
+        $requestData->CustomerId = $userID;
+        $requestData->PaymentType = "";
+        $requestData->ItemCode = "";
+        $requestData->ProductName = $productInfo->productName;
+        $requestData->Amount = $productInfo->amount;
+        $requestData->Currency = $productInfo->currency;
+        $requestData->SandBoxMode = getenv(EnvVar::MyCardSandboxmode); //true/false
+        $requestData->FacReturnURL = "";
+        $requestData->FacKey = getenv(EnvVar::MyCardFackey);
+        $requestData->hash = self::Hash($requestData);
 
-        $params = self::GetParams($data);
+        //$params = self::GetParams($requestData);
 
         $authCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/AuthGlobal');
 
         $curlReturn = $authCurl->ExecOptions([
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => http_build_query($data),
+            CURLOPT_POSTFIELDS => http_build_query($requestData),
             CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded']
         ]);
 
         if ($curlReturn === false || $authCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
-            throw new StoreException(StoreException::Error);
+            throw new StoreException(StoreException::Error, ['[cause]' => 'L54']);
         }
 
         $queryData = json_decode($curlReturn);
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             return $queryData->AuthCode;
         } else {
-            throw new StoreException(StoreException::Error);
+            throw new StoreException(StoreException::Error, ['[cause]' => 'L61']);
         }
         return "TestAuthcode";
     }
@@ -69,6 +71,11 @@ class MyCardUtility {
         $urlcode = urlencode($preHashValue);
         $encodeHashValue = strtolower($urlcode);
         return hash("sha256", $encodeHashValue);
+    }
+
+    private static function GetNowTimeString(): string {
+        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        return date("Y-m-d\TH:i:s", $nowtime);
     }
 
     private static function GetParams(stdclass $data): array {
@@ -85,38 +92,48 @@ class MyCardUtility {
 
     public static function Verify(string $userID, string $authcode): int {
 
-        $myCardPaymentHolder = new MyCardPaymentHolder();
+        $mainAccessor = new PDOAccessor(EnvVar::DBMain);
+        $userInfo = $mainAccessor->SelectExpr('`UserID`, `CreateTime`')->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
+        if ($userInfo == false) {
+            throw new StoreException(StoreException::Error);
+        }
 
-        $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentHolder);
+        $myCardPaymentModel = new MyCardPaymentModel();
+        $myCardPaymentModel->CustomerId = $userID;
+        $myCardPaymentModel->CreateAccountDateTime = $userInfo->CreateTime;
+        $myCardPaymentModel->CreateAccountIP = "";
+
+        $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentModel);
         if ($tradeCheck != StoreValue::PurchaseProcessSuccess) {
             return $tradeCheck;
         }
 
-        $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentHolder);
+        $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentModel);
         if ($payCheck == StoreValue::PurchaseProcessSuccess) {
-            $accessor = new PDOAccessor(EnvVar::DBLog);
-            $row = $accessor->FromTable('MyCardPayment')->WhereEqual("OrderID", $myCardPaymentHolder->orderID)->Fetch();
+
+            $logAccessor = new PDOAccessor(EnvVar::DBLog);
+
+            $row = $logAccessor->FromTable('MyCardPayment')->WhereEqual("FacTradeSeq", $myCardPaymentModel->FacTradeSeq)->Fetch();
             if (empty($row)) {
-                $accessor->ClearCondition()->Add([
-                    "OrderID" => $myCardPaymentHolder->orderID,
-                    "UserID" => $userID,
-                    "PaymentType" => $myCardPaymentHolder->paymentType,
-                    "Amount" => $myCardPaymentHolder->amount,
-                    "Currency" => $myCardPaymentHolder->currency,
-                    "MyCardTradeNo" => $myCardPaymentHolder->myCardTradeNo,
-                    "MyCardType" => $myCardPaymentHolder->myCardType,
-                    "PromoCode" => $myCardPaymentHolder->promoCode,
-                    "SerialId" => $myCardPaymentHolder->serialId,
-                    "TradeSeq" => $myCardPaymentHolder->tradeSeq,
-                    "CreateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
+
+                $logAccessor->ClearCondition()->Add([
+                    "PaymentType" => $myCardPaymentModel->PaymentType,
+                    "TradeSeq" => $myCardPaymentModel->TradeSeq,//form PaymentConfirm
+                    "MyCardTradeNo" => $myCardPaymentModel->MyCardTradeNo,
+                    "FacTradeSeq" => $myCardPaymentModel->FacTradeSeq,
+                    "CustomerId" => $userID,
+                    "Amount" => $myCardPaymentModel->Amount,
+                    "Currency" => $myCardPaymentModel->Currency,
+                    "TradeDateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
+                    "CreateAccountDateTime" => $userInfo->CreateTime,
+                    "CreateAccountIP" => ""
                 ]);
             }
         }
     }
 
-    private static function TradeQuery(string $authcode, MyCardPaymentHolder &$myCardPaymentHolder): int {
+    private static function TradeQuery(string $authcode, MyCardPaymentModel &$myCardPaymentModel): int {
 
-        $myCardPaymentHolder->orderID = "1";
         $verifyCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/TradeQuery');
         $curlReturn = $verifyCurl->ExecOptions([
             CURLOPT_RETURNTRANSFER => true,
@@ -134,14 +151,12 @@ class MyCardUtility {
         $queryData = json_decode($curlReturn);
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             if ($queryData->PayResult == StoreValue::MyCardPaySuccess) {
-                $myCardPaymentHolder->orderID = $queryData->FacTradeSeq;
-                $myCardPaymentHolder->PaymentType = $queryData->PaymentType;
-                $myCardPaymentHolder->Amount = $queryData->Amount;
-                $myCardPaymentHolder->Currency = $queryData->Currency;
-                $myCardPaymentHolder->MyCardTradeNo = $queryData->MyCardTradeNo;
-                $myCardPaymentHolder->MyCardType = $queryData->MyCardType;
-                $myCardPaymentHolder->PromoCode = $queryData->PromoCode;
-                $myCardPaymentHolder->SerialId = $queryData->SerialId;
+                $myCardPaymentModel->PaymentType = $queryData->PaymentType;
+                $myCardPaymentModel->MyCardTradeNo = $queryData->MyCardTradeNo;
+                $myCardPaymentModel->FacTradeSeq = $queryData->FacTradeSeq;
+                $myCardPaymentModel->Amount = $queryData->Amount;
+                $myCardPaymentModel->Currency = $queryData->Currency;
+                //請款回傳
 
                 return StoreValue::PurchaseProcessSuccess;
             } else {
@@ -152,7 +167,7 @@ class MyCardUtility {
         }
     }
 
-    private static function PaymentConfirm(string $authcode, MyCardPaymentHolder &$myCardPaymentHolder): int {
+    private static function PaymentConfirm(string $authcode, MyCardPaymentModel &$myCardPaymentModel): int {
 
         $paymentCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/PaymentConfirm');
         $paymentReturn = $paymentCurl->ExecOptions([
@@ -172,11 +187,18 @@ class MyCardUtility {
 
         if ($paymentData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             //付費紀錄
-            $myCardPaymentHolder->tradeSeq = $paymentData->TradeSeq;
+            $myCardPaymentModel->TradeSeq = $paymentData->TradeSeq;
             return StoreValue::PurchaseProcessSuccess;
         } else {//查詢失敗
             return StoreValue::PurchaseProcessFailure;
         }
+    }
+    
+    public static function CheckAllowIP():bool
+    {
+        getenv(EnvVar::MyCardUri);
+        
+        
     }
 
 }

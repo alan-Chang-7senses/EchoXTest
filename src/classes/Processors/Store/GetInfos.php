@@ -26,9 +26,9 @@ class GetInfos extends BaseProcessor {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
-        $device = InputHelper::get('device');
-        $plat = InputHelper::get('plat');
-        $currency = InputHelper::get('currency');
+        $device = InputHelper::post('device');
+        $plat = InputHelper::post('plat');
+        $currency = InputHelper::post('currency');
 
         $storeHandler = new StoreHandler($userID);
         $autoRefreshTime = $storeHandler->GetRefreshTime();
