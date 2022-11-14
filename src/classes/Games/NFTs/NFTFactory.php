@@ -299,8 +299,8 @@ class NFTFactory {
             $item = new stdClass();
             $item->Amount = $row->CreateRewardAmount;
             $item->ItemID = $row->CreateRewardItemID ?? 0;
-            // $mailsHandler->AddMailItems($mail,$item);
-            UserUtility::AddItems($this->userHolder->userID,[$item],ItemValue::CauseCreateNFTPlayer);
+            $mailsHandler->AddMailItems($mail,$item);
+            // UserUtility::AddItems($this->userHolder->userID,[$item],ItemValue::CauseCreateNFTPlayer);
         }
 
         $userInfo = (new UserHandler($this->userHolder->userID))->GetInfo();
