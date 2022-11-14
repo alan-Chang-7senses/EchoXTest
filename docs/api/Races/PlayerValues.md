@@ -57,23 +57,28 @@ Content Type: `application/json`
 | h | float | H值 |
 | s | float | S值 |
 | energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
+| maxHP | float | 耐力值上限 |
 | distance | float | Server移動距離 |
+| hp | float | 當前耐力值 |
 | rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    },
-	    "h": 1.2308113391984357,
-	    "s": 6.295599999999999,
-    	"energy": [
-    	    0,
-    	    0,
-    	    0,
-    	    0
-    	],
-	    "distance": 3447.71
+	  "error": {
+	    "code": 0,
+	    "message": ""
+	  },
+	  "h": 1.9913767735839156,
+	  "s": 11.043473400000005,
+	  "energy": [
+	    6,
+	    5,
+	    2,
+	    5
+	  ],
+	  "maxHP": 92.46,
+	  "distance": 145.35999999999999,
+	  "hp": 67.63,
+	  "rhythm": 1
 	}

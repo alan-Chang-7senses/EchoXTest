@@ -15,6 +15,7 @@ use Games\Players\PlayerUtility;
 use Games\Pools\RacePlayerPool;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
+use Helpers\LogHelper;
 
 /**
  * Description of RacePlayerEffectHandler
@@ -88,14 +89,22 @@ class RacePlayerEffectHandler {
     
     private static function AddHP(RacePlayerHandler $racePlayerHandler, float $value) {
 
+        $racePlayerID = $racePlayerHandler->GetInfo()->id;
+        $raceHandler = new RaceHandler($racePlayerHandler->GetInfo()->race);
+        $raceHandler->SetPlayer(new PlayerHandler($racePlayerHandler->GetInfo()->player));
+        $raceHandler->SetSecne(new SceneHandler($raceHandler->GetInfo()->scene));
+        $h = $raceHandler->ValueH();
+        RaceHP::Instance()->UpdateHP($racePlayerID,$h);
         $accessor = AccessorFactory::Main();
         $value = intval($value * RaceValue::DivisorHP);
-        $racePlayerID = $racePlayerHandler->GetInfo()->id;
         $accessor->Transaction(function() use ($accessor,$racePlayerID,$value)
         {
-            $accessor->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
-            $accessor->executeBind('UPDATE RacePlayer SET HP = HP + :HP
-                                 WHERE RacePlayerID = :RacePlayerID',['HP' => $value,'RacePlayerID' => $racePlayerID]);
+            $row = $accessor->FromTable('RacePlayer')
+                ->SelectExpr('HP')
+                ->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            $finalHP =  max(0,$row->HP + $value);
+            $accessor->ClearCondition()->FromTable('RacePlayer')->WhereEqual('RacePlayerID',$racePlayerID)
+                     ->Modify(['HP' => $finalHP]);
         });
         RacePlayerPool::Instance()->Delete($racePlayerID);
     }
