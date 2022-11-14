@@ -75,6 +75,7 @@ class EnvVar {
 
     const MyCardSwitch = 'MYCARD_SWITCH';
     const MyCardUri = "MYCARD_URI";
+    const MyCardAllowIp = "MYCARD_ALLOWIP";
     const MyCardFacserviceid = 'MYCARD_FACSERVICEID';
     const MyCardFacgameid = 'MYCARD_FACGAMEID';
     const MyCardFacgamename = 'MYCARD_FACGAMENAME';

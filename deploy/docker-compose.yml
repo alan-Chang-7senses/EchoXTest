@@ -59,6 +59,7 @@ services:
 
             MYCARD_SWITCH: 'true'
             MYCARD_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2
+            MYCARD_ALLOWIP: ["218.32.37.148","40.83.124.36"]
             MYCARD_FACSERVICEID: 'hehesdk'
             MYCARD_FACGAMEID: 'PetaRush'
             MYCARD_FACGAMENAME: '遊戲測試'
