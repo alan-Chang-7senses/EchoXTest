@@ -40,7 +40,6 @@ abstract class BasePlayerValues extends BaseRace{
 
     public function Process(): ResultData {
         
-        $hp = InputHelper::post('hp');
         $distance = InputHelper::post('distance');
         
         $values = json_decode(InputHelper::post('values'));

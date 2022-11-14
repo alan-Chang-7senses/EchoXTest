@@ -22,7 +22,6 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| hp | float | 剩餘耐力 |
 | distance | float | 移動距離 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
@@ -36,7 +35,6 @@ _此欄位資料為物件，以下欄位可擇一提供：_
 | trackType | int | [賽道類別](../codes/race.md#trackType) |
 | trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
 | trackNumber | int | 賽道號碼 |
-| ranking | int | 排名 |
 
 #### users 範例
 
