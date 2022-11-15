@@ -91,6 +91,8 @@
 - NFT\_URI：NFT 串接環境網址。
 - NFT\_CLIENTID：NFT 串接環境的 Client ID。
 - NFT\_APISECRET：NFT 串接環境的 API Secret。
+- QuickSDK\_CallBackKey\_Android：QuickSDK儲值回調的Android平台簽證密鑰
+- QuickSDK\_CallBackKey\_iOS：QuickSDK儲值回調的iOS平台簽證密鑰
 
 ## XDebug for Visual Studio Code
 

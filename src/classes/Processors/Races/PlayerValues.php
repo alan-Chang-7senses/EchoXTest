@@ -10,6 +10,7 @@ namespace Processors\Races;
 class PlayerValues extends BasePlayerValues{
     
     public function GetPlayerID(): int {
-        return $this->userInfo->player;
+        return $this->GetCurrentPlayerID();
+        // return $this->userInfo->player;
     }
 }

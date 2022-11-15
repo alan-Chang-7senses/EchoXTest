@@ -9,6 +9,7 @@ namespace Processors\Races;
 class LaunchSkill extends BaseLaunchSkill{
     
     public function GetPlayerID(): int {
-        return $this->userInfo->player;
+        return $this->GetCurrentPlayerID();
+        // return $this->userInfo->player;
     }
 }

@@ -3,6 +3,7 @@
 namespace Processors\Races;
 
 use Consts\Sessions;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Users\Holders\UserInfoHolder;
@@ -33,5 +34,26 @@ abstract class BaseRace extends BaseProcessor{
         
         if($this->mustInRace && $this->userInfo->race == RaceValue::NotInRace) throw new RaceException (RaceException::UserNotInRace);
         else if(!$this->mustInRace && $this->userInfo->race != RaceValue::NotInRace) throw new RaceException (RaceException::UserInRace);
+    }
+
+    public function GetRacePlayerID() : int
+    {
+        $accessor = AccessorFactory::Main();
+        $row = $accessor->selectExpr('`RacePlayerID`')->FromTable('RacePlayer')
+                ->WhereEqual('UserID',$this->userInfo->id)
+                ->WhereEqual('RaceID',$this->userInfo->race)
+                ->Fetch();
+        if($row === false) throw new RaceException (RaceException::UserNotInRace);
+        return $row->RacePlayerID;       
+    }
+    public function GetCurrentPlayerID() : int
+    {
+        $accessor = AccessorFactory::Main();
+        $row = $accessor->selectExpr('`PlayerID`')->FromTable('RacePlayer')
+                ->WhereEqual('UserID',$this->userInfo->id)
+                ->WhereEqual('RaceID',$this->userInfo->race)
+                ->Fetch();
+        if($row === false) throw new RaceException (RaceException::UserNotInRace);
+        return $row->PlayerID;       
     }
 }
