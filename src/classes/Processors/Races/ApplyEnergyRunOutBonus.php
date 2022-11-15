@@ -6,10 +6,10 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
-use Games\Consts\EnergyRunOutBonus;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
+use Games\Races\EnergyRunOutBonus;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
@@ -26,19 +26,23 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
-        
+        // $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        $racePlayerID = $this->GetRacePlayerID();
+
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
         
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $accessor->FromTable('EnergyRunOutBonus')
-                        ->WhereEqual('RacePlayerID',$racePlayerID)
-                        ->Fetch();
+        $row = $accessor->executeBindFetch('SELECT BonusID, Achievement
+            FROM EnergyRunOutBonus t1, PlayerNFT t2
+            WHERE t1.RacePlayerID = :racePlayerID
+            AND t2.PlayerID = :playerID;',['racePlayerID' => $racePlayerID, 'playerID' => $racePlayerInfo->player]);                        
         if($row === false) throw new RaceException(RaceException::EnergyRunOutBonusNotExist);
 
-        foreach(EnergyRunOutBonus::RunOutRewards as $reward)
+
+
+        foreach((new EnergyRunOutBonus($row->Achievement))->GetRunOutBonus() as $reward)
         {
             if($reward['number'] == $row->BonusID) $targetReward = $reward;
         }
@@ -48,7 +52,7 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $racePlayerEffectHandler = new RacePlayerEffectHandler($racePlayerID);
         $racePlayerEffectHandler->AddAll($binds);
         
-        $playerHandler = new PlayerHandler($this->userInfo->player);
+        $playerHandler = new PlayerHandler($racePlayerInfo->player);
         
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         $raceHandler->SetPlayer($playerHandler);

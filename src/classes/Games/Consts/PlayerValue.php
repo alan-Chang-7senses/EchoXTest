@@ -11,6 +11,7 @@ class PlayerValue {
     
     const BotIDLimit = 0;
     const LengthNFTID = 16;
+    const NFTIDAddValue = 1010000000000000;
     
     const Head = 1;
     const Body = 2;

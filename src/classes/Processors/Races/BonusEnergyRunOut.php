@@ -6,8 +6,8 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
-use Games\Consts\EnergyRunOutBonus;
 use Games\Exceptions\RaceException;
+use Games\Races\EnergyRunOutBonus;
 use Games\Races\RaceHandler;
 use Games\Races\RacePlayerHandler;
 use Holders\ResultData;
@@ -25,7 +25,8 @@ class BonusEnergyRunOut extends BaseRace{
         
         $raceHandler = new RaceHandler($this->userInfo->race);
         $raceInfo = $raceHandler->GetInfo();
-        $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        // $racePlayerID = $raceInfo->racePlayers->{$this->userInfo->player};
+        $racePlayerID = $this->GetRacePlayerID();
         
         $racePlayerHandler = new RacePlayerHandler($racePlayerID);
         $racePlayerInfo = $racePlayerHandler->GetInfo();
@@ -38,7 +39,11 @@ class BonusEnergyRunOut extends BaseRace{
         $effectValue = 0;
         $number = 0;
         $r = rand(1,100);
-        foreach(EnergyRunOutBonus::RunOutRewards as $rewardEffect)
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $code = $accessor->FromTable('PlayerNFT')->WhereEqual('PlayerID',$racePlayerInfo->player)
+                 ->Fetch()->Achievement;
+
+        foreach((new EnergyRunOutBonus($code))->GetRunOutBonus() as $rewardEffect)
         {
             $r -= $rewardEffect['proportion'];
             if($r <= 0)
@@ -50,8 +55,7 @@ class BonusEnergyRunOut extends BaseRace{
             }
         }
 
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('EnergyRunOutBonus')
+        $accessor->ClearCondition()->FromTable('EnergyRunOutBonus')
                 ->Add(['RacePlayerID' =>$racePlayerID,'BonusID' => $number, 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]],true);
 
         $racePlayerInfo = $racePlayerHandler->PayEnergy([1, 1, 1, 1]);

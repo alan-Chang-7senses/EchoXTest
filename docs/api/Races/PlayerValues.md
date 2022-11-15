@@ -35,7 +35,6 @@ _此欄位資料為物件，以下欄位可擇一提供：_
 | direction | int | [方向](../codes/race.md#direction) |
 | trackType | int | [賽道類別](../codes/race.md#trackType) |
 | trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
-| rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 | trackNumber | int | 賽道號碼 |
 | ranking | int | 排名 |
 
@@ -59,6 +58,7 @@ Content Type: `application/json`
 | s | float | S值 |
 | energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
 | distance | float | Server移動距離 |
+| rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 
 ### Example
 

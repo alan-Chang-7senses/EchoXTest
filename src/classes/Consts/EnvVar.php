@@ -65,4 +65,11 @@ class EnvVar {
     const SSOClientID = 'SSO_CLIEND_ID';
     const SSOClientSecret = 'SSO_CLIEND_SECRET';
     const APPUri = 'APP_URI';
+    
+    const NFTUri = 'NFT_URI';
+    const NFTClientID = 'NFT_CLIENTID';
+    const NFTAPISecret = 'NFT_APISECRET';
+    
+    const QuickSDKCallBackKeyAndroid = 'QuickSDK_CallBackKey_Android';
+    const QuickSDKCallBackKeyiOS = 'QuickSDK_CallBackKey_iOS';
 }
