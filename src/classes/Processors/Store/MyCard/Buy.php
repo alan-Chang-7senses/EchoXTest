@@ -9,6 +9,7 @@ use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\Store\StoreProductInfoPool;
 use Games\Store\MyCardUtility;
+use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\Store\Purchase\BaseBuy;
 
@@ -23,21 +24,27 @@ class Buy extends BaseBuy {
 
     public function Process(): ResultData {
 
+        //SELECT *,ISOCurrency   FROM StorePurchaseOrders inner JOIN  StoreUserInfos  USING(`UserID`) WHERE ORDERID = %s;
+        $productName = InputHelper::post('productName'); //產品名稱
         $orderID = $this->MakeOrder();
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rowInfo = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->WhereEqual("UserID", $this->userID)->fetch();
-
+        $rowInfo = $accessor->executeBindFetch(Sprintf("SELECT *,ISOCurrency FROM StorePurchaseOrders inner JOIN  StoreUserInfos  USING(`UserID`) WHERE ORDERID = %s;", $orderID), []);
         if ($rowInfo == false) {
             throw new StoreException(StoreException::Error);
         }
 
-        $productInfo = StoreProductInfoPool::Instance()->{$rowInfo->ProductID};
-        if ($productInfo == false) {
+        $productInfos = StoreProductInfoPool::Instance()->{$rowInfo->ProductID};
+        if ($productInfos == false) {
             throw new StoreException(StoreException::Error);
         }
 
-        $authCode = MyCardUtility::AuthGlobal($orderID, $this->userID, $productInfo);
+        if (!isset($productInfos, $rowInfo->ISOCurrency)) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        $productInfo = $productInfos->{$rowInfo->ISOCurrency};
+        $authCode = MyCardUtility::AuthGlobal($orderID, $this->userID, $productInfo, $productName);
         $accessor->Modify(["Receipt" => $authCode]);
         $result = new ResultData(ErrorCode::Success);
         $result->orderID = $orderID;

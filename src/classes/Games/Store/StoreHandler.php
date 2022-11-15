@@ -49,7 +49,7 @@ class StoreHandler {
             "UserID" => $this->userID,
             "Device" => $device,
             "Plat" => $plat,
-            "Currency" => $currency,
+            "ISOCurrency" => $currency,
             "AutoRefreshTime" => $nowTime
         ]);
     }

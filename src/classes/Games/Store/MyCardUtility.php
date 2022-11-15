@@ -20,7 +20,7 @@ use stdClass;
 
 class MyCardUtility {
 
-    public static function AuthGlobal(string $orderID, string $userID, StoreProductInfoModel|stdClass $productInfo): string {
+    public static function AuthGlobal(string $orderID, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): string {
 
         $requestData = new stdClass();
         $requestData->FacServiceId = getenv(EnvVar::MyCardFacserviceid);
@@ -32,9 +32,9 @@ class MyCardUtility {
         $requestData->CustomerId = $userID;
         $requestData->PaymentType = "";
         $requestData->ItemCode = "";
-        $requestData->ProductName = $productInfo->productName;
-        $requestData->Amount = $productInfo->amount;
-        $requestData->Currency = $productInfo->currency;
+        $requestData->ProductName = $productName;
+        $requestData->Amount = $productInfo->Price;
+        $requestData->Currency = $productInfo->ISOCurrency;
         $requestData->SandBoxMode = getenv(EnvVar::MyCardSandboxmode); //true/false
         $requestData->FacReturnURL = "";
         $requestData->FacKey = getenv(EnvVar::MyCardFackey);
@@ -61,7 +61,7 @@ class MyCardUtility {
         } else {
             throw new StoreException(StoreException::Error, ['[cause]' => 'L61']);
         }
-        return "TestAuthcode";
+        return $queryData->AuthCode;
     }
 
     private static function Hash(stdclass $data): string {
