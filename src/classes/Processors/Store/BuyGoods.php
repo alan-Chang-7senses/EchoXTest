@@ -29,6 +29,10 @@ class BuyGoods extends BaseProcessor {
     public function Process(): ResultData {
 
         $tradeID = InputHelper::post('tradeID');
+        $count = InputHelper::post('count');
+        if ($count <= 0) {
+            throw new StoreException(StoreException::Error);
+        }
 
         $userID = $_SESSION[Sessions::UserID];
         $storeHandler = new StoreHandler($userID);
@@ -47,13 +51,16 @@ class BuyGoods extends BaseProcessor {
             throw new StoreException(StoreException::ProductNotExist);
         }
 
-        if ($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) {
-            throw new StoreException(StoreException::OutofStock);
+        if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
+            if (($storeTradesHolder->remainInventory == StoreValue:: InventoryDisplay) ||
+                    ($storeTradesHolder->remainInventory < $count)) {
+                throw new StoreException(StoreException::OutofStock);
+            }
         }
 
         $userBagHandler = new UserBagHandler($userID);
         $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
-        $additem = ItemUtility::GetBagItem($storeCountersHolder->itemID, $storeCountersHolder->amount);
+        $additem = ItemUtility::GetBagItem($storeCountersHolder->itemID, $storeCountersHolder->amount * $count);
         if ($userBagHandler->CheckAddStacklimit($additem) == false) {
             throw new ItemException(ItemException::UserItemStacklimitReached); //堆疊溢滿
         }
@@ -61,12 +68,13 @@ class BuyGoods extends BaseProcessor {
         //扣錢
         if ($storeCountersHolder->currency != StoreValue::CurrencyFree) {
             $itemID = $storeCountersHolder->currency;
-            if ($userBagHandler->DecItemByItemID($itemID, $storeCountersHolder->price, ItemValue::CauseStore) == false) {
+            if ($userBagHandler->DecItemByItemID($itemID, $storeCountersHolder->price * $count, ItemValue::CauseStore) == false) {
                 throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠
             }
         }
+
         if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
-            $storeTradesHolder->remainInventory--;
+            $storeTradesHolder->remainInventory = $storeTradesHolder->remainInventory - $count;
             $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);
         }
 

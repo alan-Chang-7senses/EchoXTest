@@ -59,7 +59,7 @@ services:
 
             MYCARD_SWITCH: 'true'
             MYCARD_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2
-            MYCARD_ALLOWIP: ["218.32.37.148","40.83.124.36","172.21.0.1"]
+            MYCARD_ALLOWIP: '["218.32.37.148","40.83.124.36","172.21.0.1"]'
             MYCARD_FACSERVICEID: 'PETARUSH'
             MYCARD_FACGAMEID: 'PetaRush'
             MYCARD_FACGAMENAME: '動物大奔走'
