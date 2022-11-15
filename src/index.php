@@ -102,6 +102,12 @@ if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::JSON){
     }else    {
         echo "FAILURE";
     }
+} else if ($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::MyCardSDKCallback) {
+    if ($result->error->code == ErrorCode::Success) {
+        echo $result->response;
+    } else {
+        echo $resultData;
+    }
 }else if($GLOBALS[Globals::RESULT_RESPOSE_TYPE] == ResposeType::UniWebView){
     
     $script = empty($result->script) ? '' : '';

@@ -11,6 +11,7 @@ use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Store\Models\MyCardPaymentModel;
 use Games\Store\Models\StoreProductInfoModel;
+use Generators\DataGenerator;
 use stdClass;
 
 /*
@@ -73,11 +74,6 @@ class MyCardUtility {
         return hash("sha256", $encodeHashValue);
     }
 
-    private static function GetNowTimeString(): string {
-        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        return date("Y-m-d\TH:i:s", $nowtime);
-    }
-
     private static function GetParams(stdclass $data): array {
 
         $result = [];
@@ -118,7 +114,7 @@ class MyCardUtility {
 
                 $logAccessor->ClearCondition()->Add([
                     "PaymentType" => $myCardPaymentModel->PaymentType,
-                    "TradeSeq" => $myCardPaymentModel->TradeSeq,//form PaymentConfirm
+                    "TradeSeq" => $myCardPaymentModel->TradeSeq, //form PaymentConfirm
                     "MyCardTradeNo" => $myCardPaymentModel->MyCardTradeNo,
                     "FacTradeSeq" => $myCardPaymentModel->FacTradeSeq,
                     "CustomerId" => $userID,
@@ -193,12 +189,11 @@ class MyCardUtility {
             return StoreValue::PurchaseProcessFailure;
         }
     }
-    
-    public static function CheckAllowIP():bool
-    {
-        getenv(EnvVar::MyCardUri);
-        
-        
+
+    public static function CheckAllowIP(): bool {
+        $allowIPs = json_decode(getenv(EnvVar::MyCardAllowIp));
+        $myIP = DataGenerator::UserIP();
+        return in_array($myIP, $allowIPs);
     }
 
 }

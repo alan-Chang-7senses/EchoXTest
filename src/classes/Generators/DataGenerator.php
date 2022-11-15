@@ -14,6 +14,19 @@ use stdClass;
  */
 class DataGenerator {
     
+    public static function TimestampByTimezone(string $datetime, int $timezone): int {
+        $dateTimezone = new DateTimeZone('GMT' . ($timezone >= 0 ? '+' . $timezone : $timezone));
+        $datetime = new DateTime($datetime, $dateTimezone);
+        return $datetime->getTimestamp();
+    }
+
+    public static function TimestrByTimezone(int $timestamp, int $timezone): string {
+        $date = new DateTime("@" . $timestamp);
+        $dateTimezone = new DateTimeZone('GMT' . ($timezone >= 0 ? '+' . $timezone : $timezone));
+        $date->setTimezone($dateTimezone);
+        return $date->format('Y-m-d\TH:i:s');
+    }
+    
     public static function RandomString(int $length) : string{
         
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMONPQRSTUVWXYZ';
