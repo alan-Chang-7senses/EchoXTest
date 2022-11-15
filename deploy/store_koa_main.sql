@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
--- 正在傾印表格  koa_main.StoreInfos 的資料：~6 rows (近似值)
+-- 正在傾印表格  koa_main.StoreInfos 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreInfos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreInfos` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
@@ -53,11 +55,13 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   KEY `Plat` (`Plat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
 
--- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~19 rows (近似值)
+-- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StorePurchaseOrders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StorePurchaseOrders` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.StoreTrades 結構
 CREATE TABLE IF NOT EXISTS `StoreTrades` (
-  `TradeID` int(10) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
+  `TradeID` int(11) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
   `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
@@ -69,7 +73,9 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
--- 正在傾印表格  koa_main.StoreTrades 的資料：~24 rows (近似值)
+-- 正在傾印表格  koa_main.StoreTrades 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreTrades` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreTrades` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.StoreUserInfos 結構
 CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
@@ -81,7 +87,9 @@ CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
--- 正在傾印表格  koa_main.StoreUserInfos 的資料：~3 rows (近似值)
+-- 正在傾印表格  koa_main.StoreUserInfos 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreUserInfos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreUserInfos` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

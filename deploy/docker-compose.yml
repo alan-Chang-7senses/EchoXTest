@@ -59,12 +59,12 @@ services:
 
             MYCARD_SWITCH: 'true'
             MYCARD_URI: https://testb2b.mycard520.com.tw/MyBillingPay/v1.2
-            MYCARD_ALLOWIP: ["218.32.37.148","40.83.124.36"]
-            MYCARD_FACSERVICEID: 'hehesdk'
+            MYCARD_ALLOWIP: ["218.32.37.148","40.83.124.36","172.21.0.1"]
+            MYCARD_FACSERVICEID: 'PETARUSH'
             MYCARD_FACGAMEID: 'PetaRush'
-            MYCARD_FACGAMENAME: '遊戲測試'
+            MYCARD_FACGAMENAME: '動物大奔走'
             MYCARD_SANDBOXMODE: 'true'
-            MYCARD_FACKEY: 'hehe123'
+            MYCARD_FACKEY: 'xxxxxxxxxxx'
 
             GOOGLE_APPLICATION_CREDENTIALS: /configs/googlepurchase.json
             GOOGLE_APPNAME: petarushTest02
