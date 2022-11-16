@@ -11,6 +11,7 @@ use Games\Exceptions\RaceException;
 use Games\Players\PlayerHandler;
 use Games\Races\EnergyRunOutBonus;
 use Games\Races\RaceHandler;
+use Games\Races\RaceHP;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RaceUtility;
@@ -66,11 +67,12 @@ class ApplyEnergyRunOutBonus extends BaseRace{
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
-        $result->hp = $racePlayerInfo->hp / RaceValue::DivisorHP;
+        $hp = RaceHP::Instance()->UpdateHP($racePlayerID,$result->h);
+        $result->hp = $hp / RaceValue::DivisorHP;
+        
+        RaceVerifyHandler::Instance()->EnergyBonus($racePlayerInfo->id, $result->s);
+        
         $result->duration = $targetReward['duration'];
-        
-        RaceVerifyHandler::Instance()->EnergyBonus($racePlayerInfo->id, $result->s);                
-        
         return $result;
     }
 }

@@ -33,7 +33,7 @@ class LeadRate extends BaseGameLeaderboard {
         $seasonID = $content['seasonIdFunc']();
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
-        $rows = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, Nickname, TokenName')
+        $rows = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, Nickname, ItemName')
                 ->FromTableJoinUsing($table, 'PlayerHolder', 'LEFT', 'PlayerID')
                 ->FromTableJoinUsingNext('PlayerNFT', 'LEFT', 'PlayerID')
                 ->WhereEqual('SeasonID', $seasonID)->WhereGreater('PlayCount', $treshold)
@@ -47,7 +47,7 @@ class LeadRate extends BaseGameLeaderboard {
             $list[] = [
                 'ranking' => $ranking,
                 'nickname' => (string)($row->Nickname ?? $idName),
-                'tokenName' => (string)($row->TokenName ?? $idName),
+                'itemName' => (string)($row->ItemName ?? $idName),
                 'leadRate' => $row->LeadRate / RaceValue::DivisorPercent,
                 'playCount' => $row->PlayCount,
             ];

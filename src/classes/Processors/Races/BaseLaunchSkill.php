@@ -14,6 +14,7 @@ use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerPool;
 use Games\Races\Holders\RacePlayerHolder;
 use Games\Races\RaceHandler;
+use Games\Races\RaceHP;
 use Games\Races\RacePlayerEffectHandler;
 use Games\Races\RacePlayerHandler;
 use Games\Races\RacePlayerSkillHandler;
@@ -202,19 +203,19 @@ abstract class BaseLaunchSkill extends BaseRace{
             'Result' => $launchMaxResult
         ]);
         
-        
         $playerHandlerSelf = RacePlayerEffectHandler::EffectPlayer($playerHandlerSelf, $racePlayerHandlerSelf);
         $raceHandler->SetPlayer($playerHandlerSelf);
 
         $racePlayerInfoSelf = $racePlayerHandlerSelf->GetInfo();
 
+        $selfHP = RaceHP::Instance()->UpdateHP($racePlayerIDSelf,$raceHandler->ValueH());
         $self = [
             'h' => $raceHandler->ValueH(),
             's' => $raceHandler->ValueS(),
-            'hp' => $racePlayerInfoSelf->hp / RaceValue::DivisorHP,
+            'hp' => $selfHP / RaceValue::DivisorHP,
             'energy' => $racePlayerInfoSelf->energy,
+            'maxHP' => $playerHandlerSelf->GetInfo()->stamina,
         ];
-        
         $others = [];
         foreach($racePlayerHandlerOthers as $playerID => $racePlayerHandler){
             
@@ -222,12 +223,14 @@ abstract class BaseLaunchSkill extends BaseRace{
             $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
             $raceHandler->SetPlayer($playerHandler);
             $racePlayerInfo = $racePlayerHandler->GetInfo();
+            $otherHP = RaceHP::Instance()->UpdateHP($racePlayerInfo->id,$raceHandler->ValueH());
             $others[] = [
                 'id' => $playerID,
                 'h' => $raceHandler->ValueH(),
                 's' => $raceHandler->ValueS(),
-                'hp' => $racePlayerInfo->hp / RaceValue::DivisorHP,
+                'hp' => $otherHP / RaceValue::DivisorHP,
                 'energy' => $racePlayerInfo->energy,
+                'maxHP' => $playerHandler->GetInfo()->stamina,
             ];
             
             $racePlayerHandler->SaveData(['hit' => $racePlayerHandler->GetInfo()->hit + 1]);
@@ -244,7 +247,8 @@ abstract class BaseLaunchSkill extends BaseRace{
         
         $raceVerifyHandler = RaceVerifyHandler::Instance();       
         $raceVerifyHandler->LaunchSelfSkill($racePlayerIDSelf, $self['s']); 
-        $raceVerifyHandler->LaunchOthersSkill($others, $raceInfo->racePlayers); 
+        $raceVerifyHandler->LaunchOthersSkill($others, $raceInfo->racePlayers);
+        
 
         return $result;
     }

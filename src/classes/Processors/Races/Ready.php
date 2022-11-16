@@ -16,6 +16,7 @@ use Games\PVP\RaceRoomsHandler;
 use Games\Races\Holders\Processors\ReadyRaceInfoHolder;
 use Games\Races\OfflineRecoveryDataHandler;
 use Games\Races\RaceHandler;
+use Games\Races\RaceHP;
 use Games\Races\RaceUtility;
 use Games\Races\RaceVerifyHandler;
 use Games\Scenes\SceneHandler;
@@ -229,6 +230,7 @@ class Ready extends BaseRace{
         $result->users = $readyUserInfos;
                 
         RaceVerifyHandler::Instance()->Ready($readyUserInfos, $racePlayerIDs);
+        RaceHP::Instance()->Ready($readyUserInfos, $racePlayerIDs);
 
         return $result;
     }
