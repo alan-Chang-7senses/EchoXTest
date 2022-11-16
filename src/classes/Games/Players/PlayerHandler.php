@@ -14,6 +14,7 @@ use Games\Players\Exp\ExpGainResult;
 use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
+use Games\Pools\SpecifyPlayerPool;
 use stdClass;
 /**
  * Description of PlayerHandler
@@ -49,8 +50,16 @@ class PlayerHandler {
     private array $skills = [];
     private array $skillIDs = [];
 
-    public function __construct(int|string $id) {
-        $this->pool = PlayerPool::Instance();
+    public function __construct(int|string $id, ?int $levelSpecify = null, ?int $skillLevelSpecify = null) {
+        if(empty($levelSpecify) || empty($skillLevelSpecify))
+        {
+            $this->pool = PlayerPool::Instance();
+        }
+        else
+        {
+            SpecifyPlayerPool::Instance()->SpecifyLevel($id,$levelSpecify,$skillLevelSpecify);
+            $this->pool = SpecifyPlayerPool::Instance();
+        }
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
         $this->info = $info;
