@@ -77,6 +77,7 @@ Content Type: `application/json`
 | h | float | H值 |
 | hp | float | 剩餘耐力 |
 | energy | array | 能量陣列，依序為 紅,黃,藍,綠 |
+| maxHP | float | 最大耐力 |
 
 #### <span id="others">others 內容</span>
 
@@ -89,6 +90,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | h | float | H值 |
 | hp | float | 剩餘耐力 |
 | energy | array | 能量陣列，依序為 紅,黃,藍,綠 |
+| maxHP | float | 最大耐力 |
 
 ### Example
 
@@ -110,7 +112,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            0,
 	            4,
 	            2
-	        ]
+	        ],
+			"maxHP":99.75
 	    },
 	    "others": [
 	        {
@@ -123,7 +126,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	                1,
 	                7,
 	                5
-	            ]
+	            ],
+				"maxHP":99.75
 	        }
 	    ]
 	}

@@ -5,7 +5,9 @@ namespace Games\NFTs;
 use Accessors\CurlAccessor;
 use Consts\EnvVar;
 use Games\Accessors\AccessorFactory;
+use Games\Accessors\NFTLogAccessor;
 use Games\Consts\AbilityFactor;
+use Games\Consts\ItemValue;
 use Games\Consts\NFTDNA;
 use Games\Consts\NFTQueryValue;
 use Games\Exceptions\NFTException;
@@ -22,6 +24,7 @@ use Games\Pools\MetadataActivityPool;
 use Games\Pools\PlayerPool;
 use Games\Pools\UserPool;
 use Games\Users\UserHandler;
+use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 
 /**
@@ -167,7 +170,7 @@ class NFTFactory {
         $isNative = $metadata->attributes->original == NFTQueryValue::NativeValue;
         $playerNFT = [
             'PlayerID' => $playerID,
-            'TokenName' => $metadata->name,
+            'ItemName' => $metadata->name,
             'Constitution' => $metadata->attributes->attr_1 * AbilityFactor::NFTDivisor,
             'Strength' => $metadata->attributes->attr_2 * AbilityFactor::NFTDivisor,
             'Dexterity' => $metadata->attributes->attr_3 * AbilityFactor::NFTDivisor,
@@ -221,7 +224,7 @@ class NFTFactory {
         foreach($skillRows as $skillRow)$skillBind[] = ['PlayerID' => $playerID,'SkillID' => $skillRow['SkillID']];
         $mainAccessor = AccessorFactory::Main();
         $mainAccessor->FromTable('PlayerNFT')->Add($playerNFT);
-        $mainAccessor->ClearCondition()->FromTable('PlayerSkill')->Ignore(true)->AddAll($skillBind);
+        $mainAccessor->ClearCondition()->FromTable('PlayerSkill')->AddAll($skillBind);
         $mainAccessor->ClearCondition()->FromTable('PlayerLevel')->Add($playerLevel);
         $mainAccessor->ClearCondition()->FromTable('PlayerHolder')->Add($playerHolder);
     }
@@ -270,6 +273,7 @@ class NFTFactory {
         $noLongerHolds = array_values(array_diff($userHoldPlayers,$playerIDs));
         
         
+        $logAccessor = new NFTLogAccessor();
         foreach($notExistPlayerIDs as $playerID){
             
             $metadata = $this->QueryMetadata($metadataURLs[$playerID]);
@@ -279,8 +283,9 @@ class NFTFactory {
             if(!in_array($metadata->properties->universe,NFTQueryValue::ContractUniverse)
                || !in_array($metadata->properties->planet,NFTQueryValue::ContractPlanet))
                 continue;
-
             $this->CreatePlayer($playerID, $metadata);
+            $logAccessor->AddCreatePlayerBind($playerID,$metadataURLs[$playerID]);
+
             //TODO：發送獎勵信件(尚須企劃填表資料)。信件日期數？發的條件是來源標記還是原生種
             $row = MetadataActivityPool::Instance()->{$metadata->properties->activity_name};
             if($row === false)continue;
@@ -295,6 +300,7 @@ class NFTFactory {
             $item->Amount = $row->CreateRewardAmount;
             $item->ItemID = $row->CreateRewardItemID ?? 0;
             $mailsHandler->AddMailItems($mail,$item);
+            // UserUtility::AddItems($this->userHolder->userID,[$item],ItemValue::CauseCreateNFTPlayer);
         }
 
         $userInfo = (new UserHandler($this->userHolder->userID))->GetInfo();
@@ -309,21 +315,29 @@ class NFTFactory {
             $accessor->ClearCondition()->executeBind('UPDATE PlayerHolder SET UserID = 0 
                                                     WHERE PlayerID IN '. $whereValues->values.
                                                     'AND UserID = :UserID',$whereValues->bind);
-            foreach($noLongerHolds as $noLongerHold) PlayerPool::Instance()->Delete($noLongerHold);
+            foreach($noLongerHolds as $noLongerHold)
+            {
+                PlayerPool::Instance()->Delete($noLongerHold);
+                $logAccessor->AddTransferBind(0,$this->userHolder->userID,$noLongerHold);
+            }
         }
         
         if(!empty($currentPlayerToClear))
         {
             $accessor->ClearCondition()->FromTable('Users')
                 ->WhereEqual('UserID',$this->userHolder->userID)->Modify(['Player' => $userInfo->players[0]]);
-            UserPool::Instance()->Delete($this->userHolder->userID);    
         }
+        
         if(!empty($changeholdPlayerIDs))
         {
             $accessor->ClearCondition()->FromTable('PlayerHolder')
             ->WhereIn('PlayerID',$changeholdPlayerIDs)
             ->Modify(['UserID' => $this->userHolder->userID,'Nickname' => null, 'SyncRate' => 0]);
-            foreach($changeholdPlayerIDs as $changeholdPlayerID) PlayerPool::Instance()->Delete($changeholdPlayerID);                        
+            foreach($changeholdPlayerIDs as $changeholdPlayerID)
+            {
+                PlayerPool::Instance()->Delete($changeholdPlayerID);
+                $logAccessor->AddTransferBind($this->userHolder->userID,0,$changeholdPlayerID);
+            }
             
             $rows = $accessor->ClearCondition()->FromTable('Users')
                         ->WhereIn('Player',$changeholdPlayerIDs)->FetchAll();
@@ -339,7 +353,7 @@ class NFTFactory {
                 }    
             }            
         }
-
+        UserPool::Instance()->Delete($this->userHolder->userID);
         //紀錄當前、初次NFT角色數量
         $accessor->ClearCondition()->executeBind(
             'UPDATE Users SET
@@ -351,6 +365,6 @@ class NFTFactory {
                     'NFTPlayerAmount' => count($playerIDs),
                     'UserID' => $this->userHolder->userID,
                 ]);
-
+        $logAccessor->AddAll();        
     }
 }

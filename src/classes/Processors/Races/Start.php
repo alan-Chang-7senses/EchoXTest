@@ -9,6 +9,7 @@ use Consts\Globals;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePool;
+use Games\Races\RaceHP;
 use Games\Races\RaceVerifyHandler;
 use Holders\ResultData;
 /**
@@ -33,6 +34,7 @@ class Start extends BaseRace{
         ]);
         
         RaceVerifyHandler::Instance()->Start($racePlayerIDs);
+        RaceHP::Instance()->Start($racePlayerIDs);
         
         return new ResultData(ErrorCode::Success);
     }

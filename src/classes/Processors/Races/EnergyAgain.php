@@ -39,7 +39,8 @@ class EnergyAgain extends BaseRace{
         $playerHandler = RacePlayerEffectHandler::EffectPlayer($playerHandler, $racePlayerHandler);
         
         $playerInfo = $playerHandler->GetInfo();
-        $energy = RaceUtility::RandomEnergyAgain($playerInfo->stamina);
+        //暫時無裝備、成就系統。
+        $energy = RaceUtility::RandomEnergyAgain(count($playerInfo->skillHole),0);
         
         $racePlayerHandler->SaveData(['energy' => $energy, 'energyAgain' => $racePlayerInfo->energyAgain + 1]);
         
