@@ -32,7 +32,7 @@ class StoreHandler {
 
     public function GetRefreshTime(): StoreRefreshTimeHolder|false {
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->WhereEqual('UserID', $this->userID)->Fetch();
+        $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, AutoRefreshTime')->WhereEqual('UserID', $this->userID)->Fetch();
         if ($rowStoreUserInfos == false) {
             return false;
         }
@@ -41,7 +41,7 @@ class StoreHandler {
         return $autoRefreshTime;
     }
 
-    public function AddRefreshTime(int|string $device, int|string $plat, int|string $currency) {
+    public function AddRefreshTime(int|string $device, int|string $plat, string $isoCurrency) {
 
         $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
         $accessor = new PDOAccessor(EnvVar::DBMain);
@@ -49,9 +49,17 @@ class StoreHandler {
             "UserID" => $this->userID,
             "Device" => $device,
             "Plat" => $plat,
-            "ISOCurrency" => $currency,
+            "ISOCurrency" => $isoCurrency,
             "AutoRefreshTime" => $nowTime
         ]);
+    }
+
+    public function ModifyCurrency(string $isoCurrency) {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $storeUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, ISOCurrency')->WhereEqual('UserID', $this->userID)->Fetch();
+        if ($storeUserInfos->ISOCurrency !== $isoCurrency) {
+            $accessor->Modify(["ISOCurrency" => $isoCurrency]);
+        }
     }
 
     public function UpdateRefreshTime(StoreRefreshTimeHolder $autorefresh) {
@@ -249,9 +257,8 @@ class StoreHandler {
                         $storeProductInfoModel = $storeProductInfoModels->{$currency};
                         $tradeInfo->multiNo = $storeProductInfoModel->MultiNo;
                         $tradeInfo->price = $storeProductInfoModel->Price;
-                    }else
-                    {
-                         throw new StoreException(StoreException::Error, ['[cause]' => 'L255 '.$storePurchaseHolder->productID]);
+                    } else {
+                        throw new StoreException(StoreException::Error, ['[cause]' => 'L255 ' . $storePurchaseHolder->productID]);
                     }
                 }
             } else if ($storeType == StoreValue::TypeCounters) {

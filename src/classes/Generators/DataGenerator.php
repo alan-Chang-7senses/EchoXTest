@@ -19,12 +19,12 @@ class DataGenerator {
         $datetime = new DateTime($datetime, $dateTimezone);
         return $datetime->getTimestamp();
     }
-
-    public static function TimestrByTimezone(int $timestamp, int $timezone): string {
-        $date = new DateTime("@" . $timestamp);
+        
+    public static function TimestringByTimezone(int $timestamp, int $timezone, string $formatString): string {
         $dateTimezone = new DateTimeZone('GMT' . ($timezone >= 0 ? '+' . $timezone : $timezone));
+        $date = new DateTime("@" . $timestamp);
         $date->setTimezone($dateTimezone);
-        return $date->format('Y-m-d\TH:i:s');
+        return $date->format($formatString);
     }
     
     public static function RandomString(int $length) : string{

@@ -5,6 +5,7 @@ namespace Processors\Store\MyCard;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Pools\Store\StoreProductInfoPool;
@@ -45,7 +46,10 @@ class Buy extends BaseBuy {
 
         $productInfo = $productInfos->{$rowInfo->ISOCurrency};
         $authCode = MyCardUtility::AuthGlobal($orderID, $this->userID, $productInfo, $productName);
-        $accessor->Modify(["Receipt" => $authCode]);
+        $accessor->ClearAll()->FromTable("StorePurchaseOrders")->WhereEqual('OrderID', $orderID)->Modify([
+            "Receipt" => $authCode,
+            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+        ]);
         $result = new ResultData(ErrorCode::Success);
         $result->orderID = $orderID;
         $result->AuthCode = $authCode;

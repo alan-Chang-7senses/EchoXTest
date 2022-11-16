@@ -51,7 +51,7 @@ class TransactionComparison extends BaseProcessor {
 
                 foreach ($rowInfo as $key => $value) {
                     if (($key == "TradeDateTime") || ($key == "CreateAccountDateTime")) {
-                        $value = DataGenerator::TimestrByTimezone($value, 8);
+                        $value = MyCardUtility::GetTimestring($value);
                     }
 
                     if (empty($oneData)) {

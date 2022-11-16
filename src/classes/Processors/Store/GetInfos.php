@@ -39,6 +39,8 @@ class GetInfos extends BaseProcessor {
         } else {
             $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
+        
+        $storeHandler->ModifyCurrency($currency);
 
         //get store
         $accessorStatic = new PDOAccessor(EnvVar::DBStatic);

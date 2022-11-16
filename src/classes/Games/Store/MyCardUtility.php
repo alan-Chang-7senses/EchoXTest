@@ -196,4 +196,8 @@ class MyCardUtility {
         return in_array($myIP, $allowIPs);
     }
 
+    public static function GetTimestring(int $timestamp): string {
+        return DataGenerator::TimestringByTimezone($timestamp, 8, 'Y-m-d\TH:i:s');
+    }
+
 }
