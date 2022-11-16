@@ -23,12 +23,12 @@ class RaceUtility {
         return self::RandomEnergyBase($count);
     }
 
-    public static function RandomEnergyAgain(float $stamina): array {
-        $count = floor(20 * $stamina / 135);
-        if ($count >= RaceValue::EnergyAgainMax)
-            $count = RaceValue::EnergyAgainMax;
-        else if ($count <= RaceValue::EnergyAgainMin)
-            $count = RaceValue::EnergyAgainMin;
+    public static function RandomEnergyAgain(int $skillHoleCount, int $equipmentCount): array {
+
+        $count = RaceValue::BaseEnergyCount + $skillHoleCount + $equipmentCount;
+        
+        $count = max(RaceValue::EnergyAgainMin, min(RaceValue::EnergyAgainMax, $count));
+
         return self::RandomEnergyBase($count);
     }
 
