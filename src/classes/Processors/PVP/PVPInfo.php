@@ -43,7 +43,7 @@ class PVPInfo extends BaseRace {
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
-            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->GetCurrentPlayerID(), $qualifyingHandler->NowSeasonID);
+            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->NowSeasonID);
             $lobbyinfo->rank = new stdClass();
             $lobbyinfo->rank->playCount = $rankInfo->playCount;
             $lobbyinfo->rank->leadRate = $rankInfo->leadRate;
