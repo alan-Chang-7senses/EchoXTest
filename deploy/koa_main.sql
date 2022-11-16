@@ -45,7 +45,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('LobbyStudyPlayerLevel', '100', '練習賽指定角色等級(0=不指定)'),
 	('LobbyStudySkillLevel', '5', '練習賽指定技能等級(0=不指定)'),
 	('NewNFTRewardMailExpireDate', '500', 'NFT創角獎勵信件之領取期限(0為空)'),
-	('NewNFTRewardMailID', '0', 'NFT創角獎勵之信件編號(0為空)'),
+	('NewNFTRewardMailID', '12', 'NFT創角獎勵之信件編號(0為空)'),
 	('PvP_B_FreeTicketId_1_Count', '30', '金幣賽免費入場券(每次)發放數量'),
 	('PvP_B_FreeTicketId_2_Count', '0', 'PT幣賽免費入場券(每次)發放數量'),
 	('PvP_B_MaxTickets_1', '100', '金幣賽入場券的儲存上限'),
@@ -2291,7 +2291,7 @@ CREATE TABLE IF NOT EXISTS `QualifyingSeason` (
   PRIMARY KEY (`QualifyingSeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='晉級賽賽季';
 
--- 正在傾印表格  koa_main.QualifyingSeason 的資料：~6 rows (近似值)
+-- 正在傾印表格  koa_main.QualifyingSeason 的資料：~9 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingSeason` DISABLE KEYS */;
 INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `CoinScene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
 	(1, 1, 1001, 1001, 1659628800, 1660838400, 1659926242),
@@ -2301,7 +2301,8 @@ INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `Coi
 	(5, 5, 1001, 1001, 1663862400, 1664467200, 1663891202),
 	(6, 6, 1001, 1001, 1664467200, 1665072000, 1664496002),
 	(7, 7, 1001, 1001, 1665072000, 1665676800, 1665100802),
-	(8, 8, 1001, 1001, 1665676800, 1666281600, 1665705602);
+	(8, 8, 1001, 1001, 1665676800, 1666281600, 1665705602),
+	(9, 9, 1001, 1001, 1668096000, 1669305600, 1668393307);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.RaceBeginHours 結構
@@ -2476,6 +2477,14 @@ BEGIN
 
 END//
 DELIMITER ;
+
+-- 傾印  資料表 koa_main.RaceHP 結構
+CREATE TABLE IF NOT EXISTS `RaceHP` (
+  `RacePlayerID` int(11) NOT NULL DEFAULT 0,
+  `HValue` float(10,2) NOT NULL DEFAULT 0.00,
+  `UpdateTime` decimal(20,6) NOT NULL DEFAULT 0.000000,
+  PRIMARY KEY (`RacePlayerID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='紀錄比賽每次更新之H值';
 
 -- 傾印  資料表 koa_main.RacePlayer 結構
 CREATE TABLE IF NOT EXISTS `RacePlayer` (
