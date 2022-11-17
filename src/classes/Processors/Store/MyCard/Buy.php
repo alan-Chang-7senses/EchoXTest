@@ -25,7 +25,6 @@ class Buy extends BaseBuy {
 
     public function Process(): ResultData {
 
-        //SELECT *,ISOCurrency   FROM StorePurchaseOrders inner JOIN  StoreUserInfos  USING(`UserID`) WHERE ORDERID = %s;
         $productName = InputHelper::post('productName'); //產品名稱
         $orderID = $this->MakeOrder();
 
