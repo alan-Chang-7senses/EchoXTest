@@ -56,6 +56,7 @@ INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount
 CREATE TABLE IF NOT EXISTS `StoreData` (
   `StoreID` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
   `IsOpen` tinyint(2) unsigned NOT NULL DEFAULT 0 COMMENT '是否開放',
+  `MultiName` varchar(20) NOT NULL DEFAULT '' COMMENT '商店名稱(多國語言編號)',
   `StoreType` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
   `UIStyle` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '介面類型',
   `FixedGroup` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '固定商品專櫃群組',
@@ -67,36 +68,40 @@ CREATE TABLE IF NOT EXISTS `StoreData` (
   KEY `IsOpen` (`IsOpen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商店資訊';
 
--- 正在傾印表格  koa_static.StoreData 的資料：~5 rows (近似值)
+-- 正在傾印表格  koa_static.StoreData 的資料：~6 rows (近似值)
 /*!40000 ALTER TABLE `StoreData` DISABLE KEYS */;
-INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `StoreType`, `UIStyle`, `FixedGroup`, `StochasticGroup`, `RefreshCount`, `RefreshCost`, `RefreshCostCurrency`) VALUES
-	(1, 1, 1, 1, 1, 0, 0, 0, 0),
-	(2, 1, 2, 2, 1, 2, 6, 50, 1),
-	(3, 1, 3, 3, 2, 5, 3, 100, 2),
-	(4, 1, 4, 3, 1, 6, 3, 200, 2),
-	(9, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `StoreData` (`StoreID`, `IsOpen`, `MultiName`, `StoreType`, `UIStyle`, `FixedGroup`, `StochasticGroup`, `RefreshCount`, `RefreshCost`, `RefreshCostCurrency`) VALUES
+	(3, 1, 'testA', 2, 3, 2, 5, 3, 100, 2),
+	(4, 1, '一般商店', 1, 3, 1, 6, 3, 200, 2),
+	(9, 0, '一般商店', 1, 0, 0, 0, 0, 0, 0),
+	(100, 0, 'Mycard商店', 4, 1, 1, 0, 0, 0, 0),
+	(200, 1, 'Mycard商店', 4, 1, 1, 0, 0, 0, 0),
+	(300, 1, 'testA', 3, 2, 1, 2, 6, 50, 1);
 /*!40000 ALTER TABLE `StoreData` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StoreProductInfo 結構
 CREATE TABLE IF NOT EXISTS `StoreProductInfo` (
-  `Serial` int(11) NOT NULL DEFAULT 0 COMMENT '流水號',
+  `Serial` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `ProductID` varchar(50) NOT NULL DEFAULT '' COMMENT '商品Key',
   `MultiNo` varchar(50) DEFAULT '' COMMENT '產品名稱(多語系編號)',
   `Price` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '售價',
   `ISOCurrency` varchar(10) NOT NULL DEFAULT '' COMMENT '貨幣',
   PRIMARY KEY (`Serial`),
+  UNIQUE KEY `ProductID_ISOCurrency` (`ProductID`,`ISOCurrency`),
   KEY `ProductID` (`ProductID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值商店品項資訊';
 
--- 正在傾印表格  koa_static.StoreProductInfo 的資料：~6 rows (近似值)
+-- 正在傾印表格  koa_static.StoreProductInfo 的資料：~7 rows (近似值)
 /*!40000 ALTER TABLE `StoreProductInfo` DISABLE KEYS */;
 INSERT INTO `StoreProductInfo` (`Serial`, `ProductID`, `MultiNo`, `Price`, `ISOCurrency`) VALUES
-	(0, '004', '測試004', 40, 'USD'),
-	(1, '003', '測試003', 40, 'USD'),
-	(2, '005', '測試007', 40, 'USD'),
-	(3, '008', '測試008', 50, 'TWD'),
-	(4, '008', '測試008', 50, 'USD'),
-	(5, '006', '測試006', 50, 'USD');
+	(1, '003', '測試003', 1, 'TWD'),
+	(2, '005', '測試005', 1, 'TWD'),
+	(3, '008', '測試008', 1, 'TWD'),
+	(5, '006', '測試006', 1, 'TWD'),
+	(7, '001', '測試001', 1, 'TWD'),
+	(8, '004', '測試004', 1, 'TWD'),
+	(9, '002', '測試002', 1, 'TWD'),
+	(10, '007', '測試007', 1, 'TWD');
 /*!40000 ALTER TABLE `StoreProductInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.StorePurchase 結構
