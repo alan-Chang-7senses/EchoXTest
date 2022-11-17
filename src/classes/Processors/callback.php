@@ -9,6 +9,7 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Consts\ResposeType;
+use Consts\Sessions;
 use Exception;
 use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
@@ -68,7 +69,13 @@ class callback extends BaseProcessor{
         
         $userProfile = json_decode($curlReturn);
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $accessor->FromTable('Users')->WhereEqual('Username', $userProfile->data->id)->Fetch();
+        
+        $row = $accessor->FromTable('Sessions')->WhereEqual('SessionID', $state)->Fetch();
+        session_decode($row->SessionData ?? '');
+        $userIP = $_SESSION[Sessions::UserIP] ?? '';
+        
+        $row = $accessor->ClearCondition()->FromTable('Users')->WhereEqual('Username', $userProfile->data->id)->Fetch();
+        
         $accessor->ClearCondition();
         
         $uniwebviewMessage = 'LoginFinish';
@@ -78,7 +85,8 @@ class callback extends BaseProcessor{
                 'Username' => $userProfile->data->id,
                 'Nickname' => $userProfile->data->id,
                 'Email' => $userProfile->data->email,
-                'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                'CreatedIP' => $userIP
             ]);
             
             $userID = $accessor->LastInsertID();
@@ -103,12 +111,16 @@ class callback extends BaseProcessor{
             $userID = $row->UserID;
         }
         
+        $_SESSION[Sessions::UserID] = $userID;
+        $_SESSION[Sessions::Signed] = true;
+        
         $accessor->FromTable('Sessions')->WhereEqual('SessionID', $state)->Modify([
-            'SessionData' => 'Signed|b:1;UserID|i:'.$userID.';',
+            'SessionData' => session_encode(),
             'UserID' => $userID
         ]);
         
         session_gc();
+        session_destroy();
         
         $accessor->ClearCondition();
         $rows = $accessor->FromTable('Sessions')->WhereEqual('UserID', $userID)->FetchAll();
