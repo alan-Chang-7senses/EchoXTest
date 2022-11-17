@@ -47,6 +47,7 @@ Content Type: `application/json`
 | race | int | 當前競賽 ID，0 = 非競賽中 |
 | lobby | int | [當前競賽所在大廳](../codes/race.md#lobby) |
 | room | int | 當前競賽房號 |
+| tutorial | int | [當前的新手引導階段](../codes/tutorial.md#tutorial) |
 
 ### Example
 

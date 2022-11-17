@@ -24,6 +24,7 @@
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
 		- [更新電力](User/UpdatePower.md)。
 		- [更新NFT資料](User/RefreshNFT.md)。
+		- [更新新手引導進度](User/UpdateTutorialStep.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
