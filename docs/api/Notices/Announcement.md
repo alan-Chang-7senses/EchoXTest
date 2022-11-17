@@ -21,7 +21,6 @@ Content Type: `application/x-www-form-urlencoded`
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | lang | int | [多國語言編號](../codes/other.md#lang) |
-<!-- | timeZone | int || -->
 
 ## Response
 
