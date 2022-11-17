@@ -126,6 +126,7 @@ class MyCardUtility {
                 ]);
             }
         }
+        return $payCheck;
     }
 
     private static function TradeQuery(string $authcode, MyCardPaymentModel &$myCardPaymentModel): int {

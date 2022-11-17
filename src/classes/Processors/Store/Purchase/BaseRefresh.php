@@ -5,7 +5,6 @@ namespace Processors\Store\Purchase;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
-use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
