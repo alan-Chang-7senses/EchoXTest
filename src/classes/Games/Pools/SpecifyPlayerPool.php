@@ -4,6 +4,7 @@ namespace Games\Pools;
 
 use Accessors\MemcacheAccessor;
 
+/**指定角色等級時。提供PlayerHandler取用。若要單獨使用。必須在取值前先指定玩家等級與技能等級 */
 class SpecifyPlayerPool extends PlayerPool
 {
     private static SpecifyPlayerPool $instance;
@@ -12,6 +13,7 @@ class SpecifyPlayerPool extends PlayerPool
 
     const Key = 'specifyPlayer_';
 
+    /**指定角色等級與技能等級 */
     public function SpecifyLevel(int $playerID,?int $playerLevel, ?int $skillLevel)
     {
         if(!empty($this->$playerID))unset($this->$playerID);

@@ -50,6 +50,10 @@ class PlayerHandler {
     private array $skills = [];
     private array $skillIDs = [];
 
+    /**
+     * @param ?int $levelSpecify 指定角色等級。未填入則取得原始等級資訊
+     * @param ?int $skillLevelSpecify 指定角色技能等級。未填入則取得原始等級資訊
+     */
     public function __construct(int|string $id, ?int $levelSpecify = null, ?int $skillLevelSpecify = null) {
         if(empty($levelSpecify) || empty($skillLevelSpecify))
         {
