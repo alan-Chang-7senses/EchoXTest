@@ -42,6 +42,7 @@ class ItemValue
     const CausePVEMedalReward = 9;
     const CauseStore = 10;
     const CauseCreateNFTPlayer = 11;
+    const CauseTutorial = 12;
     
     const ActionObtain = 1;
     const ActionUsed = 2;
