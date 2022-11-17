@@ -45,6 +45,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | storeInfoID | int | 商店編號 |
+| multiName | string | 商店名稱(多國語系編號) |
 | uiStyle | int | [介面類型](#UIStyle) |
 | refreshRemain | int | 剩餘刷新次數 |
 | refreshMax | int | 每日刷新次數 |
@@ -113,100 +114,95 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
         },
         "currencies": [
             849,
-            802,
+            804,
             0,
             0,
             0,
             1
         ],
-        "autoRefreshTime": 78001,
+        "autoRefreshTime": 41584,
         "stores": [
             {
-                "storeInfoID": 1,
-                "uiStyle": 1,
-                "refreshRemain": 0,
-                "refreshMax": 0,
-                "refreshCost": 0,
-                "refreshCurrency": 0,
-                "storetype": 1,
-                "fixItems": [
-                    {
-                        "tradID": 1,
-                        "itemID": 1001,
-                        "amount": 1,
-                        "icon": "ItemIcon_0001",
-                        "name": "8101",
-                        "remainInventory": 3,
-                        "price": 100,
-                        "currency": 1,
-                        "promotion": 3
-                    },
-                    {
-                        "tradID": 2,
-                        "itemID": 1001,
-                        "amount": 1,
-                        "icon": "ItemIcon_0001",
-                        "name": "8101",
-                        "remainInventory": 3,
-                        "price": 100,
-                        "currency": 1,
-                        "promotion": 3
-                    },
-                    {
-                        "tradID": 3,
-                        "itemID": 1001,
-                        "amount": 1,
-                        "icon": "ItemIcon_0001",
-                        "name": "8101",
-                        "remainInventory": 3,
-                        "price": 100,
-                        "currency": 1,
-                        "promotion": 3
-                    }
-                ],
-                "randomItems": []
-            },
-            {
                 "storeInfoID": 2,
+                "multiName": "一般商店",
                 "uiStyle": 3,
                 "refreshRemain": 3,
                 "refreshMax": 3,
                 "refreshCost": 200,
                 "refreshCurrency": 2,
+                "storetype": 1,
+                "fixItems": [],
+                "randomItems": []
+            },
+            {
+                "storeInfoID": 9,
+                "multiName": "Mycard商店",
+                "uiStyle": 1,
+                "refreshRemain": 0,
+                "refreshMax": 0,
+                "refreshCost": 0,
+                "refreshCurrency": 0,
                 "storetype": 4,
                 "fixItems": [
                     {
-                        "tradID": 4,
+                        "tradID": 34,
                         "itemID": -3,
                         "amount": 1,
                         "icon": "ItemIcon_0028",
                         "name": "8134",
-                        "product": "003",
-                        "multiNo": "測試003",
-                        "currency": "USD",
-                        "price": 40
+                        "product": "007",
+                        "multiNo": "測試007",
+                        "price": 1
                     },
                     {
-                        "tradID": 5,
+                        "tradID": 35,
+                        "itemID": -3,
+                        "amount": 1,
+                        "icon": "ItemIcon_0028",
+                        "name": "8134",
+                        "product": "006",
+                        "multiNo": "測試006",
+                        "price": 1
+                    },
+                    {
+                        "tradID": 36,
                         "itemID": -3,
                         "amount": 1,
                         "icon": "ItemIcon_0028",
                         "name": "8134",
                         "product": "005",
-                        "multiNo": "測試007",
-                        "currency": "USD",
-                        "price": 40
+                        "multiNo": "測試005",
+                        "price": 1
                     },
                     {
-                        "tradID": 6,
+                        "tradID": 37,
                         "itemID": -3,
                         "amount": 1,
                         "icon": "ItemIcon_0028",
                         "name": "8134",
                         "product": "008",
                         "multiNo": "測試008",
-                        "currency": "USD",
-                        "price": 50
+                        "price": 1
+                    },
+                    {
+                        "tradID": 38,
+                        "itemID": -3,
+                        "amount": 1,
+                        "icon": "ItemIcon_0028",
+                        "name": "8134",
+                        "product": "003",
+                        "multiNo": "測試003",
+                        "price": 1
+                    },
+                    {
+                        "tradID": 39,
+                        "itemID": -3,
+                        "amount": 1,
+                        "icon": "ItemIcon_0028",
+                        "name": "8134",
+                        "product": "002",
+                        "multiNo": "測試002",
+                        "price": 1
                     }
                 ],
                 "randomItems": []

@@ -36,6 +36,7 @@ class StoreDataPool extends PoolAccessor {
 
         $holder = new StoreDataHolder ();
         $holder->storeID = $row->StoreID;
+        $holder->multiName = $row->MultiName;
         $holder->storeType = $row->StoreType;
         $holder->uIStyle = $row->UIStyle;
         $holder->fixedGroup = $row->FixedGroup;

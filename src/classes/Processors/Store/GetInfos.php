@@ -95,6 +95,7 @@ class GetInfos extends BaseProcessor {
             $resposeStore = new stdClass();
 
             $resposeStore->storeInfoID = $storeInfosHolder->storeInfoID;
+            $resposeStore->multiName = $storeDataHolder->multiName;
             $resposeStore->uiStyle = $storeDataHolder->uIStyle;
             $resposeStore->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
             $resposeStore->refreshMax = $storeDataHolder->refreshCount;
