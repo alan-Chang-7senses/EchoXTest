@@ -37,4 +37,5 @@ class RaceException extends NormalException{
     const UserCheat= 4026;
     const EnergyRunOutBonusNotExist = 4027;
     const UsePlayerError = 4028;
+    const NotAvailableRace = 4029;
 }
