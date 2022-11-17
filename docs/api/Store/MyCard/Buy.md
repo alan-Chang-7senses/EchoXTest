@@ -22,6 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | tradeID | int | 交易序號 |
+| productName | string | 產品名稱 |
 
 <br>
 
