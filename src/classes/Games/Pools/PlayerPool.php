@@ -154,6 +154,7 @@ class PlayerPool extends PoolAccessor {
         $key = $this->keyPrefix.$id;
         $res = MemcacheAccessor::Instance()->delete($key);
         if($res) unset ($this->$id);
+        SpecifyPlayerPool::Instance()->Delete($id);
         return $res;
     }
     
@@ -163,6 +164,7 @@ class PlayerPool extends PoolAccessor {
             $key = $this->keyPrefix.$id;
             $res = $memcacheAccessor->delete($key);
             if($res) unset ($this->$id);
+            SpecifyPlayerPool::Instance()->Delete($id);
         }
     }
 
