@@ -117,3 +117,4 @@
 	- [競賽](codes/race.md)。
 	- [物品](codes/item.md)。
 	- [其它](codes/other.md)。
+	- [新手引導進度](codes/tutorial.md)。
