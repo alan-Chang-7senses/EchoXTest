@@ -28,10 +28,7 @@ class MyCardUtility {
 
         if ($device == StoreValue::DeviceiOS) {
             $tradeType = 2;
-            $paramData = new stdClass();
-            $paramData->userID = $userID;
-            $paramData->orderID = $orderID;
-            $facReturnURL = urldecode(getenv(EnvVar::APPUri) . '/Interfaces/MyCard/Refresh/?data=' . self::EncryptString(json_encode($paramData)));
+            $facReturnURL = urldecode(getenv(EnvVar::APPUri) . '/Interfaces/MyCard/Refresh/?userID=' . $userID);
         } else {
             $tradeType = 1;
             $facReturnURL = "";
@@ -77,7 +74,7 @@ class MyCardUtility {
         }
     }
 
-    private static function Hash(stdClass $data): string {
+    public static function Hash(stdClass $data): string {
         $preHashValue = "";
         foreach ($data as $key) {
             $preHashValue .= $key;

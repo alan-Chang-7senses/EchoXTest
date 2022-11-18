@@ -2,9 +2,9 @@
 
 namespace Processors\Interfaces\MyCard;
 
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\ResposeType;
-use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Store\MyCardUtility;
 use Helpers\InputHelper;
@@ -29,15 +29,32 @@ class Refresh extends BaseRefresh {
     }
 
     public function Process(): ResultData {
-        $datastring = InputHelper::Get('data');
-        $paramData = json_decode(MyCardUtility::DecryptString($datastring));
-        $this->orderID = $paramData->orderID;
-        $this->userID = $paramData->userID;
-        return $this->HandleRefresh();
+        $params = new stdClass();
+        $params->ReturnCode = InputHelper::Post('ReturnCode');
+        $params->PayResult = InputHelper::Post('PayResult');
+        $params->FacTradeSeq = InputHelper::Post('FacTradeSeq');
+        $params->PaymentType = InputHelper::Post('PaymentType');
+        $params->Amount = InputHelper::Post('Amount');
+        $params->Currency = InputHelper::Post('Currency');
+        $params->MyCardTradeNo = InputHelper::Post('MyCardTradeNo');
+        $params->MyCardType = InputHelper::Post('MyCardType');
+        $params->PromoCode = InputHelper::Post('PromoCode');
+        $params->FacKey = getenv(EnvVar::MyCardFackey);
+        $hash = InputHelper::Post('Hash');
 
-        //$result = new ResultData(ErrorCode::Success);        
-//        $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';
-//        $result->content = 'id: '.$userProfile->data->id.'<br>email: '.$userProfile->data->email;
+        $myhash = MyCardUtility::Hash($params);
+        if ($myhash !== $hash) {
+            return new ResultData(ErrorCode::Unknown);
+        }
+        $this->orderID = (int) $params->FacTradeSeq;
+        $this->userID = InputHelper::Get('userID');
+        $resultRefresh = $this->HandleRefresh();
+        
+        
+        $result = new ResultData(ErrorCode::Success);
+        $result->script = 'location.href = "uniwebview://PayFinish?code=' . ErrorCode::Success . '&message=";';
+        $result->content = 'data: '.json_encode($resultRefresh);
+        return $result;
     }
 
 }
