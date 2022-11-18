@@ -29,7 +29,7 @@ class Buy extends BaseBuy {
         $orderID = $this->MakeOrder();
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rowInfo = $accessor->executeBindFetch(Sprintf("SELECT *,ISOCurrency FROM StorePurchaseOrders inner JOIN  StoreUserInfos  USING(`UserID`) WHERE ORDERID = %s;", $orderID), []);
+        $rowInfo = $accessor->executeBindFetch(Sprintf("SELECT *,Device, ISOCurrency FROM StorePurchaseOrders inner JOIN  StoreUserInfos  USING(`UserID`) WHERE ORDERID = %s;", $orderID), []);
         if ($rowInfo == false) {
             throw new StoreException(StoreException::Error);
         }
@@ -44,7 +44,7 @@ class Buy extends BaseBuy {
         }
 
         $productInfo = $productInfos->{$rowInfo->ISOCurrency};
-        $authCode = MyCardUtility::AuthGlobal($orderID, $this->userID, $productInfo, $productName);
+        $authCode = MyCardUtility::AuthGlobal($orderID,$rowInfo->Device, $this->userID, $productInfo, $productName);
         $accessor->ClearAll()->FromTable("StorePurchaseOrders")->WhereEqual('OrderID', $orderID)->Modify([
             "Receipt" => $authCode,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]

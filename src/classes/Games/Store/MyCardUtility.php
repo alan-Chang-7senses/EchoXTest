@@ -20,14 +20,21 @@ use stdClass;
 
 class MyCardUtility {
 
-    public static function AuthGlobal(string $orderID, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): string {
+    public static function AuthGlobal(string $orderID, int $device, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): string {
 
+        if ($device == StoreValue::DeviceiOS) {
+            $tradeType = 2;
+            $facReturnURL = urldecode("http://localhost:37001/Store/MyCard/Buy/?orderID=5");
+        } else {
+            $tradeType = 1;
+            $facReturnURL = "";
+        }
         $requestData = new stdClass();
         $requestData->FacServiceId = getenv(EnvVar::MyCardFacserviceid);
         $requestData->FacTradeSeq = $orderID;
         $requestData->FacGameId = getenv(EnvVar::MyCardFacgameid);
         $requestData->FacGameName = getenv(EnvVar::MyCardFacgamename);
-        $requestData->TradeType = "1"; //:Android SDK (手遊適用)
+        $requestData->TradeType = $tradeType; //:Android SDK (手遊適用)
         $requestData->ServerId = "";
         $requestData->CustomerId = $userID;
         $requestData->PaymentType = "";
@@ -36,7 +43,7 @@ class MyCardUtility {
         $requestData->Amount = $productInfo->Price;
         $requestData->Currency = $productInfo->ISOCurrency;
         $requestData->SandBoxMode = getenv(EnvVar::MyCardSandboxmode); //true/false
-        $requestData->FacReturnURL = "";
+        $requestData->FacReturnURL = $facReturnURL;
         $requestData->FacKey = getenv(EnvVar::MyCardFackey);
         $requestData->hash = self::Hash($requestData);
 
