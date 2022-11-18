@@ -24,11 +24,14 @@ class MyCardUtility {
     private const secret_key = "rpxmca;wwp=1sle";
     private const secret_iv = "dkwjvkejIPAUJWhp";
 
-    public static function AuthGlobal(string $orderID, int $device, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): string {
+    public static function AuthGlobal(string $orderID, int $device, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): stdClass {
 
         if ($device == StoreValue::DeviceiOS) {
             $tradeType = 2;
-            $facReturnURL = urldecode("http://localhost:37001/Store/MyCard/Buy/?orderID=5");
+            $paramData = new stdClass();
+            $paramData->userID = $userID;
+            $paramData->orderID = $orderID;
+            $facReturnURL = urldecode(getenv(EnvVar::APPUri) . '/Interfaces/MyCard/Refresh/?data=' . self::EncryptString(json_encode($paramData)));
         } else {
             $tradeType = 1;
             $facReturnURL = "";
@@ -68,11 +71,10 @@ class MyCardUtility {
 
         $queryData = json_decode($curlReturn);
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
-            return $queryData->AuthCode;
+            return $queryData;
         } else {
             throw new StoreException(StoreException::Error, ['[cause]' => 'L61']);
         }
-        return $queryData->AuthCode;
     }
 
     private static function Hash(stdClass $data): string {
@@ -93,17 +95,17 @@ class MyCardUtility {
         return openssl_decrypt($value, self::encrypt_method, self::secret_key, 0, self::secret_iv);
     }
 
-    private static function GetParams(stdClass $data): array {
-
-        $result = [];
-        foreach ($data as $key => $value) {
-            if ($value == "") {
-                continue;
-            }
-            $result[$key] = $value;
-        }
-        return $result;
-    }
+//    private static function GetParams(stdClass $data): array {
+//
+//        $result = [];
+//        foreach ($data as $key => $value) {
+//            if ($value == "") {
+//                continue;
+//            }
+//            $result[$key] = $value;
+//        }
+//        return $result;
+//    }
 
     public static function Verify(string $userID, string $authcode): stdClass {
 

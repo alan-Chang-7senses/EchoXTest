@@ -41,6 +41,9 @@ abstract class BaseRefresh extends BaseProcessor {
         $tradeID = 0;
         $remainInventory = 0;
         if (!empty($row)) {
+            $tradeID = $row->TradeID;
+            $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
+            $remainInventory = $storeTradesHolder->remainInventory;
 
             if ($row->Status == StoreValue::PurchaseStatusVerify) {
                 throw new StoreException(StoreException::PurchaseProcessing);
@@ -50,7 +53,7 @@ abstract class BaseRefresh extends BaseProcessor {
                 $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusVerify, "Verifying");
 
                 $verifyResult = $this->PurchaseVerify($row);
-                
+
                 if ($verifyResult->code == StoreValue::PurchaseProcessRetry) {
                     $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
                     throw new StoreException(StoreException::PurchaseProcessing);
@@ -61,7 +64,6 @@ abstract class BaseRefresh extends BaseProcessor {
                     $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
                 }
 
-                $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
                 if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
                     $storeTradesHolder->remainInventory--;
                     $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);
@@ -70,8 +72,6 @@ abstract class BaseRefresh extends BaseProcessor {
                 //加物品
                 $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
                 $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-                $tradeID = $row->TradeID;
-                $remainInventory = $storeTradesHolder->remainInventory;
             }
         }
 
