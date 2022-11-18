@@ -21,7 +21,7 @@ class Refresh extends BaseRefresh {
 
     protected bool $mustSigned = false;
     protected int $nowPlat = StoreValue::PlatMyCard;
-    //protected int $resposeType = ResposeType::UniWebView;
+    protected int $resposeType = ResposeType::UniWebView;
 
     public function PurchaseVerify(stdClass $purchaseOrders): stdClass {
 
@@ -34,6 +34,10 @@ class Refresh extends BaseRefresh {
         $this->orderID = $paramData->orderID;
         $this->userID = $paramData->userID;
         return $this->HandleRefresh();
+
+        //$result = new ResultData(ErrorCode::Success);        
+//        $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';
+//        $result->content = 'id: '.$userProfile->data->id.'<br>email: '.$userProfile->data->email;
     }
 
 }
