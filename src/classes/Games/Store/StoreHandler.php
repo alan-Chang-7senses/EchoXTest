@@ -54,11 +54,16 @@ class StoreHandler {
         ]);
     }
 
-    public function ModifyCurrency(string $isoCurrency) {
+    public function ModifyCurrency(string $isoCurrency, int|string $device) {
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $storeUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, ISOCurrency')->WhereEqual('UserID', $this->userID)->Fetch();
-        if ($storeUserInfos->ISOCurrency !== $isoCurrency) {
-            $accessor->Modify(["ISOCurrency" => $isoCurrency]);
+        $storeUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, ISOCurrency, Device')->WhereEqual('UserID', $this->userID)->Fetch();
+        if (($storeUserInfos->ISOCurrency !== $isoCurrency) ||
+                ($storeUserInfos->Device !== $device)
+        ) {
+            $accessor->Modify([
+                "ISOCurrency" => $isoCurrency,
+                "Device" => $device
+            ]);
         }
     }
 

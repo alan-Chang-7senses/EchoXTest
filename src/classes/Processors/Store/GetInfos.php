@@ -40,7 +40,7 @@ class GetInfos extends BaseProcessor {
             $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
         
-        $storeHandler->ModifyCurrency($currency);
+        $storeHandler->ModifyCurrency($currency, $device);
 
         //get store
         $accessorStatic = new PDOAccessor(EnvVar::DBStatic);
