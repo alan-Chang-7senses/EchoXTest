@@ -88,18 +88,20 @@ class StoreHandler {
             }
 
             $storeTradesHolder = new StoreTradesHolder();
-            if (isset($tradIDs[$count])) {
-                $storeTradesHolder->tradeID = $tradIDs[$count];
-                unset($tradIDs[$count]);
-            } else {
-                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-            }
+            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+//            if (isset($tradIDs[$count])) {
+//                $storeTradesHolder->tradeID = $tradIDs[$count];
+//                unset($tradIDs[$count]);
+//            } else {
+//                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+//            }
 
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
-            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
+            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
+//            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
 
             $count++;
         }
@@ -119,19 +121,12 @@ class StoreHandler {
                 break;
             }
             $storeTradesHolder = new StoreTradesHolder();
-            if (isset($tradIDs[$count])) {
-                $storeTradesHolder->tradeID = $tradIDs[$count];
-                unset($tradIDs[$count]);
-            } else {
-                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-            }
-
+            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = StoreValue::TypeCounters;
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
-            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
-
+            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
             $count++;
         }
         $this->ClearStoreTrade($tradIDs);
@@ -176,42 +171,19 @@ class StoreHandler {
         }
     }
 
-    public function UpdateStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
+    private function AddStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        if ($tradeHolder->tradeID == StoreValue::NoTradeID) {
-
-            // 找空閒的位置
-            $rowStoreTrade = $accessor->FromTable('StoreTrades')->
-                    WhereEqual('Status', StoreValue::TradeStatusIdle)->
-                    Fetch();
-            $accessor->ClearCondition();
-
-            if (!empty($rowStoreTrade)) {
-                $tradeHolder->tradeID = $rowStoreTrade->TradeID;
-            } else {
-                $accessor->FromTable('StoreTrades')->Add([
-                    "UserID" => $this->userID,
-                    "StoreID" => $tradeHolder->storeID,
-                    "Status" => StoreValue::TradeStatusInUse,
-                    "StoreType" => $tradeHolder->storeType,
-                    "CPIndex" => $tradeHolder->cPIndex,
-                    "RemainInventory" => $tradeHolder->remainInventory,
-                    "UpdateTime" => $nowtime
-                ]);
-                return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
-            }
-        }
-
-        StoreTradesPool::Instance()->Save($tradeHolder->tradeID, 'Update', [
+        $accessor->FromTable('StoreTrades')->Add([
             "UserID" => $this->userID,
+            "StoreID" => $tradeHolder->storeID,
             "Status" => StoreValue::TradeStatusInUse,
             "StoreType" => $tradeHolder->storeType,
             "CPIndex" => $tradeHolder->cPIndex,
-            "RemainInventory" => $tradeHolder->remainInventory
+            "RemainInventory" => $tradeHolder->remainInventory,
+            "UpdateTime" => $nowtime
         ]);
-
-        return $tradeHolder->tradeID;
+        return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
     }
 
     public function UpdateStoreTradesRemain(StoreTradesHolder|stdClass $tradeHolder) {
@@ -312,11 +284,12 @@ class StoreHandler {
         return (int) $accessor->LastInsertID();
     }
 
-    public function UpdatePurchaseOrderStatus(int $orderID, int $status) {
+    public function UpdatePurchaseOrderStatus(int $orderID, int $status, string $message) {
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
             "Status" => $status,
+            "Message" => $message,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
