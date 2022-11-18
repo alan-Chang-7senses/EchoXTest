@@ -34,6 +34,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | currencies | array | 按[貨幣](GetInfos.md#Currency)順序 |
+| tradID | int | 商品流水號 |
 | remainInventory | int | 剩餘庫存數量 |
 <br>
 
@@ -52,5 +53,6 @@ Content Type: `application/json`
 			0,
 			1000
 		],
+    	"tradeID": 34,
 		"remainInventory": -1
 	}

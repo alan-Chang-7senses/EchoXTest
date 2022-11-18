@@ -37,7 +37,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | orderID | int | 訂單序號 |
 | AuthCode | string | MyCard 認證用 |
-
+| TransactionUrl | string | 交易網址,開網頁用 |
 <br>
 
 ### Example
@@ -49,4 +49,5 @@ Content Type: `application/json`
 		},
 		"orderID": 19,
 		"AuthCode": "TestAuthcode"
+		"TransactionUrl": "https://test.mycard520.com.tw/MyCardPay/?AuthCode="
 	}
