@@ -2,8 +2,11 @@
 
 namespace Processors\Store\MyCard;
 
+use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Store\MyCardUtility;
+use Helpers\InputHelper;
+use Holders\ResultData;
 use Processors\Store\Purchase\BaseRefresh;
 use stdClass;
 
@@ -16,8 +19,14 @@ class Refresh extends BaseRefresh {
 
     protected int $nowPlat = StoreValue::PlatMyCard;
 
-    public function PurchaseVerify(stdClass $purchaseOrders): int {
+    public function PurchaseVerify(stdClass $purchaseOrders): stdClass {
         return MyCardUtility::Verify($purchaseOrders->UserID, $purchaseOrders->Receipt);
+    }
+
+    public function Process(): ResultData {
+        $this->orderID = InputHelper::post('orderID');
+        $this->userID = $_SESSION[Sessions::UserID];
+        return $this->HandleRefresh();
     }
 
 }

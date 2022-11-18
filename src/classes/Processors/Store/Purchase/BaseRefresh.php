@@ -5,7 +5,6 @@ namespace Processors\Store\Purchase;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
-use Consts\Sessions;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
@@ -14,7 +13,6 @@ use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
-use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -27,46 +25,60 @@ use stdClass;
 abstract class BaseRefresh extends BaseProcessor {
 
     protected int $nowPlat = StoreValue::PlatNone;
+    protected int $orderID;
+    protected int $userID;
 
-    abstract function PurchaseVerify(stdClass $purchaseOrders): int;
+    abstract function PurchaseVerify(stdClass $purchaseOrders): stdClass;
 
-    public function Process(): ResultData {
+    public function HandleRefresh(): ResultData {
 
-        $orderID = InputHelper::post('orderID');
-
-        $userID = $_SESSION[Sessions::UserID];
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('StorePurchaseOrders')->
-                        WhereEqual("OrderID", $orderID)->WhereEqual("UserID", $userID)->
-                        WhereEqual("Plat", $this->nowPlat)->WhereEqual("Status", StoreValue::PurchaseStatusProcessing)->fetch();
+                        WhereEqual("OrderID", $this->orderID)->WhereEqual("UserID", $this->userID)->
+                        WhereEqual("Plat", $this->nowPlat)->fetch();
 
-        if (empty($row)) {
-            throw new StoreException(StoreException::Error, ['[cause]' => "no data"]);
+        $userBagHandler = new UserBagHandler($this->userID);
+        $tradeID = 0;
+        $remainInventory = 0;
+        if (!empty($row)) {
+
+            if ($row->Status == StoreValue::PurchaseStatusVerify) {
+                throw new StoreException(StoreException::PurchaseProcessing);
+            } else if ($row->Status == StoreValue::PurchaseStatusProcessing) {
+
+                $storeHandler = new StoreHandler($this->userID);
+                $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusVerify, "Verifying");
+
+                $verifyResult = $this->PurchaseVerify($row);
+                
+                if ($verifyResult->code == StoreValue::PurchaseProcessRetry) {
+                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
+                    throw new StoreException(StoreException::PurchaseProcessing);
+                } else if ($verifyResult->code == StoreValue::PurchaseProcessFailure) {
+                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
+                    throw new StoreException(StoreException::PurchaseFailure);
+                } else {
+                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
+                }
+
+                $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
+                if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {
+                    $storeTradesHolder->remainInventory--;
+                    $storeHandler->UpdateStoreTradesRemain($storeTradesHolder);
+                }
+
+                //加物品
+                $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
+                $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+                $tradeID = $row->TradeID;
+                $remainInventory = $storeTradesHolder->remainInventory;
+            }
         }
-        $storeHandler = new StoreHandler($userID);
-
-        $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusVerify);
-
-        $verifyResult = $this->PurchaseVerify($row);
-        if ($verifyResult == StoreValue::PurchaseProcessRetry) {
-            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing);
-            throw new StoreException(StoreException::PurchaseProcessing);
-        } else if ($verifyResult == StoreValue::PurchaseProcessFailure) {
-            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
-            throw new StoreException(StoreException::PurchaseFailure);
-        } else {
-            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
-        }
-
-        $storeTradesHolder = StoreTradesPool::Instance()->{$row->TradeID};
-        $userBagHandler = new UserBagHandler($userID);
-        //加物品
-        $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
-        $userBagHandler->AddItems($additem, ItemValue::CauseStore);
 
         $result = new ResultData(ErrorCode::Success);
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
-        $result->remainInventory = $storeTradesHolder->remainInventory;
+        $result->tradeID = $tradeID;
+        $result->remainInventory = $remainInventory;
         return $result;
     }
 

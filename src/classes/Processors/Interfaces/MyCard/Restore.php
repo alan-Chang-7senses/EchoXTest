@@ -51,17 +51,17 @@ class Restore extends BaseProcessor {
             $userID = $storePurchaseOrders->UserID;
 
             $storeHandler = new StoreHandler($userID);
-            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusVerify);
+            $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusVerify, "Verifying");
 
             $verifyResult = MyCardUtility::Verify($userID, $storePurchaseOrders->Receipt);
-            if ($verifyResult == StoreValue::PurchaseProcessRetry) {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing);
+            if ($verifyResult->code == StoreValue::PurchaseProcessRetry) {
+                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
                 continue;
-            } else if ($verifyResult == StoreValue::PurchaseProcessFailure) {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
+            } else if ($verifyResult->code == StoreValue::PurchaseProcessFailure) {
+                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
                 continue;
             } else {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
+                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
             }
 
             //加物品

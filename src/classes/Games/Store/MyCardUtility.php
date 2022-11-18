@@ -20,6 +20,10 @@ use stdClass;
 
 class MyCardUtility {
 
+    private const encrypt_method = "AES-256-CBC";
+    private const secret_key = "rpxmca;wwp=1sle";
+    private const secret_iv = "dkwjvkejIPAUJWhp";
+
     public static function AuthGlobal(string $orderID, int $device, string $userID, StoreProductInfoModel|stdClass $productInfo, string $productName): string {
 
         if ($device == StoreValue::DeviceiOS) {
@@ -71,7 +75,7 @@ class MyCardUtility {
         return $queryData->AuthCode;
     }
 
-    private static function Hash(stdclass $data): string {
+    private static function Hash(stdClass $data): string {
         $preHashValue = "";
         foreach ($data as $key) {
             $preHashValue .= $key;
@@ -81,7 +85,15 @@ class MyCardUtility {
         return hash("sha256", $encodeHashValue);
     }
 
-    private static function GetParams(stdclass $data): array {
+    Public static function EncryptString(string $value): string {
+        return openssl_encrypt($value, self::encrypt_method, self::secret_key, 0, self::secret_iv);
+    }
+
+    Public static function DecryptString(string $value): string {
+        return openssl_decrypt($value, self::encrypt_method, self::secret_key, 0, self::secret_iv);
+    }
+
+    private static function GetParams(stdClass $data): array {
 
         $result = [];
         foreach ($data as $key => $value) {
@@ -93,7 +105,7 @@ class MyCardUtility {
         return $result;
     }
 
-    public static function Verify(string $userID, string $authcode): int {
+    public static function Verify(string $userID, string $authcode): stdClass {
 
         $mainAccessor = new PDOAccessor(EnvVar::DBMain);
         $userInfo = $mainAccessor->SelectExpr('`UserID`, `CreateTime`')->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
@@ -107,15 +119,13 @@ class MyCardUtility {
         $myCardPaymentModel->CreateAccountIP = "";
 
         $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentModel);
-        if ($tradeCheck != StoreValue::PurchaseProcessSuccess) {
+        if ($tradeCheck->code != StoreValue::PurchaseProcessSuccess) {
             return $tradeCheck;
         }
 
         $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentModel);
-        if ($payCheck == StoreValue::PurchaseProcessSuccess) {
-
+        if ($payCheck->code == StoreValue::PurchaseProcessSuccess) {
             $logAccessor = new PDOAccessor(EnvVar::DBLog);
-
             $row = $logAccessor->FromTable('MyCardPayment')->WhereEqual("FacTradeSeq", $myCardPaymentModel->FacTradeSeq)->Fetch();
             if (empty($row)) {
 
@@ -131,12 +141,16 @@ class MyCardUtility {
                     "CreateAccountDateTime" => $userInfo->CreateTime,
                     "CreateAccountIP" => ""
                 ]);
+            } else {
+                $payCheck->message = "repeat log";
             }
+            return $payCheck;
+        } else {
+            return $payCheck;
         }
-        return $payCheck;
     }
 
-    private static function TradeQuery(string $authcode, MyCardPaymentModel &$myCardPaymentModel): int {
+    private static function TradeQuery(string $authcode, MyCardPaymentModel &$myCardPaymentModel): stdClass {
 
         $verifyCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/TradeQuery');
         $curlReturn = $verifyCurl->ExecOptions([
@@ -148,8 +162,11 @@ class MyCardUtility {
             CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded']
         ]);
 
+        $result = new stdClass();
         if ($curlReturn === false || $verifyCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
-            return StoreValue::PurchaseProcessRetry; //連不到網路
+            $result->code = StoreValue::PurchaseProcessRetry;
+            $result->message = "TradeQuery Network error";
+            return $result;
         }
 
         $queryData = json_decode($curlReturn);
@@ -161,17 +178,22 @@ class MyCardUtility {
                 $myCardPaymentModel->Amount = $queryData->Amount;
                 $myCardPaymentModel->Currency = $queryData->Currency;
                 //請款回傳
-
-                return StoreValue::PurchaseProcessSuccess;
+                $result->code = StoreValue::PurchaseProcessSuccess;
+                $result->message = "";
+                return $result;
             } else {
-                return StoreValue::PurchaseProcessFailure;
+                $result->code = StoreValue::PurchaseProcessFailure;
+                $result->message = $curlReturn;
+                return $result;
             }
         } else {//查詢失敗
-            return StoreValue::PurchaseProcessFailure;
+            $result->code = StoreValue::PurchaseProcessFailure;
+            $result->message = $curlReturn;
+            return $result;
         }
     }
 
-    private static function PaymentConfirm(string $authcode, MyCardPaymentModel &$myCardPaymentModel): int {
+    private static function PaymentConfirm(string $authcode, MyCardPaymentModel &$myCardPaymentModel): stdClass {
 
         $paymentCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/PaymentConfirm');
         $paymentReturn = $paymentCurl->ExecOptions([
@@ -182,9 +204,12 @@ class MyCardUtility {
             ]),
             CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded']
         ]);
-
+        $result = new stdClass();
         if ($paymentReturn === false || $paymentCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
-            return StoreValue::PurchaseProcessRetry; //連不到網路
+
+            $result->code = StoreValue::PurchaseProcessRetry;
+            $result->message = "PaymentConfirm Network error";
+            return $result;
         }
 
         $paymentData = json_decode($paymentReturn);
@@ -192,9 +217,13 @@ class MyCardUtility {
         if ($paymentData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             //付費紀錄
             $myCardPaymentModel->TradeSeq = $paymentData->TradeSeq;
-            return StoreValue::PurchaseProcessSuccess;
+            $result->code = StoreValue::PurchaseProcessSuccess;
+            $result->message = "pay finish";
+            return $result;
         } else {//查詢失敗
-            return StoreValue::PurchaseProcessFailure;
+            $result->code = StoreValue::PurchaseProcessFailure;
+            $result->message = $paymentReturn;
+            return $result;
         }
     }
 
