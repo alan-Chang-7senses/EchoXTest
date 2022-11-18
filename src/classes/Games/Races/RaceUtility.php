@@ -4,10 +4,14 @@ namespace Games\Races;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\Globals;
 use Consts\Sessions;
+use DateTime;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
 use Games\Pools\PlayerPool;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
@@ -138,5 +142,65 @@ class RaceUtility {
         $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
         
         PlayerPool::Instance()->DeleteAll($playerIDs);
+    }
+
+    /**
+     * 結束競賽時。計算並紀錄每個角色積分。
+     * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
+     */
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos,int $lobby) : void
+    {
+        $config = ConfigGenerator::Instance();
+        $competitionID = $config->{RaceValue::RatingLobbiesConfig[$lobby]};
+        $competitionHandler = new CompetitionsInfoHandler($competitionID);
+        $competitionInfo = $competitionHandler->GetInfo();
+        $cb2OpeningTime = new DateTime($config->CB2OpeningTime);
+        $weekSecond = 604800;
+        $seasonExpireTime = $cb2OpeningTime->getTimestamp() + $weekSecond * $competitionInfo->weeksPerSeason;
+        if($GLOBALS[Globals::TIME_BEGIN] > $seasonExpireTime)return;
+
+        $accessor = AccessorFactory::Main();
+        $playerIDs = array_column($racePlayerInfos,'player');
+        $allRatings = [];
+
+        $whereValues = $accessor->valuesForWhereIn($playerIDs);
+        $whereValues->bind['Lobby'] = $lobby;
+        //有可能是false，或有缺少資料。必須給預設值。
+        $rows = $accessor->ClearCondition()
+                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime` FROM `PlayerRating`
+                                        WHERE `PlayerID` IN '.$whereValues->values.'
+                                        AND Lobby = :Lobby',$whereValues->bind);
+        
+        foreach($rows as $row)
+        {
+            $allRatings[$row->PlayerID] = $row->Rating;
+        }
+        foreach($playerIDs as $playerID)
+        {
+            if(!isset($allRatings[$playerID]))
+            $allRatings[$playerID] = $competitionHandler->GetResetRating(null);
+        }
+
+        // $accessor->ClearCondition()->prepareName('RecordPlayerRating');
+
+        $binds = [];
+        foreach($racePlayerInfos as $racePlayerInfo)
+        {
+            //找出自己以外的
+            $allRatingsTemp = $allRatings;
+            $playerID = $racePlayerInfo->player;
+            unset($allRatingsTemp[$playerID]);
+            $otherPlayerRankings = array_values($allRatingsTemp);
+            $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRankings,$racePlayerInfo->ranking);
+            $binds[] = 
+            [
+                'PlayerID' => $playerID,
+                'Lobby' => $lobby,
+                'Rating' => $rating,
+                'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
+        }
+
+        $accessor->ClearCondition()->FromTable('PlayerRating')->AddAll($binds,true);
     }
 }

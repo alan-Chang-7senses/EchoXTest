@@ -136,6 +136,14 @@ class RaceValue {
         self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
         self::LobbyPVE => 'LobbyPVESkillLevel',
     ];
+
+    const RatingLobbiesConfig = 
+    [
+        self::LobbyCoin => 'CompetitiosIndex_Competition_Coin',
+        self::LobbyPT => 'CompetitiosIndex_Competition_PT',
+        self::LobbyCoinB => 'CompetitiosIndex_Competition_Coin_B',
+        self::LobbyPetaTokenB => 'CompetitiosIndex_Competition_PT_B',
+    ];
     
     const RoomIdle = 0;
     const RoomMatching = 1;
