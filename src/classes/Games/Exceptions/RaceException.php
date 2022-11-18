@@ -38,4 +38,5 @@ class RaceException extends NormalException{
     const EnergyRunOutBonusNotExist = 4027;
     const UsePlayerError = 4028;
     const NotAvailableRace = 4029;
+    const NoLimitTimeDataConfig = 4030;
 }

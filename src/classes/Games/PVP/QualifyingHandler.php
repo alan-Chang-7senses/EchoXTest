@@ -13,7 +13,6 @@ use Games\Pools\ItemInfoPool;
 use Games\Pools\QualifyingSeasonPool;
 use Games\Pools\TicketInfoPool;
 use Games\PVP\Holders\TicketInfoHolder;
-use Games\PVP\Holders\PVPLimitTimeHolder;
 use Games\Races\RaceUtility;
 use Games\Users\UserBagHandler;
 use Generators\ConfigGenerator;
@@ -27,7 +26,6 @@ class QualifyingHandler {
         RaceValue::LobbyStudy];
     public const MatchLobbies = [RaceValue::LobbyCoin, RaceValue::LobbyCoinB,
         RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB];
-    public const DailyLimitTimeLobbies = [RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB];
 
     public int $NowSeasonID;
     private QualifyingSeasonPool $pool;
@@ -154,34 +152,6 @@ class QualifyingHandler {
         if ($remainTime < 0)
             $remainTime = 0;
         return (int) $remainTime;
-    }
-
-    public function CheckDailyLimitTimeLobbyID(int $lobby) {
-        // 檢查是否為每日限時的大廳
-        return in_array($lobby, QualifyingHandler::DailyLimitTimeLobbies);
-    }
-
-    public function GetLimitTimeData() : PVPLimitTimeHolder {
-        
-        $checkStartTimeValue = (new DateTime(ConfigGenerator::Instance()->PvP_B_LimitTimeStart))->format('U');
-        $checkEndTimeValue = (new DateTime(ConfigGenerator::Instance()->PvP_B_LimitTimeEnd))->format('U');
-        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-
-        $result1 = new PVPLimitTimeHolder();
-
-        if ($nowtime < $checkStartTimeValue) {
-            $result1->startRemainSeconds = $checkStartTimeValue - $nowtime;
-        } else {
-            $result1->startRemainSeconds = 86400 + $checkStartTimeValue - $nowtime;
-        }
-
-        if ($nowtime < $checkEndTimeValue) {
-            $result1->endRemainSeconds = $checkEndTimeValue - $nowtime;
-        } else {
-            $result1->endRemainSeconds = 86400 + $checkEndTimeValue - $nowtime;
-        }
-
-        return $result1;
     }
 
     public function GetTicketInfo(int $userID, int $lobby): TicketInfoHolder {

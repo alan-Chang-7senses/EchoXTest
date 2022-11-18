@@ -8,7 +8,6 @@ use Games\Mails\MailsHandler;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
 use Games\Users\UserHandler;
-use Games\PVP\QualifyingHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 
@@ -45,13 +44,6 @@ class MainData extends BaseProcessor{
         $userMailsHandler = new MailsHandler();
         $result->unreadmail = $userMailsHandler->GetUnreadMails($_SESSION[Sessions::UserID]);
         
-        $qualifyingHandler = new QualifyingHandler();
-        $limitTimeData = $qualifyingHandler->GetLimitTimeData();
-        $result->raceLimitTimeData = [
-            'startRemainSeconds' => $limitTimeData->startRemainSeconds,
-            'endRemainSeconds' => $limitTimeData->endRemainSeconds,
-        ];
-
         return $result;
     }
 }
