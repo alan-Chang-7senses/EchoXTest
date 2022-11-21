@@ -81,11 +81,11 @@ class FreePetaUtility
         $accessor->FromTable('PlayerNFT')->Add(
             [
                 'PlayerID' => $id,
-                'Constitution' => $freePlayer->baseInfo->Constitution,
-                'Strength' => $freePlayer->baseInfo->Strength,
-                'Dexterity' => $freePlayer->baseInfo->Dexterity,
-                'Agility' => $freePlayer->baseInfo->Agility,
-                'Attribute' => $freePlayer->ele,
+                'Constitution' => $freePlayer->baseInfo->Constitution ?? $freePlayer->Constitution ,
+                'Strength' => $freePlayer->baseInfo->Strength ?? $freePlayer->Strength,
+                'Dexterity' => $freePlayer->baseInfo->Dexterity ?? $freePlayer->Dexterity,
+                'Agility' => $freePlayer->baseInfo->Agility ?? $freePlayer->Agility,
+                'Attribute' => $freePlayer->ele ?? $freePlayer->Attribute,
                 'HeadDNA' => $freePlayer->dna->head,
                 'BodyDNA' => $freePlayer->dna->body,
                 'HandDNA' => $freePlayer->dna->hand,
@@ -101,6 +101,7 @@ class FreePetaUtility
         $accessor->FromTable('PlayerHolder')->Add(['PlayerID' => $id, 'UserID' => $userID]);
         $accessor->FromTable('PlayerLevel')->Add(['PlayerID' => $id, 'Level' => SkillValue::LevelMin]);
         foreach($freePlayer->skills as $skill){
+            $skill = (array)$skill;
             $ids[] = ["PlayerID" => $id, "SkillID" => $skill['id']];
         }
         $accessor->ClearCondition();
