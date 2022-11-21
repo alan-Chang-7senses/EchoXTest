@@ -246,6 +246,9 @@ class StoreHandler {
                 }
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
+                if ($itemInfo == false) {
+                    throw new StoreException(StoreException::Error);
+                }
 
                 $tradeInfo->itemID = $storeCountersHolder->itemID;
                 $tradeInfo->amount = $storeCountersHolder->amount;

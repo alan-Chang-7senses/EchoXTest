@@ -66,7 +66,8 @@ class BuyGoods extends BaseProcessor {
         }
 
         //扣錢
-        if ($storeCountersHolder->currency != StoreValue::CurrencyFree) {
+        if (($storeCountersHolder->currency != StoreValue::CurrencyFree) &&
+                ($storeCountersHolder->price != StoreValue::FreeCost)) {
             $itemID = $storeCountersHolder->currency;
             if ($userBagHandler->DecItemByItemID($itemID, $storeCountersHolder->price * $count, ItemValue::CauseStore) == false) {
                 throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠

@@ -42,6 +42,8 @@ class StoreValue {
     const CurrencyMarsTicket = 4;
     const CurrencyPtTicket = 5;
     const CurrencyGroupTicket = 6;
+    
+    const FreeCost = 0;
 
     const Currencies = [
         self::CurrencyMars,
