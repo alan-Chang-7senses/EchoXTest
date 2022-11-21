@@ -30,7 +30,7 @@ class CompetitionsInfoHandler
     private function GetWinOdds() : float
     {
         $otherRatingAVG = array_sum($this->otherCurrentRatings) / count($this->otherCurrentRatings);
-        return 1 / (1 + 10 * (($otherRatingAVG - $this->currentRating) / $this->info->xValue));
+        return 1 / (1 + pow(10,(($otherRatingAVG - $this->currentRating) / $this->info->xValue)));
     }
     /**取得未奪冠率 */
     private function GetNotWinOdds() : float
@@ -39,7 +39,7 @@ class CompetitionsInfoHandler
     }
 
     /**取得期望贏分 */
-    private function GetRatingExpect() : int
+    private function GetRatingExpect() : float
     {
         $winOdds = $this->GetWinOdds();
         $notWindOdds = $this->GetNotWinOdds();
@@ -53,8 +53,8 @@ class CompetitionsInfoHandler
         }
         $scoreAVG = $scoreSum / $scoreCount;
 
-        $rt = $winOdds * $this->info->score1 + $notWindOdds * $scoreAVG;
-        return intval($rt);
+        return $winOdds * $this->info->score1 + $notWindOdds * $scoreAVG;
+        // return ($rt);
     }
 
     /**取得賽後評分 */
@@ -64,7 +64,7 @@ class CompetitionsInfoHandler
         $this->otherCurrentRatings = $otherCurrentRatings;
         $realRating = $this->info->{'score'.$rank};
         $rating = $currentRating + $this->info->kValue * ($realRating - $this->GetRatingExpect()) + $this->info->delta;
-        return min(max($rating,$this->info->minRating),$this->info->maxRating);
+        return floor(min(max($rating,$this->info->minRating),$this->info->maxRating));
     }
 
     /**取得賽季重置後的評分 */
