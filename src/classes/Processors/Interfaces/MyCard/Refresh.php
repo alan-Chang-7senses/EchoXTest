@@ -6,6 +6,7 @@ use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\ResposeType;
 use Games\Consts\StoreValue;
+use Games\Exceptions\StoreException;
 use Games\Store\MyCardUtility;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -42,6 +43,12 @@ class Refresh extends BaseRefresh {
         $params->FacKey = getenv(EnvVar::MyCardFackey);
         $hash = InputHelper::Post('Hash');
 
+        if (($params->ReturnCode != StoreValue::MyCardReturnSuccess) ||
+                $params->PayResult != StoreValue::MyCardPaySuccess) {
+
+            throw new StoreException(StoreException::Error);
+        }
+
         $myhash = MyCardUtility::Hash($params);
         if ($myhash !== $hash) {
             return new ResultData(ErrorCode::Unknown);
@@ -49,11 +56,15 @@ class Refresh extends BaseRefresh {
         $this->orderID = (int) $params->FacTradeSeq;
         $this->userID = InputHelper::Get('userID');
         $resultRefresh = $this->HandleRefresh();
-        
-        
+
+        $response = new stdClass();
+        $response->currencies = $resultRefresh->currencies;
+        $response->tradeID = $resultRefresh->tradeID;
+        $response->remainInventory = $resultRefresh->remainInventory;
+        $jsonstring = urlencode(json_encode($response));
+
         $result = new ResultData(ErrorCode::Success);
-        $result->script = 'location.href = "uniwebview://PayFinish?code=' . ErrorCode::Success . '&message=";';
-        $result->content = 'data: '.json_encode($resultRefresh);
+        $result->script = 'location.href = "uniwebview://PaySuccess?code=' . ErrorCode::Success . '&message=' . $jsonstring . '";';
         return $result;
     }
 
