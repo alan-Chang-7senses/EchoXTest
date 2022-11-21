@@ -47,6 +47,8 @@ abstract class BaseRefresh extends BaseProcessor {
 
             if ($row->Status == StoreValue::PurchaseStatusVerify) {
                 throw new StoreException(StoreException::PurchaseProcessing);
+            } else if ($row->Status == StoreValue::PurchaseStatusFinish) {
+                
             } else if ($row->Status == StoreValue::PurchaseStatusProcessing) {
 
                 $storeHandler = new StoreHandler($this->userID);
@@ -72,7 +74,11 @@ abstract class BaseRefresh extends BaseProcessor {
                 //加物品
                 $additem = ItemUtility::GetBagItem($row->ItemID, $row->Amount);
                 $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+            } else {
+                throw new StoreException(StoreException::PurchaseFailure);
             }
+        } else {
+            throw new StoreException(StoreException::PurchaseFailure);
         }
 
         $result = new ResultData(ErrorCode::Success);
