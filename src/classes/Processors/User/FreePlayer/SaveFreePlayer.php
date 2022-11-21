@@ -2,6 +2,7 @@
 namespace Processors\User\FreePlayer;
 
 use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Consts\SetUserNicknameValue;
@@ -19,7 +20,7 @@ use PDOException;
 use Processors\BaseProcessor;
 
 /**
- * Description of ReceiveFreePlayer
+ * Description of SaveFreePlayer
  * 
  * @author Liu Shu Ming <mingoliu@7senses.com>
  */
@@ -29,18 +30,22 @@ class SaveFreePlayer extends BaseProcessor {
 
         $nickname = InputHelper::post("nickname");
 
-        $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
+        $userID = $_SESSION[Sessions::UserID];
+        $userHandler = new UserHandler($userID);
         $userInfo = $userHandler->GetInfo();
-
+        
 
         // 玩家取得 3 隻免費 NFT
-        $playerA = FreePetaUtility::GetFreePlayer(FreePlayerValue::FreePlayerTypeSpeed);
-        $playerB = FreePetaUtility::GetFreePlayer(FreePlayerValue::FreePlayerTypeBalance);
-        $playerC = FreePetaUtility::GetFreePlayer(FreePlayerValue::FreePlayerTypeLasting);
+        $pdo = new PDOAccessor(EnvVar::DBMain);
+        $row = $pdo->FromTable("UserFreePeta")
+            ->WhereEqual("UserID", $userInfo->id)
+            ->Fetch();
 
-        FreePetaUtility::AddNewFreePlayer($playerA, $_SESSION[Sessions::UserID]);
-        FreePetaUtility::AddNewFreePlayer($playerB, $_SESSION[Sessions::UserID]);
-        FreePetaUtility::AddNewFreePlayer($playerC, $_SESSION[Sessions::UserID]);
+        $freePetas = json_decode($row->FreePetaInfo);
+
+        foreach($freePetas as $peta) {
+            FreePetaUtility::AddNewFreePlayer($peta, $_SESSION[Sessions::UserID]);
+        }
 
 
         // 玩家改名
@@ -55,7 +60,7 @@ class SaveFreePlayer extends BaseProcessor {
         if(NamingUtility::HasDirtyWords($nickname,DirtyWordValue::BandWordName)) {
             throw new UserException(UserException::UsernameDirty);
         }
-
+        
         $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + FreePlayerValue::FreePlayerTypeCount; // 暫定。需常數化 
 
         try {
@@ -67,7 +72,7 @@ class SaveFreePlayer extends BaseProcessor {
             throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
             else throw $ex;
         }
-
+        
         $result = new ResultData(ErrorCode::Success);
 
         return $result;
