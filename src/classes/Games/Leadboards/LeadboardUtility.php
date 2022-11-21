@@ -45,7 +45,7 @@ class LeadboardUtility {
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
         
-        $playerLead = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, UpdateTime, Nickname, TokenName')
+        $playerLead = $accessor->SelectExpr('PlayerID, PlayCount, LeadRate, UpdateTime, Nickname, ItemName')
                 ->FromTableJoinUsing($table, 'PlayerHolder', 'LEFT', 'PlayerID')
                 ->FromTableJoinUsingNext('PlayerNFT', 'LEFT', 'PlayerID')
                 ->WhereEqual('SeasonID', $seasonID)->WhereEqual('PlayerID', $playerID)
@@ -54,7 +54,7 @@ class LeadboardUtility {
         $result = new stdClass();
         $result->ranking = 0;
         $result->nickname = (string)($playerLead->Nickname ?? $playerID);
-        $result->tokenName = (string)($playerLead->TokenName ?? $playerID);
+        $result->itemName = (string)($playerLead->ItemName ?? $playerID);
         $result->leadRate = 0;
         $result->playCount = $playerLead->PlayCount ?? 0;
         

@@ -38,103 +38,103 @@ class UserRichest extends BaseWebLeaderboard{
         $result->list = json_decode('[
         {
             "ranking": 1,
-            "nickname": "A1",
-            "coin": 20565674
+            "nickname": "idee",
+            "coin": 32445001
         },
         {
             "ranking": 2,
-            "nickname": "Kouvo",
-            "coin": 18723472
+            "nickname": "3gu",
+            "coin": 32284856
         },
         {
             "ranking": 3,
-            "nickname": "BDWill",
-            "coin": 17117482
+            "nickname": "A3",
+            "coin": 30912236
         },
         {
             "ranking": 4,
-            "nickname": "Drichhhh",
-            "coin": 15819245
+            "nickname": "Kbz",
+            "coin": 30072119
         },
         {
             "ranking": 5,
-            "nickname": "PetaDee",
-            "coin": 15680076
+            "nickname": "Kally07",
+            "coin": 20611815
         },
         {
             "ranking": 6,
-            "nickname": "Neo",
-            "coin": 13726933
+            "nickname": "Vinic77",
+            "coin": 17921971
         },
         {
             "ranking": 7,
-            "nickname": "Vinic77",
-            "coin": 10130505
+            "nickname": "Wayne13",
+            "coin": 13793889
         },
         {
             "ranking": 8,
-            "nickname": "Cloudstrike17",
-            "coin": 9449908
+            "nickname": "pyro21",
+            "coin": 12103315
         },
         {
             "ranking": 9,
-            "nickname": "QQ",
-            "coin": 8925819
+            "nickname": "Difkccp",
+            "coin": 12012464
         },
         {
             "ranking": 10,
-            "nickname": "pyro21",
-            "coin": 7784924
+            "nickname": "pakyouidee",
+            "coin": 9593982
         },
         {
             "ranking": 11,
-            "nickname": "TQT",
-            "coin": 5915545
+            "nickname": "Drichhhh",
+            "coin": 9399423
         },
         {
             "ranking": 12,
-            "nickname": "Tetzu",
-            "coin": 5618252
+            "nickname": "Cson",
+            "coin": 9009476
         },
         {
             "ranking": 13,
-            "nickname": "Fallen1318",
-            "coin": 5346180
+            "nickname": "Kouvo",
+            "coin": 8626841
         },
         {
             "ranking": 14,
-            "nickname": "Asta",
-            "coin": 5252229
+            "nickname": "PetaRoxanne",
+            "coin": 8432278
         },
         {
             "ranking": 15,
-            "nickname": "78Oren",
-            "coin": 4637726
+            "nickname": "Goraniwr",
+            "coin": 7458315
         },
         {
             "ranking": 16,
-            "nickname": "0149",
-            "coin": 3932044
+            "nickname": "TSUC",
+            "coin": 6431432
         },
         {
             "ranking": 17,
-            "nickname": "SaintPerv",
-            "coin": 3735219
+            "nickname": "1930",
+            "coin": 6180422
         },
         {
             "ranking": 18,
-            "nickname": "721Hale",
-            "coin": 3651343
+            "nickname": "Cloudstrike17",
+            "coin": 6027206
         },
         {
             "ranking": 19,
-            "nickname": "X",
-            "coin": 2727448
+            "nickname": "Inosente",
+            "coin": 5288986
         },
         {
             "ranking": 20,
-            "nickname": "King",
-            "coin": 2312513
+            "nickname": "mumu",
+            "coin": 4974503
         }
     ]');
         return $result;

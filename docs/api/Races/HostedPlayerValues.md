@@ -24,7 +24,6 @@ Content Type: `application/x-www-form-urlencoded`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | player | int | 角色編號 |
-| hp | float | 剩餘耐力 |
 | distance | float | 移動距離 |
 | [values](#values) | string | 預計更新數值的物件 JSON 字串<br>若僅用於查詢，只需提供空字串 |
 
@@ -37,9 +36,7 @@ _此欄位資料為物件，以下欄位可擇一提供：_
 | direction | int | [方向](../codes/race.md#direction) |
 | trackType | int | [賽道類別](../codes/race.md#trackType) |
 | trackShape | int | [賽道形狀](../codes/race.md#trackShape) |
-| rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 | trackNumber | int | 賽道號碼 |
-| ranking | int | 排名 |
 
 #### users 範例
 
@@ -60,22 +57,28 @@ Content Type: `application/json`
 | h | float | H值 |
 | s | float | S值 |
 | energy | array | 當前能量陣列，依序為 紅,黃,藍,綠 |
+| maxHP | float | 耐力值上限 |
 | distance | float | Server移動距離 |
+| hp | float | 當前耐力值 |
+| rhythm | int | [比賽節奏](../codes/race.md#rhythm) |
 
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    },
-	    "h": 1.0774688179425564,
-	    "s": 1.4908666666666668,
-    	"energy": [
-    	    0,
-    	    0,
-    	    0,
-    	    0
-    	],
-	    "distance": 3447.71
+	  "error": {
+	    "code": 0,
+	    "message": ""
+	  },
+	  "h": 1.9913767735839156,
+	  "s": 11.043473400000005,
+	  "energy": [
+	    6,
+	    5,
+	    2,
+	    5
+	  ],
+	  "maxHP": 92.46,
+	  "distance": 145.35999999999999,
+	  "hp": 67.63,
+	  "rhythm": 1
 	}

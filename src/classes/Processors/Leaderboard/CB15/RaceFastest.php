@@ -39,103 +39,103 @@ class RaceFastest extends BaseWebLeaderboard{
         $result->list = json_decode('[
         {
             "ranking": 1,
-            "nickname": "Cidadiniz",
-            "duration": "00:01:00.169"
+            "nickname": "423Nora",
+            "duration": "00:00:56.481"
         },
         {
             "ranking": 2,
-            "nickname": "QQ",
-            "duration": "00:01:05.889"
+            "nickname": "Nora4635",
+            "duration": "00:01:27.289"
         },
         {
             "ranking": 3,
-            "nickname": "A1",
-            "duration": "00:01:06.588"
+            "nickname": "3gu",
+            "duration": "00:01:32.605"
         },
         {
             "ranking": 4,
-            "nickname": "PetaDee",
-            "duration": "00:01:07.261"
+            "nickname": "A3",
+            "duration": "00:01:32.833"
         },
         {
             "ranking": 5,
-            "nickname": "TQT",
-            "duration": "00:01:07.780"
+            "nickname": "4318Tracy",
+            "duration": "00:01:32.836"
         },
         {
             "ranking": 6,
-            "nickname": "BDWill",
-            "duration": "00:01:14.685"
+            "nickname": "pakyouidee",
+            "duration": "00:01:34.105"
         },
         {
             "ranking": 7,
-            "nickname": "zZ",
-            "duration": "00:01:18.281"
+            "nickname": "Vinic77",
+            "duration": "00:01:34.162"
         },
         {
             "ranking": 8,
-            "nickname": "Vinic77",
-            "duration": "00:01:19.099"
+            "nickname": "M1",
+            "duration": "00:01:34.229"
         },
         {
             "ranking": 9,
-            "nickname": "King",
-            "duration": "00:01:20.869"
+            "nickname": "Kally07",
+            "duration": "00:01:34.644"
         },
         {
             "ranking": 10,
-            "nickname": "Mikado",
-            "duration": "00:01:21.935"
+            "nickname": "Maik",
+            "duration": "00:01:36.020"
         },
         {
             "ranking": 11,
-            "nickname": "SaintPerv",
-            "duration": "00:01:22.524"
+            "nickname": "M2",
+            "duration": "00:01:36.105"
         },
         {
             "ranking": 12,
-            "nickname": "F1",
-            "duration": "00:01:25.673"
+            "nickname": "NB",
+            "duration": "00:01:37.814"
         },
         {
             "ranking": 13,
-            "nickname": "0149",
-            "duration": "00:01:25.767"
+            "nickname": "KZ",
+            "duration": "00:01:38.378"
         },
         {
             "ranking": 14,
-            "nickname": "IVY",
-            "duration": "00:01:27.875"
+            "nickname": "TSUC",
+            "duration": "00:01:38.502"
         },
         {
             "ranking": 15,
-            "nickname": "applekts",
-            "duration": "00:01:28.804"
+            "nickname": "pyro",
+            "duration": "00:01:38.681"
         },
         {
             "ranking": 16,
-            "nickname": "Asta",
-            "duration": "00:01:33.079"
+            "nickname": "TOKWAx27",
+            "duration": "00:01:38.807"
         },
         {
             "ranking": 17,
-            "nickname": "0149",
-            "duration": "00:01:34.361"
+            "nickname": "idee",
+            "duration": "00:01:39.593"
         },
         {
             "ranking": 18,
-            "nickname": "Ivvy",
-            "duration": "00:01:34.720"
+            "nickname": "Mikado",
+            "duration": "00:01:39.855"
         },
         {
             "ranking": 19,
-            "nickname": "Sakura25",
-            "duration": "00:01:34.919"
+            "nickname": "Cson",
+            "duration": "00:01:40.158"
         },
         {
             "ranking": 20,
-            "nickname": "pyro21",
-            "duration": "00:01:35.180"
+            "nickname": "Wayne13",
+            "duration": "00:01:40.868"
         }
     ]');
         return $result;

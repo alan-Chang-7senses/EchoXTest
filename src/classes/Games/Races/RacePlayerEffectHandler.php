@@ -4,6 +4,7 @@ namespace Games\Races;
 
 use Consts\Globals;
 use Consts\Sessions;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\SkillValue;
 use Games\Players\PlayerHandler;
 use Games\Pools\RacePlayerEffectPool;
@@ -11,8 +12,10 @@ use stdClass;
 use Games\Consts\RaceValue;
 use Games\Consts\SceneValue;
 use Games\Players\PlayerUtility;
+use Games\Pools\RacePlayerPool;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
+use Helpers\LogHelper;
 
 /**
  * Description of RacePlayerEffectHandler
@@ -85,10 +88,25 @@ class RacePlayerEffectHandler {
     }
     
     private static function AddHP(RacePlayerHandler $racePlayerHandler, float $value) {
-        
-        $hp = $racePlayerHandler->GetInfo()->hp + $value * RaceValue::DivisorHP;
-        if($hp <= RaceValue::ValueMinHP) $hp = RaceValue::ValueMinHP;
-        $racePlayerHandler->SaveData(['hp' => $hp]);
+
+        $racePlayerID = $racePlayerHandler->GetInfo()->id;
+        $raceHandler = new RaceHandler($racePlayerHandler->GetInfo()->race);
+        $raceHandler->SetPlayer(new PlayerHandler($racePlayerHandler->GetInfo()->player));
+        $raceHandler->SetSecne(new SceneHandler($raceHandler->GetInfo()->scene));
+        $h = $raceHandler->ValueH();
+        RaceHP::Instance()->UpdateHP($racePlayerID,$h);
+        $accessor = AccessorFactory::Main();
+        $value = intval($value * RaceValue::DivisorHP);
+        $accessor->Transaction(function() use ($accessor,$racePlayerID,$value)
+        {
+            $row = $accessor->FromTable('RacePlayer')
+                ->SelectExpr('HP')
+                ->WhereEqual('RacePlayerID', $racePlayerID)->ForUpdate()->Fetch();
+            $finalHP =  max(0,$row->HP + $value);
+            $accessor->ClearCondition()->FromTable('RacePlayer')->WhereEqual('RacePlayerID',$racePlayerID)
+                     ->Modify(['HP' => $finalHP]);
+        });
+        RacePlayerPool::Instance()->Delete($racePlayerID);
     }
 
     private static function AddEnergy(RacePlayerHandler $racePlayerHandler, int $type, float $value) : void{
