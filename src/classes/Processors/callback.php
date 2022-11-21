@@ -3,7 +3,6 @@
 namespace Processors;
 
 use Accessors\CurlAccessor;
-use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
@@ -11,6 +10,7 @@ use Consts\HTTPCode;
 use Consts\ResposeType;
 use Consts\Sessions;
 use Exception;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserUtility;
@@ -68,7 +68,7 @@ class callback extends BaseProcessor{
         }
         
         $userProfile = json_decode($curlReturn);
-        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor = AccessorFactory::Main();
         
         $row = $accessor->FromTable('Sessions')->WhereEqual('SessionID', $state)->Fetch();
         session_decode($row->SessionData ?? '');
@@ -132,6 +132,13 @@ class callback extends BaseProcessor{
         
         $accessor->ClearCondition();
         $accessor->FromTable('Sessions')->WhereIn('SessionID', $sessionIDs)->Delete();
+        
+        $accessor = AccessorFactory::Log();
+        $accessor->FromTable('UserLogin')->Add([
+            'UserID' => $userID,
+            'UserIP' => $userIP,
+            'LogTime' => $GLOBALS[Globals::TIME_BEGIN]
+        ]);
         
         $result = new ResultData(ErrorCode::Success);
         $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';
