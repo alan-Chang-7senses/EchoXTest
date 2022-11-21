@@ -32,6 +32,10 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
+-- 正在傾印表格  koa_main.StoreInfos 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreInfos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreInfos` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
@@ -42,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
+  `Message` varchar(250) NOT NULL DEFAULT '' COMMENT '狀態資訊',
   `Receipt` varchar(256) DEFAULT NULL COMMENT '收據orAuthCode',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
@@ -50,6 +55,10 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   KEY `Status` (`Status`),
   KEY `Plat` (`Plat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
+
+-- 正在傾印表格  koa_main.StorePurchaseOrders 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StorePurchaseOrders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StorePurchaseOrders` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.StoreTrades 結構
 CREATE TABLE IF NOT EXISTS `StoreTrades` (
@@ -65,6 +74,10 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
+-- 正在傾印表格  koa_main.StoreTrades 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreTrades` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreTrades` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.StoreUserInfos 結構
 CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
   `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
@@ -74,6 +87,10 @@ CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
   `AutoRefreshTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店自動刷新時間',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
+
+-- 正在傾印表格  koa_main.StoreUserInfos 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `StoreUserInfos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `StoreUserInfos` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

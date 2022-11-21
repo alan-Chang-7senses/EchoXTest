@@ -35,6 +35,9 @@ CREATE TABLE IF NOT EXISTS `MyCardPayment` (
   KEY `MyCardTradeNo` (`MyCardTradeNo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值資訊';
 
+-- 正在傾印表格  koa_log.MyCardPayment 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `MyCardPayment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `MyCardPayment` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
