@@ -91,6 +91,7 @@
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
+		- [戰報資料](MainMenu/BattleRecord.md)。
 	- 信箱:
 		- [查詢信件](Mails/GetMails.md)。
 		- [信件已讀/領獎](Mails/ReceiveMailsRewards.md)。
