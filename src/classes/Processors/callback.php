@@ -15,6 +15,7 @@ use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -79,13 +80,14 @@ class callback extends BaseProcessor{
         $accessor->ClearCondition();
         
         $uniwebviewMessage = 'LoginFinish';
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         if($row === false){
             
             $res = $accessor->FromTable('Users')->Add([
                 'Username' => $userProfile->data->id,
                 'Nickname' => $userProfile->data->id,
                 'Email' => $userProfile->data->email,
-                'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                'CreateTime' => $currentTime,
                 'CreatedIP' => $userIP
             ]);
             
@@ -133,11 +135,28 @@ class callback extends BaseProcessor{
         $accessor->ClearCondition();
         $accessor->FromTable('Sessions')->WhereIn('SessionID', $sessionIDs)->Delete();
         
+        $accessor->ClearCondition();
+        $row = $accessor->FromTable('UserRetainPoints')->WhereEqual('UserID', $userID)->Fetch();
+        if($row === false) $accessor->Add(['UserID' => $userID, 'UpdateTime' => $currentTime]);
+        else{
+            
+            $timezone = getenv(EnvVar::TimezoneDefault);
+            $yesterday = DataGenerator::TimestampByTimezone('yesterday', $timezone);
+            $today = DataGenerator::TimestampByTimezone('today', $timezone);
+            if($row->UpdateTime >= $yesterday && $row->UpdateTime < $today){
+                
+                $accessor->Modify([
+                    'Points' => $row->Points + 1,
+                    'UpdateTime' => $currentTime,
+                ]);
+            }
+        }
+        
         $accessor = AccessorFactory::Log();
         $accessor->FromTable('UserLogin')->Add([
             'UserID' => $userID,
             'UserIP' => $userIP,
-            'LogTime' => $GLOBALS[Globals::TIME_BEGIN]
+            'LogTime' => $currentTime
         ]);
         
         $result = new ResultData(ErrorCode::Success);
