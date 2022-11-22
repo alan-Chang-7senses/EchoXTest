@@ -148,28 +148,22 @@ class RaceUtility {
      * 結束競賽時。計算並紀錄每個角色積分。
      * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos,int $lobby) : void
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $seasonID, int $lobby) : void
     {
-        $config = ConfigGenerator::Instance();
-        $competitionID = $config->{RaceValue::RatingLobbiesConfig[$lobby]};
-        $competitionHandler = new CompetitionsInfoHandler($competitionID);
-        $competitionInfo = $competitionHandler->GetInfo();
-        $cb2OpeningTime = new DateTime($config->CB2OpeningTime);
-        $weekSecond = 604800;
-        $seasonExpireTime = $cb2OpeningTime->getTimestamp() + $weekSecond * $competitionInfo->weeksPerSeason;
-        if($GLOBALS[Globals::TIME_BEGIN] > $seasonExpireTime)return;
+        $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
+
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');
         $allRatings = [];
 
         $whereValues = $accessor->valuesForWhereIn($playerIDs);
-        $whereValues->bind['Lobby'] = $lobby;
-        //有可能是false，或有缺少資料。必須給預設值。
+        $whereValues->bind['SeasonID'] = $seasonID;
+        // //有可能是false，或有缺少資料。必須給預設值。
         $rows = $accessor->ClearCondition()
-                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime` FROM `PlayerRating`
+                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime` FROM `LeaderboardRating`
                                         WHERE `PlayerID` IN '.$whereValues->values.'
-                                        AND Lobby = :Lobby',$whereValues->bind);
+                                        AND SeasonID = :SeasonID',$whereValues->bind);
         
         foreach($rows as $row)
         {
@@ -180,9 +174,6 @@ class RaceUtility {
             if(!isset($allRatings[$playerID]))
             $allRatings[$playerID] = $competitionHandler->GetResetRating(null);
         }
-
-        // $accessor->ClearCondition()->prepareName('RecordPlayerRating');
-
         $binds = [];
         foreach($racePlayerInfos as $racePlayerInfo)
         {
@@ -195,12 +186,12 @@ class RaceUtility {
             $binds[] = 
             [
                 'PlayerID' => $playerID,
-                'Lobby' => $lobby,
+                'SeasonID' => $seasonID,
                 'Rating' => $rating,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];
         }
 
-        $accessor->ClearCondition()->FromTable('PlayerRating')->AddAll($binds,true);
+        $accessor->ClearCondition()->FromTable('LeaderboardRating')->AddAll($binds,true);
     }
 }

@@ -54,7 +54,6 @@ class CompetitionsInfoHandler
         $scoreAVG = $scoreSum / $scoreCount;
 
         return $winOdds * $this->info->score1 + $notWindOdds * $scoreAVG;
-        // return ($rt);
     }
 
     /**取得賽後評分 */
