@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
 
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
-  `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
+  `OrderID` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
   `ProductID` varchar(50) NOT NULL DEFAULT '0' COMMENT '商品Key',

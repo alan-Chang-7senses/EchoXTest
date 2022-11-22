@@ -70,7 +70,7 @@ class MyCardUtility {
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             return $queryData;
         } else {
-            throw new StoreException(StoreException::Error, ['[cause]' => 'L61']);
+            throw new StoreException(StoreException::Error, ['[cause]' => 'L61: ' . $curlReturn]);
         }
     }
 

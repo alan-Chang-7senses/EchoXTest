@@ -46,7 +46,7 @@ class Refresh extends BaseRefresh {
         if (($params->ReturnCode != StoreValue::MyCardReturnSuccess) ||
                 $params->PayResult != StoreValue::MyCardPaySuccess) {
 
-            throw new StoreException(StoreException::PurchaseFailure);
+            throw new StoreException(StoreException::PurchaseFailure, ['[cause]' => json_encode($params)]);
         }
 
         $myhash = MyCardUtility::Hash($params);

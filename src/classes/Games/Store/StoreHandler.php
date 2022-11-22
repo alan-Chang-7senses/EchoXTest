@@ -272,7 +272,9 @@ class StoreHandler {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
+        $orderid = hrtime(true);
         $accessor->FromTable('StorePurchaseOrders')->Add([
+            "OrderID" => $orderid, 
             "UserID" => $this->userID,
             "TradeID" => $tradeID,
             "ProductID" => $storePurchaseHolder->productID,
@@ -284,7 +286,7 @@ class StoreHandler {
             "CreateTime" => $nowtime,
             "UpdateTime" => $nowtime
         ]);
-        return (int) $accessor->LastInsertID();
+        return $orderid;
     }
 
     public function UpdatePurchaseOrderStatus(int $orderID, int $status, string $message) {
