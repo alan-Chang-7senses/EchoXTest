@@ -144,13 +144,13 @@ class RaceHandler {
         $result = match ($racePlayer->trackType){
             SceneValue::Upslope => $climateLoses + 
                     $slope * $valueS / $player->will * 
-                    ( 98 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
+                    ( 60 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             SceneValue::Downslope => $climateLoses + 
                     $slope * $valueS / $player->intelligent * 
-                    ( 98 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
+                    ( 60 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400)),
             default => $climateLoses + 
                     $slope * 2 * $valueS / ($player->intelligent + $player->will) * 
-                    ( 98 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400))
+                    ( 60 / ($envValue + $climateValue + $sunValue + $terrainValue + $windValue - 400))
         };
         
         $phythmValueH = $this->RhythmValueH();
