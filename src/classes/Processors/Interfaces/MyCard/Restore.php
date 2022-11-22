@@ -12,6 +12,8 @@ use Games\Store\MyCardUtility;
 use Games\Store\StoreHandler;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
+use Games\Users\UserUtility;
+use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -68,6 +70,9 @@ class Restore extends BaseProcessor {
             $userBagHandler = new UserBagHandler($userID);
             $additem = ItemUtility::GetBagItem($storePurchaseOrders->ItemID, $storePurchaseOrders->Amount);
             $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+            
+            //加入通知信件
+            UserUtility::AddMailItemsWithReceive($userID, [$additem], ConfigGenerator::Instance()->MyCardRestoreMailID, ConfigGenerator::Instance()->MyCardRestoreMailDay);
             $finishNum++;
         }
 
