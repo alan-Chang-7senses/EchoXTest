@@ -39,6 +39,7 @@
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。
+		- [新手引導賽場資訊](PVP/TutorialInfo.md)。
 		- [獲取入場卷資訊](PVP/GetTicketsInfo.md)。
 		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
@@ -56,6 +57,7 @@
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。
+		- [新手引導配對機器人角色](Races/TutorialBotPlayer.md)。
 		- [機器人角色](Races/BotPlayer.md) - ***不再可用***。
 		- [釋放機器人角色](Races/BotPlayerRelease.md) - ***不再可用***。
 		- [開局](Races/Ready.md)。
