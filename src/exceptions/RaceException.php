@@ -30,5 +30,6 @@ $lang[RaceException::UserNotInRoom] = 'User is not in the room.';
 $lang[RaceException::UserCheat] = 'User is cheating.';
 $lang[RaceException::EnergyRunOutBonusNotExist] = 'Energy Run Out bonus does not exist.';
 $lang[RaceException::UsePlayerError] = 'using player error';
-
+$lang[RaceException::NotAvailableRace] = 'The race is not available at the moment.';
+$lang[RaceException::NoLimitTimeDataConfig] = 'No Limit Time Data Config. (start time, end time)'
 return $lang;

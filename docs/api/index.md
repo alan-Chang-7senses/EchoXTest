@@ -45,6 +45,7 @@
 		- [創建房間](PVP/CreateRoom.md)。
 		- [加入房間](PVP/JoinRoom.md)。		
 		- [離開房間](PVP/LeaveRoom.md)。
+		- [PT賽每日限時開放資訊](PVP/PVPLimitTime.md)
 	- PVE：
 		- [章節列表頁面](PVE/ChapterListPage.md)。
 		- [關卡列表頁面](PVE/LevelListPage.md)。

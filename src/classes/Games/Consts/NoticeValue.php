@@ -11,6 +11,7 @@ class NoticeValue {
     
     const StatusDisabled = 0;
     const StatusEnabled = 1;
+    const StatusRaceLimitTime = 2;
     
     const LangDefault = 0;
     const LangGerman = 1;
