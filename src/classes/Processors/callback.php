@@ -3,17 +3,19 @@
 namespace Processors;
 
 use Accessors\CurlAccessor;
-use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\HTTPCode;
 use Consts\ResposeType;
+use Consts\Sessions;
 use Exception;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
 use Games\Mails\MailsHandler;
 use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
+use Generators\DataGenerator;
 use Helpers\InputHelper;
 use Helpers\LogHelper;
 use Holders\ResultData;
@@ -67,18 +69,26 @@ class callback extends BaseProcessor{
         }
         
         $userProfile = json_decode($curlReturn);
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $accessor->FromTable('Users')->WhereEqual('Username', $userProfile->data->id)->Fetch();
+        $accessor = AccessorFactory::Main();
+        
+        $row = $accessor->FromTable('Sessions')->WhereEqual('SessionID', $state)->Fetch();
+        session_decode($row->SessionData ?? '');
+        $userIP = $_SESSION[Sessions::UserIP] ?? '';
+        
+        $row = $accessor->ClearCondition()->FromTable('Users')->WhereEqual('Username', $userProfile->data->id)->Fetch();
+        
         $accessor->ClearCondition();
         
         $uniwebviewMessage = 'LoginFinish';
+        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
         if($row === false){
             
             $res = $accessor->FromTable('Users')->Add([
                 'Username' => $userProfile->data->id,
                 'Nickname' => $userProfile->data->id,
                 'Email' => $userProfile->data->email,
-                'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
+                'CreateTime' => $currentTime,
+                'CreatedIP' => $userIP
             ]);
             
             $userID = $accessor->LastInsertID();
@@ -103,12 +113,16 @@ class callback extends BaseProcessor{
             $userID = $row->UserID;
         }
         
+        $_SESSION[Sessions::UserID] = $userID;
+        $_SESSION[Sessions::Signed] = true;
+        
         $accessor->FromTable('Sessions')->WhereEqual('SessionID', $state)->Modify([
-            'SessionData' => 'Signed|b:1;UserID|i:'.$userID.';',
+            'SessionData' => session_encode(),
             'UserID' => $userID
         ]);
         
         session_gc();
+        session_destroy();
         
         $accessor->ClearCondition();
         $rows = $accessor->FromTable('Sessions')->WhereEqual('UserID', $userID)->FetchAll();
@@ -120,6 +134,30 @@ class callback extends BaseProcessor{
         
         $accessor->ClearCondition();
         $accessor->FromTable('Sessions')->WhereIn('SessionID', $sessionIDs)->Delete();
+        
+        $accessor->ClearCondition();
+        $row = $accessor->FromTable('UserRetainPoints')->WhereEqual('UserID', $userID)->Fetch();
+        if($row === false) $accessor->Add(['UserID' => $userID, 'UpdateTime' => $currentTime]);
+        else{
+            
+            $timezone = getenv(EnvVar::TimezoneDefault);
+            $yesterday = DataGenerator::TimestampByTimezone('yesterday', $timezone);
+            $today = DataGenerator::TimestampByTimezone('today', $timezone);
+            if($row->UpdateTime >= $yesterday && $row->UpdateTime < $today){
+                
+                $accessor->Modify([
+                    'Points' => $row->Points + 1,
+                    'UpdateTime' => $currentTime,
+                ]);
+            }
+        }
+        
+        $accessor = AccessorFactory::Log();
+        $accessor->FromTable('UserLogin')->Add([
+            'UserID' => $userID,
+            'UserIP' => $userIP,
+            'LogTime' => $currentTime
+        ]);
         
         $result = new ResultData(ErrorCode::Success);
         $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';

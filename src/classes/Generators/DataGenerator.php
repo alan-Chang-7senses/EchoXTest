@@ -26,6 +26,10 @@ class DataGenerator {
         return $string;
     }
     
+    public static function TimestampByTimezone(string $datetime = 'now', int $timezone = 0) : int{
+        return (new DateTime($datetime, DataGenerator::DateTimeZone($timezone)))->getTimestamp();
+    }
+
     public static function TodaySecondByTimezone(int $timezone) : int {
         return time() - (new DateTime('today midnight', self::DateTimeZone($timezone)))->getTimestamp();
     }
