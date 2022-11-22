@@ -17,6 +17,9 @@ class StoreDataHolder extends stdClass {
     /** @var int 是否開放 */
     public int $isOpen;
 
+    /** @var sttring 商店名稱(多國語言編號) */
+    public string $multiName;
+
     /** @var int 商店類型 */
     public int $storeType;
 

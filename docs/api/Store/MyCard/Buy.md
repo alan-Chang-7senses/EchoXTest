@@ -1,13 +1,13 @@
-# 商店 - 商品購買
+# 商店 - 儲值購買
 
 ## 介紹
 
-- 遊戲中一般商品的購買。
+- 遊戲中儲值狀態，先建立一筆訂單資訊，以利之後和QuickSDK的溝通。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
 
-http(s)://`域名`/Store/BuyGoods/
+http(s)://`域名`/Store/MyCard/Buy/
 
 ## Method
 
@@ -21,8 +21,9 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| tradeID | int |  交易序號 |
-| count | int |  購買數量 |
+| tradeID | int | 交易序號 |
+| productName | string | 產品名稱 |
+
 <br>
 
 ## Response
@@ -34,8 +35,9 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| currencies | array | 按[貨幣](GetInfos.md#Currency)順序 |
-| remainInventory | int | 剩餘庫存數量 |
+| orderID | int | 訂單序號 |
+| AuthCode | string | MyCard 認證用 |
+| TransactionUrl | string | 交易網址,開網頁用 |
 <br>
 
 ### Example
@@ -45,13 +47,7 @@ Content Type: `application/json`
 			"code": 0,
 			"message": ""
 		},
-		"currencies": [
-			699,
-			1005,
-			999,
-			0,
-			0,
-			1001
-		],
-		"remainInventory": 1
+		"orderID": 19,
+		"AuthCode": "TestAuthcode"
+		"TransactionUrl": "https://test.mycard520.com.tw/MyCardPay/?AuthCode="
 	}

@@ -14,13 +14,13 @@ class MailsAccessor extends BaseAccessor
             ->FetchAll();
     }
 
-    public function AddMail(int|string $userID, int $mailID, int $days): int
+    public function AddMail(int|string $userID, int $mailID, int $days, int $receiveStatus = 0): int
     {
         $this->MainAccessor()->FromTable('UserMails')->Add([
             'UserID' => $userID,
             'MailsID' => $mailID,
             'OpenStatus' => 0,
-            'ReceiveStatus' => 0,
+            'ReceiveStatus' => $receiveStatus,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'FinishTime' => $GLOBALS[Globals::TIME_BEGIN] + 86400 * $days,

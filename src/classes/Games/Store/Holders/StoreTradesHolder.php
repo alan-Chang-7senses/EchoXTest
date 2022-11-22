@@ -17,6 +17,9 @@ class StoreTradesHolder extends stdClass {
     /** @var int 使用者編號 */
     public int $userID;
 
+    /** @var int 商店編號 */
+    public int $storeID;
+
     /** @var int 狀態 */
     public int $status;
 

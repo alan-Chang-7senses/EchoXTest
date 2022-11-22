@@ -19,53 +19,60 @@ use Processors\BaseProcessor;
 
 /*
  * Description of Refresh
+ * 刷新商店物品
  */
 
 class Refresh extends BaseProcessor {
 
     public function Process(): ResultData {
 
-
         $storeInfoID = InputHelper::post('storeInfoID');
         $userID = $_SESSION[Sessions::UserID];
-
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('StoreInfoID', $storeInfoID)->Fetch();
-        $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
-
-        if ($userID != $storeInfosHolder->userID) {
-            throw new StoreException(StoreException::Error, ['[des]' => "users"]);
+        $storeHandler = new StoreHandler($userID);
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
+        if (($autoRefreshTime == null) || ($autoRefreshTime->needRefresh)) {
+            throw new StoreException(StoreException::Refreshed);
         }
 
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $rowStoreInfo = $accessor->executeBindFetch("SELECT *,ISOCurrency FROM StoreInfos inner JOIN StoreUserInfos USING(UserID) WHERE UserID = :UserID and StoreInfoID = :StoreInfoID", [
+            'UserID' => $userID,
+            'StoreInfoID' => $storeInfoID,
+        ]);
+
+        if ($rowStoreInfo == false) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
         if ($storeInfosHolder->refreshRemainAmounts == StoreValue::RefreshRemainEmpty) {
             throw new StoreException(StoreException::NoRefreshCount);
         }
 
-        $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($storeInfosHolder->updateTime);
-        if ($autoRefreshTime->needRefresh) {
-            throw new StoreException(StoreException::Refreshed);
-        }
-
         $storeDataHolder = StoreDataPool::Instance()->{$storeInfosHolder->storeID};
-        $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
-        if ($maxFixAmount == StoreValue::UINoItems) {
-            throw new StoreException(StoreException::Error, ['[des]' => "table"]);
+        if ($storeDataHolder == false) {//商店關閉
+            throw new StoreException(StoreException::ProductNotExist);
         }
 
+        $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
+        if ($maxFixAmount == StoreValue::UIUnset) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "table"]);
+        }
+
+        $userBagHandler = new UserBagHandler($userID);
         if ($storeDataHolder->refreshCostCurrency != StoreValue::CurrencyFree) {
-            $itemID = StoreUtility::GetCurrencyItemID($storeDataHolder->refreshCostCurrency);
-            $userBagHandler = new UserBagHandler($userID);
+            $itemID = $storeDataHolder->refreshCostCurrency;
             if ($userBagHandler->DecItemByItemID($itemID, $storeDataHolder->refreshCost, ItemValue::CauseStore) == false) {
                 throw new StoreException(StoreException::NotEnoughCurrency); //錢不夠
             }
         }
 
         $storeInfosHolder->refreshRemainAmounts--;
-        $storeHandler = new StoreHandler($userID);
-        if ($storeDataHolder->storeType == StoreValue::Purchase) {
-            $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
-        } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-            $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+
+        if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
+            $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeDataHolder->storeType, $storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+        } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
+            $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
         }
         $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
 
@@ -73,13 +80,8 @@ class Refresh extends BaseProcessor {
         $result = new ResultData(ErrorCode::Success);
         $result->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
-        $result->randomPurchase = [];
-        $result->randomCounters = [];
-        if ($storeDataHolder->storeType == StoreValue::Purchase) {
-            $result->randomPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->randomTradIDs);
-        } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-            $result->randomCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->randomTradIDs);
-        }
+        $result->storetype = $storeDataHolder->storeType;
+        $result->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $rowStoreInfo->ISOCurrency, $storeInfosHolder->randomTradIDs);
         return $result;
     }
 

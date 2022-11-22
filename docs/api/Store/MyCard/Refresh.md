@@ -2,13 +2,13 @@
 
 ## 介紹
 
-- 儲值完成後，需等待QuickSDK完成訂單購買，並回調後端完成加入物品資訊。
-- 由此API得知訂單購買狀態，若[錯誤碼](../response.md#error)為 8009 則定期輪詢，直到完成購買。
+- 儲值完成後，需等待MyCard完成訂單購買，後端查詢是否完成交易。
+- 由此API得知訂單購買狀態，若[錯誤碼](../../codes/errorCode.md)為 8009 則定期輪詢，直到完成購買。
 - 需要完成登入驗證才可正常使用此API。
 
 ## URL
 
-http(s)://`域名`/Store/PurchaseRefresh/
+http(s)://`域名`/Store/MyCard/Refresh/
 
 ## Method
 
@@ -34,6 +34,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | currencies | array | 按[貨幣](GetInfos.md#Currency)順序 |
+| tradID | int | 商品流水號 |
 | remainInventory | int | 剩餘庫存數量 |
 <br>
 
@@ -52,5 +53,6 @@ Content Type: `application/json`
 			0,
 			1000
 		],
+    	"tradeID": 34,
 		"remainInventory": -1
 	}
