@@ -24,6 +24,7 @@
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
 		- [更新電力](User/UpdatePower.md)。
 		- [更新NFT資料](User/RefreshNFT.md)。
+		- [更新新手引導進度](User/UpdateTutorialStep.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
@@ -38,6 +39,7 @@
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。
+		- [新手引導賽場資訊](PVP/TutorialInfo.md)。
 		- [獲取入場卷資訊](PVP/GetTicketsInfo.md)。
 		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
@@ -56,6 +58,7 @@
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。
+		- [新手引導配對機器人角色](Races/TutorialBotPlayer.md)。
 		- [機器人角色](Races/BotPlayer.md) - ***不再可用***。
 		- [釋放機器人角色](Races/BotPlayerRelease.md) - ***不再可用***。
 		- [開局](Races/Ready.md)。
@@ -121,3 +124,4 @@
 	- [競賽](codes/race.md)。
 	- [物品](codes/item.md)。
 	- [其它](codes/other.md)。
+	- [新手引導進度](codes/tutorial.md)。
