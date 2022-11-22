@@ -5,6 +5,7 @@ namespace Processors\Player;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Accessors\UpgradeLogAccessor;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
 use Games\Consts\PlayerValue;
 use Games\Consts\UpgradeValue;
@@ -12,6 +13,7 @@ use Games\Exceptions\ItemException;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Pools\PlayerPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -69,7 +71,10 @@ class RankUp extends BaseProcessor{
             throw new ItemException(ItemException::ItemNotEnough,['item' => $itemID]);
         }
         
-        $playerhandler->SaveLevel(['rank' => $playerInfo->rank + UpgradeValue::RankUnit]);
+        // $playerhandler->SaveLevel(['rank' => $playerInfo->rank + UpgradeValue::RankUnit]);
+        AccessorFactory::Main()->FromTable('PlayerLevel')->WhereEqual('PlayerID',$playerID)
+                              ->Modify(['Rank' => $playerInfo->rank + UpgradeValue::RankUnit]);
+        PlayerPool::Instance()->Delete($playerID);
         $userHandler->SaveData(['coin' => $userInfo->coin - $charge]);
         
         // 扣道具
