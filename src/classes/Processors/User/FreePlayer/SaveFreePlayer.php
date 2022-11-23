@@ -35,20 +35,7 @@ class SaveFreePlayer extends BaseProcessor {
         $userInfo = $userHandler->GetInfo();
         
 
-        // 玩家取得 3 隻免費 NFT
-        $pdo = new PDOAccessor(EnvVar::DBMain);
-        $row = $pdo->FromTable("UserFreePeta")
-            ->WhereEqual("UserID", $userInfo->id)
-            ->Fetch();
-
-        $freePetas = json_decode($row->FreePetaInfo);
-
-        foreach($freePetas as $peta) {
-            FreePetaUtility::AddNewFreePlayer($peta, $_SESSION[Sessions::UserID]);
-        }
-
-
-        // 玩家改名
+        // 玩家改名 + 寫入資料庫
         if(!NamingUtility::IsOnlyEnglishAndNumber($nickname)) {
             throw new UserException(UserException::UsernameNotEnglishOrNumber);        
         }
@@ -60,19 +47,45 @@ class SaveFreePlayer extends BaseProcessor {
         if(NamingUtility::HasDirtyWords($nickname,DirtyWordValue::BandWordName)) {
             throw new UserException(UserException::UsernameDirty);
         }
-        
-        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + FreePlayerValue::FreePlayerDefaultID;
 
         try {
-            (new UserAccessor())->ModifyUserValuesByID($userInfo->id, ["Nickname" => $nickname, "Player" => $playerID]);
+            (new UserAccessor())->ModifyUserValuesByID($userInfo->id, ["Nickname" => $nickname]);
         }
         catch(PDOException $ex) {
             $info = $ex->errorInfo;   
             if(!empty($info) && $info[0] == ErrorCode::PDODuplicate)
-            throw new UserException(UserException::UsernameAlreadyExist,['username' => $nickname]);
-            else throw $ex;
+                throw new UserException(UserException::UsernameAlreadyExist, ['username' => $nickname]);
+            else
+                throw $ex;
         }
-        
+
+
+        // 玩家取得 3 隻免費 Peta + 寫入資料庫
+        $pdo = new PDOAccessor(EnvVar::DBMain);
+        $row = $pdo->FromTable("UserFreePeta")
+            ->WhereEqual("UserID", $userInfo->id)
+            ->Fetch();
+
+        $freePetas = json_decode($row->FreePetaInfo);
+
+        foreach($freePetas as $peta) {
+            FreePetaUtility::AddNewFreePlayer($peta, $_SESSION[Sessions::UserID]);
+        }
+
+        // 預設選角為擁有的第一隻 Peta
+        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + FreePlayerValue::FreePlayerDefaultID;
+
+        try {
+            (new UserAccessor())->ModifyUserValuesByID($userInfo->id, ["Player" => $playerID]);
+        }
+        catch(PDOException $ex) {
+            $info = $ex->errorInfo;   
+            if(!empty($info) && $info[0] == ErrorCode::PDODuplicate)
+                throw new UserException(UserException::UserFreePlayerSaveError, ['userID' => $_SESSION[Sessions::UserID]]);
+            else
+                throw $ex;
+        }
+
         $result = new ResultData(ErrorCode::Success);
 
         return $result;
