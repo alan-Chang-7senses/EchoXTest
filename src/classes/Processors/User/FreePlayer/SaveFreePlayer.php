@@ -61,7 +61,7 @@ class SaveFreePlayer extends BaseProcessor {
             throw new UserException(UserException::UsernameDirty);
         }
         
-        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + FreePlayerValue::FreePlayerTypeCount; // 暫定。需常數化 
+        $playerID = $userInfo->id * PlayerValue::freePetaPlayerIDMultiplier + FreePlayerValue::FreePlayerDefaultID;
 
         try {
             (new UserAccessor())->ModifyUserValuesByID($userInfo->id, ["Nickname" => $nickname, "Player" => $playerID]);
