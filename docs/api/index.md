@@ -21,9 +21,11 @@
 		- [取得選擇物品資訊](User/GetItemSelectInfo.md)。
 		- [使用選擇物品](User/UseItemSelect.md)。
 		- [隨機三隻免費Peta](User/Get3FreePlayer.md)。
+		- [玩家創角改名送三隻免費Peta](User/SaveFreePlayer.md)。
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
 		- [更新電力](User/UpdatePower.md)。
 		- [更新NFT資料](User/RefreshNFT.md)。
+		- [更新新手引導進度](User/UpdateTutorialStep.md)。
 	- 角色：
 		- [Avatar 部位](Player/AvatarParts.md)。
 		- [技能](Player/Skills.md)。
@@ -38,6 +40,7 @@
 	- PVP：
 		- [大廳資訊](PVP/LobbyInfo.md)。
 		- [PVP賽場資訊](PVP/PVPInfo.md)。
+		- [新手引導賽場資訊](PVP/TutorialInfo.md)。
 		- [獲取入場卷資訊](PVP/GetTicketsInfo.md)。
 		- [領取入場卷](PVP/ReceiveTicket.md)。
 		- [PVP配對](PVP/PVPMatch.md)。
@@ -45,6 +48,7 @@
 		- [創建房間](PVP/CreateRoom.md)。
 		- [加入房間](PVP/JoinRoom.md)。		
 		- [離開房間](PVP/LeaveRoom.md)。
+		- [PT賽每日限時開放資訊](PVP/PVPLimitTime.md)
 	- PVE：
 		- [章節列表頁面](PVE/ChapterListPage.md)。
 		- [關卡列表頁面](PVE/LevelListPage.md)。
@@ -55,6 +59,7 @@
 	- 競賽：
 		- [練習賽房間](Races/StudyRoom.md)。
 		- [隨機機器人角色](Races/RandomBotPlayer.md)。
+		- [新手引導配對機器人角色](Races/TutorialBotPlayer.md)。
 		- [機器人角色](Races/BotPlayer.md) - ***不再可用***。
 		- [釋放機器人角色](Races/BotPlayerRelease.md) - ***不再可用***。
 		- [開局](Races/Ready.md)。
@@ -91,6 +96,7 @@
 		- [主要資料](MainMenu/MainData.md)。
 		- [角色選擇介面資料](MainMenu/CharacterSelectData.md)。
 		- [角色資料](MainMenu/CharacterData.md)。
+		- [戰報資料](MainMenu/BattleRecord.md)。
 	- 信箱:
 		- [查詢信件](Mails/GetMails.md)。
 		- [信件已讀/領獎](Mails/ReceiveMailsRewards.md)。
@@ -98,8 +104,11 @@
 	- 排行榜：
 		- CB 1.5
 			- [競賽最快速排行榜](Leaderboard/CB15/RaceFastest.md)。
-			- [最有錢使用者排行榜](leaderboard/CB15/UserRichest.md)。
-		- [領先率](leaderboard/LeadRate.md)。
+			- [最有錢使用者排行榜](Leaderboard/CB15/UserRichest.md)。
+		- [領先率](Leaderboard/LeadRate.md)。
+	- 串接：
+		- Metasens：
+			- [用戶是否存在](Interfaces/Metasens/UserExist.md)。
 	- 菁英測試：
 		- [登入](EliteTest/Login.md)。
 		- [使用者資料](EliteTest/UserInfo.md)。
@@ -116,3 +125,4 @@
 	- [競賽](codes/race.md)。
 	- [物品](codes/item.md)。
 	- [其它](codes/other.md)。
+	- [新手引導進度](codes/tutorial.md)。

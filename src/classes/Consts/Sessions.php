@@ -11,4 +11,5 @@ class Sessions {
     
     const Signed = 'Signed';
     const UserID = 'UserID';
+    const UserIP = 'UserIP';
 }

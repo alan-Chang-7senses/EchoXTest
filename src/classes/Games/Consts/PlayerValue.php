@@ -10,6 +10,7 @@ namespace Games\Consts;
 class PlayerValue {
     
     const BotIDLimit = 0;
+    const NewbieBotIDLimit = -10000;
     const LengthNFTID = 16;
     const NFTIDAddValue = 1010000000000000;
     

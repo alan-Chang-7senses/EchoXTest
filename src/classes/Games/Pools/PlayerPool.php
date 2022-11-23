@@ -2,6 +2,7 @@
 
 namespace Games\Pools;
 
+use Accessors\MemcacheAccessor;
 use Accessors\PoolAccessor;
 use Games\Accessors\PlayerAccessor;
 use Games\Consts\AbilityFactor;
@@ -40,6 +41,9 @@ class PlayerPool extends PoolAccessor {
     }
     
     protected string $keyPrefix = 'player_';
+
+    protected ?int $playerLevelSpecify = null;
+    protected ?int $skillLevelSpecify = null;
     
     public function FromDB(int|string $playerID) : stdClass|false{
         
@@ -53,7 +57,7 @@ class PlayerPool extends PoolAccessor {
         $holder->name = $player->Nickname ?? $holder->idName;
         $holder->ele = $player->Attribute;
         $holder->sync = $player->SyncRate / SyncRate::Divisor;
-        $holder->level = $player->Level;
+        $holder->level = $this->playerLevelSpecify ?? $player->Level;
         $holder->exp = $player->Exp;
         $holder->rank = $player->Rank;
         $holder->maxExp = PlayerEXP::GetNextLevelRequireEXP($holder->level,$holder->rank,$holder->exp);
@@ -119,7 +123,8 @@ class PlayerPool extends PoolAccessor {
         $holder->skills = [];
         $slot = [];
         foreach ($rows as $row) {
-            $holder->skills[] = new PlayerSkillHolder($row->SkillID, $row->Level, $row->Slot);
+            $level = $this->skillLevelSpecify ?? $row->Level;
+            $holder->skills[] = new PlayerSkillHolder($row->SkillID, $level, $row->Slot);
             $slot[$row->Slot] = $row->SkillID;
         }
         
@@ -144,37 +149,23 @@ class PlayerPool extends PoolAccessor {
         }
     }
 
-    
-    // protected function SaveData(stdClass $data, array $values) : stdClass{
-        
-    //     $bind = [];
-    //     foreach($values as $key => $value){
-    //         $bind[ucfirst($key)] = $value;
-    //         $data->$key = $value;
-    //     }        
-    //     (new PlayerAccessor())->ModifyPlayerByPlayerID($data->id, $bind);        
-    //     return $data;
-    // }
-
-    protected function SaveSync(stdClass $data, float|int $sync):stdClass
-    {
-        $bind = ['SyncRate' => $sync * SyncRate::Divisor];
-        $res = (new PlayerAccessor())->ModifySyncByPlayerID($data->id,$bind);
-        if($res !== false)
-        {
-            $data->sync = $sync;
-        }
-        return $data;
+    //TODO：刪除自身以外，指定等級之快取也一併刪除。
+    public function Delete(string $id) : bool{
+        $key = $this->keyPrefix.$id;
+        $res = MemcacheAccessor::Instance()->delete($key);
+        if($res) unset ($this->$id);
+        SpecifyPlayerPool::Instance()->Delete($id);
+        return $res;
     }
-    protected function SaveLevel(stdClass $data, array $values):stdClass
-    {
-        $bind = [];
-        foreach($values as $key => $value){
-            $bind[ucfirst($key)] = $value;
-            $data->$key = $value;
-        }        
-        (new PlayerAccessor())->ModifyLevelByPlayerID($data->id, $bind);        
-        return $data;
+    
+    public function DeleteAll(array $ids) : void{
+        $memcacheAccessor = MemcacheAccessor::Instance();
+        foreach($ids as $id){
+            $key = $this->keyPrefix.$id;
+            $res = $memcacheAccessor->delete($key);
+            if($res) unset ($this->$id);
+            SpecifyPlayerPool::Instance()->Delete($id);
+        }
     }
 
 }

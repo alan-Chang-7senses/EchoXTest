@@ -14,16 +14,9 @@ use stdClass;
  */
 class DataGenerator {
     
-    public static function TimestampByTimezone(string $datetime, int $timezone): int {
-        $dateTimezone = new DateTimeZone('GMT' . ($timezone >= 0 ? '+' . $timezone : $timezone));
-        $datetime = new DateTime($datetime, $dateTimezone);
-        return $datetime->getTimestamp();
-    }
-        
     public static function TimestringByTimezone(int $timestamp, int $timezone, string $formatString): string {
-        $dateTimezone = new DateTimeZone('GMT' . ($timezone >= 0 ? '+' . $timezone : $timezone));
         $date = new DateTime("@" . $timestamp);
-        $date->setTimezone($dateTimezone);
+        $date->setTimezone(self::DateTimeZone($timezone));
         return $date->format($formatString);
     }
     
@@ -39,6 +32,10 @@ class DataGenerator {
         return $string;
     }
     
+    public static function TimestampByTimezone(string $datetime = 'now', int $timezone = 0) : int{
+        return (new DateTime($datetime, self::DateTimeZone($timezone)))->getTimestamp();
+    }
+
     public static function TodaySecondByTimezone(int $timezone) : int {
         return time() - (new DateTime('today midnight', self::DateTimeZone($timezone)))->getTimestamp();
     }

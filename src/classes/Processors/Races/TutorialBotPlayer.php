@@ -13,9 +13,9 @@ use Holders\ResultData;
 /**
  * Description of RandomBotPlayer
  *
- * @author Lian Zhi Wei <zhiwei.lian@7senses.com>
+ * @author Lin Zheng Fu <sigma@7senses.com>
  */
-class RandomBotPlayer extends BaseRace{
+class TutorialBotPlayer extends BaseRace{
     
     protected bool|null $mustInRace = false;
 
@@ -25,7 +25,7 @@ class RandomBotPlayer extends BaseRace{
         if(empty($amount)) $amount = 1;
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rows = $accessor->FromTable('Users')->WhereLess('UserID', PlayerValue::BotIDLimit)->WhereEqual('Status', 1)->OrderBy('RAND()')->Limit($amount)->FetchAll();
+        $rows = $accessor->FromTable('Users')->WhereLess('UserID', PlayerValue::NewbieBotIDLimit)->Limit($amount)->FetchAll();
         
         $playerPool = PlayerPool::Instance();
         
