@@ -21,5 +21,4 @@ $lang[UserException::UserFreePlayerListEmpty] = 'User:[userID] free player list 
 $lang[UserException::UserFreePlayerOverLimit] = 'User:[userID] free player count over limit.';
 $lang[UserException::UserCoinNotEnough] = 'User:[userID] Coin Not Enough.';
 $lang[UserException::UserPowerNotEnough] = 'User:[userID] power not enough.';
-$lang[UserException::UserFreePlayerSaveError] = 'User:[userID] free player save default id error.';
 return $lang;
