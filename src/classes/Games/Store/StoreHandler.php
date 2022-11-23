@@ -16,6 +16,7 @@ use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
+use Generators\DataGenerator;
 use stdClass;
 
 /*
@@ -267,14 +268,14 @@ class StoreHandler {
         return $result;
     }
 
-    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): int {
+    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): string {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
-        $orderid = hrtime(true);
+        $orderid = DataGenerator::GuidV4();
         $accessor->FromTable('StorePurchaseOrders')->Add([
-            "OrderID" => $orderid, 
+            "OrderID" => $orderid,
             "UserID" => $this->userID,
             "TradeID" => $tradeID,
             "ProductID" => $storePurchaseHolder->productID,
@@ -289,9 +290,12 @@ class StoreHandler {
         return $orderid;
     }
 
-    public function UpdatePurchaseOrderStatus(int $orderID, int $status, string $message) {
-        $accessor = new PDOAccessor(EnvVar::DBMain);
+    public function UpdatePurchaseOrderStatus(string $orderID, int $status, string $message) {
+        self::UpdatePurchaseOrderStatusStatic($orderID, $status, $message);
+    }
 
+    public static function UpdatePurchaseOrderStatusStatic(string $orderID, int $status, string $message) {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
             "Status" => $status,
             "Message" => $message,
@@ -321,13 +325,13 @@ class StoreHandler {
 //
 //        $orderID = $storePurchaseOrdersHolder->OrderID;
 //
-//        if ($result == StoreValue::PurchaseProcessSuccess) {
+//        if ($result == StoreValue::PurchaseVerifySuccess) {
 //            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
 //            //加物品
 //            $userBagHandler = new UserBagHandler($this->userID);
 //            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
 //            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-//        } else if ($result == StoreValue::PurchaseProcessFailure) {
+//        } else if ($result == StoreValue::PurchaseVerifyFailure) {
 //            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
 //        }
 //        return true;

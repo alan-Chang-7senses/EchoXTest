@@ -45,7 +45,7 @@ abstract class BaseRestore extends BaseProcessor {
         foreach ($rows as $row) {
 
             $verifyResult = $this->PurchaseVerify($row);
-            if ($verifyResult == StoreValue::PurchaseProcessSuccess) {
+            if ($verifyResult == StoreValue::PurchaseVerifySuccess) {
 
                 $accessor->ClearCondition();
                 $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $row->OrderID)->Modify([

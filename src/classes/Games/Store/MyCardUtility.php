@@ -70,7 +70,8 @@ class MyCardUtility {
         if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             return $queryData;
         } else {
-            throw new StoreException(StoreException::Error, ['[cause]' => 'L61: ' . $curlReturn]);
+            $returnMsg = urldecode($queryData->ReturnMsg);
+            throw new StoreException(StoreException::MyCardError, ['[message]' => $returnMsg]);
         }
     }
 
@@ -118,12 +119,12 @@ class MyCardUtility {
         $myCardPaymentModel->CreateAccountIP = "";
 
         $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentModel);
-        if ($tradeCheck->code != StoreValue::PurchaseProcessSuccess) {
+        if ($tradeCheck->code != StoreValue::PurchaseVerifySuccess) {
             return $tradeCheck;
         }
 
         $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentModel);
-        if ($payCheck->code == StoreValue::PurchaseProcessSuccess) {
+        if ($payCheck->code == StoreValue::PurchaseVerifySuccess) {
             $logAccessor = new PDOAccessor(EnvVar::DBLog);
             $row = $logAccessor->FromTable('MyCardPayment')->WhereEqual("FacTradeSeq", $myCardPaymentModel->FacTradeSeq)->Fetch();
             if (empty($row)) {
@@ -145,6 +146,7 @@ class MyCardUtility {
             }
             return $payCheck;
         } else {
+
             return $payCheck;
         }
     }
@@ -163,7 +165,7 @@ class MyCardUtility {
 
         $result = new stdClass();
         if ($curlReturn === false || $verifyCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
-            $result->code = StoreValue::PurchaseProcessRetry;
+            $result->code = StoreValue::PurchaseVerifyRetry;
             $result->message = "TradeQuery Network error";
             return $result;
         }
@@ -177,17 +179,17 @@ class MyCardUtility {
                 $myCardPaymentModel->Amount = $queryData->Amount;
                 $myCardPaymentModel->Currency = $queryData->Currency;
                 //請款回傳
-                $result->code = StoreValue::PurchaseProcessSuccess;
+                $result->code = StoreValue::PurchaseVerifySuccess;
                 $result->message = "";
                 return $result;
             } else {
-                $result->code = StoreValue::PurchaseProcessFailure;
-                $result->message = $curlReturn;
+                $result->code = StoreValue::PurchaseVerifyMyCardError;
+                $result->message = urldecode($queryData->ReturnMsg);
                 return $result;
             }
         } else {//查詢失敗
-            $result->code = StoreValue::PurchaseProcessFailure;
-            $result->message = $curlReturn;
+            $result->code = StoreValue::PurchaseVerifyMyCardError;
+            $result->message = urldecode($queryData->ReturnMsg);
             return $result;
         }
     }
@@ -206,7 +208,7 @@ class MyCardUtility {
         $result = new stdClass();
         if ($paymentReturn === false || $paymentCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
 
-            $result->code = StoreValue::PurchaseProcessRetry;
+            $result->code = StoreValue::PurchaseVerifyRetry;
             $result->message = "PaymentConfirm Network error";
             return $result;
         }
@@ -216,12 +218,12 @@ class MyCardUtility {
         if ($paymentData->ReturnCode == StoreValue::MyCardReturnSuccess) {
             //付費紀錄
             $myCardPaymentModel->TradeSeq = $paymentData->TradeSeq;
-            $result->code = StoreValue::PurchaseProcessSuccess;
+            $result->code = StoreValue::PurchaseVerifySuccess;
             $result->message = "pay finish";
             return $result;
         } else {//查詢失敗
-            $result->code = StoreValue::PurchaseProcessFailure;
-            $result->message = $paymentReturn;
+            $result->code = StoreValue::PurchaseVerifyMyCardError;
+            $result->message = urldecode($paymentData->ReturnMsg);
             return $result;
         }
     }

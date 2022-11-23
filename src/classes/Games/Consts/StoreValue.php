@@ -42,9 +42,8 @@ class StoreValue {
     const CurrencyMarsTicket = 4;
     const CurrencyPtTicket = 5;
     const CurrencyGroupTicket = 6;
-    
+    // 免費金額
     const FreeCost = 0;
-
     const Currencies = [
         self::CurrencyMars,
         self::CurrencyDiamond,
@@ -60,15 +59,17 @@ class StoreValue {
     const TradeStatusIdle = 0;
     const TradeStatusInUse = 1;
     //儲值流程
-    const PurchaseProcessSuccess = 0;
-    const PurchaseProcessFailure = 1;
-    const PurchaseProcessRetry = 2;
+    const PurchaseVerifySuccess = 0;
+    const PurchaseVerifyFailure = 1;
+    const PurchaseVerifyRetry = 2;
+    const PurchaseVerifyMyCardError = 3;
     //儲值狀態
     const PurchaseStatusCancel = 0;
     const PurchaseStatusProcessing = 1;
     const PurchaseStatusFinish = 2;
     const PurchaseStatusFailure = 3;
     const PurchaseStatusVerify = 4;
+    const PurchaseStatusMyCardError = 5;
     //MyCard(他方)回應資訊
     const MyCardReturnSuccess = 1;
     const MyCardPaySuccess = 3;

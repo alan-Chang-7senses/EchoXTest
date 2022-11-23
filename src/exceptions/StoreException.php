@@ -12,5 +12,6 @@ $lang[StoreException::PurchaseIsComplete] = 'Purchase is complete !';
 $lang[StoreException::PurchaseFailure] = 'Payment Fail! [cause]';
 $lang[StoreException::PurchaseProcessing] = 'Purchasing in progress!';
 $lang[StoreException::ProductNotExist] = 'Product does not exist!';
+$lang[StoreException::MyCardError] = '[message]';
 
 return $lang;
