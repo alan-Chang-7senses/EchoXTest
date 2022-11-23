@@ -21,6 +21,7 @@
 		- [取得選擇物品資訊](User/GetItemSelectInfo.md)。
 		- [使用選擇物品](User/UseItemSelect.md)。
 		- [隨機三隻免費Peta](User/Get3FreePlayer.md)。
+		- [玩家創角改名送三隻免費Peta](User/SaveFreePlayer.md)。
 		- [完成免費Peta三選一](User/FinishFreePlayer.md)。
 		- [更新電力](User/UpdatePower.md)。
 		- [更新NFT資料](User/RefreshNFT.md)。
