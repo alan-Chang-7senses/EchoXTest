@@ -6,12 +6,15 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
 use Games\Consts\StoreValue;
+use Games\Exceptions\StoreException;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\Store\StoreCountersPool;
+use Games\Pools\Store\StoreProductInfoPool;
 use Games\Pools\Store\StorePurchasePool;
 use Games\Pools\Store\StoreTradesPool;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
+use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
 use stdClass;
 
@@ -27,13 +30,53 @@ class StoreHandler {
         $this->userID = $userID;
     }
 
-    public function GetStoreDatas(): array {
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
-        return $items;
+    public function GetRefreshTime(): StoreRefreshTimeHolder|false {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $rowStoreUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, AutoRefreshTime')->WhereEqual('UserID', $this->userID)->Fetch();
+        if ($rowStoreUserInfos == false) {
+            return false;
+        }
+
+        $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($rowStoreUserInfos->AutoRefreshTime);
+        return $autoRefreshTime;
     }
 
-    public function UpdatePurchaseTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function AddRefreshTime(int|string $device, int|string $plat, string $isoCurrency) {
+
+        $nowTime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->FromTable('StoreUserInfos')->Add([
+            "UserID" => $this->userID,
+            "Device" => $device,
+            "Plat" => $plat,
+            "ISOCurrency" => $isoCurrency,
+            "AutoRefreshTime" => $nowTime
+        ]);
+    }
+
+    public function ModifyCurrency(string $isoCurrency, int|string $device) {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $storeUserInfos = $accessor->FromTable('StoreUserInfos')->SelectExpr('UserID, ISOCurrency, Device')->WhereEqual('UserID', $this->userID)->Fetch();
+        if (($storeUserInfos->ISOCurrency !== $isoCurrency) ||
+                ($storeUserInfos->Device !== $device)
+        ) {
+            $accessor->Modify([
+                "ISOCurrency" => $isoCurrency,
+                "Device" => $device
+            ]);
+        }
+    }
+
+    public function UpdateRefreshTime(StoreRefreshTimeHolder $autorefresh) {
+        if ($autorefresh->needRefresh) {
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $accessor->FromTable('StoreUserInfos')->WhereEqual("UserID", $this->userID)->Modify([
+                "AutoRefreshTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+            ]);
+        }
+    }
+
+    public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
@@ -45,17 +88,20 @@ class StoreHandler {
             }
 
             $storeTradesHolder = new StoreTradesHolder();
-            if (isset($tradIDs[$count])) {
-                $storeTradesHolder->tradeID = $tradIDs[$count];
-                unset($tradIDs[$count]);
-            } else {
-                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-            }
+            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+//            if (isset($tradIDs[$count])) {
+//                $storeTradesHolder->tradeID = $tradIDs[$count];
+//                unset($tradIDs[$count]);
+//            } else {
+//                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+//            }
 
-            $storeTradesHolder->storeType = StoreValue::Purchase;
+            $storeTradesHolder->storeID = $storeID;
+            $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
-            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
+            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
+//            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
 
             $count++;
         }
@@ -64,7 +110,7 @@ class StoreHandler {
         return json_encode($storeTradeIDs);
     }
 
-    public function UpdateCountersTrades(string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $groupID, int $amount): string {
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StoreCounters WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.CounterID ORDER BY RAND()", []);
@@ -75,18 +121,12 @@ class StoreHandler {
                 break;
             }
             $storeTradesHolder = new StoreTradesHolder();
-            if (isset($tradIDs[$count])) {
-                $storeTradesHolder->tradeID = $tradIDs[$count];
-                unset($tradIDs[$count]);
-            } else {
-                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-            }
-
-            $storeTradesHolder->storeType = StoreValue::Counters;
+            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+            $storeTradesHolder->storeID = $storeID;
+            $storeTradesHolder->storeType = StoreValue::TypeCounters;
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
-            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
-
+            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
             $count++;
         }
         $this->ClearStoreTrade($tradIDs);
@@ -119,15 +159,6 @@ class StoreHandler {
         }
     }
 
-    public function UpdateStoreInfoRemain(StoreInfosHolder|stdClass $storinfo): int {
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('StoreInfos')->WhereEqual("StoreInfoID", $storinfo->storeInfoID)->Modify([
-            "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
-            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
-        ]);
-        return $storinfo->storeInfoID;
-    }
-
     private function ClearStoreTrade(array|null $tradIDs) {
         if ($tradIDs == null) {
             return;
@@ -140,41 +171,19 @@ class StoreHandler {
         }
     }
 
-    public function UpdateStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
+    private function AddStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        if ($tradeHolder->tradeID == StoreValue::NoTradeID) {
-
-            // 找空閒的位置
-            $rowStoreTrade = $accessor->FromTable('StoreTrades')->
-                    WhereEqual('Status', StoreValue::TradeStatusIdle)->
-                    Fetch();
-            $accessor->ClearCondition();
-
-            if (!empty($rowStoreTrade)) {
-                $tradeHolder->tradeID = $rowStoreTrade->TradeID;
-            } else {
-                $accessor->FromTable('StoreTrades')->Add([
-                    "UserID" => $this->userID,
-                    "Status" => StoreValue::TradeStatusInUse,
-                    "StoreType" => $tradeHolder->storeType,
-                    "CPIndex" => $tradeHolder->cPIndex,
-                    "RemainInventory" => $tradeHolder->remainInventory,
-                    "UpdateTime" => $nowtime
-                ]);
-                return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
-            }
-        }
-
-        StoreTradesPool::Instance()->Save($tradeHolder->tradeID, 'Update', [
+        $accessor->FromTable('StoreTrades')->Add([
             "UserID" => $this->userID,
+            "StoreID" => $tradeHolder->storeID,
             "Status" => StoreValue::TradeStatusInUse,
             "StoreType" => $tradeHolder->storeType,
             "CPIndex" => $tradeHolder->cPIndex,
-            "RemainInventory" => $tradeHolder->remainInventory
+            "RemainInventory" => $tradeHolder->remainInventory,
+            "UpdateTime" => $nowtime
         ]);
-
-        return $tradeHolder->tradeID;
+        return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
     }
 
     public function UpdateStoreTradesRemain(StoreTradesHolder|stdClass $tradeHolder) {
@@ -183,11 +192,16 @@ class StoreHandler {
         ]);
     }
 
-    public function GetTrades(int $storeType, string|null $tradIDArrays): array {
+    public function GetTrades(int $storeType, string $currency, string|null $tradIDArrays): array {
         $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : [];
         $result = [];
         foreach ($tradIDs as $tradID) {
             $storeTradesHolder = StoreTradesPool::Instance()->{$tradID};
+
+            if ($storeTradesHolder == false) {
+                throw new StoreException(StoreException::Error, ['[cause]' => 'L217']);
+            }
+
             $tradeInfo = new stdClass();
             $tradeInfo->tradID = $tradID;
 
@@ -201,19 +215,40 @@ class StoreHandler {
                 continue;
             }
 
-            if ($storeType == StoreValue::Purchase) {
+            if (StoreUtility::IsPurchaseStore($storeType)) {
                 $storePurchaseHolder = StorePurchasePool::Instance()->{$storeTradesHolder->cPIndex};
-                $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
+                if ($storePurchaseHolder == false) {
+                    throw new StoreException(StoreException::Error, ['[cause]' => "PIndex " . $storeTradesHolder->cPIndex]);
+                }
 
+                $itemInfo = ItemInfoPool::Instance()->{ $storePurchaseHolder->itemID};
                 $tradeInfo->itemID = $storePurchaseHolder->itemID;
                 $tradeInfo->amount = $storePurchaseHolder->amount;
                 $tradeInfo->icon = $itemInfo->Icon;
                 $tradeInfo->name = $itemInfo->ItemName;
-                $tradeInfo->IAP = $storePurchaseHolder->iAP;
-                $tradeInfo->IAB = $storePurchaseHolder->iAB;
-            } else if ($storeType == StoreValue::Counters) {
+                $tradeInfo->product = $storePurchaseHolder->productID;
+
+                if ($storeType == StoreValue::TypeMyCard) {
+                    $storeProductInfoModels = StoreProductInfoPool::Instance()->{$storePurchaseHolder->productID};
+                    if ((!empty($storeProductInfoModels)) && (property_exists($storeProductInfoModels, $currency))) {
+                        $storeProductInfoModel = $storeProductInfoModels->{$currency};
+                        $tradeInfo->multiNo = $storeProductInfoModel->MultiNo;
+                        $tradeInfo->price = $storeProductInfoModel->Price;
+                    } else {
+                        throw new StoreException(StoreException::Error, ['[cause]' => 'L255 ' . $storePurchaseHolder->productID]);
+                    }
+                }
+            } else if ($storeType == StoreValue::TypeCounters) {
                 $storeCountersHolder = StoreCountersPool::Instance()->{$storeTradesHolder->cPIndex};
+
+                if ($storeCountersHolder == false) {
+                    throw new StoreException(StoreException::Error, ['[cause]' => "CIndex " . $storeTradesHolder->cPIndex]);
+                }
+
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
+                if ($itemInfo == false) {
+                    throw new StoreException(StoreException::Error);
+                }
 
                 $tradeInfo->itemID = $storeCountersHolder->itemID;
                 $tradeInfo->amount = $storeCountersHolder->amount;
@@ -232,44 +267,69 @@ class StoreHandler {
         return $result;
     }
 
-    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $device): int {
+    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): int {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
+        $orderid = hrtime(true);
         $accessor->FromTable('StorePurchaseOrders')->Add([
+            "OrderID" => $orderid, 
             "UserID" => $this->userID,
             "TradeID" => $tradeID,
-            "Device" => $device,
+            "ProductID" => $storePurchaseHolder->productID,
             "ItemID" => $storePurchaseHolder->itemID,
             "Amount" => $storePurchaseHolder->amount,
+            "Plat" => $plat,
             "Status" => StoreValue::PurchaseStatusProcessing,
+            "Receipt" => "",
             "CreateTime" => $nowtime,
             "UpdateTime" => $nowtime
         ]);
-        return (int) $accessor->LastInsertID();
+        return $orderid;
     }
 
-    public function UpdatePurchaseOrderStatus(int $orderID, int $status) {
+    public function UpdatePurchaseOrderStatus(int $orderID, int $status, string $message) {
         $accessor = new PDOAccessor(EnvVar::DBMain);
 
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
             "Status" => $status,
+            "Message" => $message,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
 
-    public function FinishPurchaseOrder(int $orderID, string $orderNO, string $usdAmount, string $payAmount, string $payCurrency) {
-
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
-            "Status" => StoreValue::PurchaseStatusFinish,
-            "OrderNo" => $orderNO,
-            "UsdAmount" => $usdAmount,
-            "PayAmount" => $payAmount,
-            "PayCurrency" => $payCurrency,
-            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
-        ]);
-    }
-
+//    public function VerrifyProduct(stdclass|StorePurchaseOrdersHolder $storePurchaseOrdersHolder): bool {
+//
+//        if ($storePurchaseOrdersHolder->Status == StoreValue::PurchaseStatusFinish) {
+//            return true;
+//        }
+//
+//        if ($storePurchaseOrdersHolder->Status != StoreValue::PurchaseStatusProcessing) {
+//            return false;
+//        }
+//
+//        if (empty($storePurchaseOrdersHolder->Receipt)) {
+//            return false;
+//        }
+//
+//        if ($storePurchaseOrdersHolder->Plat == StoreValue::PlatMyCard) {
+//            $result = PurchaseUtility::MyCardVerify($this->userID, $storePurchaseOrdersHolder->Receipt);
+//        } else {
+//            return false;
+//        }
+//
+//        $orderID = $storePurchaseOrdersHolder->OrderID;
+//
+//        if ($result == StoreValue::PurchaseProcessSuccess) {
+//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
+//            //加物品
+//            $userBagHandler = new UserBagHandler($this->userID);
+//            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
+//            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
+//        } else if ($result == StoreValue::PurchaseProcessFailure) {
+//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
+//        }
+//        return true;
+//    }
 }

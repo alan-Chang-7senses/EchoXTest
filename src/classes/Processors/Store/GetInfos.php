@@ -12,6 +12,7 @@ use Games\Pools\Store\StoreDataPool;
 use Games\Store\StoreHandler;
 use Games\Store\StoreUtility;
 use Games\Users\UserBagHandler;
+use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -25,88 +26,93 @@ class GetInfos extends BaseProcessor {
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
+        $device = InputHelper::post('device');
+        $plat = InputHelper::post('plat');
+        $currency = InputHelper::post('currency');
+
+        $storeHandler = new StoreHandler($userID);
+        $autoRefreshTime = $storeHandler->GetRefreshTime();
+        if ($autoRefreshTime == false) {
+            $autoRefreshTime = StoreUtility::CheckAutoRefreshTime((int) $GLOBALS[Globals::TIME_BEGIN]);
+            $autoRefreshTime->needRefresh = true;
+            $storeHandler->AddRefreshTime($device, $plat, $currency);
+        } else {
+            $storeHandler->UpdateRefreshTime($autoRefreshTime);
+        }
+        
+        $storeHandler->ModifyCurrency($currency, $device);
 
         //get store
-        $storeHandler = new StoreHandler($userID);
-        $storeIDs = $storeHandler->GetStoreDatas();
+        $accessorStatic = new PDOAccessor(EnvVar::DBStatic);
+        $storeDatas = $accessorStatic->executeBindFetchAll('SELECT StoreID FROM StoreData ORDER BY StoreID ASC', []);
 
-        $accessor = new PDOAccessor(EnvVar::DBMain);
         $resposeStores = [];
-        foreach ($storeIDs as $storeID) {
-            $storeDataHolder = StoreDataPool::Instance()->{$storeID->StoreID};
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        foreach ($storeDatas as $storeData) {
+            $storeID = $storeData->StoreID;
+            $storeDataHolder = StoreDataPool::Instance()->{$storeID};
             if ($storeDataHolder == false) {
                 continue;
             }
+
+            if (($storeDataHolder->storeType == StoreValue::TypeMyCard) &&
+                    (getenv(EnvVar::MyCardSwitch) != 'true')) {
+                continue;
+            }
+
+            $nowPlat = StoreUtility::GetPurchasePlat($storeDataHolder->storeType);
+            if (($nowPlat != StoreValue::PlatNone) && ($nowPlat != $plat)) {
+                continue;
+            }
+
             $maxFixAmount = StoreUtility::GetMaxStoreAmounts($storeDataHolder->uIStyle);
-            if ($maxFixAmount == StoreValue::UINoItems) {
+            if ($maxFixAmount == StoreValue::UIUnset) {
                 continue;
             }
 
             $accessor->ClearCondition();
-            $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID->StoreID)->Fetch();
+            $rowStoreInfo = $accessor->FromTable('StoreInfos')->WhereEqual('UserID', $userID)->WhereEqual('StoreID', $storeID)->Fetch();
             $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
-            $storeInfosHolder->storeID = $storeID->StoreID;
-            $updateTime = empty($rowStoreInfo) ? (int) $GLOBALS[Globals::TIME_BEGIN] : $storeInfosHolder->updateTime;
-            $autoRefreshTime = StoreUtility::CheckAutoRefreshTime($updateTime);
-            $resetRefreshTime = StoreUtility::CheckResetTime($updateTime);
+            $storeInfosHolder->storeID = $storeID;
 
-            if (empty($rowStoreInfo)) {
-                $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
-                $autoRefreshTime->needRefresh = true;
-                $resetRefreshTime->needRefresh = false;
-            } else {
-                if ($resetRefreshTime->needRefresh) {
-                    if ($storeInfosHolder->refreshRemainAmounts == $storeDataHolder->refreshCount) {
-                        $resetRefreshTime->needRefresh = false;
-                    } else {
-                        $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
-                    }
-                }
-            }
+            if ($autoRefreshTime->needRefresh || empty($rowStoreInfo)) {
 
-            if ($autoRefreshTime->needRefresh) {
-
-                if ($storeDataHolder->storeType == StoreValue::Purchase) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
-                } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
+                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }
+                $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
+
                 $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
-            } else if ($resetRefreshTime->needRefresh) {
-                $storeHandler->UpdateStoreInfoRemain($storeInfosHolder);
             }
 
-            //response
+            //response Client
             $resposeStore = new stdClass();
+
             $resposeStore->storeInfoID = $storeInfosHolder->storeInfoID;
+            $resposeStore->multiName = $storeDataHolder->multiName;
             $resposeStore->uiStyle = $storeDataHolder->uIStyle;
-            $resposeStore->autoRefreshTime = $autoRefreshTime->remainSeconds;
             $resposeStore->refreshRemain = $storeInfosHolder->refreshRemainAmounts;
             $resposeStore->refreshMax = $storeDataHolder->refreshCount;
-            $resposeStore->resetRefreshTime = $resetRefreshTime->remainSeconds;
             $resposeStore->refreshCost = $storeDataHolder->refreshCost;
             $resposeStore->refreshCurrency = $storeDataHolder->refreshCostCurrency;
-            $resposeStore->fixPurchase = [];
-            $resposeStore->randomPurchase = [];
-            $resposeStore->fixCounters = [];
-            $resposeStore->randomCounters = [];
 
-            if ($storeDataHolder->storeType == StoreValue::Purchase) {
-                $resposeStore->fixPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->fixTradIDs);
-                $resposeStore->randomPurchase = $storeHandler->GetTrades(StoreValue::Purchase, $storeInfosHolder->randomTradIDs);
-            } else if ($storeDataHolder->storeType == StoreValue::Counters) {
-                $resposeStore->fixCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->fixTradIDs);
-                $resposeStore->randomCounters = $storeHandler->GetTrades(StoreValue::Counters, $storeInfosHolder->randomTradIDs);
-            }
+            $resposeStore->storetype = $storeDataHolder->storeType;
+            $resposeStore->fixItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->fixTradIDs);
+            $resposeStore->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->randomTradIDs);
+
             $resposeStores[] = $resposeStore;
         }
+
         $userBagHandler = new UserBagHandler($userID);
         $result = new ResultData(ErrorCode::Success);
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
+        $result->autoRefreshTime = $autoRefreshTime->remainSeconds;
         $result->stores = $resposeStores;
 
         return $result;
