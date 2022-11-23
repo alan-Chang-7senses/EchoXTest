@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `ConfigVersions` (
   `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態(0=關)',
   `Frontend` varchar(255) NOT NULL COMMENT '前端版本',
   `Avatar` varchar(255) NOT NULL COMMENT 'Avatar資源版本',
+  `FeatureFlag` text NOT NULL COMMENT '介面開關資料(JSON)',
   KEY `Backend` (`Backend`),
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='版本設置';
