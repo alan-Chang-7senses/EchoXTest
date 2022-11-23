@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `MyCardPayment` (
   `PaymentType` varchar(50) NOT NULL DEFAULT '' COMMENT '付費方式',
   `TradeSeq` varchar(50) NOT NULL DEFAULT '' COMMENT 'MyCard 交易序',
   `MyCardTradeNo` varchar(50) NOT NULL DEFAULT '' COMMENT '交易序號',
-  `FacTradeSeq` varchar(50) NOT NULL DEFAULT '' COMMENT '廠商交易序號',
+  `FacTradeSeq` varchar(250) NOT NULL DEFAULT '' COMMENT '廠商交易序號',
   `CustomerId` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '支付金額',
   `Currency` varchar(50) NOT NULL DEFAULT '' COMMENT '支付的幣種',
