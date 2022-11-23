@@ -14,6 +14,7 @@ use Games\Players\Exp\ExpGainResult;
 use Games\Players\Exp\PlayerEXP;
 use Games\Players\Holders\PlayerInfoHolder;
 use Games\Pools\PlayerPool;
+use Games\Pools\SpecifyPlayerPool;
 use stdClass;
 /**
  * Description of PlayerHandler
@@ -49,8 +50,20 @@ class PlayerHandler {
     private array $skills = [];
     private array $skillIDs = [];
 
-    public function __construct(int|string $id) {
-        $this->pool = PlayerPool::Instance();
+    /**
+     * @param ?int $levelSpecify 指定角色等級。未填入則取得原始等級資訊
+     * @param ?int $skillLevelSpecify 指定角色技能等級。未填入則取得原始等級資訊
+     */
+    public function __construct(int|string $id, ?int $levelSpecify = null, ?int $skillLevelSpecify = null) {
+        if(empty($levelSpecify) || empty($skillLevelSpecify))
+        {
+            $this->pool = PlayerPool::Instance();
+        }
+        else
+        {
+            SpecifyPlayerPool::Instance()->SpecifyLevel($id,$levelSpecify,$skillLevelSpecify);
+            $this->pool = SpecifyPlayerPool::Instance();
+        }
         $info = $this->pool->$id;
         if($info === false) throw new PlayerException(PlayerException::PlayerNotExist, ['[player]' => $id]);
         $this->info = $info;
@@ -143,14 +156,6 @@ class PlayerHandler {
         $this->info = $this->pool->{$this->info->id};
     }
     
-    public function SaveSync(float|int $bind) : void{    
-        $this->pool->Save($this->info->id, 'Sync', $bind);
-        $this->ResetInfo();
-    }
-    public function SaveLevel(array $bind) : void{    
-        $this->pool->Save($this->info->id, 'Level', $bind);
-        $this->ResetInfo();
-    }
 
     /**
      * @param int|float $rawExp

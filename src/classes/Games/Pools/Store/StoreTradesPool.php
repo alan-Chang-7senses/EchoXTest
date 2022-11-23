@@ -32,9 +32,14 @@ class StoreTradesPool extends PoolAccessor {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $row = $accessor->FromTable('StoreTrades')->WhereEqual("TradeID", $id)->Fetch();
 
+        if ($row == false) {
+            return false;
+        }
+
         $holder = new StoreTradesHolder ();
-        $holder->tradeID = $row->TradeID;        
+        $holder->tradeID = $row->TradeID;
         $holder->userID = $row->UserID;
+        $holder->storeID = $row->StoreID;
         $holder->status = $row->Status;
         $holder->storeType = $row->StoreType;
         $holder->cPIndex = $row->CPIndex;

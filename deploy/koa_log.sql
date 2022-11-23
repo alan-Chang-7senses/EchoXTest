@@ -34,6 +34,24 @@ CREATE TABLE IF NOT EXISTS `BaseProcess` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='基礎處理 log';
 
+-- 傾印  資料表 koa_log.MyCardPayment 結構
+CREATE TABLE IF NOT EXISTS `MyCardPayment` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `PaymentType` varchar(50) NOT NULL DEFAULT '' COMMENT '付費方式',
+  `TradeSeq` varchar(50) NOT NULL DEFAULT '' COMMENT 'MyCard 交易序',
+  `MyCardTradeNo` varchar(50) NOT NULL DEFAULT '' COMMENT '交易序號',
+  `FacTradeSeq` varchar(50) NOT NULL DEFAULT '' COMMENT '廠商交易序號',
+  `CustomerId` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '支付金額',
+  `Currency` varchar(50) NOT NULL DEFAULT '' COMMENT '支付的幣種',
+  `TradeDateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
+  `CreateAccountDateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '創立帳號時間',
+  `CreateAccountIP` varchar(50) NOT NULL DEFAULT '' COMMENT '創立帳號 IP',
+  PRIMARY KEY (`Serial`),
+  KEY `TradeDateTime` (`TradeDateTime`),
+  KEY `MyCardTradeNo` (`MyCardTradeNo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值資訊';
+
 -- 傾印  資料表 koa_log.NFTCreatePlayer 結構
 CREATE TABLE IF NOT EXISTS `NFTCreatePlayer` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
@@ -172,6 +190,16 @@ CREATE TABLE IF NOT EXISTS `UserItemsLog` (
   KEY `UserID` (`UserID`),
   KEY `ItemID` (`ItemID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者物品紀錄';
+
+-- 傾印  資料表 koa_log.UserLogin 結構
+CREATE TABLE IF NOT EXISTS `UserLogin` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `UserIP` varchar(255) NOT NULL DEFAULT '' COMMENT '使用者IP',
+  `LogTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  PRIMARY KEY (`Serial`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者登入紀錄';
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

@@ -27,10 +27,10 @@ class MailsHandler
         return false;
     }
 
-    public function AddMail(int|string $userID, int $mailID, int $day): int
+    public function AddMail(int|string $userID, int $mailID, int $day, int $receiveStatus = 0): int
     {
         $mailsAccessor = new MailsAccessor();
-        $index = $mailsAccessor->AddMail($userID, $mailID, $day);
+        $index = $mailsAccessor->AddMail($userID, $mailID, $day, $receiveStatus);
         UserMailsPool::Instance()->Delete($userID);
         return $index;
     }

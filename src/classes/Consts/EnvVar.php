@@ -72,4 +72,17 @@ class EnvVar {
     
     const QuickSDKCallBackKeyAndroid = 'QuickSDK_CallBackKey_Android';
     const QuickSDKCallBackKeyiOS = 'QuickSDK_CallBackKey_iOS';
+
+    const MyCardSwitch = 'MYCARD_SWITCH';
+    const MyCardUri = "MYCARD_URI";
+    const MyCardAllowIp = "MYCARD_ALLOWIP";
+    const MyCardFacserviceid = 'MYCARD_FACSERVICEID';
+    const MyCardFacgameid = 'MYCARD_FACGAMEID';
+    const MyCardFacgamename = 'MYCARD_FACGAMENAME';
+    const MyCardSandboxmode = 'MYCARD_SANDBOXMODE';
+    const MyCardFackey = 'MYCARD_FACKEY';   
+    
+    const GoogleAppName= 'GOOGLE_APPNAME';
+    const GoogleApiKey = 'GOOGLE_APIKEY';
+    const GooglePackagename = 'GOOGLE_PACKAGENAME';
 }

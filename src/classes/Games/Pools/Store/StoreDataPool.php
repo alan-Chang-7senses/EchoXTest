@@ -36,10 +36,11 @@ class StoreDataPool extends PoolAccessor {
 
         $holder = new StoreDataHolder ();
         $holder->storeID = $row->StoreID;
+        $holder->multiName = $row->MultiName;
         $holder->storeType = $row->StoreType;
         $holder->uIStyle = $row->UIStyle;
         $holder->fixedGroup = $row->FixedGroup;
-        $holder->stochasticGroup = $row->StochasticGroup;
+        $holder->stochasticGroup = $row->StochasticGroup ?: -1;
         $holder->refreshCount = $row->RefreshCount;
         $holder->refreshCost = $row->RefreshCost;
         $holder->refreshCostCurrency = $row->RefreshCostCurrency;
