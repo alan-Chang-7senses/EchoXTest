@@ -25,7 +25,7 @@ class NFTEvent extends BaseProcessor{
         $headers = getallheaders();
         
         $nftAuthorization = NFTUtility::Authorization();
-        if($headers['Authorization'] != $nftAuthorization)
+        if(($headers['Authorization'] ?? $headers['authorization']) != $nftAuthorization)
             throw new Exception ('Authorzation error', ErrorCode::VerifyError);
 
         $payload = NFTUtility::EventPayload();
