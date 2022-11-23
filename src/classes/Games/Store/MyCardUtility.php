@@ -108,7 +108,7 @@ class MyCardUtility {
     public static function Verify(string $userID, string $authcode): stdClass {
 
         $mainAccessor = new PDOAccessor(EnvVar::DBMain);
-        $userInfo = $mainAccessor->SelectExpr('`UserID`, `CreateTime`')->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
+        $userInfo = $mainAccessor->SelectExpr('`UserID`, `CreateTime`, `CreatedIP`')->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
         if ($userInfo == false) {
             throw new StoreException(StoreException::Error);
         }
@@ -116,7 +116,7 @@ class MyCardUtility {
         $myCardPaymentModel = new MyCardPaymentModel();
         $myCardPaymentModel->CustomerId = $userID;
         $myCardPaymentModel->CreateAccountDateTime = $userInfo->CreateTime;
-        $myCardPaymentModel->CreateAccountIP = "";
+        $myCardPaymentModel->CreateAccountIP = $userInfo->CreatedIP;
 
         $tradeCheck = MyCardUtility::TradeQuery($authcode, $myCardPaymentModel);
         if ($tradeCheck->code != StoreValue::PurchaseVerifySuccess) {
@@ -134,12 +134,12 @@ class MyCardUtility {
                     "TradeSeq" => $myCardPaymentModel->TradeSeq, //form PaymentConfirm
                     "MyCardTradeNo" => $myCardPaymentModel->MyCardTradeNo,
                     "FacTradeSeq" => $myCardPaymentModel->FacTradeSeq,
-                    "CustomerId" => $userID,
+                    "CustomerId" => $myCardPaymentModel->CustomerId,
                     "Amount" => $myCardPaymentModel->Amount,
                     "Currency" => $myCardPaymentModel->Currency,
                     "TradeDateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
                     "CreateAccountDateTime" => $userInfo->CreateTime,
-                    "CreateAccountIP" => ""
+                    "CreateAccountIP" => $myCardPaymentModel->CreateAccountIP
                 ]);
             } else {
                 $payCheck->message = "repeat log";

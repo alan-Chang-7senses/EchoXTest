@@ -248,7 +248,7 @@ class StoreHandler {
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
                 if ($itemInfo == false) {
-                    throw new StoreException(StoreException::Error);
+                    throw new StoreException(StoreException::Error, ['[cause]' => 'ItemID does not exist ' . $storeCountersHolder->itemID]);
                 }
 
                 $tradeInfo->itemID = $storeCountersHolder->itemID;
