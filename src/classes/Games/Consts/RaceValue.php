@@ -59,19 +59,19 @@ class RaceValue {
     
     const TrackType = [
         SceneValue::Flat => 10,
-        SceneValue::Upslope => 12,
+        SceneValue::Upslope => 11,
         SceneValue::Downslope => 9,
     ];
     
     const ClimateAccelerations = [
         SceneValue::Sunny => 1,
-        SceneValue::Aurora => 1.1,
-        SceneValue::SandDust => 1,
+        SceneValue::Aurora => 1.2,
+        SceneValue::SandDust => 0.9,
     ];
     const ClimateLoses = [
-        SceneValue::Sunny => 0,
+        SceneValue::Sunny => -0.1,
         SceneValue::Aurora => 0,
-        SceneValue::SandDust => 0.5,
+        SceneValue::SandDust => 0.05,
     ];
     
     const WindCheckPositive = 2;
