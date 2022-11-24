@@ -148,7 +148,7 @@ class RaceUtility {
      * 結束競賽時。計算並紀錄每個角色積分。
      * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $seasonID, int $lobby) : void
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : void
     {
         $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
 
@@ -180,6 +180,8 @@ class RaceUtility {
             //找出自己以外的
             $allRatingsTemp = $allRatings;
             $playerID = $racePlayerInfo->player;
+            //不幫機器人記排行榜。
+            if($playerID < PlayerValue::BotIDLimit)continue;
             unset($allRatingsTemp[$playerID]);
             $otherPlayerRankings = array_values($allRatingsTemp);
             $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRankings,$racePlayerInfo->ranking);
@@ -187,6 +189,7 @@ class RaceUtility {
             [
                 'PlayerID' => $playerID,
                 'SeasonID' => $seasonID,
+                'CompetitionType' => $lobby,
                 'Rating' => $rating,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];

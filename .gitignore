@@ -1,2 +1,15 @@
 nbproject/
 .vscode/
+data/
+docker-compose.yml
+Dockerfile
+docker-php-ext-opcache.ini
+docker-php-ext-xdebug.ini
+php.ini-development
+php.ini-production
+src/classes/.DS_Store
+src/classes/Games/.DS_Store
+src/classes/Processors/.DS_Store
+src/classes/Processors/MyMemFlush.php
+src/classes/Processors/TestProcessor.php
+src/logs/

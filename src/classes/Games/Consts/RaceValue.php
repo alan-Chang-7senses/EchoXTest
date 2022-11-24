@@ -139,8 +139,8 @@ class RaceValue {
 
     const CompetitionCoin = 1;
     const CompetitionPT = 2;
-    const CompetitionCoinB = 3;
-    const CompetitionPTB = 4;
+    const CompetitionCoinB = 4;
+    const CompetitionPTB = 5;
 
     const LobbyCompetition = 
     [

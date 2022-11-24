@@ -4,6 +4,7 @@ namespace Games\Leadboards;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
 use Generators\ConfigGenerator;
 use stdClass;
@@ -83,5 +84,60 @@ class LeadboardUtility {
         }
         
         return $result;
+    }
+
+    /**
+     * 取得特定角色當前的排名
+     */
+    public static function GetPlayerRateRanking(int $lobby, int $playerID, int $seasonID) : int|false
+    {
+        $accessor = AccessorFactory::Main();
+
+        $row = $accessor->FromTable('LeaderboardRating')
+                 ->WhereEqual('PlayerID',$playerID)
+                 ->WhereEqual('SeasonID', $seasonID)
+                 ->WhereEqual('Lobby',$lobby)
+                 ->Fetch();
+        if($row === false)return false; //不在排行榜中
+        $row = $accessor->ClearCondition()
+                        ->SelectExpr('COUNT(*) AS cnt')
+                        ->FromTable('LeaderboardRating')
+                        ->WhereEqual('SeasonID',$seasonID)
+                        ->WhereEqual('Lobby',$lobby)
+                        ->WhereGreater('Rating',$row->Rating)
+                        ->Fetch();
+        return $row->cnt + 1;
+    }
+
+    /**
+     * 取得該賽制之賽季所有角色的排行
+     * @param int $seasonID 賽季ID
+     * @param int $lobby 賽制大廳ID
+     * @param int $offset 要獲得名次的起始名次。未輸入則從第一名開始獲取
+     * @param int $length 要獲得角色名次的數量。未輸入則獲得到指定數量
+     */
+    public static function GetPlayersRateRanking(int $seasonID, int $lobby, int $offset = 1, int $length = 100 ) : array|false
+    {
+        $accessor = AccessorFactory::Main();
+        $rows = $accessor->SelectExpr('PlayerID, Rating')
+                 ->FromTable('LeaderboardRating')
+                 ->WhereEqual('SeasonID',$seasonID)
+                 ->WhereEqual('Lobby', $lobby)
+                 ->OrderBy('Rating','DESC')
+                 ->FetchAll();
+        if(empty($rows))return false;
+        $rankingInfo = [];
+        $ranking = 0;
+        $offset = max(1,$offset);
+
+        for($i = $offset - 1; $i < min(count($rows),$length); $i++)
+        {
+            if(isset($rows[$i - 1]) && $rows[$i - 1]->Rating != $rows[$i]->Rating)
+            {
+                $ranking = $i + 1;
+            }
+            $rankingInfo[] =  ['playerID' => $rows[$i]->PlayerID,'rate' => $rows[$i]->Rating, 'rank' => $ranking];
+        }
+        return $rankingInfo;
     }
 }
