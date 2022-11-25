@@ -110,33 +110,68 @@ class LeadboardUtility {
     }
 
     /**
-     * 取得該賽制之賽季所有角色的排行
+     * 取得該賽制之賽季所有角色的排行，可使用參數指定排名區間
      * @param int $seasonID 賽季ID
      * @param int $lobby 賽制大廳ID
      * @param int $offset 要獲得名次的起始名次。未輸入則從第一名開始獲取
-     * @param int $length 要獲得角色名次的數量。未輸入則獲得到指定數量
+     * @param int $endRank 要獲得角色的最大名次。未輸入則使用默認數量1~100名
+     * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
      */
-    public static function GetPlayersRateRanking(int $seasonID, int $lobby, int $offset = 1, int $length = 100 ) : array|false
+    public static function GetPlayersRateRanking(int $seasonID, int $lobby, int $offset = 1, int $endRank = 100 ) : array|false
     {
+        $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->SelectExpr('PlayerID, Rating')
+        $rows = $accessor->SelectExpr('PlayerID AS ID, Rating')
                  ->FromTable('LeaderboardRating')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereEqual('Lobby', $lobby)
                  ->OrderBy('Rating','DESC')
                  ->FetchAll();
         if(empty($rows))return false;
+        return self::HandleRankingInfo($rows,$offset,$endRank);
+    }
+
+    /**
+     * 取得該賽制之賽季所有使用者排行，可使用參數指定排名區間
+     * @param int $seasonID 賽季ID
+     * @param int $lobby 賽制大廳ID
+     * @param int $offset 要獲得名次的起始名次。未輸入則從第一名開始獲取
+     * @param int $endRank 要獲得使用者的最大名次。未輸入則使用默認數量1~100名
+     * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
+     */
+    public static function GetUsersRateRanking(int $seasonID, int $lobby, int $offset = 1, int $endRank = 100) : array | false
+    {
+        $offset = min(1,$offset);
+        $accessor = AccessorFactory::Main();
+        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
+                 ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
+                 ->WhereEqual('SeasonID',$seasonID)
+                 ->WhereEqual('Lobby',$lobby)
+                 ->GroupBy('UserID')
+                 ->OrderBy('Rating','DESC')
+                 ->FetchAll();
+        if(empty($rows))return false;
+        return self::HandleRankingInfo($rows,$offset,$endRank);
+    }
+
+    private static function HandleRankingInfo(array $rows,int $offset, int $endRank) : array
+    {
         $rankingInfo = [];
-        $ranking = 0;
+        $ranking = 1;
         $offset = max(1,$offset);
 
-        for($i = $offset - 1; $i < min(count($rows),$length); $i++)
+        for($i = $offset - 1; $ranking <= $endRank && $i < count($rows); $i++)
         {
-            if(isset($rows[$i - 1]) && $rows[$i - 1]->Rating != $rows[$i]->Rating)
+            $ratingResult = new RatingResult();
+            $ratingResult->id = $rows[$i]->ID;
+            $ratingResult->rate = $rows[$i]->Rating;
+            $ratingResult->rank = $ranking;
+            $rankingInfo[] =  $ratingResult;
+            
+            if(isset($rows[$i + 1]) && $rows[$i + 1]->Rating != $rows[$i]->Rating)
             {
-                $ranking = $i + 1;
+                $ranking = $i + 2;
             }
-            $rankingInfo[] =  ['playerID' => $rows[$i]->PlayerID,'rate' => $rows[$i]->Rating, 'rank' => $ranking];
         }
         return $rankingInfo;
     }
