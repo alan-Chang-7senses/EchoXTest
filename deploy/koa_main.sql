@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `ConfigVersions` (
   `Status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '狀態(0=關)',
   `Frontend` varchar(255) NOT NULL COMMENT '前端版本',
   `Avatar` varchar(255) NOT NULL COMMENT 'Avatar資源版本',
-  `FeatureFlag` text NOT NULL COMMENT '介面開關資料(JSON)',
+  `FeatureFlag` text DEFAULT NULL COMMENT '介面開關資料(JSON)',
   KEY `Backend` (`Backend`),
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='版本設置';
@@ -867,10 +867,6 @@ CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
   `TeamWin` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '團體戰優勝次數',
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
-
--- 正在傾印表格  koa_main.PlayerrCounts 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `PlayerrCounts` DISABLE KEYS */;
-/*!40000 ALTER TABLE `PlayerrCounts` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `PlayerSkill` (
@@ -2765,7 +2761,7 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
 
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
-  `OrderID` varchar(250) NOT NULL DEFAULT '0' COMMENT '訂單編號',
+  `OrderID` varchar(250) NOT NULL DEFAULT '' COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
   `ProductID` varchar(50) NOT NULL DEFAULT '0' COMMENT '商品Key',
