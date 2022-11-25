@@ -39,4 +39,5 @@ class RaceException extends NormalException{
     const UsePlayerError = 4028;
     const NotAvailableRace = 4029;
     const NoLimitTimeDataConfig = 4030;
+    const NoRaceSceneInfo = 4031;
 }

@@ -17,6 +17,7 @@ use Generators\ConfigGenerator;
 use Holders\ResultData;
 use Processors\Races\BaseRace;
 use stdClass;
+use Throwable;
 
 /**
  * Description of TutorialInfo
@@ -46,7 +47,13 @@ class TutorialInfo extends BaseRace {
             $lobbyinfo->ticketAmount = $userBagHandler->GetItemAmount($ticketID);
             $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
 
-            $sceneHandler = new SceneHandler($scendID);
+            try {
+                $sceneHandler = new SceneHandler($scendID);
+            }            
+            catch (Throwable $ex){    
+                throw new RaceException(RaceException::NoRaceSceneInfo, ['[scene]' => $scendID]);
+            }
+
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
