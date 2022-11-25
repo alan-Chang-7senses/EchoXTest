@@ -33,7 +33,7 @@ class Announcement extends BaseProcessor
         {
             foreach($rows as $row)
             {
-                $announceTime = DataGenerator::TimestringByTimezone($row->CreateTime, $timezone, 'Y-m-d');
+                $announceTime = DataGenerator::TimestringByTimezone($row->CreateTime, $timezone, 'Y:m:d');
                 $announcement[] = 
                 [
                     'graphURL' => $row->GraphURL,
