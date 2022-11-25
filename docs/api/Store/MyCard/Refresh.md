@@ -22,7 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| orderID | int | 訂單序號 |
+| orderID | string | 訂單序號 |
 
 ## Response
 

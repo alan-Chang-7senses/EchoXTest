@@ -5,6 +5,7 @@ namespace Games\Pools\Store;
 use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
 use Consts\EnvVar;
+use Games\Consts\StoreValue;
 use Games\Store\Holders\StoreDataHolder;
 use stdClass;
 
@@ -40,7 +41,7 @@ class StoreDataPool extends PoolAccessor {
         $holder->storeType = $row->StoreType;
         $holder->uIStyle = $row->UIStyle;
         $holder->fixedGroup = $row->FixedGroup;
-        $holder->stochasticGroup = $row->StochasticGroup ?: -1;
+        $holder->stochasticGroup = $row->StochasticGroup ?: StoreValue::NoStoreGroup;
         $holder->refreshCount = $row->RefreshCount;
         $holder->refreshCost = $row->RefreshCost;
         $holder->refreshCostCurrency = $row->RefreshCostCurrency;

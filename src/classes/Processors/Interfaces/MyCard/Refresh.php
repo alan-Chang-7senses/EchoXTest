@@ -2,12 +2,14 @@
 
 namespace Processors\Interfaces\MyCard;
 
+use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\ResposeType;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Store\MyCardUtility;
+use Games\Store\StoreHandler;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\Store\Purchase\BaseRefresh;
@@ -45,15 +47,21 @@ class Refresh extends BaseRefresh {
 
         if (($params->ReturnCode != StoreValue::MyCardReturnSuccess) ||
                 $params->PayResult != StoreValue::MyCardPaySuccess) {
+            $returnMsg = urldecode(InputHelper::Post('ReturnMsg'));
 
-            throw new StoreException(StoreException::PurchaseFailure, ['[cause]' => json_encode($params)]);
+            $accessor = new PDOAccessor(EnvVar::DBMain);
+            $row = $accessor->FromTable('StorePurchaseOrders')->SelectExpr("OrderID, Status")->WhereEqual("OrderID", $params->FacTradeSeq)->fetch();
+            if ($row->Status != StoreValue::PurchaseStatusFinish) {
+                StoreHandler::UpdatePurchaseOrderStatusStatic($params->FacTradeSeq, StoreValue::PurchaseStatusMyCardError, $returnMsg);
+            }
+            throw new StoreException(StoreException::MyCardError, ['[message]' => $returnMsg]);
         }
 
         $myhash = MyCardUtility::Hash($params);
         if ($myhash !== $hash) {
             return new ResultData(ErrorCode::Unknown);
         }
-        $this->orderID = (int) $params->FacTradeSeq;
+        $this->orderID = $params->FacTradeSeq;
         $this->userID = InputHelper::Get('userID');
         $resultRefresh = $this->HandleRefresh();
 

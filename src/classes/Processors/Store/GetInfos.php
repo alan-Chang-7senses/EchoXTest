@@ -39,7 +39,7 @@ class GetInfos extends BaseProcessor {
         } else {
             $storeHandler->UpdateRefreshTime($autoRefreshTime);
         }
-        
+
         $storeHandler->ModifyCurrency($currency, $device);
 
         //get store
@@ -75,7 +75,7 @@ class GetInfos extends BaseProcessor {
             $storeInfosHolder = StoreUtility::GetStoreInfosHolder($rowStoreInfo);
             $storeInfosHolder->storeID = $storeID;
 
-            if ($autoRefreshTime->needRefresh || empty($rowStoreInfo)) {
+            if ($autoRefreshTime->needRefresh) {
 
                 if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
                     $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
@@ -89,6 +89,8 @@ class GetInfos extends BaseProcessor {
                 $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
 
                 $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
+            } else if (empty($rowStoreInfo)) {
+                continue;
             }
 
             //response Client

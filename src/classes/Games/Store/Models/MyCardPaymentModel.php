@@ -21,7 +21,7 @@ class MyCardPaymentModel extends stdClass{
    public string $MyCardTradeNo;
 
    /** @var int 廠商交易序號 */
-   public int $FacTradeSeq;
+   public string $FacTradeSeq;
 
    /** @var int 使用者編號 */
    public int $CustomerId;

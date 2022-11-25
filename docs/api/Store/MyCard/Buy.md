@@ -35,7 +35,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| orderID | int | 訂單序號 |
+| orderID | string | 訂單序號 |
 | AuthCode | string | MyCard 認證用 |
 | TransactionUrl | string | 交易網址,開網頁用 |
 <br>
