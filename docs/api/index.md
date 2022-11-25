@@ -106,6 +106,7 @@
 			- [競賽最快速排行榜](Leaderboard/CB15/RaceFastest.md)。
 			- [最有錢使用者排行榜](Leaderboard/CB15/UserRichest.md)。
 		- [領先率](Leaderboard/LeadRate.md)。
+		- [觀看其他人的Peta資料](Leaderboard/RivalPlayer.md)。
 	- 串接：
 		- Metasens：
 			- [用戶是否存在](Interfaces/Metasens/UserExist.md)。
