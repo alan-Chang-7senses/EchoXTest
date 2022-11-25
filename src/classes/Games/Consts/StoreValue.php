@@ -10,6 +10,7 @@ class StoreValue {
 
     // 交易基本設定
     const NoStoreInfoID = 0;
+    const NoStoreGroup = -1;
     const NoTradeID = 0;
     const RefreshRemainEmpty = 0;
     // 商店類型

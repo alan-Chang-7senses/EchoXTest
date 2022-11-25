@@ -78,31 +78,35 @@ class StoreHandler {
     }
 
     public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
+
+        if ($groupID == StoreValue::NoStoreGroup) {
+            return "";
+        }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
+        $purchaseGroup = $accessor->executeBindFetch("SELECT PurchaseID FROM StorePurchase WHERE GROUPID = " . $groupID . " GROUP BY PurchaseID ORDER BY RAND()", []);
+        if ($purchaseGroup === false) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L89" . $groupID]);
+        }
+
         $storeTradeIDs = [];
         $count = 0;
+        $items = $accessor->ClearAll()->FromTable("StorePurchase")->WhereEqual("GROUPID", $groupID)->WhereEqual("PurchaseID", $purchaseGroup->PurchaseID)->OrderBy("", "RAND()")->FetchAll();
+        if (!isset($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L96:" . $purchaseGroup->PurchaseID]);
+        }
+
         foreach ($items as $item) {
             if ($count >= $amount) {
                 break;
             }
-
             $storeTradesHolder = new StoreTradesHolder();
             $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-//            if (isset($tradIDs[$count])) {
-//                $storeTradesHolder->tradeID = $tradIDs[$count];
-//                unset($tradIDs[$count]);
-//            } else {
-//                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-//            }
-
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
             $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
-//            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
 
             $count++;
         }
@@ -112,9 +116,22 @@ class StoreHandler {
     }
 
     public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $groupID, int $amount): string {
+
+        if ($groupID == StoreValue::NoStoreGroup) {
+            return "";
+        }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StoreCounters WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.CounterID ORDER BY RAND()", []);
+        $countersGroup = $accessor->executeBindFetch("SELECT CounterID FROM StoreCounters WHERE GROUPID =" . $groupID . " GROUP BY CounterID ORDER BY RAND()", []);
+        if (!isset($countersGroup)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L127:" . $groupID]);
+        }
+
+        $items = $accessor->ClearAll()->FromTable("StoreCounters")->WhereEqual("GROUPID", $groupID)->WhereEqual("CounterID", $countersGroup->CounterID)->OrderBy("", "RAND()")->FetchAll();
+        if (!isset($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L132:" . $countersGroup->CounterID]);
+        }
+
         $storeTradeIDs = [];
         $count = 0;
         foreach ($items as $item) {
