@@ -4,6 +4,8 @@ namespace Processors\User;
 
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Sessions;
+use Generators\DataGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 /**
@@ -23,6 +25,8 @@ class SSOAuthURL extends BaseProcessor{
         $params['response_type'] = 'code';
         $params['scope'] = '' ;
         $params['state'] = session_id();
+        
+        $_SESSION[Sessions::UserIP] = DataGenerator::UserIP();
 
         $result = new ResultData(ErrorCode::Success);
         $result->url = urldecode(getenv(EnvVar::SSOUri).'/oauth/authorize?'.http_build_query($params));

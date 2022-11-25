@@ -93,6 +93,9 @@
 - NFT\_APISECRET：NFT 串接環境的 API Secret。
 - QuickSDK\_CallBackKey\_Android：QuickSDK儲值回調的Android平台簽證密鑰
 - QuickSDK\_CallBackKey\_iOS：QuickSDK儲值回調的iOS平台簽證密鑰
+- GOOGLE\_APPLICATION\_CREDENTIALS: 內建Google憑證位置(變數名稱不能改)
+- GOOGLE\_APIKEY: Google APIKEY 密鑰
+- GOOGLE\_PACKAGENAME: 前端目前使用的包名
 
 ## XDebug for Visual Studio Code
 

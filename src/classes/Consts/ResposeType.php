@@ -13,4 +13,5 @@ class ResposeType {
     const DeepLink = 3;
     const EventNFT = 4;
     const QuickSDKCallback = 5;
+    const MyCardSDKCallback = 6;
 }

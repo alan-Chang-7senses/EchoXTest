@@ -30,6 +30,11 @@ class StorePurchasePool extends PoolAccessor {
 
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $row = $accessor->FromTable('StorePurchase')->WhereEqual('PIndex', $pIndex)->Fetch();
+        
+        if ($row == false)
+        {
+            return false;
+        }
 
         $holder = new StorePurchaseHolder ();
         $holder->pIndex = $row->PIndex;
@@ -37,9 +42,7 @@ class StorePurchasePool extends PoolAccessor {
         $holder->purchaseID = $row->PurchaseID;
         $holder->itemID = $row->ItemID;
         $holder->amount = $row->Amount;
-        $holder->iAP = $row->IAP;
-        $holder->iAB = $row->IAB;
-
+        $holder->productID = $row->ProductID;
         return $holder;
     }
 

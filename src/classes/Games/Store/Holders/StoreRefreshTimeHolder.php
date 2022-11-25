@@ -14,5 +14,8 @@ class StoreRefreshTimeHolder {
 
     /** 剩餘更新時間(秒) for client */
     public int $remainSeconds;
+    
+    /** 更新時間*/
+    public int $updateTime;
 
 }

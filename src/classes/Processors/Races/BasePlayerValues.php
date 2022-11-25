@@ -98,7 +98,7 @@ abstract class BasePlayerValues extends BaseRace{
         $result->h = $raceHandler->ValueH();
         $result->s = $raceHandler->ValueS();
         $result->energy = $racePlayerHandler->GetInfo()->energy;
-        $result->maxHP = $playerHandler->GetInfo()->stamina / RaceValue::DivisorHP;
+        $result->maxHP = $playerHandler->GetInfo()->stamina;
         
         
         $result->distance = RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance);        

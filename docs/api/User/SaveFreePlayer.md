@@ -1,13 +1,12 @@
-# 商店 - 儲值取消
+# 使用者 - 玩家創角改名送三隻免費Peta
 
 ## 介紹
 
-- 遊戲中儲值狀態，取消訂單購買。
-- 需要完成登入驗證才可正常使用此API。
+- 玩家創角送三隻免費Peta與取好的暱稱存入資料庫。
 
 ## URL
 
-http(s)://`域名`/Store/PurchaseCancel/
+http(s)://`域名`/User/FreePlayer/SaveFreePlayer/
 
 ## Method
 
@@ -21,9 +20,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| orderID | int | 訂單序號 |
-
-<br>
+| nickname | string | 取好的暱稱 |
 
 ## Response
 
@@ -35,13 +32,13 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 
-<br>
-
 ### Example
 
+#### 成功
+
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    }
+    	"error": {
+        	"code": 0,
+        	"message": ""
+    	}
 	}

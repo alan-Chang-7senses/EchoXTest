@@ -30,7 +30,9 @@ class StoreCountersPool extends PoolAccessor {
 
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $row = $accessor->FromTable('StoreCounters')->WhereEqual("CIndex", $cIndex)->Fetch();
-
+        if ($row == false) {
+            return false;
+        }
         $holder = new StoreCountersHolder ();
         $holder->cIndex = $row->CIndex;
         $holder->groupID = $row->GroupID;

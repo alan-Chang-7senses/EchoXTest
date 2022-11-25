@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~34 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~45 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AllPlayerLevel', '100', '強制指定所有角色等級(0=無效)'),
@@ -44,10 +44,15 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('LobbyPVESkillLevel', '0', 'PVE指定技能等級(0=不指定)'),
 	('LobbyStudyPlayerLevel', '100', '練習賽指定角色等級(0=不指定)'),
 	('LobbyStudySkillLevel', '5', '練習賽指定技能等級(0=不指定)'),
+	('MyCardRestoreMailDay', '30', 'MyCard補儲加入信件的過期時間(日)'),
+	('MyCardRestoreMailID', '13', 'MyCard補儲加入信件的MailID'),
 	('NewNFTRewardMailExpireDate', '500', 'NFT創角獎勵信件之領取期限(0為空)'),
 	('NewNFTRewardMailID', '12', 'NFT創角獎勵之信件編號(0為空)'),
 	('PvP_B_FreeTicketId_1_Count', '30', '金幣賽免費入場券(每次)發放數量'),
 	('PvP_B_FreeTicketId_2_Count', '0', 'PT幣賽免費入場券(每次)發放數量'),
+	('PvP_B_LimitTimeData', '[{"start":"07:00:00+8:00", "end":"11:00:00+8:00"},{"start":"19:00:00+8:00", "end":"23:00:00+8:00"}]', 'PT賽每日開放時間與跑馬燈資料(JSON 物件陣列)'),
+	('PvP_B_LimitTimeEndMarqueeID', '[27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]', 'PT賽每日結束時各語系跑馬燈編號'),
+	('PvP_B_LimitTimeStartMarqueeID', '[14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]', 'PT賽每日開始時各語系跑馬燈編號'),
 	('PvP_B_MaxTickets_1', '100', '金幣賽入場券的儲存上限'),
 	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
 	('PvP_B_NewRoomRate_1', '1', '金幣晉級賽創建房間千分比'),
@@ -67,10 +72,11 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('RaceVerifyDistance', '10', '驗證比賽距離誤差值'),
 	('SeasonRankingRewardMailDay', '7', '賽季排行獎勵信件過期時間(日)'),
 	('SeasonRankingRewardMailID', '1', '賽季排行獎勵信件編號'),
-	('StoreAutoRefreshTime', '16:00:00+8:00', '每日自動刷新商店內容的時間'),
-	('StoreRefreshResetTime', '00:00:00+8:00', '每日重置刷新按鈕的時間'),
+	('StoreAutoRefreshTime', '00:00:00+08:00', '每日自動刷新商店內容的時間'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
-	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)');
+	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)'),
+	('TutorialRewards', '[{"Step":1, "ItemID":1003, "Amount":1}]', '新手引導獎勵'),
+	('TutorialSceneID', '4000', '新手引導賽場編號');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.ConfigVersions 結構
@@ -165,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `Marquee` (
   KEY `Staus` (`Status`,`Lang`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跑馬燈訊息';
 
--- 正在傾印表格  koa_main.Marquee 的資料：~13 rows (近似值)
+-- 正在傾印表格  koa_main.Marquee 的資料：~39 rows (近似值)
 /*!40000 ALTER TABLE `Marquee` DISABLE KEYS */;
 INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `CreateTime`, `UpdateTime`) VALUES
 	(1, 1, 0, 0, 'So glad to have you in PetaRush. Come and join the festivity!', 0, 0),
@@ -180,7 +186,33 @@ INSERT INTO `Marquee` (`Serial`, `Status`, `Lang`, `Sorting`, `Content`, `Create
 	(10, 1, 9, 0, 'Bem-vindo à PetaRush! Vem participar das comemorações da Peta com a gente!', 0, 0),
 	(11, 1, 10, 0, 'Добро пожаловать в PetaRush! Присоединяйтесь к празднику Peta вместе с нами!', 0, 0),
 	(12, 1, 11, 0, 'ยินดีต้อนรับสู่ 《PetaRush》. เราขอเชิญคุณมาร่วมงานPetaครั้งสำคัญใน PetaRush', 0, 0),
-	(13, 1, 12, 0, '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', 0, 0);
+	(13, 1, 12, 0, '歡迎來到《PetaRush》誠摯邀請你一同來參與《動物大奔走》這個Peta的大型盛事！', 0, 0),
+	(14, 2, 0, 0, '(0) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(15, 2, 1, 0, '(1) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(16, 2, 2, 0, '(2) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(17, 2, 3, 0, '(3) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(18, 2, 4, 0, '(4) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(19, 2, 5, 0, '(5) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(20, 2, 6, 0, '(6) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(21, 2, 7, 0, '(7) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(22, 2, 8, 0, '(8) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(23, 2, 9, 0, '(9) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(24, 2, 10, 0, '(10) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(25, 2, 11, 0, '(11) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(26, 2, 12, 0, '(12) 立即前往 PT 賽場參賽！以實力爭取優渥獎勵！', 0, 0),
+	(27, 2, 0, 0, '(0) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(28, 2, 1, 0, '(1) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(29, 2, 2, 0, '(2) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(30, 2, 3, 0, '(3) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(31, 2, 4, 0, '(4) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(32, 2, 5, 0, '(5) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(33, 2, 6, 0, '(6) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(34, 2, 7, 0, '(7) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(35, 2, 8, 0, '(8) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(36, 2, 9, 0, '(9) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(37, 2, 10, 0, '(10) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(38, 2, 11, 0, '(11) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0),
+	(39, 2, 12, 0, '(12) 當前 PT 賽場參賽時段已結束，敬請期待下次開放！', 0, 0);
 /*!40000 ALTER TABLE `Marquee` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_main.PlayerHolder 結構
@@ -194,9 +226,16 @@ CREATE TABLE IF NOT EXISTS `PlayerHolder` (
   KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色持有資訊';
 
--- 正在傾印表格  koa_main.PlayerHolder 的資料：~160 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerHolder 的資料：~185 rows (近似值)
 /*!40000 ALTER TABLE `PlayerHolder` DISABLE KEYS */;
 INSERT INTO `PlayerHolder` (`PlayerID`, `UserID`, `Nickname`, `SyncRate`) VALUES
+	(-10007, -10007, 'AI Cat', 0),
+	(-10006, -10006, 'Prudence Lion', 0),
+	(-10005, -10005, 'Aimee Lion', 0),
+	(-10004, -10004, 'Ceto Fox', 0),
+	(-10003, -10003, 'Oz Fox', 0),
+	(-10002, -10002, 'Gottloh Fox', 0),
+	(-10001, -10001, 'Airty Lion', 0),
 	(-15, -15, 'Aixe Cat', 0),
 	(-14, -14, 'Aimee Cat', 0),
 	(-13, -13, 'Ceto Cat', 0),
@@ -394,9 +433,16 @@ CREATE TABLE IF NOT EXISTS `PlayerLevel` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色養成數值';
 
--- 正在傾印表格  koa_main.PlayerLevel 的資料：~160 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerLevel 的資料：~185 rows (近似值)
 /*!40000 ALTER TABLE `PlayerLevel` DISABLE KEYS */;
 INSERT INTO `PlayerLevel` (`PlayerID`, `Level`, `LevelBackup`, `Rank`, `Exp`) VALUES
+	(-10007, 1, 0, 1, 0),
+	(-10006, 1, 0, 1, 0),
+	(-10005, 1, 0, 1, 0),
+	(-10004, 1, 0, 1, 0),
+	(-10003, 1, 0, 1, 0),
+	(-10002, 1, 0, 1, 0),
+	(-10001, 1, 0, 1, 0),
 	(-15, 100, 0, 1, 0),
 	(-14, 100, 0, 1, 0),
 	(-13, 100, 0, 1, 0),
@@ -614,6 +660,13 @@ CREATE TABLE IF NOT EXISTS `PlayerNFT` (
 -- 正在傾印表格  koa_main.PlayerNFT 的資料：~185 rows (近似值)
 /*!40000 ALTER TABLE `PlayerNFT` DISABLE KEYS */;
 INSERT INTO `PlayerNFT` (`PlayerID`, `ItemName`, `Constitution`, `Strength`, `Dexterity`, `Agility`, `Attribute`, `HeadDNA`, `BodyDNA`, `HandDNA`, `LegDNA`, `BackDNA`, `HatDNA`, `Achievement`, `Native`, `Source`, `StrengthLevel`, `SkeletonType`, `TradeCount`, `ExternalURL`, `Image`, `AnimationURL`) VALUES
+	(-10007, NULL, 6000, 4900, 6100, 6100, 1, '130301000013030100001303010000', '130301000013030100001303010000', '130301000013030100001303010000', '130301000013030100001303010000', '130301000013030100001303010000', '130301000013030100001303010000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10006, NULL, 6400, 5000, 6500, 5200, 3, '110211000011021100001102110000', '110211000011021100001102110000', '110211000011021100001102110000', '110211000011021100001102110000', '110211000011021100001102110000', '110211000011021100001102110000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10005, NULL, 6100, 4900, 5900, 6200, 2, '110110000011011000001101100000', '110110000011011000001101100000', '110110000011011000001101100000', '110110000011011000001101100000', '110110000011011000001101100000', '110110000011011000001101100000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10004, NULL, 6100, 5200, 5400, 5400, 1, '110109000011010900001101090000', '110109000011010900001101090000', '110109000011010900001101090000', '110109000011010900001101090000', '110109000011010900001101090000', '110109000011010900001101090000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10003, NULL, 6300, 5300, 6600, 4900, 3, '110208000011020800001102080000', '110208000011020800001102080000', '110208000011020800001102080000', '110208000011020800001102080000', '110208000011020800001102080000', '110208000011020800001102080000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10002, NULL, 6100, 6200, 5900, 4900, 2, '110207000011020700001102070000', '110207000011020700001102070000', '110207000011020700001102070000', '110207000011020700001102070000', '110207000011020700001102070000', '110207000011020700001102070000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
+	(-10001, NULL, 6000, 6100, 5600, 5400, 1, '110106000011010600001101060000', '110106000011010600001101060000', '110106000011010600001101060000', '110106000011010600001101060000', '110106000011010600001101060000', '110106000011010600001101060000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
 	(-15, NULL, 6000, 5000, 5000, 6000, 2, '140206000014020600001402060000', '140206000014020600001402060000', '140206000014020600001402060000', '140206000014020600001402060000', '140206000014020600001402060000', '140206000014020600001402060000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
 	(-14, NULL, 6000, 5000, 5000, 6000, 1, '140105000014010500001401050000', '140105000014010500001401050000', '140105000014010500001401050000', '140105000014010500001401050000', '140105000014010500001401050000', '140105000014010500001401050000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
 	(-13, NULL, 6000, 5000, 5000, 6000, 2, '140204000014020400001402040000', '140204000014020400001402040000', '140204000014020400001402040000', '140204000014020400001402040000', '140204000014020400001402040000', '140204000014020400001402040000', '0000000000000000', 00, 0, 0, 00, 0, NULL, NULL, NULL),
@@ -814,6 +867,10 @@ CREATE TABLE IF NOT EXISTS `PlayerrCounts` (
   PRIMARY KEY (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色計量數值';
 
+-- 正在傾印表格  koa_main.PlayerrCounts 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `PlayerrCounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `PlayerrCounts` ENABLE KEYS */;
+
 -- 傾印  資料表 koa_main.PlayerSkill 結構
 CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   `PlayerID` bigint(20) NOT NULL,
@@ -825,9 +882,65 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
--- 正在傾印表格  koa_main.PlayerSkill 的資料：~1,249 rows (近似值)
+-- 正在傾印表格  koa_main.PlayerSkill 的資料：~1,449 rows (近似值)
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `LevelBackup`, `Slot`) VALUES
+	(-10007, 55, 1, 0, 0),
+	(-10007, 56, 1, 0, 0),
+	(-10007, 58, 1, 0, 0),
+	(-10007, 60, 1, 0, 0),
+	(-10007, 61, 1, 0, 0),
+	(-10007, 63, 1, 0, 0),
+	(-10007, 67, 1, 0, 0),
+	(-10007, 100, 1, 0, 0),
+	(-10006, 55, 1, 0, 0),
+	(-10006, 56, 1, 0, 0),
+	(-10006, 58, 1, 0, 0),
+	(-10006, 60, 1, 0, 0),
+	(-10006, 61, 1, 0, 0),
+	(-10006, 63, 1, 0, 0),
+	(-10006, 67, 1, 0, 0),
+	(-10006, 100, 1, 0, 0),
+	(-10005, 55, 1, 0, 0),
+	(-10005, 56, 1, 0, 0),
+	(-10005, 58, 1, 0, 0),
+	(-10005, 60, 1, 0, 0),
+	(-10005, 61, 1, 0, 0),
+	(-10005, 63, 1, 0, 0),
+	(-10005, 67, 1, 0, 0),
+	(-10005, 100, 1, 0, 0),
+	(-10004, 55, 1, 0, 0),
+	(-10004, 56, 1, 0, 0),
+	(-10004, 58, 1, 0, 0),
+	(-10004, 60, 1, 0, 0),
+	(-10004, 61, 1, 0, 0),
+	(-10004, 63, 1, 0, 0),
+	(-10004, 67, 1, 0, 0),
+	(-10004, 100, 1, 0, 0),
+	(-10003, 55, 1, 0, 0),
+	(-10003, 56, 1, 0, 0),
+	(-10003, 58, 1, 0, 0),
+	(-10003, 60, 1, 0, 0),
+	(-10003, 61, 1, 0, 0),
+	(-10003, 63, 1, 0, 0),
+	(-10003, 67, 1, 0, 0),
+	(-10003, 100, 1, 0, 0),
+	(-10002, 55, 1, 0, 0),
+	(-10002, 56, 1, 0, 0),
+	(-10002, 58, 1, 0, 0),
+	(-10002, 60, 1, 0, 0),
+	(-10002, 61, 1, 0, 0),
+	(-10002, 63, 1, 0, 0),
+	(-10002, 67, 1, 0, 0),
+	(-10002, 100, 1, 0, 0),
+	(-10001, 55, 1, 0, 0),
+	(-10001, 56, 1, 0, 0),
+	(-10001, 58, 1, 0, 0),
+	(-10001, 60, 1, 0, 0),
+	(-10001, 61, 1, 0, 0),
+	(-10001, 63, 1, 0, 0),
+	(-10001, 67, 1, 0, 0),
+	(-10001, 100, 1, 0, 0),
 	(-15, 67, 1, 0, 0),
 	(-15, 68, 1, 0, 0),
 	(-15, 69, 1, 0, 0),
@@ -2651,25 +2764,29 @@ CREATE TABLE IF NOT EXISTS `StoreInfos` (
 
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
-  `OrderID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
+  `OrderID` bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
-  `Device` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '裝置',
-  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品Id',
+  `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
+  `ProductID` varchar(50) NOT NULL DEFAULT '0' COMMENT '商品Key',
+  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品物品Id',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
+  `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
-  `OrderNo` varchar(50) DEFAULT '' COMMENT '訂單編號(同SDK)',
-  `UsdAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '美元計價的金額(SDK)',
-  `PayAmount` decimal(20,6) unsigned NOT NULL DEFAULT 0.000000 COMMENT '支付金額',
-  `PayCurrency` varchar(50) DEFAULT '' COMMENT '支付的幣種',
+  `Message` varchar(250) NOT NULL DEFAULT '' COMMENT '狀態資訊',
+  `Receipt` varchar(256) DEFAULT NULL COMMENT '收據orAuthCode',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  PRIMARY KEY (`OrderID`)
+  PRIMARY KEY (`OrderID`),
+  KEY `UserID` (`UserID`),
+  KEY `Status` (`Status`),
+  KEY `Plat` (`Plat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
 
 -- 傾印  資料表 koa_main.StoreTrades 結構
 CREATE TABLE IF NOT EXISTS `StoreTrades` (
-  `TradeID` int(10) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
+  `TradeID` int(11) NOT NULL AUTO_INCREMENT COMMENT '交易序號',
   `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `StoreID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `StoreType` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店類型',
   `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
@@ -2678,6 +2795,16 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
   PRIMARY KEY (`TradeID`),
   KEY `Status` (`Status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
+
+-- 傾印  資料表 koa_main.StoreUserInfos 結構
+CREATE TABLE IF NOT EXISTS `StoreUserInfos` (
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Device` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '裝置',
+  `ISOCurrency` varchar(10) NOT NULL DEFAULT '' COMMENT '使用幣別(ISO)',
+  `Plat` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '儲值平台',
+  `AutoRefreshTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店自動刷新時間',
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易商店資訊';
 
 -- 傾印  資料表 koa_main.UserDiamond 結構
 CREATE TABLE IF NOT EXISTS `UserDiamond` (
@@ -2802,6 +2929,14 @@ ON DUPLICATE KEY UPDATE `Fastest` = LEAST(`Fastest`, inDuration), `Slowest` = GR
 END//
 DELIMITER ;
 
+-- 傾印  資料表 koa_main.UserRetainPoints 結構
+CREATE TABLE IF NOT EXISTS `UserRetainPoints` (
+  `UserID` int(10) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Points` smallint(5) unsigned NOT NULL DEFAULT 1 COMMENT '留存積分',
+  `UpdateTime` int(10) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者留存積分';
+
 -- 傾印  資料表 koa_main.UserRewardTimes 結構
 CREATE TABLE IF NOT EXISTS `UserRewardTimes` (
   `UserRewardTimeID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '使用者領獎時間ID',
@@ -2837,63 +2972,73 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
   `NFTPlayerAmount` int(11) NOT NULL DEFAULT 0 COMMENT '使用者當前NFT角色持有數量',
   `FirstNFTPlayerAmount` int(11) DEFAULT NULL COMMENT '使用者初次登入時持有NFT角色數量',
+  `Tutorial` tinyint(3) unsigned NOT NULL DEFAULT 1 COMMENT '新手引導進度',
+  `CreatedIP` varchar(255) NOT NULL DEFAULT '' COMMENT '創建帳號的IP',
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Username` (`Username`),
   UNIQUE KEY `Nickname` (`Nickname`),
   KEY `Race` (`Race`),
   KEY `Coin` (`Coin`),
   KEY `Room` (`Room`),
-  KEY `FirstNFTPlayerAmount` (`FirstNFTPlayerAmount`)
+  KEY `FirstNFTPlayerAmount` (`FirstNFTPlayerAmount`),
+  KEY `Email` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='使用者資料';
 
--- 正在傾印表格  koa_main.Users 的資料：~46 rows (近似值)
+-- 正在傾印表格  koa_main.Users 的資料：~53 rows (近似值)
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Email`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`, `NFTPlayerAmount`, `FirstNFTPlayerAmount`) VALUES
-	(-15, 1, 'Robot015', 'Aixe Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -15, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-14, 1, 'Robot014', 'Aimee Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -14, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-13, 1, 'Robot013', 'Ceto Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -13, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-12, 1, 'Robot012', 'Oliver Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -12, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-11, 1, 'Robot011', 'Olé Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -11, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-10, 1, 'Robot010', 'Prudence Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -10, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-9, 1, 'Robot009', 'Arty Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -9, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-8, 1, 'Robot008', 'Morot Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -8, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-7, 1, 'Robot007', 'Al Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -7, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-6, 1, 'Robot006', 'Ceto Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -6, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-5, 1, 'Robot005', 'Oliver Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -5, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-4, 1, 'Robot004', 'Arty Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -4, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-3, 1, 'Robot003', 'Aixe Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -3, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-2, 1, 'Robot002', 'Oz Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -2, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(-1, 1, 'Robot001', 'Gottloh Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -1, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 101, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 201, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(3, 1, 'test003', 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 301, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(4, 1, 'test004', 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 401, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(5, 1, 'test005', 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 501, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(6, 1, 'test006', 'test006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 601, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(7, 1, 'test007', 'test007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 701, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 801, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 901, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1001, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(11, 1, 'test011', 'test011', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1101, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(12, 1, 'test012', 'test012', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1201, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(13, 1, 'test013', 'test013', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1301, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(14, 1, 'test014', 'test014', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1401, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(15, 1, 'test015', 'test015', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1501, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(16, 1, 'test016', 'test016', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1601, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(17, 1, 'test017', 'test017', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1701, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(18, 1, 'test018', 'test018', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1801, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(19, 1, 'test019', 'test019', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1901, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(20, 1, 'test020', 'test020', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2001, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(21, 1, 'test021', 'test021', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2101, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(22, 1, 'test022', 'test022', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2201, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(23, 1, 'test023', 'test023', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2301, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(24, 1, 'test024', 'test024', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2401, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(25, 1, 'test025', 'test025', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2501, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(26, 1, 'test026', 'test026', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2601, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(27, 1, 'test027', 'test027', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2701, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(28, 1, 'test028', 'test028', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2801, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(29, 1, 'test029', 'test029', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2901, 1001, 0, 0, 0, 0, 0, 0, NULL),
-	(30, 1, 'test030', 'test030', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 3001, 1001, 0, 0, 0, 0, 0, 0, NULL);
+INSERT INTO `Users` (`UserID`, `Status`, `Username`, `Nickname`, `Password`, `Email`, `Level`, `Exp`, `PetaToken`, `Coin`, `Power`, `Diamond`, `Player`, `Scene`, `Race`, `Lobby`, `Room`, `CreateTime`, `UpdateTime`, `NFTPlayerAmount`, `FirstNFTPlayerAmount`, `Tutorial`, `CreatedIP`) VALUES
+	(-10007, 0, 'Robot022', 'AI Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -10007, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10006, 0, 'Robot021', 'Prudence Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -10006, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10005, 0, 'Robot020', 'Aimee Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -10005, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10004, 0, 'Robot019', 'Ceto Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -10004, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10003, 0, 'Robot018', 'Oz Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -10003, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10002, 0, 'Robot017', 'Gottloh Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -10002, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-10001, 0, 'Robot016', 'Airty Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -10001, 1001, 0, 0, 0, 0, 1669091507, 0, NULL, 1, ''),
+	(-15, 1, 'Robot015', 'Aixe Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -15, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-14, 1, 'Robot014', 'Aimee Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -14, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-13, 1, 'Robot013', 'Ceto Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -13, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-12, 1, 'Robot012', 'Oliver Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -12, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-11, 1, 'Robot011', 'Olé Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -11, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-10, 1, 'Robot010', 'Prudence Cat', NULL, NULL, 1, 0, 0, 0, 0, 0, -10, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-9, 1, 'Robot009', 'Arty Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -9, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-8, 1, 'Robot008', 'Morot Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -8, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-7, 1, 'Robot007', 'Al Fox', NULL, NULL, 1, 0, 0, 0, 0, 0, -7, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-6, 1, 'Robot006', 'Ceto Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -6, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-5, 1, 'Robot005', 'Oliver Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -5, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-4, 1, 'Robot004', 'Arty Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -4, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-3, 1, 'Robot003', 'Aixe Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -3, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-2, 1, 'Robot002', 'Oz Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -2, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(-1, 1, 'Robot001', 'Gottloh Lion', NULL, NULL, 1, 0, 0, 0, 0, 0, -1, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(1, 1, 'test001', 'test001', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 101, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(2, 1, 'test002', 'test002', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 201, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(3, 1, 'test003', 'test003', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 301, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(4, 1, 'test004', 'test004', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 401, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(5, 1, 'test005', 'test005', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 501, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(6, 1, 'test006', 'test006', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 601, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(7, 1, 'test007', 'test007', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 701, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(8, 1, 'test008', 'test008', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 801, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(9, 1, 'test009', 'test009', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 901, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(10, 1, 'test010', 'test010', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1001, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(11, 1, 'test011', 'test011', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1101, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(12, 1, 'test012', 'test012', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1201, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(13, 1, 'test013', 'test013', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1301, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(14, 1, 'test014', 'test014', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1401, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(15, 1, 'test015', 'test015', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1501, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(16, 1, 'test016', 'test016', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1601, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(17, 1, 'test017', 'test017', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1701, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(18, 1, 'test018', 'test018', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1801, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(19, 1, 'test019', 'test019', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 1901, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(20, 1, 'test020', 'test020', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2001, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(21, 1, 'test021', 'test021', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2101, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(22, 1, 'test022', 'test022', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2201, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(23, 1, 'test023', 'test023', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2301, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(24, 1, 'test024', 'test024', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2401, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(25, 1, 'test025', 'test025', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2501, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(26, 1, 'test026', 'test026', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2601, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(27, 1, 'test027', 'test027', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2701, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(28, 1, 'test028', 'test028', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2801, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(29, 1, 'test029', 'test029', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 2901, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, ''),
+	(30, 1, 'test030', 'test030', '$2y$10$elorX60dGEdj50HVHxJqE.aigfqxUu86tPKCCYmDyIdWoDHUL3JVy', '', 1, 0, 0, 0, 0, 0, 3001, 1001, 0, 0, 0, 0, 0, 0, NULL, 1, '');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

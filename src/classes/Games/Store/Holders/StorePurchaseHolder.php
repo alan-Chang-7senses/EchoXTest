@@ -26,10 +26,8 @@ class StorePurchaseHolder extends stdClass {
     /** @var int 商品數量 */
     public int $amount;
 
-    /** @var string 蘋果商品 */
-    public string $iAP;
+    /** @var string 商品ProductID */
+    public string $productID;
 
-    /** @var string 安卓商品 */
-    public string $iAB;
 
 }

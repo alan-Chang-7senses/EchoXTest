@@ -4,7 +4,6 @@ namespace Games\Store;
 
 use Consts\EnvVar;
 use Consts\Globals;
-use Consts\Predefined;
 use DateTime;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
@@ -26,7 +25,7 @@ class StoreUtility {
             StoreValue::UIType_08 => 9,
             StoreValue::UIType_04 => 3,
             StoreValue::UIType_00 => 0,
-            default => StoreValue::UINoItems
+            default => StoreValue::UIUnset
         };
     }
 
@@ -34,6 +33,7 @@ class StoreUtility {
         $checkTimeValue = (new DateTime($checkTime))->format('U');
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
         $result = new StoreRefreshTimeHolder();
+        $result->updateTime = $updateTime;
 
         if ($updateTime < $checkTimeValue) {
             $seconds = $checkTimeValue - $updateTime;
@@ -50,14 +50,24 @@ class StoreUtility {
         return $result;
     }
 
+    public static function IsPurchaseStore(int $storeType): bool {
+        return (($storeType == StoreValue::TypeAppleIAP) ||
+                ($storeType == StoreValue::TypeGoogleIAB) ||
+                ($storeType == StoreValue::TypeMyCard));
+    }
+
+    public static function GetPurchasePlat(int $storeType): int {
+        return match ($storeType) {
+            StoreValue::TypeAppleIAP => StoreValue::PlatApple,
+            StoreValue::TypeGoogleIAB => StoreValue::PlatGoogle,
+            StoreValue::TypeMyCard => StoreValue::PlatMyCard,
+            default => StoreValue::PlatNone
+        };
+    }
+
     public static function CheckAutoRefreshTime(int $updateTime): StoreRefreshTimeHolder {
         //商品更新,回傳剩餘時間
         return self::CheckTime($updateTime, ConfigGenerator::Instance()->StoreAutoRefreshTime);
-    }
-
-    public static function CheckResetTime(int $updateTime): StoreRefreshTimeHolder {
-        //每日重置刷新按鈕的時間,回傳剩餘時間
-        return self::CheckTime($updateTime, ConfigGenerator::Instance()->StoreRefreshResetTime);
     }
 
     public static function GetCurrencyItemID(int $currency): int {
@@ -98,7 +108,7 @@ class StoreUtility {
 
     public static function GetCallbackkey(int $device): string {
         return match ($device) {
-            StoreValue::Andriod => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
+            StoreValue::Android => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
             StoreValue::iOS => getenv(EnvVar::QuickSDKCallBackKeyiOS),
             default => ""
         };

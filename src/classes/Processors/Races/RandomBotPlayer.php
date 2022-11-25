@@ -25,7 +25,7 @@ class RandomBotPlayer extends BaseRace{
         if(empty($amount)) $amount = 1;
         
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rows = $accessor->FromTable('Users')->WhereLess('UserID', PlayerValue::BotIDLimit)->OrderBy('RAND()')->Limit($amount)->FetchAll();
+        $rows = $accessor->FromTable('Users')->WhereLess('UserID', PlayerValue::BotIDLimit)->WhereEqual('Status', 1)->OrderBy('RAND()')->Limit($amount)->FetchAll();
         
         $playerPool = PlayerPool::Instance();
         
