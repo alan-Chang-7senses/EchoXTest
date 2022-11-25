@@ -35,6 +35,8 @@ class GetMails extends BaseProcessor
             {
                 $items[] = ItemUtility::GetClientSimpleInfo($mailItem->ItemID, $mailItem->Amount);
             }
+            
+            $content =  $userMailsHandler->ReplaceContent( $mailInfo->Content,$userMailInfo->MailArgument);
 
 
             $mail = new stdClass();
@@ -43,7 +45,8 @@ class GetMails extends BaseProcessor
                 'openStatus' => $userMailInfo->OpenStatus,
                 'receiveStatus' => $userMailInfo->ReceiveStatus,
                 'title' => $mailInfo->Title,
-                'content' => $mailInfo->Content,
+                'content' => $content,
+                'argus' => $userMailInfo->MailArgument,
                 'sender' => $mailInfo->Sender,
                 'url' => $mailInfo->URL,
                 'remainingTime' => $userMailInfo->FinishTime - $GLOBALS[Globals::TIME_BEGIN],
