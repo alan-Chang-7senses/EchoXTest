@@ -32,7 +32,7 @@ class Versions extends BaseProcessor{
             $versions[] = [
                 'frontend' => $row->Frontend,
                 'avatar' => $row->Avatar,
-                'featureFlag' => $row->FeatureFlag
+                'featureFlag' => $row->FeatureFlag ?? '',
             ];
         }
 
