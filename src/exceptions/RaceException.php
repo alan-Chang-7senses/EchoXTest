@@ -32,4 +32,5 @@ $lang[RaceException::EnergyRunOutBonusNotExist] = 'Energy Run Out bonus does not
 $lang[RaceException::UsePlayerError] = 'using player error';
 $lang[RaceException::NotAvailableRace] = 'The race is not available at the moment.';
 $lang[RaceException::NoLimitTimeDataConfig] = 'No Limit Time Data Config. (start time, end time)';
+$lang[RaceException::NoRaceSceneInfo] = 'The Scene Info is not exist  (Scene ID: [scene])';
 return $lang;

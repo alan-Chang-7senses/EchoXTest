@@ -49,7 +49,11 @@ class StoreTradesPool extends PoolAccessor {
         return $holder;
     }
 
-    protected function SaveUpdate(stdClass $data, array $bind): stdClass {
+    protected function SaveUpdate(stdClass|bool $data, array $bind): stdClass|bool {
+        if ($data === false) {
+            return false;
+        }
+
 
         $bind['UpdateTime'] = (int) $GLOBALS[Globals::TIME_BEGIN];
 

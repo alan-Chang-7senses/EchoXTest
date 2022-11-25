@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `Announcement` (
   `GraphURL` text NOT NULL DEFAULT '' COMMENT '圖片URL',
   `Title` text NOT NULL DEFAULT '' COMMENT '公告標題',
   `Content` text NOT NULL DEFAULT '' COMMENT '公告內文',
-  `CreateTime` datetime NOT NULL COMMENT '創建時間。非發佈時間',
+  `CreateTime` int(11) NOT NULL DEFAULT 0 COMMENT 'UI 顯示公告創建時間',
   `PublishTime` int(11) NOT NULL DEFAULT 0 COMMENT '發佈時間',
   `FinishTime` int(11) NOT NULL DEFAULT 0 COMMENT '結束時間',
   PRIMARY KEY (`Serial`) USING BTREE,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `Announcement` (
 -- 正在傾印表格  koa_static.Announcement 的資料：~1 rows (近似值)
 /*!40000 ALTER TABLE `Announcement` DISABLE KEYS */;
 INSERT INTO `Announcement` (`Serial`, `ID`, `Type`, `Lang`, `GraphURL`, `Title`, `Content`, `CreateTime`, `PublishTime`, `FinishTime`) VALUES
-	(1, 1, 2, 12, '...', '我是標題', '我是公告\r\n我是公告\r\n我是公告', '2022-10-31 00:00:00', 1666597667, 2147483647);
+	(1, 1, 2, 12, '...', '我是標題', '我是公告\r\n我是公告\r\n我是公告', 1666597667, 1666597667, 2147483647);
 /*!40000 ALTER TABLE `Announcement` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.DirtyWord 結構

@@ -25,7 +25,7 @@ use stdClass;
 abstract class BaseRefresh extends BaseProcessor {
 
     protected int $nowPlat = StoreValue::PlatNone;
-    protected int $orderID;
+    protected string $orderID;
     protected int $userID;
 
     abstract function PurchaseVerify(stdClass $purchaseOrders): stdClass;
@@ -56,14 +56,20 @@ abstract class BaseRefresh extends BaseProcessor {
 
                 $verifyResult = $this->PurchaseVerify($row);
 
-                if ($verifyResult->code == StoreValue::PurchaseProcessRetry) {
-                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
-                    throw new StoreException(StoreException::PurchaseProcessing);
-                } else if ($verifyResult->code == StoreValue::PurchaseProcessFailure) {
-                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
-                    throw new StoreException(StoreException::PurchaseFailure);
-                } else {
-                    $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
+                switch ($verifyResult->code) {
+                    case StoreValue::PurchaseVerifySuccess:
+                        $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
+                        break;
+                    case StoreValue::PurchaseVerifyRetry:
+                        $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
+                        throw new StoreException(StoreException::PurchaseProcessing);
+                    case StoreValue::PurchaseVerifyMyCardError:
+                        $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusMyCardError, $verifyResult->message);
+                        throw new StoreException(StoreException::MyCardError, ['[message]' => $verifyResult->message]);
+                    case StoreValue::PurchaseVerifyFailure:
+                    default :
+                        $storeHandler->UpdatePurchaseOrderStatus($this->orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
+                        throw new StoreException(StoreException::PurchaseFailure);
                 }
 
                 if ($storeTradesHolder->remainInventory != StoreValue::InventoryNoLimit) {

@@ -48,6 +48,7 @@
 		- [創建房間](PVP/CreateRoom.md)。
 		- [加入房間](PVP/JoinRoom.md)。		
 		- [離開房間](PVP/LeaveRoom.md)。
+		- [創建新手引導競賽房間](PVP/CreateTutorialRoom.md)。
 		- [PT賽每日限時開放資訊](PVP/PVPLimitTime.md)
 	- PVE：
 		- [章節列表頁面](PVE/ChapterListPage.md)。
@@ -106,6 +107,7 @@
 			- [競賽最快速排行榜](Leaderboard/CB15/RaceFastest.md)。
 			- [最有錢使用者排行榜](Leaderboard/CB15/UserRichest.md)。
 		- [領先率](Leaderboard/LeadRate.md)。
+		- [觀看其他人的Peta資料](Leaderboard/RivalPlayer.md)。
 	- 串接：
 		- Metasens：
 			- [用戶是否存在](Interfaces/Metasens/UserExist.md)。
