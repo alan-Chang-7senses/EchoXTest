@@ -54,7 +54,7 @@ class BattleRecord extends BaseProcessor
         $playerDict = [];
         {
             $playerList = $accessor->FromTable("PlayerNFT")->WhereIn("PlayerID", $playerIDList)
-                ->SelectExpr("PlayerID, TokenName")->FetchAll();
+                ->SelectExpr("PlayerID, ItemName")->FetchAll();
             $accessor->ClearAll();
             foreach( $playerList as $player )
             {
@@ -64,7 +64,7 @@ class BattleRecord extends BaseProcessor
                 $newItem = new stdClass();
                 $idName = PlayerUtility::GetIDName($player->PlayerID);
                 $newItem->id = $player->PlayerID;
-                $newItem->name = (string)($player->TokenName ?? $idName);
+                $newItem->name = (string)($player->ItemName ?? $idName);
                 $newItem->head = $parts->head;
                 $newItem->body = $parts->body;
                 $newItem->hand = $parts->hand;
