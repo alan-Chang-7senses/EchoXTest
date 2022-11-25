@@ -41,6 +41,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 |:-:|:-:|:-:|
 | frontend | string | 前端版本號 |
 | avatar | string | Avatar 資源版本號 |
+| featureFlag | string | 該版本的功能開關(Json) |
 
 ### Example
 
@@ -52,11 +53,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	    "versions": [
 	        {
 	            "frontend": "0.1.19",
-	            "avatar": "0.9.3"
+	            "avatar": "0.9.3",
+	            "featureFlag": ""
 	        },
 	        {
 	            "frontend": "0.1.18",
-	            "avatar": "0.9.3"
+	            "avatar": "0.9.3",
+	            "featureFlag": "{\"ReceiveTicket\":false}"
 	        }
 	    ]
 	}

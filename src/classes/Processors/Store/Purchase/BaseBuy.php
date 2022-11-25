@@ -27,7 +27,7 @@ abstract class BaseBuy extends BaseProcessor {
     protected int $tradeID;
     protected int $nowPlat = StoreValue::PlatNone;
 
-    public function MakeOrder(): int {
+    public function MakeOrder(): string {
 
         $this->tradeID = InputHelper::post('tradeID');
 

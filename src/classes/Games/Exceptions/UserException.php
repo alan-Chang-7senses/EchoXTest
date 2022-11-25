@@ -28,5 +28,4 @@ class UserException extends NormalException
     const UserFreePlayerOverLimit = 2016;
     const UserCoinNotEnough = 2017;
     const UserPowerNotEnough = 2018;
-    const UserFreePlayerSaveError = 2019;
 }

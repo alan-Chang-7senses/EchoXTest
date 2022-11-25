@@ -16,6 +16,7 @@ use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StorePurchaseHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Store\Holders\StoreTradesHolder;
+use Generators\DataGenerator;
 use stdClass;
 
 /*
@@ -77,31 +78,35 @@ class StoreHandler {
     }
 
     public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
+
+        if ($groupID == StoreValue::NoStoreGroup) {
+            return "";
+        }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StorePurchase WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.PurchaseID ORDER BY RAND()", []);
+        $purchaseGroup = $accessor->executeBindFetch("SELECT PurchaseID FROM StorePurchase WHERE GROUPID = " . $groupID . " GROUP BY PurchaseID ORDER BY RAND()", []);
+        if ($purchaseGroup === false) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L89" . $groupID]);
+        }
+
         $storeTradeIDs = [];
         $count = 0;
+        $items = $accessor->ClearAll()->FromTable("StorePurchase")->WhereEqual("GROUPID", $groupID)->WhereEqual("PurchaseID", $purchaseGroup->PurchaseID)->OrderBy("", "RAND()")->FetchAll();
+        if (!isset($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L96:" . $purchaseGroup->PurchaseID]);
+        }
+
         foreach ($items as $item) {
             if ($count >= $amount) {
                 break;
             }
-
             $storeTradesHolder = new StoreTradesHolder();
             $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-//            if (isset($tradIDs[$count])) {
-//                $storeTradesHolder->tradeID = $tradIDs[$count];
-//                unset($tradIDs[$count]);
-//            } else {
-//                $storeTradesHolder->tradeID = StoreValue::NoTradeID;
-//            }
-
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = $storeType;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
             $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
-//            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
 
             $count++;
         }
@@ -111,9 +116,22 @@ class StoreHandler {
     }
 
     public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $groupID, int $amount): string {
+
+        if ($groupID == StoreValue::NoStoreGroup) {
+            return "";
+        }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $items = $accessor->executeBindFetchAll("SELECT * FROM (SELECT * FROM StoreCounters WHERE GROUPID = " . $groupID . " ORDER BY RAND()) AS Result GROUP BY Result.CounterID ORDER BY RAND()", []);
+        $countersGroup = $accessor->executeBindFetch("SELECT CounterID FROM StoreCounters WHERE GROUPID =" . $groupID . " GROUP BY CounterID ORDER BY RAND()", []);
+        if (!isset($countersGroup)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L127:" . $groupID]);
+        }
+
+        $items = $accessor->ClearAll()->FromTable("StoreCounters")->WhereEqual("GROUPID", $groupID)->WhereEqual("CounterID", $countersGroup->CounterID)->OrderBy("", "RAND()")->FetchAll();
+        if (!isset($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L132:" . $countersGroup->CounterID]);
+        }
+
         $storeTradeIDs = [];
         $count = 0;
         foreach ($items as $item) {
@@ -247,7 +265,7 @@ class StoreHandler {
 
                 $itemInfo = ItemInfoPool::Instance()->{ $storeCountersHolder->itemID};
                 if ($itemInfo == false) {
-                    throw new StoreException(StoreException::Error);
+                    throw new StoreException(StoreException::Error, ['[cause]' => 'ItemID does not exist ' . $storeCountersHolder->itemID]);
                 }
 
                 $tradeInfo->itemID = $storeCountersHolder->itemID;
@@ -267,14 +285,14 @@ class StoreHandler {
         return $result;
     }
 
-    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): int {
+    public function CreatPurchaseOrder(StorePurchaseHolder|stdClass $storePurchaseHolder, int $tradeID, int $plat): string {
 
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
 
-        $orderid = hrtime(true);
+        $orderid = DataGenerator::GuidV4();
         $accessor->FromTable('StorePurchaseOrders')->Add([
-            "OrderID" => $orderid, 
+            "OrderID" => $orderid,
             "UserID" => $this->userID,
             "TradeID" => $tradeID,
             "ProductID" => $storePurchaseHolder->productID,
@@ -289,9 +307,12 @@ class StoreHandler {
         return $orderid;
     }
 
-    public function UpdatePurchaseOrderStatus(int $orderID, int $status, string $message) {
-        $accessor = new PDOAccessor(EnvVar::DBMain);
+    public function UpdatePurchaseOrderStatus(string $orderID, int $status, string $message) {
+        self::UpdatePurchaseOrderStatusStatic($orderID, $status, $message);
+    }
 
+    public static function UpdatePurchaseOrderStatusStatic(string $orderID, int $status, string $message) {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $orderID)->Modify([
             "Status" => $status,
             "Message" => $message,
@@ -321,13 +342,13 @@ class StoreHandler {
 //
 //        $orderID = $storePurchaseOrdersHolder->OrderID;
 //
-//        if ($result == StoreValue::PurchaseProcessSuccess) {
+//        if ($result == StoreValue::PurchaseVerifySuccess) {
 //            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
 //            //加物品
 //            $userBagHandler = new UserBagHandler($this->userID);
 //            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
 //            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-//        } else if ($result == StoreValue::PurchaseProcessFailure) {
+//        } else if ($result == StoreValue::PurchaseVerifyFailure) {
 //            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
 //        }
 //        return true;

@@ -2,6 +2,7 @@
 
 ## 介紹
 
+- (暫時用不到，因為沒有插入的點)
 - 遊戲中MyCard儲值，取消訂單購買。
 - 需要完成登入驗證才可正常使用此API。
 
@@ -21,7 +22,7 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| orderID | int | 訂單序號 |
+| orderID | string | 訂單序號 |
 
 <br>
 

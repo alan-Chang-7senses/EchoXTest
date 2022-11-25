@@ -56,21 +56,27 @@ class Restore extends BaseProcessor {
             $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusVerify, "Verifying");
 
             $verifyResult = MyCardUtility::Verify($userID, $storePurchaseOrders->Receipt);
-            if ($verifyResult->code == StoreValue::PurchaseProcessRetry) {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
-                continue;
-            } else if ($verifyResult->code == StoreValue::PurchaseProcessFailure) {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
-                continue;
-            } else {
-                $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
+            switch ($verifyResult->code) {
+                case StoreValue::PurchaseVerifySuccess:
+                    $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish, $verifyResult->message);
+                    break;
+                case StoreValue::PurchaseVerifyRetry:
+                    $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusProcessing, $verifyResult->message);
+                    continue 2;
+                case StoreValue::PurchaseVerifyMyCardError:
+                    $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusMyCardError, $verifyResult->message);
+                    continue 2;
+                case StoreValue::PurchaseVerifyFailure:
+                default :
+                    $storeHandler->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure, $verifyResult->message);
+                    continue 2;
             }
 
             //加物品
             $userBagHandler = new UserBagHandler($userID);
             $additem = ItemUtility::GetBagItem($storePurchaseOrders->ItemID, $storePurchaseOrders->Amount);
             $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-            
+
             //加入通知信件
             UserUtility::AddMailItemsWithReceive($userID, [$additem], ConfigGenerator::Instance()->MyCardRestoreMailID, ConfigGenerator::Instance()->MyCardRestoreMailDay);
             $finishNum++;
