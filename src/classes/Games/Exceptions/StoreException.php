@@ -16,5 +16,6 @@ class StoreException extends NormalException {
     const PurchaseFailure = 8008;
     const PurchaseProcessing = 8009;
     const ProductNotExist = 8010;
+    const MyCardError = 8011;
 
 }
