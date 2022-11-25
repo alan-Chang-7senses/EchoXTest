@@ -33,12 +33,8 @@ class MailsHandler {
     }
 
     public function AddMailArgument(int $kind, string $value) {
-
         if ($kind != MailValues::ArgumentNone) {
-            $newValue = new stdClass();
-            $newValue->k = $kind;            
-            $newValue->v = $value;
-            $this->arguments[] = $newValue;
+            $this->arguments[] = ["kind" => $kind, "value" => $value];
         }
     }
 
@@ -111,28 +107,26 @@ class MailsHandler {
     }
 
     public function ReplaceContent(string $content, string|null|array &$argumentString): string {
-        if (isset($argumentString)) {
 
+        if (isset($argumentString)) {
             $arguments = json_decode($argumentString);
             $response = [];
-
             foreach ($arguments as $argu) {
 
-                switch ($argu->k) {
+                switch ($argu->kind) {
                     case MailValues::ArgumentText:
-                        $content = preg_replace(MailValues::ReplaceText, $argu->v, $content, 1);
+                        $content = preg_replace(MailValues::ReplaceText, $argu->value, $content, 1);
                         continue 2;
                     case MailValues::ArgumentTime:
-                        $response[] = ["kind" => MailValues::ClientTimeStamp, "value"=>$argu ->v];
+                        $response[] = ["kind" => MailValues::ClientTimeStamp, "value" => $argu->value];
                         break;
                     case MailValues::ArgumentAreaID:
-                        $response[] = ["kind" => MailValues::ClientAreaID, "value"=>$argu ->v];                        
+                        $response[] = ["kind" => MailValues::ClientAreaID, "value" => $argu->value];
                         break;
                     case MailValues::ArgumentAmount:
-                        $content = preg_replace(MailValues::ReplaceAmount, $argu->v, $content, 1);
+                        $content = preg_replace(MailValues::ReplaceAmount, $argu->value, $content, 1);
                         continue 2;
                 }
-                
             }
             $argumentString = $response;
         }

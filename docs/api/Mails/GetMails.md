@@ -43,14 +43,15 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | receiveStatus | int |信件是否已領獎 |
 | title | string | 信件標題 |
 | content | string | 信件內容 |
-| [argus](#argus) | argus | 信件參數(json) |
+| [argus](#argus) | object | 信件參數 |
 | sender | string | 信件寄件人 |
 | url | string | 信件內容-網址 |
 | remainingTime | int | 剩餘時間 |
 | [rewardItems](#rewardItems) | object| 獎勵物品|
 |
 
-#### <span id="argus">rewardItems 內容</span>
+#### <span id="argus">argus 內容</span>
+_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | kind | int | 取代種類<br>1.時間戳 2.多國語序號 |
@@ -81,7 +82,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 				"openStatus": 0,
 				"receiveStatus": 0,
 				"title": "Welcome to PetaRush,",
-				"content": "在{time1}送上盲盒開出 已取代名稱 的賦能 「{areaID}」30張！ 時間 {time2}",
+				"content": "在時間 {time1} 送上盲盒開出 已取代名稱 的賦能 「{areaID}」30張！ 現在時間: {time1}",
 				"argus": [
 					{
 						"kind": 1,
