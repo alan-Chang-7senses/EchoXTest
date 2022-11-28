@@ -26,7 +26,6 @@ class CompetitionsInfoPool extends PoolAccessor
             ->Fetch();
         if($row === false)return false;    
         $holder->id = $row->ID;
-        $holder->seasonStartTime = $row->SeasonStartTime;
         $holder->weeksPerSeason = $row->WeeksPerSeason;
         $holder->minRatingReset = $row->MinRatingReset;
         $holder->resetRate = $row->ResetRate;
@@ -50,6 +49,7 @@ class CompetitionsInfoPool extends PoolAccessor
         $holder->yValue = $row->YValue;
         $holder->kValue = $row->KValue;
         $holder->delta = $row->Delta;
+        $holder->bot = $row->BOT;
         return $holder;
     }
 }

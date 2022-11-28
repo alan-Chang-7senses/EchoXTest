@@ -6,7 +6,6 @@ use stdClass;
 class CompetitionsInfoHolder extends stdClass
 {
     public int $id;
-    public int|string $seasonStartTime;
     public int $weeksPerSeason;
     public int $minRatingReset;
     public int $resetRate;
@@ -30,5 +29,5 @@ class CompetitionsInfoHolder extends stdClass
     public int $yValue;
     public int $kValue;
     public int $delta;
-
+    public int $bot;
 }
