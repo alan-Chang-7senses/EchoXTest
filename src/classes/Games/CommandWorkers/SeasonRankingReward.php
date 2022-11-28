@@ -18,8 +18,8 @@ use Generators\ConfigGenerator;
 class SeasonRankingReward extends BaseWorker{
     
     private array $rewardField = [
-        RaceValue::LobbyCoin => 'CoinReward',
-        RaceValue::LobbyPT => 'PetaTokenReward',
+        RaceValue::LobbyCoinA => 'CoinReward',
+        RaceValue::LobbyPetaTokenA => 'PetaTokenReward',
         RaceValue::LobbyCoinB => 'CoinRewardB',
         RaceValue::LobbyPetaTokenB => 'PetaTokenRewardB',
     ];
@@ -63,8 +63,8 @@ class SeasonRankingReward extends BaseWorker{
         echo '== Get Season Ranking Rewards comoleted..'.PHP_EOL.PHP_EOL;
         
         $limit = count($rewards);
-        $lobbyCoin = $this->RewardAndLog(RaceValue::LobbyCoin, $seasonID, $limit, $rewards);
-        $lobbyPetaToken = $this->RewardAndLog(RaceValue::LobbyPT, $seasonID, $limit, $rewards);
+        $lobbyCoin = $this->RewardAndLog(RaceValue::LobbyCoinA, $seasonID, $limit, $rewards);
+        $lobbyPetaToken = $this->RewardAndLog(RaceValue::LobbyPetaTokenA, $seasonID, $limit, $rewards);
         $lobbyCoinB = $this->RewardAndLog(RaceValue::LobbyCoinB, $seasonID, $limit, $rewards);
         $lobbyPetaTokenB = $this->RewardAndLog(RaceValue::LobbyPetaTokenB, $seasonID, $limit, $rewards);
         

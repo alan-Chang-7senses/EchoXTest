@@ -15,7 +15,7 @@ use stdClass;
 class LeadboardUtility {
     
     const LeadRateContents = [
-        RaceValue::LobbyCoin => [
+        RaceValue::LobbyCoinA => [
             'table' => 'LeaderboardLeadCoin',
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',

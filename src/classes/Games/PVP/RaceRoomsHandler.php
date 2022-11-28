@@ -18,10 +18,10 @@ class RaceRoomsHandler {
 
     private function GetNewRomRate(int $lobby): int {
         switch ($lobby) {
-            case RaceValue::LobbyCoin:
+            case RaceValue::LobbyCoinA:
             case RaceValue::LobbyCoinB:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
-            case RaceValue::LobbyPT:
+            case RaceValue::LobbyPetaTokenA:
             case RaceValue::LobbyPetaTokenB:
                 return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
             case RaceValue::LobbyStudy:

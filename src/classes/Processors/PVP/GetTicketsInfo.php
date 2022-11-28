@@ -20,7 +20,7 @@ class GetTicketsInfo extends BaseRace {
         }
 
         $ticketsinfo = [];
-        $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyCoin);                      
+        $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyCoinA);                      
         //todo vip 達標            
         //$ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyPT);
         $result = new ResultData(ErrorCode::Success);

@@ -31,15 +31,15 @@ use Holders\ResultData;
 class FinishRace extends BaseRace{
     
     private array $rewardField = [
-        RaceValue::LobbyCoin => 'coinReward',
-        RaceValue::LobbyPT => 'petaTokenReward',
+        RaceValue::LobbyCoinA => 'coinReward',
+        RaceValue::LobbyPetaTokenA => 'petaTokenReward',
         RaceValue::LobbyCoinB => 'coinRewardB',
         RaceValue::LobbyPetaTokenB => 'petaTokenRewardB',
     ];
     
     private array $leaderboardLeadFunc = [
-        RaceValue::LobbyCoin => 'LeaderboardLeadCoin',
-        RaceValue::LobbyPT => 'LeaderboardLeadPT',
+        RaceValue::LobbyCoinA => 'LeaderboardLeadCoin',
+        RaceValue::LobbyPetaTokenA => 'LeaderboardLeadPT',
         RaceValue::LobbyCoinB => 'LeaderboardLeadCoinB',
         RaceValue::LobbyPetaTokenB => 'LeaderboardLeadPTB',
     ];
