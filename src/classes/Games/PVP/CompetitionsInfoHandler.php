@@ -66,8 +66,11 @@ class CompetitionsInfoHandler
         return floor(min(max($rating,$this->info->minRating),$this->info->maxRating));
     }
 
-    /**取得賽季重置後的評分 */
-    public function GetResetRating(?int $oldRating) : int
+    /**
+     * 取得賽季重置後的評分
+     * @param $oldRating == null時回傳基礎分數
+     */
+    public function GetResetRating(?int $oldRating = null) : int
     {
         if($oldRating === null) return $this->info->baseRating;
         $rt = $oldRating * ($this->info->resetRate / CompetitionsValue::ResetRateDivisor);
