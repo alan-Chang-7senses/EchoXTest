@@ -37,6 +37,7 @@ Content Type: `application/json`
 | [nextLevelRequired](#nextLevelRequired) | array | 下級升級所需道具資訊。滿等回傳null |
 | requiredCoin | int | 升級所需金幣。滿等回傳0 |
 | coinHold | int | 使用者持有金幣 |
+| hasNextLevelReachLimit | bool | 升級後下一級是否到當前階級限制 |
 
 ##### <span id="nextLevelRequired">itemInfos 升級所需物品資訊內容</span>
 
@@ -78,5 +79,6 @@ Content Type: `application/json`
             }
         ],
         "requiredCoin": 218000,
-        "coinHold": 7043999
+        "coinHold": 7043999,
+        "hasNextLevelReachLimit" : true
     }

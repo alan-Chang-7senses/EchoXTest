@@ -95,6 +95,7 @@ class UpgradeSkill extends BaseProcessor{
             $results->nextLevelRequired = null;
             $results->requiredCoin = 0;
             $results->coinHold = $userInfo->coin;
+            $results->hasNextLevelReachLimit = true;
             return $results;
        }
        $chipID = UpgradeUtility::GetSkillUpgradeChipID($skillID);
@@ -108,7 +109,7 @@ class UpgradeSkill extends BaseProcessor{
        }
        $results->requiredCoin = $chargeRequired;
        $results->coinHold = $userInfo->coin;
-
+       $results->hasNextLevelReachLimit = $nextLevel > $levelLimit;
        return $results;
     }
 }
