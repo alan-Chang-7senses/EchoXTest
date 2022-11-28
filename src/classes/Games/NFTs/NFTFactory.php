@@ -349,13 +349,18 @@ class NFTFactory {
                     $userInfo =(new UserHandler($row['UserID']))->GetInfo();
                     $accessor->ClearCondition()->FromTable('Users')
                     ->WhereEqual('UserID',$userInfo->id)->Modify(['Player' => $userInfo->players[0]]);
-                    UserPool::Instance()->Delete($userInfo->id);
+                    // UserPool::Instance()->Delete($userInfo->id);
                 }    
             }            
+            $rows = $accessor->ClearCondition()->SelectExpr('UserID')->FromTable('PlayerHolder')
+                                       ->WhereIn('PlayerID',$changeholdPlayerIDs)
+                                       ->FetchAll();
+            foreach($rows as $row) UserPool::Instance()->Delete($row['UserID']);
         }
+
         UserPool::Instance()->Delete($this->userHolder->userID);
         //紀錄當前、初次NFT角色數量
-        $accessor->ClearCondition()->executeBind(
+        $accessor->ClearAll()->executeBind(
             'UPDATE Users SET
                 FirstNFTPlayerAmount = if(FirstNFTPlayerAmount IS NULL, :FirstNFTPlayerAmount,FirstNFTPlayerAmount),
                 NFTPlayerAmount = :NFTPlayerAmount
