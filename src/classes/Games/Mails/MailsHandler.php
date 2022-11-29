@@ -108,7 +108,7 @@ class MailsHandler {
 
     public function ReplaceContent(string $content, string|null|array &$argumentString): string {
 
-        if (isset($argumentString)) {
+        if (!empty($argumentString)) {
             $arguments = json_decode($argumentString);
             $response = [];
             foreach ($arguments as $argu) {

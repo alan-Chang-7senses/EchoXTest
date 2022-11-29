@@ -38,6 +38,7 @@ class CurrentInfo extends BaseProcessor{
             'room' => $userInfo->room,
             'unreadmail' => (new MailsHandler())->GetUnreadMails($userInfo->id),
             'raceCount' => UserUtility::GetUserRaceCount($userInfo->id),
+            'tutorial' => $userInfo->tutorial,
         ];
         
         return $result;

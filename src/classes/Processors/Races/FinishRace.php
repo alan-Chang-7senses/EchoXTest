@@ -201,9 +201,9 @@ class FinishRace extends BaseRace{
                     ]);
         });
         
-        $racePlayerInfos = [];
-        foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerInfos[] = (new RacePlayerHandler($racePlayerID))->GetInfo();
-        RaceUtility::RecordRatingForEachPlayer($racePlayerInfos,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);
+        // $racePlayerInfos = [];
+        // foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerInfos[] = (new RacePlayerHandler($racePlayerID))->GetInfo();
+        // RaceUtility::RecordRatingForEachPlayer($racePlayerInfos,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);
 
         foreach ($users as $user) $userPool->Delete($user['id']);
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
