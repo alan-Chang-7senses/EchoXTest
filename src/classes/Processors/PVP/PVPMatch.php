@@ -14,6 +14,9 @@ class PVPMatch extends BasePVPMatch {
         $result->raceRoomID = $raceRoomID;
         $result->extraMatchSeconds = ConfigGenerator::Instance()->PvP_ExtraMatchSeconds;
         $result->maxMatchSeconds = ConfigGenerator::Instance()->PvP_MaxMatchSeconds;
+        //todo
+        $result->minMatchPlayers = 0;
+        $result->maxBot = 0;
 
         return $result;
     }

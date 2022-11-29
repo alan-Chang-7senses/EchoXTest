@@ -4,10 +4,14 @@ namespace Games\Races;
 
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
+use Consts\Globals;
 use Consts\Sessions;
+use DateTime;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
 use Games\Pools\PlayerPool;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
@@ -138,5 +142,60 @@ class RaceUtility {
         $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
         
         PlayerPool::Instance()->DeleteAll($playerIDs);
+    }
+
+    /**
+     * 結束競賽時。計算並紀錄每個角色積分。
+     * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
+     */
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : void
+    {
+        $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
+        //不計排行榜的賽制不計分
+        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return;
+
+        $accessor = AccessorFactory::Main();
+        $playerIDs = array_column($racePlayerInfos,'player');
+        $allRatings = [];
+
+        $whereValues = $accessor->valuesForWhereIn($playerIDs);
+        $whereValues->bind['SeasonID'] = $seasonID;
+        // //有可能是false，或有缺少資料。必須給預設值。
+        $rows = $accessor->ClearCondition()
+                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime` FROM `LeaderboardRating`
+                                        WHERE `PlayerID` IN '.$whereValues->values.'
+                                        AND SeasonID = :SeasonID',$whereValues->bind);
+        
+        foreach($rows as $row)
+        {
+            $allRatings[$row->PlayerID] = $row->Rating;
+        }
+        foreach($playerIDs as $playerID)
+        {
+            if(!isset($allRatings[$playerID]))
+            $allRatings[$playerID] = $competitionHandler->GetResetRating(null);
+        }
+        $binds = [];
+        foreach($racePlayerInfos as $racePlayerInfo)
+        {
+            //找出自己以外的
+            $allRatingsTemp = $allRatings;
+            $playerID = $racePlayerInfo->player;
+            //不幫機器人記排行榜。
+            if($playerID < PlayerValue::BotIDLimit)continue;
+            unset($allRatingsTemp[$playerID]);
+            $otherPlayerRankings = array_values($allRatingsTemp);
+            $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRankings,$racePlayerInfo->ranking);
+            $binds[] = 
+            [
+                'PlayerID' => $playerID,
+                'SeasonID' => $seasonID,
+                'CompetitionType' => $lobby,
+                'Rating' => $rating,
+                'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
+        }
+
+        $accessor->ClearCondition()->FromTable('LeaderboardRating')->AddAll($binds,true);
     }
 }

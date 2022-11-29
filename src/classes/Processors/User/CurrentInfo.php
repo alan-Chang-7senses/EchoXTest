@@ -5,6 +5,7 @@ namespace Processors\User;
 use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Mails\MailsHandler;
+use Games\Users\UserUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -36,6 +37,7 @@ class CurrentInfo extends BaseProcessor{
             'lobby' => $userInfo->lobby,
             'room' => $userInfo->room,
             'unreadmail' => (new MailsHandler())->GetUnreadMails($userInfo->id),
+            'raceCount' => UserUtility::GetUserRaceCount($userInfo->id),
         ];
         
         return $result;

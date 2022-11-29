@@ -17,6 +17,7 @@ use Games\Pools\RaceVerifyPool;
 use Games\Pools\RaceVerifyScenePool;
 use Games\Pools\SingleRankingRewardPool;
 use Games\Pools\UserPool;
+use Games\Races\RacePlayerHandler;
 use Games\Races\RaceUtility;
 use Games\Users\RewardHandler;
 use Games\Users\UserBagHandler;
@@ -200,6 +201,10 @@ class FinishRace extends BaseRace{
                     ]);
         });
         
+        $racePlayerInfos = [];
+        foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerInfos[] = (new RacePlayerHandler($racePlayerID))->GetInfo();
+        RaceUtility::RecordRatingForEachPlayer($racePlayerInfos,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);
+
         foreach ($users as $user) $userPool->Delete($user['id']);
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);
         $racePool->Delete($raceID);

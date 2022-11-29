@@ -11,4 +11,5 @@ use Exceptions\NormalException;
 class LeaderboardException extends NormalException{
     
     const NoLeaderboard = 6001;
+    const NoAnyLeaderboardData = 6002;
 }
