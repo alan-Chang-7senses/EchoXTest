@@ -14,6 +14,7 @@ use stdClass;
 
 class LeaderBoardRewardInfo extends BaseProcessor
 {
+    protected bool $mustSigned = false;
     public function Process() : ResultData
     {
         $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];

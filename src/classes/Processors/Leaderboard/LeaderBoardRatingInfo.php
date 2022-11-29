@@ -18,23 +18,33 @@ class LeaderBoardRatingInfo extends BaseProcessor
 
         $result = new ResultData(ErrorCode::Success);
 
+        $rewardAPI = new LeaderBoardRewardInfo();
+        $rewardsInfo = $rewardAPI->Process()->rewardInfo;
+
+        if(empty($rewardsInfo))throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);
         $result->leaderBoards = [];
         foreach($rows as $row)
         {
             $seasonID = $row->SeasonID;
-            $staticAccessor->ClearCondition()
-                           ->FromTable()
+            foreach($rewardsInfo as $rewardInfo)
+            {
+                if($rewardInfo->seasonId == $seasonID)
+                $rewards = $rewardInfo->rewards;
+            }
 
             $result->leaderBoards[] = 
             [
                 'id' => $row->Serial,
                 'group' => $row->Group,
                 'mainLeaderboardTitle' => $row->MainLeaderboradName,
-                'subLeaderboardTitle' => $row->SubLeaderboradName,
+                'subLeaderboardTitle' => $row->SubLeaderboardName,
                 'ruleHint' => $row->CompetitionRuleHint,
-                'reward' => 
+                'ratingTarget' => $row->RecordType,
+                'rankRuleHint' => $row->RankRuleHint,
+                'rewards' => $rewards,
             ];
         }
+        
         return $result;
     }
 }
