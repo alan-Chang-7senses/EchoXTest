@@ -10,7 +10,7 @@ use stdClass;
 
 class CompetitionsInfoHandler
 {
-    private CompetitionsInfoHolder|stdClass $info;
+    private CompetitionsInfoHolder|stdClass|false $info;
     private CompetitionsInfoPool $pool;
     private int $currentRating;
     private array $otherCurrentRatings;
@@ -19,7 +19,7 @@ class CompetitionsInfoHandler
     {
         $this->pool = CompetitionsInfoPool::Instance();
         $this->info = $this->pool->$id;
-        if($this->info === false)throw new RaceException(RaceException::NoSeasonData);
+        if($this->info == false)throw new RaceException(RaceException::NoSeasonData);
     }
     public function GetInfo() : CompetitionsInfoHolder|stdClass
     {
