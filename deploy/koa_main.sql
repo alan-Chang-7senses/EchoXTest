@@ -2844,6 +2844,7 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   `UserMailID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
   `UserID` int(10) NOT NULL COMMENT '玩家ID',
   `MailsID` int(10) NOT NULL COMMENT '信件編號',
+  `MailArgument` varchar(250) NOT NULL DEFAULT '' COMMENT '信件參數',
   `OpenStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開啟狀態',
   `ReceiveStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '領取狀態',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
