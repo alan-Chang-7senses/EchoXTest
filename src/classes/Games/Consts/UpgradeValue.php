@@ -56,6 +56,8 @@ class UpgradeValue
     const SkillUpgradeThird = 3;
     const SkillUpgradeForth = 4;
 
+    const SkillMaxRank = 5;
+
     const SkillUpOther = 0;
 
     const SkillRankUnit = 1;

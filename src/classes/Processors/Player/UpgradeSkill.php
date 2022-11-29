@@ -83,8 +83,33 @@ class UpgradeSkill extends BaseProcessor{
 
     //    (new GameLogAccessor())->AddUpgradeLog($playerID,$skillID,UpgradeValue::SkillRankUnit,-$charge,null,null,null);
        (new UpgradeLogAccessor())->AddUpgradeSkill($playerID,$charge,$skillID,UpgradeValue::SkillRankUnit);
-        
+
+
+       
        $results = new ResultData(ErrorCode::Success);
+       $results->currentLevel = $skillLevel + UpgradeValue::SkillRankUnit;
+       $nextLevel = $results->currentLevel + UpgradeValue::SkillRankUnit;
+       $results->nextLevelRequired = [];
+       if($nextLevel > UpgradeValue::SkillMaxRank)
+       {
+            $results->nextLevelRequired = null;
+            $results->requiredCoin = 0;
+            $results->coinHold = $userInfo->coin;
+            $results->hasNextLevelReachLimit = true;
+            return $results;
+       }
+       $chipID = UpgradeUtility::GetSkillUpgradeChipID($skillID);
+       $requireItemIDAmounts = UpgradeUtility::GetSkillUpgradeRequireItems($results->currentLevel,$chipID);
+       $chargeRequired = UpgradeValue::SkillUpgradeCharge[$results->currentLevel];
+       
+       foreach($requireItemIDAmounts as $itemID => $amount)
+       {
+            $info = UpgradeUtility::GetUpgradeItemInfo($itemID,$userBagHandler->GetItemAmount($itemID),$amount);
+            $results->nextLevelRequired[] = $info;
+       }
+       $results->requiredCoin = $chargeRequired;
+       $results->coinHold = $userInfo->coin;
+       $results->hasNextLevelReachLimit = $nextLevel > $levelLimit;
        return $results;
     }
 }
