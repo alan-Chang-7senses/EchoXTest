@@ -151,7 +151,8 @@ class RaceUtility {
     public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : void
     {
         $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
-
+        //不計排行榜的賽制不計分
+        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return;
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');
