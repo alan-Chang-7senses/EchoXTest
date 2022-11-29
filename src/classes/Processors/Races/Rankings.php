@@ -37,17 +37,18 @@ class Rankings extends BaseRace{
             $racePlayerInfo = (new RacePlayerHandler($racePlayerID))->GetInfo();
             $raceVerifySceneInfos = RaceVerifyScenePool::Instance()->{$raceInfo->scene};
             $raceVerifySceneInfo = $raceVerifySceneInfos->{$racePlayerInfo->trackNumber};
-            $totalDistance = $raceVerifySceneInfo->total - $raceVerifySceneInfo->begin;
+            // $totalDistance = $raceVerifySceneInfo->total - $raceVerifySceneInfo->begin;
             // $verifyInfo = $accessor->FromTable('RaceVerify')->WhereEqual('RacePlayerID',$racePlayerInfo->id)
             //         ->Fetch(); 
             $verifyInfo = RaceVerifyPool::Instance()->{$racePlayerInfo->id}; 
             $currentDistance = $verifyInfo->serverDistance;
-            $progress[$racePlayerInfo->id] = $currentDistance / $totalDistance;
+            // $progress[$racePlayerInfo->id] = $currentDistance / $totalDistance;
+            $progress[$racePlayerInfo->id] = $raceVerifySceneInfo->total - $currentDistance; 
         }
 
         uasort($progress,function($a, $b)
         {
-            if($a < $b)return 1;
+            if($a > $b)return 1;
             return -1;
         });
         $rank = 1;
