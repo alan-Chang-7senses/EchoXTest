@@ -25,7 +25,7 @@ use Processors\BaseProcessor;
 
 class Restore extends BaseProcessor {
 
-    protected bool $mustSigned = true;
+    protected bool $mustSigned = false;
 
     public function Process(): ResultData {
 
