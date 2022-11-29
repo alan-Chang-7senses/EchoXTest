@@ -158,6 +158,20 @@ CREATE TABLE IF NOT EXISTS `LeaderboardLeadPTB` (
   KEY `PlayCount_LeadRate_UpdateTime` (`PlayCount`,`LeadRate`,`UpdateTime`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PT賽B領先排行榜';
 
+-- 傾印  資料表 koa_main.LeaderboardRating 結構
+CREATE TABLE IF NOT EXISTS `LeaderboardRating` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `SeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '賽季編號',
+  `Lobby` tinyint(4) NOT NULL COMMENT '大廳(競賽種類)',
+  `PlayerID` bigint(20) NOT NULL COMMENT '角色編號',
+  `Rating` smallint(6) NOT NULL COMMENT '評分',
+  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  PRIMARY KEY (`Serial`),
+  UNIQUE KEY `PlayerID_CompetitionType_SeasonID` (`PlayerID`,`Lobby`,`SeasonID`) USING BTREE,
+  KEY `UpdateTime` (`UpdateTime`),
+  KEY `Rating` (`Rating`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='積分排行榜。';
+
 -- 傾印  資料表 koa_main.Marquee 結構
 CREATE TABLE IF NOT EXISTS `Marquee` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT,

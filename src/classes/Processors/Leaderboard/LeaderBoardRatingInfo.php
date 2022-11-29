@@ -22,18 +22,18 @@ class LeaderBoardRatingInfo extends BaseProcessor
         foreach($rows as $row)
         {
             $seasonID = $row->SeasonID;
-            $staticAccessor->ClearCondition()
-                           ->FromTable()
-
-            $result->leaderBoards[] = 
-            [
-                'id' => $row->Serial,
-                'group' => $row->Group,
-                'mainLeaderboardTitle' => $row->MainLeaderboradName,
-                'subLeaderboardTitle' => $row->SubLeaderboradName,
-                'ruleHint' => $row->CompetitionRuleHint,
-                'reward' => 
-            ];
+//            $staticAccessor->ClearCondition()
+//                           ->FromTable()
+//
+//            $result->leaderBoards[] = 
+//            [
+//                'id' => $row->Serial,
+//                'group' => $row->Group,
+//                'mainLeaderboardTitle' => $row->MainLeaderboradName,
+//                'subLeaderboardTitle' => $row->SubLeaderboradName,
+//                'ruleHint' => $row->CompetitionRuleHint,
+//                'reward' => 
+//            ];
         }
         return $result;
     }
