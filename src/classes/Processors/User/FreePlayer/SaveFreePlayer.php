@@ -69,7 +69,7 @@ class SaveFreePlayer extends BaseProcessor {
         // 尚未改名的新玩家，才能收到 3 隻免費 Peta
         if ($isNewPlayer == true) {
             $accessor->ClearCondition();
-            $rows = $accessor->FromTable("UserFreePeta")->Fetch();
+            $rows = $accessor->FromTable("UserFreePeta")->WhereEqual('UserID', $userInfo->id)->Fetch();
             $freePetas = json_decode($rows->FreePetaInfo);
     
             foreach($freePetas as $peta) {
