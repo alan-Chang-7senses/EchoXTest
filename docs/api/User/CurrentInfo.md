@@ -77,7 +77,7 @@ Content Type: `application/json`
 	        "lobby": 0,
 	        "room": 0,
 	        "unreadmail": 0,
-			"raceCount": 1,
-			"tutorial": 1
+	        "raceCount": 1,
+	        "tutorial": 1
 	    }
 	}
