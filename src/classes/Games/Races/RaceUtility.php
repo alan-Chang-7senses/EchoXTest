@@ -128,6 +128,22 @@ class RaceUtility {
     }
 
     /**
+     * 取得目前各大廳賽季編號 (0: 尚未開放, >0: 賽季編號)
+     * @param array $lobby 大廳編號
+     * @return int (0: 尚未開放, >0: 賽季編號)
+     */
+    public static function GetSeasonIDByLobby(int $lobby): int {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $data = $accessor->FromTable('QualifyingSeasonData')->WhereEqual('Lobby', $lobby)->WhereEqual('Status', RaceValue::QualifyingSeasonOpen)->Fetch();
+        if ($data == false) {
+            return 0;
+        }
+        else {
+            return $data->SeasonID;
+        }
+    }
+
+    /**
      * 結束競賽狀態後恢復角色等級
      * 除完賽、棄賽、清理問題賽局、作弊出局外，請勿使用。
      * @param array $playerIDs

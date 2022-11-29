@@ -150,6 +150,9 @@ class RaceValue {
         self::LobbyPetaTokenB => self::CompetitionPTB,
     ];
     
+    const QualifyingSeasonClose = 0;
+    const QualifyingSeasonOpen = 1;
+    
     const RoomIdle = 0;
     const RoomMatching = 1;
     const RoomFull = 2;

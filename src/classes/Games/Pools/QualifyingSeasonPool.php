@@ -19,6 +19,17 @@ class QualifyingSeasonPool extends PoolAccessor
     
 	function FromDB(int|string $id):stdClass|false  {
         $pdoAccessor = new QualifyingSeasonAccessor();
-        return $pdoAccessor->GetNowSeason();      
+        //return $pdoAccessor->GetNowSeason();
+        $rows = $pdoAccessor->GetOpenQualifyingSeasonData();
+        if ($rows !== false) {
+            $holder = new stdClass();
+            foreach ($rows as $row) {
+                $holder->{$row->ID} = $row;
+            }
+            return $holder;
+        }
+        else {
+            return false;
+        }
 	}
 }

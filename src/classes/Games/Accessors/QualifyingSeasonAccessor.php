@@ -3,6 +3,7 @@
 namespace Games\Accessors;
 
 use Consts\Globals;
+use Games\Consts\RaceValue;
 use stdClass;
 
 class QualifyingSeasonAccessor extends BaseAccessor
@@ -89,5 +90,43 @@ class QualifyingSeasonAccessor extends BaseAccessor
         }
     }
 
+    public function GetQualifyingData(): mixed
+    {
+        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        $result = $this->StaticAccessor()->FromTable('QualifyingData')
+                                         ->WhereCondition('StartTime','<=', $nowtime)
+                                         ->WhereGreater('EndTime', $nowtime)
+                                         ->OrderBy('Lobby')
+                                         ->FetchAll();
 
+        // echo '[Mingo][QualifyingSeasonAccessor][GetQualifyingData] search from QualifyingData ...'.PHP_EOL;
+        // foreach ($result as $key => $val) {
+        //     echo $key.' => SeasonID('.$val->SeasonID.'), SeasonName('.$val->SeasonName.'), Lobby('.$val->Lobby.'), StartTime('.$val->StartTime.'), EndTime('.$val->EndTime.')'.PHP_EOL;
+        // }
+
+        return $result;
+    }
+    
+    public function GetOpenQualifyingSeasonData(): mixed
+    {
+        return $this->MainAccessor()->FromTable('QualifyingSeasonData')
+                                    ->WhereEqual('Status', RaceValue::QualifyingSeasonOpen)
+                                    ->FetchAll();
+    }
+
+    public function AddQualifyingSeasonData(int $seasonID, int $lobby): bool
+    {
+        return $this->MainAccessor()->FromTable('QualifyingSeasonData')->Add([
+            'SeasonID' => $seasonID,
+            'Lobby' => $lobby,
+            'Status' => RaceValue::QualifyingSeasonOpen,
+            'Assign' => 0,
+            'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN]
+        ]);
+    }
+
+    public function ModifyQualifyingSeasonData(int $id, array $bind): bool
+    {
+        return $this->MainAccessor()->FromTable('QualifyingSeasonData')->WhereEqual('SeasonID', $id)->Modify($bind);
+    }
 }
