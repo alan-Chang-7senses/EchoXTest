@@ -15,7 +15,7 @@ class GetTicketsInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
+        if ($qualifyingHandler->GetSeasonIDByLobby(RaceValue::LobbyCoinA) == RaceValue::NOSeasonID) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 
