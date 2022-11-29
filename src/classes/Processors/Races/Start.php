@@ -6,6 +6,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\RacePool;
@@ -36,6 +37,22 @@ class Start extends BaseRace{
         RaceVerifyHandler::Instance()->Start($racePlayerIDs);
         RaceHP::Instance()->Start($racePlayerIDs);
         
-        return new ResultData(ErrorCode::Success);
+        $result = new ResultData(ErrorCode::Success);
+
+        $rows = AccessorFactory::Main()->SelectExpr('PlayerID, AnimationURL')
+                               ->FromTable('PlayerNFT')
+                               ->WhereIn('PlayerID',array_keys((array)$raceInfo->racePlayers))
+                               ->FetchAll(); 
+        $result->playerMusicURLs = [];                               
+        foreach($rows as $row)
+        {
+            $result->playerMusicURLs[] = 
+            [
+                'playerID' => $row->PlayerID,
+                'musicURL' => $row->AnimationURL ?? '',
+            ];
+        }
+
+        return $result;
     }
 }
