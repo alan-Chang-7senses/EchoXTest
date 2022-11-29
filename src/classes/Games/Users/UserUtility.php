@@ -2,6 +2,8 @@
 
 namespace Games\Users;
 
+use Games\Accessors\AccessorFactory;
+
 use Games\Consts\ItemValue;
 use Games\Consts\PlayerValue;
 use Games\Mails\MailsHandler;
@@ -55,5 +57,16 @@ class UserUtility {
             $count++;
         }
         return $count;
+    }
+
+    /**取得玩家參賽次數 */
+    public static function GetUserRaceCount(int $userID) : int
+    {
+        $row = AccessorFactory::Main()->SelectExpr('Begin')
+                                ->FromTable('UserRaceAmount')
+                                ->WhereEqual('UserID',$userID)
+                                ->Fetch();
+
+        return $row === false ? 0 : $row->Begin;
     }
 }

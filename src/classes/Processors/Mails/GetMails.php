@@ -2,14 +2,13 @@
 
 namespace Processors\Mails;
 
-use stdClass;
+use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Sessions;
-use Consts\ErrorCode;
-use Holders\ResultData;
-use Helpers\InputHelper;
 use Games\Mails\MailsHandler;
 use Games\Users\ItemUtility;
+use Helpers\InputHelper;
+use Holders\ResultData;
 use Processors\BaseProcessor;
 
 class GetMails extends BaseProcessor
@@ -35,25 +34,24 @@ class GetMails extends BaseProcessor
             {
                 $items[] = ItemUtility::GetClientSimpleInfo($mailItem->ItemID, $mailItem->Amount);
             }
-
-
-            $mail = new stdClass();
-            $mail = [
+            
+            $content =  $userMailsHandler->ReplaceContent( $mailInfo->Content,$userMailInfo->MailArgument);
+            $mails[] = [
                 'userMailID' =>$userMailInfo->UserMailID,
                 'openStatus' => $userMailInfo->OpenStatus,
                 'receiveStatus' => $userMailInfo->ReceiveStatus,
                 'title' => $mailInfo->Title,
-                'content' => $mailInfo->Content,
+                'content' => $content,
+                'argus' => $userMailInfo->MailArgument,
                 'sender' => $mailInfo->Sender,
                 'url' => $mailInfo->URL,
                 'remainingTime' => $userMailInfo->FinishTime - $GLOBALS[Globals::TIME_BEGIN],
                 'rewardItems' => $items,
             ];
-            $mails[] = $mail;
         }
         $result = new ResultData(ErrorCode::Success);
         $result->Mails = $mails;
 
         return $result;
     }
-}
+} 

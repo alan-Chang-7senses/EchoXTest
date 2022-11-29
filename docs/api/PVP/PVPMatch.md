@@ -37,6 +37,8 @@ Content Type: `application/json`
 | raceRoomID | int | 房間編號 |
 | extraMatchSeconds | int | 開局配對延長等待秒數 |
 | maxMatchSeconds | int | 開局配對基本等待秒數 |
+| minMatchPlayers | int | 最少開局人數 |
+| maxBot | int | 最大機器人數量 |
 
 
 ### Example
@@ -45,7 +47,9 @@ Content Type: `application/json`
 			"code": 0,
 			"message": ""
 		},
-		"raceRoomID": 63,
-		"extraMatchSeconds": "120",
-		"maxMatchSeconds": "600"
+		"raceRoomID": 1,
+		"extraMatchSeconds": "60",
+		"maxMatchSeconds": "60",
+		"minMatchPlayers": 0,
+		"maxBot": 0
 	}
