@@ -26,7 +26,7 @@ class LeadboardUtility {
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',
         ],
-        RaceValue::LobbyPT => [
+        RaceValue::LobbyPetaTokenA => [
             'table' => 'LeaderboardLeadPT',
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_2',
@@ -148,7 +148,7 @@ class LeadboardUtility {
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
-                 ->WhereIn('Lobby',[RaceValue::LobbyPT,RaceValue::LobbyPetaTokenB])
+                 ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
                  ->GroupBy('UserID')
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
