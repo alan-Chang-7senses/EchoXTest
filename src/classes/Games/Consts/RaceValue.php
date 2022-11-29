@@ -144,8 +144,8 @@ class RaceValue {
 
     const LobbyCompetition = 
     [
-        self::LobbyCoin => self::CompetitionCoin,
-        self::LobbyPT => self::CompetitionPT,
+        self::LobbyCoinA => self::CompetitionCoin,
+        self::LobbyPetaTokenA => self::CompetitionPT,
         self::LobbyCoinB => self::CompetitionCoinB,
         self::LobbyPetaTokenB => self::CompetitionPTB,
     ];
