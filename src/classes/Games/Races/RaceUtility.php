@@ -168,7 +168,7 @@ class RaceUtility {
     {
         //不計排行榜的賽制不計分
         if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return;
-        $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
+        $competitionHandler = CompetitionsInfoHandler::Instance($lobby);
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');
@@ -206,7 +206,7 @@ class RaceUtility {
             [
                 'PlayerID' => $playerID,
                 'SeasonID' => $seasonID,
-                'CompetitionType' => $lobby,
+                'Lobby' => $lobby,
                 'Rating' => $rating,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];
