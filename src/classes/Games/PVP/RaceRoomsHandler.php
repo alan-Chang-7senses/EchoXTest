@@ -30,28 +30,36 @@ class RaceRoomsHandler {
         return 1000; //find idle/new room
     }
 
-    public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound): stdclass|false {
+    public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound, int $bound, int $seansonID = RaceValue::NOSeasonID): stdclass|false {
 
         if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
-            return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
+            return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound, $seansonID);
         } else {
-            $rooms = $this->accessor->GetMatchRooms($lobby, $version, $lowBound, $upBound);
+            $rooms = $this->accessor->GetMatchRooms($lobby, $version, $bound);
             $roomNumber = count($rooms);
             if ($roomNumber > 0) {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
+                return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound, $seansonID);
             }
         }
     }
 
-    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound): stdclass|false {
-        $idleRoom = $this->accessor->GetIdleRoom($lobby, $version, $lowBound, $upBound);
+    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound, int $seansonID = RaceValue::NOSeasonID): stdclass|false {
+        $idleRoom = $this->accessor->GetIdleRoom();
         if ($idleRoom !== false) {
-            return $idleRoom;
+            $bind = [
+                'Status' => RaceValue::RoomMatching,
+                'Lobby' => $lobby,
+                'Version' => $version,
+                'LowBound' => $lowBound,
+                'UpBound' => $upBound,
+                'QualifyingSeasonID' => $seansonID,
+            ];
+            return $this->accessor->Update($idleRoom->RaceRoomID, $bind);
         } else {
-            return $this->accessor->AddNewRoom($lobby, $version, $lowBound, $upBound);
+            return $this->accessor->AddNewRoom($lobby, $version, $lowBound, $upBound, $seansonID);
         }
     }
 
@@ -60,7 +68,7 @@ class RaceRoomsHandler {
         return $this->accessor->GetRoom($raceRoomID);
     }
 
-    public function UpdateUsers(int $raceRoomID, array $users): bool {
+    private function UpdateUsers(int $raceRoomID, array $users): bool {
         $seatCount = count($users);
 
         if ($seatCount >= ConfigGenerator::Instance()->AmountRacePlayerMax) {
