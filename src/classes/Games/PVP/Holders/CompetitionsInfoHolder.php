@@ -5,8 +5,7 @@ use stdClass;
 
 class CompetitionsInfoHolder extends stdClass
 {
-    public int $id;
-    public int $weeksPerSeason;
+    public int $lobby;
     public int $minRatingReset;
     public int $resetRate;
     public int $matchingRange;
@@ -30,4 +29,7 @@ class CompetitionsInfoHolder extends stdClass
     public int $kValue;
     public int $delta;
     public int $bot;
+    public int $ticketId;
+    public int $ticketCost;
+    public int $treshold;
 }
