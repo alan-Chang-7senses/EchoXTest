@@ -21,7 +21,7 @@ class PVPInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $infos = [];
         $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);

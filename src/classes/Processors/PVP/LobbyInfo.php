@@ -13,7 +13,7 @@ class LobbyInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $result = new ResultData(ErrorCode::Success);
 

@@ -29,7 +29,7 @@ class TutorialInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $scendID = ConfigGenerator::Instance()->TutorialSceneID;
 

@@ -21,7 +21,7 @@ class ReceiveTicket extends BaseProcessor {
 
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $userID = $_SESSION[Sessions::UserID];
         $ticket = new stdClass();

@@ -115,7 +115,7 @@ class QualifyingHandler {
         }
     }
 
-    public function CheckSeasonIsExist() {
+    public function CheckAnySeasonIsExist() {
         if (count($this->NowSeasonIDArr) <= 0) {
             throw new RaceException(RaceException::NoSeasonData);
         }
