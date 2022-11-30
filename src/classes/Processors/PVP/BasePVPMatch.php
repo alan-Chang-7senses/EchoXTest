@@ -68,7 +68,7 @@ abstract class BasePVPMatch extends BaseProcessor {
         $userBagHandler = new UserBagHandler($userID);
 
         // 配合賽季結束時間 PvP_B_StopMatch
-        if ($qualifyingHandler->GetSeasonRemaintime() <= 0) {
+        if ($qualifyingHandler->GetSeasonRemaintime($lobby) <= 0) {
             throw new RaceException(RaceException::NoSeasonData);
         }
 

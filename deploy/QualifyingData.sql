@@ -14,22 +14,24 @@ CREATE TABLE IF NOT EXISTS `QualifyingData` (
 
 INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (1, '', 1, 1001, 1668988800, 1669593600, 1668988800);
 INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (2, '', 2, 1001, 1668988800, 1669593600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (3, '', 4, 1001, 1668988800, 1669593600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (4, '', 5, 1001, 1668988800, 1669593600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (5, '', 1, 1001, 1669593600, 1669680000, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (6, '', 2, 1001, 1669593600, 1669680000, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (7, '', 4, 1001, 1669593600, 1669680000, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (8, '', 5, 1001, 1669593600, 1669680000, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (9, '', 1, 1001, 1669680000, 1670025600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (10, '', 2, 1001, 1669680000, 1670025600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (11, '', 4, 1001, 1669680000, 1669766400, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (12, '', 5, 1001, 1669680000, 1669766400, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (13, '', 4, 1001, 1669766400, 1669852800, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (14, '', 5, 1001, 1669766400, 1669852800, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (15, '', 4, 1001, 1669852800, 1669939200, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (16, '', 5, 1001, 1669852800, 1669939200, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (17, '', 4, 1001, 1669939200, 1670025600, 1668988800);
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (18, '', 5, 1001, 1669939200, 1670025600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (3, '', 3, 1001, 1668988800, 2147483647, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (4, '', 4, 1001, 1668988800, 1669593600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (5, '', 5, 1001, 1668988800, 1669593600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (6, '', 1, 1001, 1669593600, 1669680000, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (7, '', 2, 1001, 1669593600, 1669680000, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (8, '', 4, 1001, 1669593600, 1669680000, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (9, '', 5, 1001, 1669593600, 1669680000, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (10, '', 1, 1001, 1669680000, 1670025600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (11, '', 2, 1001, 1669680000, 1670025600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (12, '', 4, 1001, 1669680000, 1669766400, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (13, '', 5, 1001, 1669680000, 1669766400, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (14, '', 4, 1001, 1669766400, 1669852800, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (15, '', 5, 1001, 1669766400, 1669852800, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (16, '', 4, 1001, 1669852800, 1669939200, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (17, '', 5, 1001, 1669852800, 1669939200, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (18, '', 4, 1001, 1669939200, 1670025600, 1668988800);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (19, '', 5, 1001, 1669939200, 1670025600, 1668988800);
+
 
 
 

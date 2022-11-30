@@ -21,7 +21,7 @@ class PVPInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $infos = [];
         $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
@@ -55,11 +55,11 @@ class PVPInfo extends BaseRace {
                 'lighting' => $climates->lighting,
             ];
 
+            $lobbyinfo->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime($lobby);
             $infos[] = $lobbyinfo;
         }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime();
         $result->infos = $infos;
         return $result;
     }

@@ -8,26 +8,6 @@ use stdClass;
 
 class QualifyingSeasonAccessor extends BaseAccessor
 {
-    public function GetNowSeason(): mixed
-    {
-        return $this->MainAccessor()->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Fetch();
-    }
-
-    public function AddNewSeason(int $id, int $startTime, int $endTime): bool
-    {
-        $value = $this->GetArean($id);
-
-        return $this->MainAccessor()->FromTable('QualifyingSeason')->Add([
-            'ArenaID' => $id,
-            'PTScene' => $value->PTScene,
-            'CoinScene' => $value->CoinScene,
-            'StartTime' => $startTime,
-            'EndTime' => $endTime,
-            'CreateTime' => $GLOBALS[Globals::TIME_BEGIN]
-        ]);
-
-    }
-
     public function GetArean(int $id): stdClass
     {
         $ptScenes = $this->StaticAccessor()->FromTable('QualifyingArena')->selectExpr('`QualifyingArenaID`,`PTScene` as SceneID')
@@ -107,11 +87,23 @@ class QualifyingSeasonAccessor extends BaseAccessor
         return $result;
     }
     
-    public function GetOpenQualifyingSeasonData(): mixed
+    public function GetOpenQualifyingDataByLobby(int $lobby): mixed
+    {
+        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
+        $result = $this->StaticAccessor()->FromTable('QualifyingData')
+                                         ->WhereEqual('Lobby', $lobby)
+                                         ->WhereCondition('StartTime','<=', $nowtime)
+                                         ->WhereGreater('EndTime', $nowtime)
+                                         ->Fetch();
+        return $result;
+    }
+
+    public function GetOpenQualifyingSeasonData(int $lobby): mixed
     {
         return $this->MainAccessor()->FromTable('QualifyingSeasonData')
+                                    ->WhereEqual('Lobby', $lobby)
                                     ->WhereEqual('Status', RaceValue::QualifyingSeasonOpen)
-                                    ->FetchAll();
+                                    ->Fetch();
     }
 
     public function AddQualifyingSeasonData(int $seasonID, int $lobby): bool

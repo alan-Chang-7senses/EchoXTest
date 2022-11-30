@@ -13,10 +13,15 @@ class LobbyInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        $qualifyingHandler->CheckSeasonIsExist();
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $result = new ResultData(ErrorCode::Success);
-        $result->pvpRemainTime = $qualifyingHandler->GetSeasonRemaintime();
+
+        $remainTimeArr = [];
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+            $remainTimeArr[$lobby] = $qualifyingHandler->GetSeasonRemaintime($lobby);
+        }
+        $result->pvpRemainTime =  empty($remainTimeArr) ? null : $remainTimeArr;
         $result->petaToken = $this->userInfo->petaToken;
         $result->coin = $this->userInfo->coin;
         $result->diamond = $this->userInfo->diamond;

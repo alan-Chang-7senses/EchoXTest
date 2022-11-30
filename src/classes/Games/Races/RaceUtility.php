@@ -136,7 +136,7 @@ class RaceUtility {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $data = $accessor->FromTable('QualifyingSeasonData')->WhereEqual('Lobby', $lobby)->WhereEqual('Status', RaceValue::QualifyingSeasonOpen)->Fetch();
         if ($data == false) {
-            return 0;
+            return RaceValue::NOSeasonID;
         }
         else {
             return $data->SeasonID;
