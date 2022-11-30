@@ -70,11 +70,11 @@ class TutorialInfo extends BaseRace {
                 'lighting' => $climates->lighting,
             ];
 
+            $lobbyinfo->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime($lobby);
             $infos[] = $lobbyinfo;
         }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime();
         $result->infos = $infos;
         return $result;
     }
