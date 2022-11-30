@@ -30,7 +30,6 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| seasonRemainTime | int | 剩餘賽季時間(秒) |
 | [infos](#infos) | object | 大廳資訊 |
 <br>
 
@@ -44,6 +43,7 @@ Content Type: `application/json`
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [rank](#rank) | object | 排行榜資訊 |
 | [scene](#scene) | object | 場景資訊 |
+| seasonRemainTime | int | 剩餘賽季時間(秒) |
 <br>
 
 #### <span id="rank">rank 排行榜資訊</span>
@@ -74,15 +74,14 @@ Content Type: `application/json`
             "code": 0,
             "message": ""
         },
-        "seasonRemainTime": 130165,
         "infos": [
             {
                 "lobby": 1,
                 "ticketIcon": "ItemIcon_0032",
-                "ticketAmount": 998,
+                "ticketAmount": 30,
                 "petaLimitLevel": 70,
                 "rank": {
-                    "playCount": 1,
+                    "playCount": 0,
                     "leadRate": 0,
                     "ranking": 0
                 },
@@ -90,15 +89,37 @@ Content Type: `application/json`
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 1,
-                    "windDirection": 2,
-                    "windSpeed": 50,
-                    "lighting": 1
-                }
+                    "weather": 2,
+                    "windDirection": 4,
+                    "windSpeed": 25,
+                    "lighting": 2
+                },
+                "seasonRemainTime": 217086
+            },
+            {
+                "lobby": 4,
+                "ticketIcon": "ItemIcon_0032",
+                "ticketAmount": 30,
+                "petaLimitLevel": 70,
+                "rank": {
+                    "playCount": 0,
+                    "leadRate": 0,
+                    "ranking": 0
+                },
+                "scene": {
+                    "id": 1001,
+                    "name": "9001",
+                    "env": 1,
+                    "weather": 2,
+                    "windDirection": 4,
+                    "windSpeed": 25,
+                    "lighting": 2
+                },
+                "seasonRemainTime": 44286
             },
             {
                 "lobby": 2,
-                "ticketIcon": "ItemIcon_0031",
+                "ticketIcon": "ItemIcon_0041",
                 "ticketAmount": 0,
                 "petaLimitLevel": 0,
                 "rank": {
@@ -110,11 +131,33 @@ Content Type: `application/json`
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 1,
-                    "windDirection": 2,
-                    "windSpeed": 50,
-                    "lighting": 1
-                }
+                    "weather": 2,
+                    "windDirection": 4,
+                    "windSpeed": 25,
+                    "lighting": 2
+                },
+                "seasonRemainTime": 217086
+            },
+            {
+                "lobby": 5,
+                "ticketIcon": "ItemIcon_0041",
+                "ticketAmount": 0,
+                "petaLimitLevel": 0,
+                "rank": {
+                    "playCount": 0,
+                    "leadRate": 0,
+                    "ranking": 0
+                },
+                "scene": {
+                    "id": 1001,
+                    "name": "9001",
+                    "env": 1,
+                    "weather": 2,
+                    "windDirection": 4,
+                    "windSpeed": 25,
+                    "lighting": 2
+                },
+                "seasonRemainTime": 44286
             }
         ]
     }
