@@ -18,12 +18,9 @@ class GetTicketsInfo extends BaseRace {
         $qualifyingHandler->CheckAnySeasonIsExist();
 
         $ticketsinfo = [];
-        foreach (QualifyingHandler::MatchLobbies as $lobby) {
-            if ($qualifyingHandler->GetSeasonIDByLobby($lobby) != RaceValue::NOSeasonID) {
-                $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, $lobby);   
-            }
-        }
-
+        $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyCoinA);                      
+        //todo vip 達標            
+        //$ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyPetaTokenA);
         $result = new ResultData(ErrorCode::Success);
         $result->tickets = $ticketsinfo;
         return $result;
