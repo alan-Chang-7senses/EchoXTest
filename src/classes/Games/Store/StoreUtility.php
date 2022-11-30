@@ -126,6 +126,14 @@ class StoreUtility {
         return md5($signKey);
     }
 
+    public static function GetSandBoxes(): array {
+        $responseSanbox = [];
+        $responseSanbox["mycard"] = getenv(EnvVar::MyCardSandboxmode) === "true" ? true : false;
+        $responseSanbox["app"] = false;
+        $responseSanbox["google"] = false;
+        return $responseSanbox;
+    }
+
     public static function GetCurrency(UserBagHandler $userBagHandler): array {
         $responseCurrencies = [];
         foreach (StoreValue::Currencies as $currency) {
