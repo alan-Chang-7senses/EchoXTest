@@ -67,6 +67,7 @@ abstract class BasePVPMatch extends BaseProcessor {
         $qualifyingHandler->CheckLobbyID($lobby);
         $userBagHandler = new UserBagHandler($userID);
 
+        // 配合賽季結束時間 PvP_B_StopMatch
         if ($qualifyingHandler->GetSeasonRemaintime() <= 0) {
             throw new RaceException(RaceException::NoSeasonData);
         }
@@ -85,7 +86,6 @@ abstract class BasePVPMatch extends BaseProcessor {
 
         $accessor->Transaction(function () use ($accessor, $qualifyingHandler, $userID, $lobby, $version, &$raceRoomID, $isCreateRoom) {
             $userInfo = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
-
             if ($userInfo->Room != RaceValue::NotInRoom) {
 
                 //fix 4016
@@ -99,6 +99,7 @@ abstract class BasePVPMatch extends BaseProcessor {
             $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
             $competitionsInfoHandler = new CompetitionsInfoHandler($lobby);
             $this->competitionsInfo = $competitionsInfoHandler->GetInfo();
+            $accessor->ClearCondition();
             $row = $accessor->FromTable('LeaderboardRating')
                     ->WhereEqual('PlayerID', $userInfo->Player)
                     ->WhereEqual('SeasonID', $seasonID)
@@ -106,20 +107,20 @@ abstract class BasePVPMatch extends BaseProcessor {
                     ->Fetch();
 
             if (empty($row)) {
-                $rating = $row->Rating;
+                $rating = $this->competitionsInfo->baseRating;
             } else {
-                $rating = $this->competitionsInfo->BaseRating;
+                $rating = $row->Rating;
             }
 
-            $lowbound = $rating - $this->competitionsInfo->MatchingRange;
-            $upbound = $rating + $this->competitionsInfo->MatchingRange;
+            $lowbound = $rating - $this->competitionsInfo->matchingRange;
+            $upbound = $rating + $this->competitionsInfo->matchingRange;
             //
             $raceroomHandler = new RaceRoomsHandler();
 
             if ($isCreateRoom) {
-                $raceRoom = $raceroomHandler->GetIdleRoom($lobby, $version, $lowbound, $upbound, $seasonID);
+                $raceRoom = $raceroomHandler->GetIdleRoom($lobby, $version, $lowbound, $upbound);
             } else {
-                $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $version, $lowbound, $upbound, $rating, $seasonID);
+                $raceRoom = $raceroomHandler->GetMatchRoom($lobby, $version, $lowbound, $upbound, $rating);
             }
             $raceroomHandler->JoinRoom($userID, $raceRoom);
             $raceRoomID = $raceRoom->RaceRoomID;

@@ -30,10 +30,10 @@ class RaceRoomsHandler {
         return 1000; //find idle/new room
     }
 
-    public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound, int $bound, int $seansonID = RaceValue::NOSeasonID): stdclass|false {
+    public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound, int $bound): stdclass|false {
 
         if (rand(1, 1000) < $this->GetNewRomRate($lobby)) {//Get idle room
-            return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound, $seansonID);
+            return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
         } else {
             $rooms = $this->accessor->GetMatchRooms($lobby, $version, $bound);
             $roomNumber = count($rooms);
@@ -41,12 +41,12 @@ class RaceRoomsHandler {
                 $rnd = rand(0, $roomNumber - 1);
                 return $rooms[$rnd];
             } else {
-                return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound, $seansonID);
+                return $this->GetIdleRoom($lobby, $version, $lowBound, $upBound);
             }
         }
     }
 
-    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound, int $seansonID = RaceValue::NOSeasonID): stdclass|false {
+    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound): stdclass|false {
         $idleRoom = $this->accessor->GetIdleRoom();
         if ($idleRoom !== false) {
             $bind = [
@@ -54,12 +54,17 @@ class RaceRoomsHandler {
                 'Lobby' => $lobby,
                 'Version' => $version,
                 'LowBound' => $lowBound,
-                'UpBound' => $upBound,
-                'QualifyingSeasonID' => $seansonID,
+                'UpBound' => $upBound
             ];
-            return $this->accessor->Update($idleRoom->RaceRoomID, $bind);
+
+            if ($this->accessor->Update($idleRoom->RaceRoomID, $bind)) {
+                return $this->accessor->GetRoom($idleRoom->RaceRoomID);
+            }else
+            {
+                throw new RaceException(RaceException::UserMatchError);
+            }
         } else {
-            return $this->accessor->AddNewRoom($lobby, $version, $lowBound, $upBound, $seansonID);
+            return $this->accessor->AddNewRoom($lobby, $version, $lowBound, $upBound);
         }
     }
 

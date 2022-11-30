@@ -27,14 +27,13 @@ class RaceRoomsAccessor extends BaseAccessor {
         return $this->useTable()->WhereEqual('Status', RaceValue::RoomIdle)->ForUpdate()->Fetch();
     }
 
-    public function AddNewRoom(int $lobby, string $version, int $lowBound, int $upBound, int $seansonID = RaceValue::NOSeasonID): stdClass|false {
+    public function AddNewRoom(int $lobby, string $version, int $lowBound, int $upBound): stdClass|false {
         $this->useTable()->Add([
             'Status' => RaceValue::RoomMatching,
             'Lobby' => $lobby,
             'Version' => $version,
             'LowBound' => $lowBound,
             'UpBound' => $upBound,
-            'QualifyingSeasonID' => $seansonID,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
         ]);
