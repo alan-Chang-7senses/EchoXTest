@@ -16,7 +16,7 @@ use stdClass;
 class LeadboardUtility {
     
     const LeadRateContents = [
-        RaceValue::LobbyCoin => [
+        RaceValue::LobbyCoinA => [
             'table' => 'LeaderboardLeadCoin',
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',
@@ -26,7 +26,7 @@ class LeadboardUtility {
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_1',
         ],
-        RaceValue::LobbyPT => [
+        RaceValue::LobbyPetaTokenA => [
             'table' => 'LeaderboardLeadPT',
             'seasonIdFunc' => 'Games\Races\RaceUtility::QualifyingSeasonID',
             'tresholdParam' => 'PvP_B_Treshold_2',
@@ -148,13 +148,56 @@ class LeadboardUtility {
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
-                 ->WhereIn('Lobby',[RaceValue::LobbyPT,RaceValue::LobbyPetaTokenB])
+                 ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
                  ->GroupBy('UserID')
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
                  ->FetchAll();
         if(empty($rows))return false;
         return self::HandleRankingInfo($rows,$offset,$endRank);
+    }
+
+    /**
+     * 取得該賽制之賽季排行，用於執行派獎
+     * @param int $seasonID 賽季ID
+     * @param int $lobby 賽制大廳ID。目前無法指定
+     * @param int $endRank 要獲得使用者的最大名次。未輸入則使用默認數量1~100名
+     * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
+     */
+    public static function GetSeasonRankingForPlayer(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
+    {
+        $accessor = AccessorFactory::Main();
+        $rows = $accessor->selectExpr('Rating, UserID AS ID')
+                 ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
+                 ->WhereEqual('SeasonID',$seasonID)
+                 ->WhereEqual('Lobby', $lobby)
+                 ->WhereGreater('Rating', 0)
+                 ->OrderBy('Rating','DESC')
+                 ->FetchAll();
+        if(empty($rows))return false;
+        return self::HandleRankingInfo($rows,1,$endRank);
+    }
+
+    /**
+     * 取得該賽制之賽季總積分排行，用於執行派獎
+     * @param int $seasonID 賽季ID
+     * @param int $lobby 賽制大廳ID。目前無法指定
+     * @param int $endRank 要獲得使用者的最大名次。未輸入則使用默認數量1~100名
+     * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
+     */
+    public static function GetSeasonRankingForUser(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
+    {
+        $accessor = AccessorFactory::Main();
+        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
+                 ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
+                 ->WhereEqual('SeasonID',$seasonID)
+                 ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
+                 ->GroupBy('UserID')
+                 ->WhereGreater('Rating', 0)
+                 ->OrderBy('Rating','DESC')
+                 ->FetchAll();
+        if(empty($rows))return false;
+        return self::HandleRankingInfo($rows,1,$endRank);
     }
 
     private static function HandleRankingInfo(array $rows,int $offset, int $endRank) : array

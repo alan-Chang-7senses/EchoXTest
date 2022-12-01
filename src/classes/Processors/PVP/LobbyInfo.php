@@ -3,8 +3,6 @@
 namespace Processors\PVP;
 
 use Consts\ErrorCode;
-use Games\Consts\RaceValue;
-use Games\Exceptions\RaceException;
 use Games\PVP\QualifyingHandler;
 use Holders\ResultData;
 use Processors\Races\BaseRace;
@@ -15,12 +13,15 @@ class LobbyInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
-            throw new RaceException(RaceException::NoSeasonData);
-        }
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $result = new ResultData(ErrorCode::Success);
-        $result->pvpRemainTime = $qualifyingHandler->GetSeasonRemaintime();
+
+        $remainTimeArr = [];
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+            $remainTimeArr[$lobby] = $qualifyingHandler->GetSeasonRemaintime($lobby);
+        }
+        $result->pvpRemainTime =  empty($remainTimeArr) ? null : $remainTimeArr;
         $result->petaToken = $this->userInfo->petaToken;
         $result->coin = $this->userInfo->coin;
         $result->diamond = $this->userInfo->diamond;

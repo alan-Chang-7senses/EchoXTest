@@ -15,14 +15,12 @@ class GetTicketsInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
-            throw new RaceException(RaceException::NoSeasonData);
-        }
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $ticketsinfo = [];
-        $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyCoin);                      
+        $ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyCoinA);                      
         //todo vip 達標            
-        //$ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyPT);
+        //$ticketsinfo[] = $qualifyingHandler->GetTicketInfo($this->userInfo->id, RaceValue::LobbyPetaTokenA);
         $result = new ResultData(ErrorCode::Success);
         $result->tickets = $ticketsinfo;
         return $result;
