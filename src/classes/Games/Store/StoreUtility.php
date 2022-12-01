@@ -6,7 +6,9 @@ use Consts\EnvVar;
 use Consts\Globals;
 use DateTime;
 use Games\Consts\ItemValue;
+use Games\Consts\RaceValue;
 use Games\Consts\StoreValue;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Store\Holders\StoreInfosHolder;
 use Games\Store\Holders\StoreRefreshTimeHolder;
 use Games\Users\UserBagHandler;
@@ -75,9 +77,9 @@ class StoreUtility {
             StoreValue::CurrencyMars => ItemValue::CurrencyCoin,
             StoreValue::CurrencyDiamond => ItemValue::CurrencyDiamond,
             StoreValue::CurrencyPT => ItemValue::CurrencyPetaToken,
-            StoreValue::CurrencyMarsTicket => ConfigGenerator::Instance()->PvP_B_TicketId_1,
-            StoreValue::CurrencyPtTicket => ConfigGenerator::Instance()->PvP_B_TicketId_2,
-            StoreValue::CurrencyGroupTicket => ConfigGenerator::Instance()->PvP_B_TicketId_3,
+            StoreValue::CurrencyMarsTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyCoinA)->GetInfo()->ticketId,
+            StoreValue::CurrencyPtTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenA)->GetInfo()->ticketId,
+           // StoreValue::CurrencyGroupTicket => ConfigGenerator::Instance()->PvP_B_TicketId_3,
         };
     }
 

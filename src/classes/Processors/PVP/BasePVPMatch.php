@@ -73,7 +73,8 @@ abstract class BasePVPMatch extends BaseProcessor {
         }
 
         $useTicketId = RaceUtility::GetTicketID($lobby);
-        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
+        $ticketCost = RaceUtility::GetTicketCost($lobby);
+        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) < $ticketCost)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
 
@@ -97,8 +98,8 @@ abstract class BasePVPMatch extends BaseProcessor {
             }
             //Get bounds
             $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
-            $competitionsInfoHandler = new CompetitionsInfoHandler($lobby);
-            $this->competitionsInfo = $competitionsInfoHandler->GetInfo();
+
+            $this->competitionsInfo = CompetitionsInfoHandler::Instance($lobby)->GetInfo();
             $accessor->ClearCondition();
             $row = $accessor->FromTable('LeaderboardRating')
                     ->WhereEqual('PlayerID', $userInfo->Player)
