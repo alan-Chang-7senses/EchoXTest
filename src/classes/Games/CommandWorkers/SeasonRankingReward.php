@@ -166,7 +166,8 @@ class SeasonRankingReward extends BaseWorker{
         }
 
         //return LeadboardUtility::GetSeasonRanking($seasonID, $lobby, $count);
-        return self::LeadRateFunc[$recordType]($seasonID, $lobby, $count);
+        $func = self::LeadRateFunc[$recordType];
+        return $func($seasonID, $lobby, $count);
     }
 
     // 派獎
