@@ -38,7 +38,7 @@ class MailsHandler {
         }
     }
 
-    public function AddMail(int|string $userID, int $mailID, int $day, int $receiveStatus = 0): int {
+    public function AddMail(int|string $userID, int $mailID, int $day, int $receiveStatus = MailValues::ReceiveStatusNone): int {
         $mailsAccessor = new MailsAccessor();
         $index = $mailsAccessor->AddMail($userID, $mailID, $day, $this->arguments, $receiveStatus);
         UserMailsPool::Instance()->Delete($userID);

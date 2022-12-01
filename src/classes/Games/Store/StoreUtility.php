@@ -108,8 +108,8 @@ class StoreUtility {
 
     public static function GetCallbackkey(int $device): string {
         return match ($device) {
-            StoreValue::Android => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
-            StoreValue::iOS => getenv(EnvVar::QuickSDKCallBackKeyiOS),
+            StoreValue::PlatGoogle => getenv(EnvVar::QuickSDKCallBackKeyAndroid),
+            StoreValue::PlatApple => getenv(EnvVar::QuickSDKCallBackKeyiOS),
             default => ""
         };
     }
@@ -124,6 +124,14 @@ class StoreUtility {
         }
         $signKey .= $callbackkey;
         return md5($signKey);
+    }
+
+    public static function GetSandBoxes(): array {
+        $responseSanbox = [];
+        $responseSanbox["mycard"] = getenv(EnvVar::MyCardSandboxmode) === "true" ? true : false;
+        $responseSanbox["app"] = false;
+        $responseSanbox["google"] = false;
+        return $responseSanbox;
     }
 
     public static function GetCurrency(UserBagHandler $userBagHandler): array {
