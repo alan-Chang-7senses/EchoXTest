@@ -12,6 +12,7 @@ use Games\Exceptions\UserException;
 use Games\Users\FreePeta\FreePetaUtility;
 use Games\Users\NamingUtility;
 use Games\Users\UserHandler;
+use Games\Pools\UserPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use PDOException;
@@ -69,7 +70,7 @@ class SaveFreePlayer extends BaseProcessor {
         // 尚未改名的新玩家，才能收到 3 隻免費 Peta
         if ($isNewPlayer == true) {
             $accessor->ClearCondition();
-            $rows = $accessor->FromTable("UserFreePeta")->Fetch();
+            $rows = $accessor->FromTable("UserFreePeta")->WhereEqual('UserID', $userInfo->id)->Fetch();
             $freePetas = json_decode($rows->FreePetaInfo);
     
             foreach($freePetas as $peta) {
@@ -84,6 +85,7 @@ class SaveFreePlayer extends BaseProcessor {
         $accessor->ClearCondition();
         $accessor->FromTable('Users')->WhereEqual('UserID', $userInfo->id)->Modify(["Player" => $playerID]);
 
+        UserPool::Instance()->Delete($userInfo->id);  
 
         $result = new ResultData(ErrorCode::Success);
         return $result;
