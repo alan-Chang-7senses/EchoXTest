@@ -49,7 +49,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | ranking | int | 排名 |
 | duration | float | 競賽使用時間 |
 | [items](#items) | array | 獲獎物品資訊物件陣列 |
-| leadRate | float | 領先率 |
+| rate | int | 積分 |
 
 #### <span id="items">items 內容</span>
 

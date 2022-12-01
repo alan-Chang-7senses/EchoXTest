@@ -6,6 +6,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
 use Games\Consts\RaceValue;
 use Games\Consts\RewardValue;
@@ -155,14 +156,19 @@ class FinishRace extends BaseRace{
                 $userBagHandler->DecItemByItemID($ticket, 1);
             }
         }
+            $rankingRows = AccessorFactory::Main()->SelectExpr('PlayerID AS player, Ranking AS ranking')
+            ->FromTable('RacePlayer')
+            ->WhereIn('RacePlayerID',array_values($racePlayersArr))
+            ->FetchAll();
+        $rates = RaceUtility::RecordRatingForEachPlayer($rankingRows,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);    
         
-        if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
+        // if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
         
         foreach ($users as $idx => $user) {
             
             if(UserUtility::IsNonUser($user['id'])) continue;
             
-            $users[$idx]['leadRate'] = $leadRates[$user['player']] ?? 0;
+            $users[$idx]['rate'] = $rates[$user['player']] ?? 0;
             
             if(empty($rewards[$user['id']])) continue;
             
@@ -201,9 +207,6 @@ class FinishRace extends BaseRace{
                     ]);
         });
         
-        // $racePlayerInfos = [];
-        // foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerInfos[] = (new RacePlayerHandler($racePlayerID))->GetInfo();
-        // RaceUtility::RecordRatingForEachPlayer($racePlayerInfos,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);
 
         foreach ($users as $user) $userPool->Delete($user['id']);
         foreach($raceInfo->racePlayers as $racePlayerID) $racePlayerPool->Delete($racePlayerID);

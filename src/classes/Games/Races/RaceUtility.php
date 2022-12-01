@@ -164,34 +164,63 @@ class RaceUtility {
      * 結束競賽時。計算並紀錄每個角色積分。
      * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : void
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : array
     {
         //不計排行榜的賽制不計分
-        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return;
+        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return[];
         $competitionHandler = CompetitionsInfoHandler::Instance($lobby);
+        // $competitionInfo = $competitionHandler->GetInfo();
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');
         $allRatings = [];
+        $playCount = [];
 
         $whereValues = $accessor->valuesForWhereIn($playerIDs);
         $whereValues->bind['SeasonID'] = $seasonID;
         // //有可能是false，或有缺少資料。必須給預設值。
         $rows = $accessor->ClearCondition()
-                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime` FROM `LeaderboardRating`
+                 ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime`, `PlayCount` FROM `LeaderboardRating`
                                         WHERE `PlayerID` IN '.$whereValues->values.'
                                         AND SeasonID = :SeasonID',$whereValues->bind);
         
         foreach($rows as $row)
         {
             $allRatings[$row->PlayerID] = $row->Rating;
+            $playCount[$row->PlayerID] = $row->PlayCount;
         }
+        //取上個賽季
+        if(count($playerIDs) != count($rows))
+        $preSeasonRow = $accessor->executeBindFetch('SELECT SeasonID FROM QualifyingSeasonData 
+                                                     WHERE ID < (SELECT `ID` FROM QualifyingSeasonData 
+                                                                WHERE SeasonID = :SeasonID AND Lobby = :Lobby)
+                                                     AND `Status` = 0
+                                                     ORDER BY ID DESC
+                                                     LIMIT 1',['SeasonID' => $seasonID, 'Lobby' => $lobby]);
+        $accessor->ClearCondition()->PrepareName('GetPreSeasonRating');
         foreach($playerIDs as $playerID)
         {
             if(!isset($allRatings[$playerID]))
-            $allRatings[$playerID] = $competitionHandler->GetResetRating(null);
+            {
+                $oldRating = null;
+                if(!empty($preSeasonRow) && $preSeasonRow !== false)
+                {
+                    $preRatingRow = $accessor->SelectExpr('Rating')
+                             ->FromTable('LeaderboardRating')
+                             ->WhereEqual('SeasonID',$preSeasonRow->SeasonID)
+                             ->WhereEqual('Lobby',$lobby)
+                             ->Fetch();
+                    $oldRating = $preRatingRow->Rating ?? null;                             
+                }
+                $allRatings[$playerID] = $competitionHandler->GetResetRating($oldRating);
+            }
+            if(!isset($playCount[$playerID]))
+            {
+                $playCount[$playerID] = 0;
+            }
         }
         $binds = [];
+        $ratingResults = [];
         foreach($racePlayerInfos as $racePlayerInfo)
         {
             //找出自己以外的
@@ -209,9 +238,12 @@ class RaceUtility {
                 'Lobby' => $lobby,
                 'Rating' => $rating,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
+                'PlayCount' => $playCount[$playerID] + 1,
             ];
+            $ratingResults[$playerID] = $rating;
         }
 
-        $accessor->ClearCondition()->FromTable('LeaderboardRating')->AddAll($binds,true);
+        $accessor->ClearAll()->FromTable('LeaderboardRating')->AddAll($binds,true);
+        return $ratingResults;
     }
 }
