@@ -3,6 +3,7 @@
 namespace Processors\Leaderboard;
 
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Accessors\AccessorFactory;
 use Games\Exceptions\LeaderboardException;
 use Holders\ResultData;
@@ -13,26 +14,38 @@ class LeaderBoardRatingInfo extends BaseProcessor
     public function Process(): ResultData
     {
         $staticAccessor = AccessorFactory::Static();
-        $rows = $staticAccessor->FromTable('Leaderboard')->FetchAll();
+
+        $nowtime = (int)$GLOBALS[Globals::TIME_BEGIN];
+        $seasonInfo = $staticAccessor->FromTable("QualifyingData")
+                ->WhereLess("StartTime", $nowtime)
+                ->WhereGreater("EndTime", $nowtime)
+                ->SelectExpr("QualifyingSeasonID")
+                ->FetchAll();
+        $seasonInfo = array_column($seasonInfo, "QualifyingSeasonID");
+
+        $rows = $staticAccessor->ClearAll()
+            ->FromTable('Leaderboard')
+            ->WhereIn('SeasonID', $seasonInfo)
+            ->FetchAll();
         if($rows === false)throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);
 
         $result = new ResultData(ErrorCode::Success);
 
         $rewardAPI = new LeaderBoardRewardInfo();
         $rewardsInfo = $rewardAPI->Process()->rewardInfo;
+        $rewardsInfoMap = array_column($rewardsInfo, "seasonId");
 
         if(empty($rewardsInfo))throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);
+
         $result->leaderBoards = [];
         foreach($rows as $row)
         {
             $seasonID = $row->SeasonID;
-            foreach($rewardsInfo as $rewardInfo)
-            {
-                if($rewardInfo->seasonId == $seasonID)
-                $rewards = $rewardInfo->rewards;
-            }
+            $reward = array_search($seasonID, $rewardsInfoMap);
+            if( false !== $reward ) $reward = $rewardsInfo[$reward]->rewards;
+            else $reward = null;
 
-            $result->leaderBoards[] = 
+            array_push($result->leaderBoards,
             [
                 'id' => $row->Serial,
                 'group' => $row->Group,
@@ -41,10 +54,10 @@ class LeaderBoardRatingInfo extends BaseProcessor
                 'ruleHint' => $row->CompetitionRuleHint,
                 'ratingTarget' => $row->RecordType,
                 'rankRuleHint' => $row->RankRuleHint,
-                'rewards' => $rewards,
-            ];
+                'rewards' => $reward,
+            ]);
         }
-        
+
         return $result;
     }
 }

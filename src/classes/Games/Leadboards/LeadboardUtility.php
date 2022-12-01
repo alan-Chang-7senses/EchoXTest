@@ -7,6 +7,9 @@ use Consts\EnvVar;
 use Consts\Globals;
 use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
+use Games\Players\PlayerHandler;
+use Games\Players\PlayerUtility;
+use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use stdClass;
 /**
@@ -98,13 +101,15 @@ class LeadboardUtility {
 
         $accessor = AccessorFactory::Main();
 
-        $row = $accessor->FromTable('LeaderboardRating')
+        $row = $accessor
+                 ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('PlayerID',$playerID)
                  ->WhereEqual('SeasonID', $seasonID)
                  ->Fetch();
         if($row === false)return false; //不在排行榜中
 
         $playerRate = $row->Rating;
+        $userId = $row->UserID;
         $row = $accessor->ClearCondition()
                         ->SelectExpr('COUNT(*) AS cnt')
                         ->FromTable('LeaderboardRating')
@@ -112,8 +117,13 @@ class LeadboardUtility {
                         ->WhereGreater('Rating', $playerRate)
                         ->Fetch();
 
+        $info = (new PlayerHandler($playerID))->GetInfo();
+        $idName = PlayerUtility::GetIDName($playerID);
+
         $result = new RatingResult();
-        $result->id = $playerID;
+        $result->userId = $userId;
+        $result->petaName = (string)$idName;
+        $result->petaId = $playerID;
         $result->rank = $row->cnt + 1;
         $result->rate = $playerRate;
         return $result;
@@ -122,7 +132,6 @@ class LeadboardUtility {
     /**
      * 取得該賽制之賽季所有角色的排行，可使用參數指定排名區間
      * @param int $seasonID 賽季ID
-     * @param int $lobby 賽制大廳ID
      * @param int $offset 要獲得名次的起始名次。未輸入則從第一名開始獲取
      * @param int $endRank 要獲得角色的最大名次。未輸入則使用默認數量1~100名
      * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
@@ -131,8 +140,8 @@ class LeadboardUtility {
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->SelectExpr('PlayerID AS ID, Rating')
-                 ->FromTable('LeaderboardRating')
+        $rows = $accessor->SelectExpr('PlayerID, Rating, UserID')
+                 ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
@@ -152,10 +161,10 @@ class LeadboardUtility {
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
+        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereIn('SeasonID', $seasonID)
-                 ->GroupBy('ID')
+                 ->GroupBy('UserID')
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
                  ->FetchAll();
@@ -185,8 +194,15 @@ class LeadboardUtility {
                         ->OrderBy('Rating','DESC')
                         ->FetchAll();
 
+        $userInfo = (new UserHandler($userID))->GetInfo();
+        $playerID = $userInfo->player;
+        $info = (new PlayerHandler($playerID))->GetInfo();
+        $idName = PlayerUtility::GetIDName($playerID);
+
         $result = new RatingResult();
-        $result->id = $userID;
+        $result->userId = $userID;
+        $result->petaName = (string)$idName;
+        $result->petaId = $playerID;
         $result->rank = array_search($userRating->Rating, array_column($row, "Rating")) + 1;
         $result->rate = $userRating->Rating;
         return $result;
@@ -200,10 +216,24 @@ class LeadboardUtility {
         $sameRank = 1;
         $offset = max(1,$offset);
 
+        if( !property_exists($rows[0], "PlayerID") )
+        {
+            foreach( $rows as $row )
+            {
+                $userInfo = (new UserHandler($row->UserID))->GetInfo();
+                $row->PlayerID = $userInfo->player;
+            }
+        }
+
         for( $i=0 ; $ranking<=$endRank && $i<count($rows) ; ++$i )
         {
+            $info = (new PlayerHandler($rows[$i]->PlayerID))->GetInfo();
+            $idName = PlayerUtility::GetIDName($rows[$i]->PlayerID);
+
             $ratingResult = new RatingResult();
-            $ratingResult->id = $rows[$i]->ID;
+            $ratingResult->userId = $rows[$i]->UserID;
+            $ratingResult->petaName = (string)$idName;
+            $ratingResult->petaId = $rows[$i]->PlayerID;
             $ratingResult->rate = $rows[$i]->Rating;
             $ratingResult->rank = $ranking;
 

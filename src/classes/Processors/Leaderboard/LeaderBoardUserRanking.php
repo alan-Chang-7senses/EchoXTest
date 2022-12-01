@@ -34,15 +34,41 @@ class LeaderBoardUserRanking extends BaseProcessor
                 ->WhereGreater("EndTime", $nowtime)
                 ->SelectExpr("QualifyingSeasonID, Lobby")
                 ->FetchAll();
+        $seasonIdList = array_column($seasonInfo, "QualifyingSeasonID");
+
+        $recordTypeMap = [];
+        {
+            $leaderBoards = $accessor->ClearAll()
+                ->SelectExpr('SeasonID, RecordType')
+                ->FromTable('Leaderboard')
+                ->WhereIn('SeasonID', $seasonIdList)
+                ->FetchAll();
+            if($leaderBoards === false)throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);
+
+            foreach( $leaderBoards as $leaderBoard ) $recordTypeMap[$leaderBoard->SeasonID] = $leaderBoard->RecordType;
+        }
+
         foreach( $seasonInfo as $item )
         {
-            $newRankInfo = $this->ConstructPlayerRankInfo($item->QualifyingSeasonID, $userInfo->player);
+            $newRankInfo = false;
+            switch( $recordTypeMap[$item->QualifyingSeasonID] )
+            {
+                case 0:// peta rank
+                    $newRankInfo = $this->ConstructPlayerRankInfo($item->QualifyingSeasonID, $userInfo->player);
+                    break;
+
+                case 1:// user rank
+                    $newRankInfo = $this->ConstructTotalRankInfo([$item->QualifyingSeasonID], $userId);
+                    break;
+
+                default:break;
+            }
             if( false === $newRankInfo ) continue;
+
             $newRankInfo->lobby = $item->Lobby;
             array_push($seasonRatinInfo, $newRankInfo);
         }
 
-        $seasonIdList = array_column($seasonInfo, "QualifyingSeasonID");
         $totalRankInfo = $this->ConstructTotalRankInfo($seasonIdList, $userId);
 
         //if( false === $rankingInfo ) throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);

@@ -6,7 +6,7 @@
 
 ## URL
 
-http(s)://`域名`/Leaderboard/LeaderBoardRewardInfo/
+http(s)://`域名`/Leaderboard/LeaderBoardRatingInfo/
 
 ## Method
 
@@ -27,17 +27,20 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| [rewardInfo](#rewardInfo) | array | 獎勵資訊列表 |
+| [leaderBoards](#leaderBoards) | array | 排名資訊列表 |
 
-#### <span id="rewardInfo"> rewardInfo 內容</span>
-
-_此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
+#### <span id="leaderBoards"> leaderBoards 內容</span>
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| seasonId | int | 賽季ID |
-| lobby | int | 大廳種類 |
-| [rewards](#rewards) | array | 獎勵資訊 |
+| id | int | 資料序號 |
+| group | int | 排行榜主項群組ID |
+| mainLeaderboardTitle | string | 主榜單字串 |
+| subLeaderboardTitle | string | 子榜單字串 |
+| ruleHint | string | 榜單規則字串 |
+| ratingTarget | int | 計分類型(0：角色, 1：玩家) |
+| rankRuleHint | int | 排名基準HINT字串 |
+| [rewards](#rewards) | array | 獎勵資訊列表 |
 
 #### <span id="rewards"> rewards 內容</span>
 
@@ -68,10 +71,15 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	        "code": 0,
 	        "message": ""
 	    },
-	    "rewardInfo": [
+	    "leaderBoards": [
 	        {
-	            "seasonId": 1,
-	            "lobby": 1,
+	            "id": 3,
+	            "group": 2,
+	            "mainLeaderboardTitle": "CoinA",
+	            "subLeaderboardTitle": "SubCoinA",
+	            "ruleHint": "CoinARule",
+	            "ratingTarget": 0,
+	            "rankRuleHint": "HintCoinA",
 	            "rewards": [
 	                {
 	                    "minRank": 1,
@@ -120,8 +128,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            ]
 	        },
 	        {
-	            "seasonId": 2,
-	            "lobby": 2,
+	            "id": 4,
+	            "group": 2,
+	            "mainLeaderboardTitle": "PointA",
+	            "subLeaderboardTitle": "SubPointA",
+	            "ruleHint": "PointARule",
+	            "ratingTarget": 0,
+	            "rankRuleHint": "HintPointA",
 	            "rewards": [
 	                {
 	                    "minRank": 1,
@@ -159,8 +172,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            ]
 	        },
 	        {
-	            "seasonId": 3,
-	            "lobby": 4,
+	            "id": 5,
+	            "group": 3,
+	            "mainLeaderboardTitle": "CoinB",
+	            "subLeaderboardTitle": "SubCoinB",
+	            "ruleHint": "CoinBRule",
+	            "ratingTarget": 0,
+	            "rankRuleHint": "HintCoinB",
 	            "rewards": [
 	                {
 	                    "minRank": 1,
@@ -209,8 +227,13 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 	            ]
 	        },
 	        {
-	            "seasonId": 4,
-	            "lobby": 5,
+	            "id": 6,
+	            "group": 3,
+	            "mainLeaderboardTitle": "PointB",
+	            "subLeaderboardTitle": "SubPointB",
+	            "ruleHint": "PointBRule",
+	            "ratingTarget": 0,
+	            "rankRuleHint": "HintPointB",
 	            "rewards": [
 	                {
 	                    "minRank": 1,

@@ -109,7 +109,7 @@
 		- [領先率](Leaderboard/LeadRate.md)。
 		- [觀看其他人的Peta資料](Leaderboard/RivalPlayer.md)。
 		- [排行榜](Leaderboard/LeadRank.md)。
-		- [排行榜獎勵](Leaderboard/LeadRewardInfo.md)。
+		- [排行榜靜態資訊](Leaderboard/LeadInfo.md)。
 	- 串接：
 		- Metasens：
 			- [用戶是否存在](Interfaces/Metasens/UserExist.md)。
