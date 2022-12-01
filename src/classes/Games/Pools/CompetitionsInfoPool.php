@@ -30,10 +30,10 @@ class CompetitionsInfoPool extends PoolAccessor
         $holder = new CompetitionsInfoHolder();
         $row = AccessorFactory::Static()
             ->FromTable('CompetitionsInfo')
-            ->WhereEqual('Lobby',$id)
+            ->WhereEqual('ID',$id)
             ->Fetch();
         if($row === false)return false;    
-        $holder->lobby = $row->Lobby;
+        $holder->lobby = $row->ID;
         $holder->minRatingReset = $row->MinRatingReset;
         $holder->resetRate = $row->ResetRate;
         $holder->matchingRange = $row->MatchingRange;
