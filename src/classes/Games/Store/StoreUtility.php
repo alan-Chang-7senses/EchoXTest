@@ -78,7 +78,7 @@ class StoreUtility {
             StoreValue::CurrencyDiamond => ItemValue::CurrencyDiamond,
             StoreValue::CurrencyPT => ItemValue::CurrencyPetaToken,
             StoreValue::CurrencyMarsTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyCoinA)->GetInfo()->ticketId,
-            StoreValue::CurrencyPtTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenA)->GetInfo()->ticketId,
+            StoreValue::CurrencyPtTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenA)->GetInfo()->ticketId
            // StoreValue::CurrencyGroupTicket => ConfigGenerator::Instance()->PvP_B_TicketId_3,
         };
     }
