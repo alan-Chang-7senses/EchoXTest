@@ -190,7 +190,7 @@ class RaceUtility {
             [
                 'PlayerID' => $playerID,
                 'SeasonID' => $seasonID,
-                'CompetitionType' => $lobby,
+                'Lobby' => $lobby,
                 'Rating' => $rating,
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];

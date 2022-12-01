@@ -15,10 +15,10 @@ class CompetitionsInfoHandler
     private int $currentRating;
     private array $otherCurrentRatings;
 
-    public function __construct(int $id)
+    public function __construct(int $lobby)
     {
         $this->pool = CompetitionsInfoPool::Instance();
-        $this->info = $this->pool->$id;
+        $this->info = $this->pool->$lobby;
         if($this->info == false)throw new RaceException(RaceException::NoSeasonData);
     }
     public function GetInfo() : CompetitionsInfoHolder|stdClass
