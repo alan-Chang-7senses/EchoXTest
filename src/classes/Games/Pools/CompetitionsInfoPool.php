@@ -4,11 +4,18 @@ namespace Games\Pools;
 
 use Accessors\PoolAccessor;
 use Games\Accessors\AccessorFactory;
+use Games\Consts\RaceValue;
+use Games\Exceptions\RaceException;
 use Games\PVP\Holders\CompetitionsInfoHolder;
 use stdClass;
 
 class CompetitionsInfoPool extends PoolAccessor
 {
+    const NoValueLobby = 
+    [
+        RaceValue::LobbyStudy,
+        RaceValue::LobbyPVE,
+    ];
     private static CompetitionsInfoPool $instance;
     public static function Instance() : CompetitionsInfoPool
     {
@@ -19,14 +26,14 @@ class CompetitionsInfoPool extends PoolAccessor
 
     public function FromDB(int|string $id): CompetitionsInfoHolder|stdClass|false
     {
+        if(in_array($id,self::NoValueLobby))throw new RaceException(RaceException::NoSeasonData);
         $holder = new CompetitionsInfoHolder();
         $row = AccessorFactory::Static()
             ->FromTable('CompetitionsInfo')
             ->WhereEqual('ID',$id)
             ->Fetch();
         if($row === false)return false;    
-        $holder->id = $row->ID;
-        $holder->weeksPerSeason = $row->WeeksPerSeason;
+        $holder->lobby = $row->ID;
         $holder->minRatingReset = $row->MinRatingReset;
         $holder->resetRate = $row->ResetRate;
         $holder->matchingRange = $row->MatchingRange;
@@ -50,6 +57,9 @@ class CompetitionsInfoPool extends PoolAccessor
         $holder->kValue = $row->KValue;
         $holder->delta = $row->Delta;
         $holder->bot = $row->BOT;
+        $holder->ticketId = $row->TicketId;
+        $holder->ticketCost = $row->TicketCost;
+        $holder->treshold = $row->Treshold;
         return $holder;
     }
 }

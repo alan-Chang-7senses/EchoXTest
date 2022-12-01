@@ -42,7 +42,7 @@ class StoreValue {
     const CurrencyPT = 3;
     const CurrencyMarsTicket = 4;
     const CurrencyPtTicket = 5;
-    const CurrencyGroupTicket = 6;
+//    const CurrencyGroupTicket = 6;
     // 免費金額
     const FreeCost = 0;
     const Currencies = [
@@ -50,8 +50,8 @@ class StoreValue {
         self::CurrencyDiamond,
         self::CurrencyPT,
         self::CurrencyMarsTicket,
-        self::CurrencyPtTicket,
-        self::CurrencyGroupTicket,
+        self::CurrencyPtTicket
+//        self::CurrencyGroupTicket,
     ];
     //庫存(Inventory) -1:無限 0:展示用 >0:庫存數量
     const InventoryNoLimit = -1;

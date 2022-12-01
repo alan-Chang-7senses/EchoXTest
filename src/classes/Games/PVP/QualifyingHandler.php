@@ -5,12 +5,12 @@ namespace Games\PVP;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Globals;
-use DateTime;
 use Exception;
 use Games\Accessors\QualifyingSeasonAccessor;
 use Games\Consts\RaceValue;
+use Games\Exceptions\RaceException;
 use Games\Pools\ItemInfoPool;
-use Games\Pools\QualifyingSeasonPool;
+use Games\Pools\QualifyingDataPool;
 use Games\Pools\TicketInfoPool;
 use Games\PVP\Holders\TicketInfoHolder;
 use Games\Races\RaceUtility;
@@ -21,124 +21,92 @@ use stdClass;
 
 class QualifyingHandler {
 
-    public const Lobbies = [RaceValue::LobbyCoin, RaceValue::LobbyCoinB,
-        RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB,
+    public const Lobbies = [RaceValue::LobbyCoinA, RaceValue::LobbyCoinB,
+        RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB,
         RaceValue::LobbyStudy];
-    public const MatchLobbies = [RaceValue::LobbyCoin, RaceValue::LobbyCoinB,
-        RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB];
+    public const MatchLobbies = [RaceValue::LobbyCoinA, RaceValue::LobbyCoinB,
+        RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB];
 
-    public int $NowSeasonID;
-    private QualifyingSeasonPool $pool;
+    public array $NowSeasonIDArr;
+    public array $infoArr;
+
+    private QualifyingDataPool $qualifyingDataPool;
     private TicketInfoPool $ticketPool;
     private QualifyingSeasonAccessor $pdoAccessor;
-    public stdClass $info;
 
     public function __construct() {
-        $this->pool = QualifyingSeasonPool::Instance();
+        $this->qualifyingDataPool = QualifyingDataPool::Instance();
         $this->ticketPool = TicketInfoPool::Instance();
         $this->pdoAccessor = new QualifyingSeasonAccessor();
-        $this->SetInfo();
+        $this->DetectQualifying();
     }
 
-    private function SetInfo() {
+    private function DetectQualifying() {
+        $this->NowSeasonIDArr = [];
+        $this->infoArr = [];
 
-        $result = $this->pool->{ "LastID"};
-        if ($result != false) {
-            $this->info = $result;
-            $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-            if (($nowtime > $this->info->StartTime) && ($nowtime < $this->info->EndTime)) {
-                $this->NowSeasonID = $this->info->QualifyingSeasonID;
-            } else {
-                $this->NowSeasonID = RaceValue::NOSeasonID;
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+
+            // 輪巡大廳編號 查詢 QualifyingSeasonData 開放賽季資料
+            $data = $this->pdoAccessor->GetOpenQualifyingSeasonData($lobby);
+
+            if ($data !== false) {
+                // 紀錄大廳開放賽季編號
+                $this->NowSeasonIDArr[] = $data->SeasonID;
+
+                // 賽季資料 整理至陣列
+                $info = new stdClass;
+                $info->ID = $data->ID;
+                $info->SeasonID = $data->SeasonID;
+                $info->Lobby = $data->Lobby;
+                $info->Status = $data->Status;
+                $info->Assign = $data->Assign;
+                $info->UpdateTime = $data->UpdateTime;
+                $this->infoArr[$data->Lobby] = $info;
             }
-        } else {
-            $this->info = new stdClass;
-            $this->info->QualifyingSeasonID = RaceValue::NOSeasonID;
-            $this->NowSeasonID = RaceValue::NOSeasonID;
         }
     }
+    
+    public function DetectSeason() {
+        $qualifyingData = [];
+        $defSeasonIDArr = [];
+        
+        // (QualifyingData) : 取得企劃定義的賽季大廳資料
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+            $data = $this->qualifyingDataPool->{$lobby};
+            if ($data !== false) {
+                $qualifyingData[$lobby] = $data;
+                $defSeasonIDArr[$lobby] = $data->SeasonID;
+            }
+        }
 
-    public function ChangeSeason(int $forceNewArenaID = null, bool $startRightNow = null): int {
-
-
-        $lastQualifyingSeasonID = -1;
-        if ($forceNewArenaID == null) {
-            //正常排程換季            
-            $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-
-            if ($this->info->QualifyingSeasonID == RaceValue::NOSeasonID) {
-                //目前資料表沒有賽季,根據設定時間開啟賽季, 是否立即開始: $startRightNow
-                $arenaID = 1;
-                $newSeason = $this->GetNewSeasonInfo($startRightNow);
-                $startTime = $newSeason->StartTime;
-                $endTime = $newSeason->EndTime;
-            } else {
-                //目前資料表有賽季
-                if ($nowtime >= $this->info->EndTime) {
-                    $lastQualifyingSeasonID = $this->info->QualifyingSeasonID;
-                    $arenaID = $this->info->ArenaID + 1;
-                    $newSeason = $this->GetNewSeasonInfo(true);
-                    $startTime = $newSeason->StartTime;
-                    $endTime = $newSeason->EndTime;
-                } else {
-                    //進行中賽季, 排程時間間距太短
-                    throw new Exception("進行中賽季未結束");
+        // (QualifyingSeasonData) $this->NowSeasonIDArr : 目前遊戲紀錄 進行中賽季資料
+        if (count($this->NowSeasonIDArr) > 0) {
+            foreach ($this->NowSeasonIDArr as $nowSeasonID) {
+                // 若逾期，則將 Status 改成 0
+                if (in_array($nowSeasonID, $defSeasonIDArr) == false) {
+                    $bind = ["Status" => 0];
+                    $this->pdoAccessor->ModifyQualifyingSeasonData($nowSeasonID, $bind);
+                    array_diff($this->NowSeasonIDArr, array($nowSeasonID));
                 }
             }
-        } else {
-            //強制換季
-            if ($this->info->QualifyingSeasonID != RaceValue::NOSeasonID) {
-                $lastQualifyingSeasonID = $this->info->QualifyingSeasonID;
-            }
-
-            $newSeason = $this->GetNewSeasonInfo($startRightNow);
-            $arenaID = $forceNewArenaID;
-            $startTime = $newSeason->StartTime;
-            $endTime = $newSeason->EndTime;
         }
-
-        $this->pool->Delete("LastID");
-        $this->pdoAccessor->AddNewSeason($arenaID, $startTime, $endTime);
-        $this->SetInfo();
-        return $lastQualifyingSeasonID;
-    }
-
-    public function SendPrizes(int $qualifyingSeasonID): bool {
-        if ($qualifyingSeasonID == RaceValue::NOSeasonID) {
-            return false;
-        }
-        //todo send prize 金幣和PT
-        return true;
-    }
-
-    private function GetNewSeasonInfo(bool $startNow): stdClass {
-        $startTimeValue = ConfigGenerator::Instance()->PvP_B_SeasonStartTime;
-        $startTime = (new DateTime($startTimeValue))->format('U');
-        $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        $sessionTime = $this->SeasonDurations();
-
-        $result = new stdclass();
-        if ($startTime < $nowtime) { //過去時間        
-            $passSeasons = floor(($nowtime - $startTime) / $sessionTime);
-            if ($startNow == false) {
-                $passSeasons++;
-            }
-            $startTime = $startTime + $passSeasons * $sessionTime;
-        } else {
-            if ($startNow) {
-                $diffSeasons = floor(($startTime - $nowtime) / $sessionTime) + 1;
-                $startTime = $startTime - $diffSeasons * $sessionTime;
+        
+        // (QualifyingSeasonData) 新增資料
+        if ($qualifyingData != false) {
+            foreach ($qualifyingData as $data) {
+                // 不在 目前遊戲紀錄進行中賽季資料 
+                if (in_array($data->SeasonID, $this->NowSeasonIDArr) == false) {
+                    $this->pdoAccessor->AddQualifyingSeasonData($data->SeasonID, $data->Lobby);
+                }
             }
         }
 
-        $result->StartTime = $startTime;
-        $result->EndTime = $startTime + $sessionTime;
-        return $result;
-    }
+        foreach (QualifyingHandler::Lobbies as $lobby) {
+            $this->qualifyingDataPool->Delete($lobby);
+        }
 
-    private function SeasonDurations(): int {
-        $weekTimeValue = ConfigGenerator::Instance()->PvP_B_WeeksPerSeacon;
-        return $weekTimeValue * 604800;
+        $this->DetectQualifying();
     }
 
     public function CheckLobbyID(int $lobby) {
@@ -147,10 +115,23 @@ class QualifyingHandler {
         }
     }
 
-    public function GetSeasonRemaintime(): int {
-        $remainTime = $this->info->EndTime - $GLOBALS[Globals::TIME_BEGIN] - ConfigGenerator::Instance()->PvP_B_StopMatch;
-        if ($remainTime < 0)
+    public function CheckAnySeasonIsExist() {
+        if (count($this->NowSeasonIDArr) <= 0) {
+            throw new RaceException(RaceException::NoSeasonData);
+        }
+    }
+
+    public function GetSeasonRemaintime(int $lobby): int {
+        $qualifyData = $this->qualifyingDataPool-> {$lobby};
+        if ($qualifyData !== false) {
+            $remainTime = $qualifyData->EndTime - $GLOBALS[Globals::TIME_BEGIN] - ConfigGenerator::Instance()->PvP_B_StopMatch;
+            if ($remainTime < 0)
+                $remainTime = 0;
+        }
+        else {
             $remainTime = 0;
+        }
+        
         return (int) $remainTime;
     }
 
@@ -172,20 +153,17 @@ class QualifyingHandler {
     }
 
     public function GetSceneID(int $lobby, int $defaultSceneID): int {
-        switch ($lobby) {
-            case RaceValue::LobbyCoin:
-            case RaceValue::LobbyCoinB:
-                return $this->info->CoinScene;
-            case RaceValue::LobbyPT:
-            case RaceValue::LobbyPetaTokenB:
-                return $this->info->PTScene;
+        $qualifyData = $this->qualifyingDataPool->{$lobby};
+        if ($qualifyData !== false) {
+            return $qualifyData->Scene;
         }
+        
         return $defaultSceneID;
     }
 
     public function GetPetaLimitLevel(int $lobby): int {
         switch ($lobby) {
-            case RaceValue::LobbyCoin:
+            case RaceValue::LobbyCoinA:
             case RaceValue::LobbyCoinB:
                 return ConfigGenerator::Instance()->PvP_B_PetaLvLimit_1;
         }
@@ -196,12 +174,12 @@ class QualifyingHandler {
         $keyValue = "";
         $updateColumn = "";
         switch ($lobby) {
-            case RaceValue::LobbyCoin:
+            case RaceValue::LobbyCoinA:
             case RaceValue::LobbyCoinB:
                 $keyValue = 'Ticket_Coin';
                 $updateColumn = "CoinTime";
                 break;
-            case RaceValue::LobbyPT:
+            case RaceValue::LobbyPetaTokenA:
             case RaceValue::LobbyPetaTokenB:
                 $keyValue = 'Ticket_PT';
                 $updateColumn = "PTTime";
@@ -240,11 +218,11 @@ class QualifyingHandler {
             $resultTime = 0;
             $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
             switch ($lobby) {
-                case RaceValue::LobbyCoin:
+                case RaceValue::LobbyCoinA:
                 case RaceValue::LobbyCoinB:                    
                     $resultTime = $userRewardTimes->CoinTime - $nowtime;
                     break;
-                case RaceValue::LobbyPT:
+                case RaceValue::LobbyPetaTokenA:
                 case RaceValue::LobbyPetaTokenB:
                     $resultTime = $userRewardTimes->PTTime - $nowtime;
                     break;
@@ -258,4 +236,10 @@ class QualifyingHandler {
         }
     }
 
+    public function GetSeasonIDByLobby(int $lobby): int {
+        if (array_key_exists($lobby, $this->infoArr) == true) {
+            return $this->infoArr[$lobby]->SeasonID;
+        }
+        return RaceValue::NOSeasonID;
+    }
 }

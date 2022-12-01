@@ -112,16 +112,16 @@ class RaceValue {
     const SValueBaseMinusHP = 0;
 
     const LobbyNone = 0;
-    const LobbyCoin = 1;
-    const LobbyPT = 2;
+    const LobbyCoinA = 1;
+    const LobbyPetaTokenA = 2;
     const LobbyStudy = 3;
     const LobbyCoinB = 4;
     const LobbyPetaTokenB = 5;
     const LobbyPVE = 6;
     
     const LobbyPlayerLevelConfig = [
-        self::LobbyCoin => 'LobbyCoinPlayerLevel',
-        self::LobbyPT => 'LobbyPTPlayerLevel',
+        self::LobbyCoinA => 'LobbyCoinPlayerLevel',
+        self::LobbyPetaTokenA => 'LobbyPTPlayerLevel',
         self::LobbyStudy => 'LobbyStudyPlayerLevel',
         self::LobbyCoinB => 'LobbyCoinPlayerLevel',
         self::LobbyPetaTokenB => 'LobbyPTPlayerLevel',
@@ -129,8 +129,8 @@ class RaceValue {
     ];
     
     const LobbySkillLevelConfig = [
-        self::LobbyCoin => 'LobbyCoinSkillLevel',
-        self::LobbyPT => 'LobbyPTSkillLevel',
+        self::LobbyCoinA => 'LobbyCoinSkillLevel',
+        self::LobbyPetaTokenA => 'LobbyPTSkillLevel',
         self::LobbyStudy => 'LobbyStudySkillLevel',
         self::LobbyCoinB => 'LobbyCoinSkillLevel',
         self::LobbyPetaTokenB => 'LobbyPTSkillLevel',
@@ -144,11 +144,14 @@ class RaceValue {
 
     const LobbyCompetition = 
     [
-        self::LobbyCoin => self::CompetitionCoin,
-        self::LobbyPT => self::CompetitionPT,
+        self::LobbyCoinA => self::CompetitionCoin,
+        self::LobbyPetaTokenA => self::CompetitionPT,
         self::LobbyCoinB => self::CompetitionCoinB,
         self::LobbyPetaTokenB => self::CompetitionPTB,
     ];
+    
+    const QualifyingSeasonClose = 0;
+    const QualifyingSeasonOpen = 1;
     
     const RoomIdle = 0;
     const RoomMatching = 1;

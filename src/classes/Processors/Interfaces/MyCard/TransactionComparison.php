@@ -50,6 +50,10 @@ class TransactionComparison extends BaseProcessor {
                 $oneData = "";
 
                 foreach ($rowInfo as $key => $value) {
+                    if ($key == "Serial")
+                    {
+                        continue;
+                    }
                     if (($key == "TradeDateTime") || ($key == "CreateAccountDateTime")) {
                         $value = MyCardUtility::GetTimestring($value);
                     }
