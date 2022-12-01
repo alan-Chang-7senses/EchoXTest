@@ -2,7 +2,7 @@ USE `koa_static`;
 
 CREATE TABLE IF NOT EXISTS `QualifyingData` (
 	`SeasonID` INT(11) NOT NULL AUTO_INCREMENT COMMENT '賽季編號',
-	`SeasonName` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '註解' COLLATE 'utf8mb3_general_ci',
+	`SeasonName` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '企劃註解' COLLATE 'utf8mb4_general_ci',
 	`Lobby` INT(11) NOT NULL DEFAULT '0' COMMENT '賽制大廳',
 	`Scene` INT(10) UNSIGNED NULL DEFAULT '0' COMMENT '場地編號',
 	`StartTime` INT(11) NOT NULL DEFAULT '0' COMMENT '開始時間',
