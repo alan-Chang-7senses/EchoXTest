@@ -4,8 +4,6 @@ namespace Processors\PVP;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
-use Games\Consts\RaceValue;
-use Games\Exceptions\RaceException;
 use Games\Leadboards\LeadboardUtility;
 use Games\Pools\ItemInfoPool;
 use Games\PVP\QualifyingHandler;
@@ -23,9 +21,7 @@ class PVPInfo extends BaseRace {
 
     public function Process(): ResultData {
         $qualifyingHandler = new QualifyingHandler();
-        if ($qualifyingHandler->NowSeasonID == RaceValue::NOSeasonID) {
-            throw new RaceException(RaceException::NoSeasonData);
-        }
+        $qualifyingHandler->CheckAnySeasonIsExist();
 
         $infos = [];
         $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
@@ -43,7 +39,7 @@ class PVPInfo extends BaseRace {
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
-            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->NowSeasonID);
+            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->GetSeasonIDByLobby($lobby));
             $lobbyinfo->rank = new stdClass();
             $lobbyinfo->rank->playCount = $rankInfo->playCount;
             $lobbyinfo->rank->leadRate = $rankInfo->leadRate;
@@ -59,11 +55,11 @@ class PVPInfo extends BaseRace {
                 'lighting' => $climates->lighting,
             ];
 
+            $lobbyinfo->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime($lobby);
             $infos[] = $lobbyinfo;
         }
 
         $result = new ResultData(ErrorCode::Success);
-        $result->seasonRemainTime = $qualifyingHandler->GetSeasonRemaintime();
         $result->infos = $infos;
         return $result;
     }

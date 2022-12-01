@@ -12,7 +12,7 @@ use Games\Skills\SkillHandler;
 use Games\Leadboards\LeadboardUtility;
 
 use Games\PVP\QualifyingHandler;
-
+use Games\Races\RaceUtility;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -80,7 +80,7 @@ class RivalPlayer extends BaseProcessor{
 
 
         $qualifyingHandler = new QualifyingHandler();
-        $ranking = LeadboardUtility::PlayerLeadRanking($lobby, $playerID, $qualifyingHandler->NowSeasonID);
+        $ranking = LeadboardUtility::PlayerLeadRanking($lobby, $playerID, $qualifyingHandler->GetSeasonIDByLobby($lobby));
         $result->ranking = [
             'ranking' => $ranking->ranking,
             'playCount' => $ranking->playCount,

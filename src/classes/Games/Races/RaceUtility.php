@@ -83,18 +83,18 @@ class RaceUtility {
 
         $config = ConfigGenerator::Instance();
         return match ($lobby) {
-            RaceValue::LobbyCoin, RaceValue::LobbyCoinB => $config->PvP_B_TicketId_1,
-            RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB => $config->PvP_B_TicketId_2,
+            RaceValue::LobbyCoinA, RaceValue::LobbyCoinB => $config->PvP_B_TicketId_1,
+            RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB => $config->PvP_B_TicketId_2,
             default => RaceValue::NoTicketID,
         };
     }
 
     public static function GetMaxTickets(int $lobby): int {
         switch ($lobby) {
-            case RaceValue::LobbyCoin:
+            case RaceValue::LobbyCoinA:
             case RaceValue::LobbyCoinB:
                 return ConfigGenerator::Instance()->PvP_B_MaxTickets_1;
-            case RaceValue::LobbyPT:
+            case RaceValue::LobbyPetaTokenA:
             case RaceValue::LobbyPetaTokenB:
                 return ConfigGenerator::Instance()->PvP_B_MaxTickets_2;
         }
@@ -105,15 +105,15 @@ class RaceUtility {
 
         $config = ConfigGenerator::Instance();
         return match ($lobby) {
-            RaceValue::LobbyCoin, RaceValue::LobbyCoinB => $config->PvP_B_FreeTicketId_1_Count,
-            RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB => $config->PvP_B_FreeTicketId_2_Count,
+            RaceValue::LobbyCoinA, RaceValue::LobbyCoinB => $config->PvP_B_FreeTicketId_1_Count,
+            RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB => $config->PvP_B_FreeTicketId_2_Count,
             default => 0,
         };
     }
 
     public static function CheckPlayerID(int $lobby, int $playerID): bool {
         return match ($lobby) {
-            RaceValue::LobbyPT, RaceValue::LobbyPetaTokenB => (strlen($playerID) == PlayerValue::LengthNFTID),
+            RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB => (strlen($playerID) == PlayerValue::LengthNFTID),
             default => true,
         };
     }
@@ -125,6 +125,22 @@ class RaceUtility {
     public static function QualifyingSeasonID(): int {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         return $accessor->FromTable('QualifyingSeason')->OrderBy('QualifyingSeasonID', 'DESC')->Limit(1)->Fetch()->QualifyingSeasonID;
+    }
+
+    /**
+     * 取得目前各大廳賽季編號 (0: 尚未開放, >0: 賽季編號)
+     * @param array $lobby 大廳編號
+     * @return int (0: 尚未開放, >0: 賽季編號)
+     */
+    public static function GetSeasonIDByLobby(int $lobby): int {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $data = $accessor->FromTable('QualifyingSeasonData')->WhereEqual('Lobby', $lobby)->WhereEqual('Status', RaceValue::QualifyingSeasonOpen)->Fetch();
+        if ($data == false) {
+            return RaceValue::NOSeasonID;
+        }
+        else {
+            return $data->SeasonID;
+        }
     }
 
     /**
