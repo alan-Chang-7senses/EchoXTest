@@ -90,6 +90,7 @@ class BattleRecord extends BaseProcessor
 
             $newItem->useItem = [];
             $itemId = RaceUtility::GetTicketID($roomInfo->lobby);
+            $itemCost = RaceUtility::GetTicketCount($roomInfo->lobby);
             $itemIcon = "";
             if( RaceValue::NoTicketID != $itemId )
             {
@@ -100,7 +101,7 @@ class BattleRecord extends BaseProcessor
                 array(
                     "itemId" => $itemId,
                     "itemIcon" => $itemIcon,
-                    "count" => 1));
+                    "count" => $itemCost));
             $newItem->startTime = $racePlayer->StartTime;
             $newItem->endTime = $racePlayer->FinishTime;
             array_push($recordList, $newItem);

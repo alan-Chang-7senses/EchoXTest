@@ -46,7 +46,8 @@ class CreateTutorialRoom  {
         }
 
         $useTicketId = RaceUtility::GetTicketID($lobby);
-        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) <= 0)) {
+        $ticketCost = RaceUtility::GetTicketCost($lobby);
+        if (($useTicketId !== RaceValue::NoTicketID) && ($userBagHandler->GetItemAmount($useTicketId) < $ticketCost)) {
             throw new RaceException(RaceException::UserTicketNotEnough);
         }
         
