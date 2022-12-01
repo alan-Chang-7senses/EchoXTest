@@ -4,6 +4,7 @@ namespace Games\Accessors;
 
 use Accessors\PDOAccessor;
 use Consts\Globals;
+use Games\Consts\RaceValue;
 use stdClass;
 
 class RaceRoomsAccessor extends BaseAccessor {
@@ -16,23 +17,21 @@ class RaceRoomsAccessor extends BaseAccessor {
         return $this->useTable()->WhereEqual('RaceRoomID', $raceRoomID)->ForUpdate()->Fetch();
     }
 
-    public function GetMatchRooms(int $lobby, string $version, int $lowBound, int $upBound): array {
-        return $this->useTable()->WhereEqual('Status', 1)->
-                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
+    public function GetMatchRooms(int $lobby, string $version, int $bound): array {
+        return $this->useTable()->WhereEqual('Status', RaceValue::RoomMatching)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereGreater('LowBound', $bound)->WhereLess('UpBound', $bound)->
                         ForUpdate()->FetchAll();
     }
 
-    public function GetIdleRoom(int $lobby, string $version, int $lowBound, int $upBound): stdClass|false {
-        return $this->useTable()->WhereEqual('Status', 0)->
-                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereEqual('LowBound', $lowBound)->WhereEqual('UpBound', $upBound)->
-                        ForUpdate()->Fetch();
+    public function GetIdleRoom(): stdClass|false {
+        return $this->useTable()->WhereEqual('Status', RaceValue::RoomIdle)->ForUpdate()->Fetch();
     }
 
     public function AddNewRoom(int $lobby, string $version, int $lowBound, int $upBound): stdClass|false {
         $this->useTable()->Add([
-            'Status' => 1,
+            'Status' => RaceValue::RoomMatching,
             'Lobby' => $lobby,
-            'Version' => $version,            
+            'Version' => $version,
             'LowBound' => $lowBound,
             'UpBound' => $upBound,
             'CreateTime' => $GLOBALS[Globals::TIME_BEGIN],

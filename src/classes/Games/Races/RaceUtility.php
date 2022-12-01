@@ -80,13 +80,19 @@ class RaceUtility {
     }
 
     public static function GetTicketID(int $lobby): int {
-
-        $config = ConfigGenerator::Instance();
-        return match ($lobby) {
-            RaceValue::LobbyCoinA, RaceValue::LobbyCoinB => $config->PvP_B_TicketId_1,
-            RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB => $config->PvP_B_TicketId_2,
-            default => RaceValue::NoTicketID,
-        };
+        if ($lobby == RaceValue::LobbyStudy) {
+            return RaceValue::NoTicketID;
+        } else {
+            return CompetitionsInfoHandler::Instance($lobby)->GetInfo()->ticketId;
+        }
+    }
+    
+    public static function GetTicketCost(int $lobby): int {
+        if ($lobby == RaceValue::LobbyStudy) {
+            return 0;
+        } else {
+            return CompetitionsInfoHandler::Instance($lobby)->GetInfo()->ticketCost;
+        }
     }
 
     public static function GetMaxTickets(int $lobby): int {
@@ -168,7 +174,7 @@ class RaceUtility {
     {
         //不計排行榜的賽制不計分
         if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return;
-        $competitionHandler = new CompetitionsInfoHandler(RaceValue::LobbyCompetition[$lobby]);
+        $competitionHandler = CompetitionsInfoHandler::Instance($lobby);
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');

@@ -148,11 +148,11 @@ class FinishRace extends BaseRace{
         
         $ticket = RaceUtility::GetTicketID($this->userInfo->lobby);
         if($ticket != RaceValue::NoTicketID) {
-            
+            $ticketCost = RaceUtility::GetTicketCost($this->userInfo->lobby);
             foreach($users as $user) {
                 if(UserUtility::IsNonUser($user['id'])) continue;
                 $userBagHandler = new UserBagHandler($user['id']);
-                $userBagHandler->DecItemByItemID($ticket, 1);
+                $userBagHandler->DecItemByItemID($ticket, $ticketCost);
             }
         }
         
