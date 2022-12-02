@@ -10,17 +10,27 @@ use stdClass;
 
 class CompetitionsInfoHandler
 {
-    private CompetitionsInfoHolder|stdClass $info;
+    private static array $instance;
+    private CompetitionsInfoHolder|stdClass|false $info;
     private CompetitionsInfoPool $pool;
     private int $currentRating;
     private array $otherCurrentRatings;
 
-    public function __construct(int $id)
+
+
+    private function __construct(int $lobby)
     {
         $this->pool = CompetitionsInfoPool::Instance();
-        $this->info = $this->pool->$id;
-        if($this->info === false)throw new RaceException(RaceException::NoSeasonData);
+        $this->info = $this->pool->$lobby;
+        if($this->info == false)throw new RaceException(RaceException::NoSeasonData);
     }
+
+    public static function Instance(int $lobby) : CompetitionsInfoHandler
+    {
+        if(!isset(self::$instance[$lobby])) self::$instance[$lobby] = new CompetitionsInfoHandler($lobby);
+        return self::$instance[$lobby];
+    }
+
     public function GetInfo() : CompetitionsInfoHolder|stdClass
     {
         return $this->info;

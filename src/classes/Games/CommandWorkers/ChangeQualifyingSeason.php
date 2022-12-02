@@ -14,11 +14,10 @@ class ChangeQualifyingSeason extends BaseWorker
     {
         try {
             $qualifyingHandler = new QualifyingHandler();
-            $lastQualifyingSeasonID = $qualifyingHandler->ChangeSeason($this->SeasonID, $this->StartNow);
-            $qualifyingHandler->SendPrizes($lastQualifyingSeasonID);
-            return ["success"];            
-        }catch(Exception $ex)
-        {
+            $qualifyingHandler->DetectSeason();
+            return ["success"];
+        }
+        catch(Exception $ex){
             return [new ResultData(ErrorCode::Unknown, $ex->getMessage())];
         }
     }

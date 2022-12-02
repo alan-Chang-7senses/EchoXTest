@@ -5,11 +5,16 @@ namespace Games\CommandWorkers;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\Globals;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
 use Games\Leadboards\LeadboardUtility;
 use Games\Mails\MailsHandler;
 use Games\Users\RewardHandler;
 use Generators\ConfigGenerator;
+
+use Exception;
+use stdClass;
+
 /**
  * Description of SeasonRankingReward
  *
@@ -18,111 +23,186 @@ use Generators\ConfigGenerator;
 class SeasonRankingReward extends BaseWorker{
     
     private array $rewardField = [
-        RaceValue::LobbyCoin => 'CoinReward',
-        RaceValue::LobbyPT => 'PetaTokenReward',
+        RaceValue::LobbyCoinA => 'CoinReward',
+        RaceValue::LobbyPetaTokenA => 'PetaTokenReward',
         RaceValue::LobbyCoinB => 'CoinRewardB',
         RaceValue::LobbyPetaTokenB => 'PetaTokenRewardB',
     ];
+
+    const LeadRateFunc = [
+        'Games\Leadboards\LeadboardUtility::GetSeasonRankingForPlayer',
+        'Games\Leadboards\LeadboardUtility::GetSeasonRankingForUser',
+    ];
     
     public function Process(): array {
-        
-        echo '== Process Start .. Get SeasonID ..'.PHP_EOL;
-        
-        $logAccessor = new PDOAccessor(EnvVar::DBLog);
-        $logAccessor->FromTable('SeasonRankingReward');
-        
-        if(!empty($this->SeasonID)){
-            
-            $row = $logAccessor->WhereEqual('SeasonID', $this->SeasonID)->Fetch();
-            if($row === false) $seasonID = $this->SeasonID;
-            else return ['Message' => 'Reward has been settled', 'SeasonID' => $this->SeasonID];
-            
-        }else{
-            
-            $row = $logAccessor->OrderBy('Serial', 'DESC')->Limit(1)->Fetch();
-            $seasonID = $row === false ? 1 : $row->SeasonID + 1;
+
+        $season = $this->GetSeasonData();
+        if($season == false)
+        {
+            $season = ["No Season Data"];
+        }
+        else
+        {
+            foreach($season as $data)
+            {
+                $data->result = $this->Award($data->id, $data->lobby, $data->recodeType);
+            }
         }
         
-        echo '== Checked SeasonID => '.$seasonID.PHP_EOL;
-        
-        $mainAccessor = new PDOAccessor(EnvVar::DBMain);
-        $row = $mainAccessor->FromTable('QualifyingSeason')->WhereEqual('QualifyingSeasonID', $seasonID)->Fetch();
-        if($row === false) return ['Message' => 'No season', 'SeasonID' => $seasonID];
-        
-        $currentTime = $GLOBALS[Globals::TIME_BEGIN];
-        if($row->EndTime > $currentTime) return ['Message' => 'This season not end yet.', 'SeasonID' => $seasonID];
-        
-        echo '== Has a season must to process..'.PHP_EOL;
-        echo '== Get Season Ranking Rewards ..'.PHP_EOL;
-        
-        $staticAccessor = new PDOAccessor(EnvVar::DBStatic);
-        $rows = $staticAccessor->FromTable('SeasonRankingReward')->FetchAll();
-        $rewards = [];
-        foreach($rows as $row) $rewards[$row->Ranking] = $row;
-        
-        echo '== Get Season Ranking Rewards comoleted..'.PHP_EOL.PHP_EOL;
-        
-        $limit = count($rewards);
-        $lobbyCoin = $this->RewardAndLog(RaceValue::LobbyCoin, $seasonID, $limit, $rewards);
-        $lobbyPetaToken = $this->RewardAndLog(RaceValue::LobbyPT, $seasonID, $limit, $rewards);
-        $lobbyCoinB = $this->RewardAndLog(RaceValue::LobbyCoinB, $seasonID, $limit, $rewards);
-        $lobbyPetaTokenB = $this->RewardAndLog(RaceValue::LobbyPetaTokenB, $seasonID, $limit, $rewards);
-        
-        return [
-            'SeasonID' => $seasonID,
-            'Result' => [
-                'Coin' => $lobbyCoin,
-                'CoinB' => $lobbyCoinB,
-                'PetaToken' => $lobbyPetaToken,
-                'PetaTokenB' => $lobbyPetaTokenB,
-            ],
-        ];
+        return $season;
     }
-    
-    private function RewardAndLog(int $lobby, int $seasonID, int $limit, array $rewards) : int{
+
+    // 取得配獎賽季
+    private function GetSeasonData() : array|false {
+
+        // 取得結束的賽季資料
+        $Qualifying = AccessorFactory::Static()->SelectExpr('SeasonID, RecordType')
+                                        ->FromTableJoinUsing('QualifyingData', 'Leaderboard', 'LEFT', 'SeasonID')
+                                        ->WhereLess('EndTime', $GLOBALS[Globals::TIME_BEGIN])
+                                        ->FetchAll();
+
+        if (empty($Qualifying))
+        {
+            return false;
+        }
+
+        // 建立計分規則表
+        $rules = [];       
+        $seasonIDs = [];
+        foreach($Qualifying as $item)
+        {
+            // 防呆處理 將 null 過濾
+            if(is_null($item->SeasonID) || is_null($item->RecordType)) continue;
+            
+            $rules[$item->SeasonID] = $item->RecordType;
+            $seasonIDs[] = $item->SeasonID;
+        }
+
+         // 檢查還沒派過獎的賽季
+        $QualifyingSeason = AccessorFactory::Main()
+                                            ->FromTable('QualifyingSeasonData')
+                                            ->WhereIn('SeasonID', $seasonIDs)
+                                            ->WhereEqual('Status', 0)
+                                            ->WhereEqual('Assign', 0)
+                                            ->FetchAll();
+
+        if (empty($QualifyingSeason))
+        {
+            return false;
+        }
+
+        // 取出可以派獎的賽季資料
+        $seasons = [];
+        foreach($QualifyingSeason as $data)
+        {
+            $season = new stdClass();
+            $season->id = $data->SeasonID;
+            $season->lobby = $data->Lobby;
+            $season->recodeType = $rules[$data->SeasonID];
+            $season->result = "skipped";
+
+            $seasons[] = $season;
+        }
         
-        echo '== Start Reward And Log.. Lobby => '.$lobby.PHP_EOL;
+        return $seasons;
+    }
+
+    // 取得名次獎勵
+    private function GetReward(int $seasonID) : array|false {
         
-        $content = LeadboardUtility::LeadRateContents[$lobby];
-        $table = $content['table'];
-        $treshold = ConfigGenerator::Instance()->{$content['tresholdParam']} - 1;
+        echo '== Get Reward from SeasonRankingRewardNew, SeasonID => '.$seasonID.PHP_EOL;
+
+        // 取得賽季表
+        $rows = AccessorFactory::Static()->FromTable('SeasonRankingRewardNew')
+                                        ->WhereEqual('SeasonID', $seasonID)
+                                        ->FetchAll();
+
+        if(empty($rows))
+        {
+            echo '== Failure, No reward data for SeasonID => '.$seasonID.PHP_EOL;
+            return false;
+        }
+
+        $rewardTable = [];
+
+        try
+        {
+            foreach($rows as $reward)
+            {
+                $rewardHandler = new RewardHandler($reward->RewarID);
+                $rewardTable[$reward->Rank] = array_values($rewardHandler->GetItems());
+            }
+        }
+        catch(Exception $ex)
+        {
+            echo $ex.PHP_EOL;
+            return false;
+        }
         
-        $accessor = new PDOAccessor(EnvVar::DBMain);
-        $rows = $accessor->SelectExpr('PlayerID, UserID')
-                ->FromTableJoinUsing($table, 'PlayerHolder', 'LEFT', 'PlayerID')
-                ->WhereEqual('SeasonID', $seasonID)->WhereGreater('PlayCount', $treshold)
-                ->OrderBy('LeadRate', 'DESC')->OrderBy('PlayCount', 'DESC')->OrderBy('UpdateTime')
-                ->Limit($limit)->FetchAll();
+
+        // 檢查獎勵清單是否有誤(名次獎勵跳號)
+        $total = count($rewardTable);
+
+        for($ranking = 1; $ranking <= $total; ++$ranking)
+        {
+            if(array_key_exists($ranking, $rewardTable) == false)
+            {
+                echo '== Failure, Miss reward data of Ranking => '.$ranking.PHP_EOL;
+                return false;
+            }          
+        }
+
+        return $rewardTable;
+    }
+
+    // 取得名次
+    private function GetRanking(int $seasonID, int $lobby, int $recordType, int $count) : array|false {
+
+        echo '== Get Ranking from Leadboard, SeasonID => '.$seasonID.', Lobby => '.$lobby.', recordType => '.$recordType.', Count => '.$count.PHP_EOL;
+        if (array_key_exists($recordType, self::LeadRateFunc) == false)
+        {
+            echo '== Failure, Illegel recordType => '.$recordType.PHP_EOL;
+            return false;
+        }
+
+        //return LeadboardUtility::GetSeasonRanking($seasonID, $lobby, $count);
+        $func = self::LeadRateFunc[$recordType];
+        return $func($seasonID, $lobby, $count);
+    }
+
+    // 派獎
+    private function Award(int $seasonID, int $lobby, int $recordType) : string {
         
-        echo '== Count => '.count($rows).PHP_EOL;
-        
+        $rewards = $this->GetReward($seasonID);
+        if($rewards == false)
+        {
+            return 'failure, Reward Data Error';
+        }
+
+        $total = count($rewards);
+
+        $rankings = $this->GetRanking($seasonID, $lobby, $recordType, $total);
+        if(empty($rankings))
+        {
+            return 'failure, No Ranking Data';
+        }
+
+
         $config = ConfigGenerator::Instance();
         $mailsHandler = new MailsHandler();
-        
-        $logAccessor = new PDOAccessor(EnvVar::DBLog);
+
+        $logAccessor = AccessorFactory::Log();
         $logAccessor->FromTable('SeasonRankingReward');
-        
-        $ranking = 1;
-        $rewardField = $this->rewardField[$lobby];
-        foreach($rows as $row){
-            
-            echo '== Ranking => '.$ranking.PHP_EOL;
-            
-            $rewardID = $rewards[$ranking]->$rewardField;
-            if(empty($rewardID)){
-                
-                echo '== RewardID is empty.. RewardField => '.$rewardField.PHP_EOL;
-                continue;
-            }
-            
-            $rewardHandler = new RewardHandler($rewardID);
-            $items = array_values($rewardHandler->GetItems());
-            
-            $userMailID = $mailsHandler->AddMail($row->UserID, $config->SeasonRankingRewardMailID, $config->SeasonRankingRewardMailDay);
+
+        foreach($rankings as $ranking)
+        {
+            $items = $rewards[$ranking->rank];
+
+            $userMailID = $mailsHandler->AddMail($ranking->id, $config->SeasonRankingRewardMailID, $config->SeasonRankingRewardMailDay);
             $mailsHandler->AddMailItems($userMailID, $items);
-            
+
             echo '== Add MailItems completed.. UserMailID => '.$userMailID.' Items => '. json_encode($items).PHP_EOL;
-            
+
             $content = array_map(function($val){
                 return [
                     'ItemID' => $val->ItemID,
@@ -133,22 +213,25 @@ class SeasonRankingReward extends BaseWorker{
             $logContent = [
                 'SeasonID' => $seasonID,
                 'Lobby' => $lobby,
-                'Ranking' => $ranking,
-                'UserID' => $row->UserID,
-                'PlayerID' => $row->PlayerID,
+                'Ranking' => $ranking->rank,
+                'UserID' => $ranking->id,
+                'PlayerID' => 0,
                 'Content' => json_encode($content),
                 'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];
-            
+
             $logAccessor->Add($logContent);
-            
+
             echo '== Add Log completed.. content => '. json_encode($logContent).PHP_EOL;
-            
-            ++$ranking;
+
         }
-        
-        echo '== End Reward And Log.. End Ranking => '. $ranking.PHP_EOL.PHP_EOL;
-        
-        return $ranking - 1;
+
+        AccessorFactory::Main()->FromTable('QualifyingSeasonData')
+                                ->WhereEqual('SeasonID', $seasonID)
+                                ->Modify(['Assign' => 1,]);
+
+        echo '== update table QualifyingSeasonData column Assign => 1'.PHP_EOL;
+
+        return 'success, award '.count($rankings).' times for this season';
     }
 }

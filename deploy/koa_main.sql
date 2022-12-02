@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~45 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~40 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AllPlayerLevel', '100', '強制指定所有角色等級(0=無效)'),
@@ -60,14 +60,9 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
 	('PvP_B_SeasonStartTime', '2022-06-24 00:00:00+8:00', '晉級賽賽季起始時間'),
 	('PvP_B_StopMatch', '1800', '晉級賽結束配對時間(秒數)'),
-	('PvP_B_TicketId_1', '5100', '金幣賽入場券的道具Id'),
-	('PvP_B_TicketId_2', '5201', 'PT賽入場券的道具Id'),
-	('PvP_B_TicketId_3', '1001', '群體賽入場券的道具Id'),
 	('PvP_B_Treshold_1', '10', '火星幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_Treshold_2', '10', 'PT幣賽的上榜門檻(比賽次數)'),
 	('PvP_B_WeeksPerSeacon', '2', '晉級賽每賽季有幾週'),
-	('PvP_ExtraMatchSeconds', '60', '開局配對延長等待秒數'),
-	('PvP_MaxMatchSeconds', '60', '開局配對基本等待秒數'),
 	('RaceRewardMultiplier', '1', '競賽獎勵倍數'),
 	('RaceVerifyDistance', '10', '驗證比賽距離誤差值'),
 	('SeasonRankingRewardMailDay', '7', '賽季排行獎勵信件過期時間(日)'),
@@ -157,6 +152,20 @@ CREATE TABLE IF NOT EXISTS `LeaderboardLeadPTB` (
   KEY `SeasonID` (`SeasonID`) USING BTREE,
   KEY `PlayCount_LeadRate_UpdateTime` (`PlayCount`,`LeadRate`,`UpdateTime`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='PT賽B領先排行榜';
+
+-- 傾印  資料表 koa_main.LeaderboardRating 結構
+CREATE TABLE IF NOT EXISTS `LeaderboardRating` (
+  `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `SeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '賽季編號',
+  `Lobby` tinyint(4) NOT NULL COMMENT '大廳(競賽種類)',
+  `PlayerID` bigint(20) NOT NULL COMMENT '角色編號',
+  `Rating` smallint(6) NOT NULL COMMENT '評分',
+  `UpdateTime` int(11) NOT NULL COMMENT '更新時間',
+  PRIMARY KEY (`Serial`),
+  UNIQUE KEY `PlayerID_CompetitionType_SeasonID` (`PlayerID`,`Lobby`,`SeasonID`) USING BTREE,
+  KEY `UpdateTime` (`UpdateTime`),
+  KEY `Rating` (`Rating`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='積分排行榜。';
 
 -- 傾印  資料表 koa_main.Marquee 結構
 CREATE TABLE IF NOT EXISTS `Marquee` (
@@ -2415,6 +2424,17 @@ INSERT INTO `QualifyingSeason` (`QualifyingSeasonID`, `ArenaID`, `PTScene`, `Coi
 	(9, 9, 1001, 1001, 1668096000, 1669305600, 1668393307);
 /*!40000 ALTER TABLE `QualifyingSeason` ENABLE KEYS */;
 
+-- 傾印  資料表 koa_main.QualifyingSeasonData 結構
+CREATE TABLE IF NOT EXISTS `QualifyingSeasonData` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `SeasonID` int(11) NOT NULL DEFAULT 0 COMMENT '賽季編號',
+  `Lobby` int(11) NOT NULL DEFAULT 0 COMMENT '賽制大廳',
+  `Status` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '狀態 (0:關, 1:開)',
+  `Assign` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '是否派獎 (0:無, 1:有)',
+  `UpdateTime` int(11) NOT NULL DEFAULT 0 COMMENT '更新時間',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='賽季資料';
+
 -- 傾印  資料表 koa_main.RaceBeginHours 結構
 CREATE TABLE IF NOT EXISTS `RaceBeginHours` (
   `Hours` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '小時',
@@ -2844,6 +2864,7 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   `UserMailID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '信件流水號',
   `UserID` int(10) NOT NULL COMMENT '玩家ID',
   `MailsID` int(10) NOT NULL COMMENT '信件編號',
+  `MailArgument` varchar(250) NOT NULL DEFAULT '' COMMENT '信件參數',
   `OpenStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '開啟狀態',
   `ReceiveStatus` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '領取狀態',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',

@@ -113,6 +113,7 @@ class GetInfos extends BaseProcessor {
 
         $userBagHandler = new UserBagHandler($userID);
         $result = new ResultData(ErrorCode::Success);
+        $result->sandboxes = StoreUtility::GetSandBoxes();
         $result->currencies = StoreUtility::GetCurrency($userBagHandler);
         $result->autoRefreshTime = $autoRefreshTime->remainSeconds;
         $result->stores = $resposeStores;

@@ -6,6 +6,7 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
 use Games\Pools\ItemInfoPool;
@@ -89,12 +90,18 @@ class BattleRecord extends BaseProcessor
 
             $newItem->useItem = [];
             $itemId = RaceUtility::GetTicketID($roomInfo->lobby);
-            $itemInfo = ItemInfoPool::Instance()->{$itemId};
+            $itemCost = RaceUtility::GetTicketCount($roomInfo->lobby);
+            $itemIcon = "";
+            if( RaceValue::NoTicketID != $itemId )
+            {
+                $itemInfo = ItemInfoPool::Instance()->{$itemId};
+                $itemIcon = $itemInfo->Icon;
+            }
             array_push($newItem->useItem,
                 array(
                     "itemId" => $itemId,
-                    "itemIcon" => $itemInfo->Icon,
-                    "count" => 1));
+                    "itemIcon" => $itemIcon,
+                    "count" => $itemCost));
             $newItem->startTime = $racePlayer->StartTime;
             $newItem->endTime = $racePlayer->FinishTime;
             array_push($recordList, $newItem);

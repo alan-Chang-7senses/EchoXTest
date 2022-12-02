@@ -19,11 +19,11 @@ class RewardHandler
     {
         $this->pool = RewardPool::Instance();
         $this->info = $this->pool->{ $rewardID};
-        $this->items = null;
-        $this->GetItems();
         if ($this->info == false) {
             throw new ItemException(ItemException::UseRewardIDError, ['[rewardID]' => $rewardID]);
-        }
+        }        
+        $this->items = null;
+        $this->GetItems();
     }
     
     public function GetInfo() : stdClass|false{

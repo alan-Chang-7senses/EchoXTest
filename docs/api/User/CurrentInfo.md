@@ -50,6 +50,8 @@ Content Type: `application/json`
 | lobby | int | [當前競賽所在大廳](../codes/race.md#lobby) |
 | room | int | 當前競賽房號 |
 | unreadmail | int | 未讀郵件數量 |
+| raceCount | int | 參賽次數 |
+| tutorial | int | [當前的新手引導階段](../codes/tutorial.md#tutorial) |
 
 ### Example
 
@@ -74,6 +76,8 @@ Content Type: `application/json`
 	        "race": 0,
 	        "lobby": 0,
 	        "room": 0,
-	        "unreadmail": 0
+	        "unreadmail": 0,
+	        "raceCount": 1,
+	        "tutorial": 1
 	    }
 	}

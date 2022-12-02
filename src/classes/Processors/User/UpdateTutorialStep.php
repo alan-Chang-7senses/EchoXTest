@@ -6,6 +6,7 @@ use Consts\Sessions;
 
 use Games\Accessors\UserAccessor;
 use Games\Users\TutorialUtility;
+use Games\Pools\UserPool;
 
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -30,7 +31,9 @@ class UpdateTutorialStep extends BaseProcessor{
         if ($tutorial->nextStep != $row->Tutorial)
         {
             TutorialUtility::AddRewards($userID, $tutorial->rewardItems);
+
             $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $tutorial->nextStep]);
+            UserPool::Instance()->Delete($userID);
         }        
         
         $result = new ResultData(ErrorCode::Success);

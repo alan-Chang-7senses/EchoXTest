@@ -8,6 +8,7 @@ use Games\Accessors\AccessorFactory;
 use Games\Accessors\NFTLogAccessor;
 use Games\Consts\AbilityFactor;
 use Games\Consts\ItemValue;
+use Games\Consts\MailValues;
 use Games\Consts\NFTDNA;
 use Games\Consts\NFTQueryValue;
 use Games\Exceptions\NFTException;
@@ -20,6 +21,7 @@ use Games\NFTs\Holders\PartSkillHolder;
 use Games\Consts\PlayerValue;
 use Games\Mails\MailsHandler;
 use Games\Players\Holders\PlayerDnaHolder;
+use Games\Pools\ItemInfoPool;
 use Games\Pools\MetadataActivityPool;
 use Games\Pools\PlayerPool;
 use Games\Pools\UserPool;
@@ -286,7 +288,7 @@ class NFTFactory {
             $this->CreatePlayer($playerID, $metadata);
             $logAccessor->AddCreatePlayerBind($playerID,$metadataURLs[$playerID]);
 
-            //TODO：發送獎勵信件(尚須企劃填表資料)。信件日期數？發的條件是來源標記還是原生種
+            
             $row = MetadataActivityPool::Instance()->{$metadata->properties->activity_name};
             if($row === false)continue;
             if($row->Source == NFTDNA::SourcePromote)continue;
@@ -294,13 +296,19 @@ class NFTFactory {
             $mailID = ConfigGenerator::Instance()->NewNFTRewardMailID;
             $expireDate = ConfigGenerator::Instance()->NewNFTRewardMailExpireDate;
             if(empty($mailID) || empty($expireDate))continue;
-            $mailsHandler = new MailsHandler();
-            $mail = $mailsHandler->AddMail($this->userHolder->userID,$mailID,$expireDate);
             $item = new stdClass();
             $item->Amount = $row->CreateRewardAmount;
             $item->ItemID = $row->CreateRewardItemID ?? 0;
-            $mailsHandler->AddMailItems($mail,$item);
-            // UserUtility::AddItems($this->userHolder->userID,[$item],ItemValue::CauseCreateNFTPlayer);
+            
+            $itemRow = ItemInfoPool::Instance()->{$item->ItemID};
+            
+            $mailHandler = new MailsHandler();
+            $mailHandler->AddMailArgument(MailValues::ArgumentText,$metadata->name);
+            $mailHandler->AddMailArgument(MailValues::ArgumentAreaID,$itemRow->ItemName); //itemInfo的ItemName欄位
+            $mailHandler->AddMailArgument(MailValues::ArgumentAmount,$item->Amount);
+            
+            $mail = $mailHandler->AddMail($this->userHolder->userID,$mailID,$expireDate);
+            $mailHandler->AddMailItems($mail,$item);
         }
 
         $userInfo = (new UserHandler($this->userHolder->userID))->GetInfo();
@@ -349,13 +357,18 @@ class NFTFactory {
                     $userInfo =(new UserHandler($row['UserID']))->GetInfo();
                     $accessor->ClearCondition()->FromTable('Users')
                     ->WhereEqual('UserID',$userInfo->id)->Modify(['Player' => $userInfo->players[0]]);
-                    UserPool::Instance()->Delete($userInfo->id);
+                    // UserPool::Instance()->Delete($userInfo->id);
                 }    
             }            
+            $rows = $accessor->ClearCondition()->SelectExpr('UserID')->FromTable('PlayerHolder')
+                                       ->WhereIn('PlayerID',$changeholdPlayerIDs)
+                                       ->FetchAll();
+            foreach($rows as $row) UserPool::Instance()->Delete($row['UserID']);
         }
+
         UserPool::Instance()->Delete($this->userHolder->userID);
         //紀錄當前、初次NFT角色數量
-        $accessor->ClearCondition()->executeBind(
+        $accessor->ClearAll()->executeBind(
             'UPDATE Users SET
                 FirstNFTPlayerAmount = if(FirstNFTPlayerAmount IS NULL, :FirstNFTPlayerAmount,FirstNFTPlayerAmount),
                 NFTPlayerAmount = :NFTPlayerAmount

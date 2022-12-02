@@ -47,6 +47,7 @@ class UserPool extends PoolAccessor{
         $holder->race = $row->Race;
         $holder->lobby = $row->Lobby;
         $holder->room = $row->Room;
+        $holder->tutorial = $row->Tutorial;
         
         $playerAccessor = new PlayerAccessor();
         $rows = $playerAccessor->rowsHolderByUserIDFetchAssoc($id);
