@@ -12,6 +12,7 @@ use Games\Consts\PlayerValue;
 use Games\Consts\RaceValue;
 use Games\Pools\PlayerPool;
 use Games\PVP\CompetitionsInfoHandler;
+use Games\PVP\QualifyingHandler;
 use Games\Scenes\SceneHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
@@ -170,12 +171,23 @@ class RaceUtility {
      * 結束競賽時。計算並紀錄每個角色積分。
      * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int|string $seasonID, int $lobby) : array
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby) : array
     {
         //不計排行榜的賽制不計分
-        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))return[];
+        if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))
+        {
+            $rt = [];
+            foreach($racePlayerInfos as $raningInfos)
+            {
+                $rt[$raningInfos->player]['new'] = 0;
+                $rt[$raningInfos->player]['old'] = 0;
+            }
+            return $rt;
+        }
         $competitionHandler = CompetitionsInfoHandler::Instance($lobby);
-        // $competitionInfo = $competitionHandler->GetInfo();
+
+        $qualifyingHandler = new QualifyingHandler();
+        $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
 
         $accessor = AccessorFactory::Main();
         $playerIDs = array_column($racePlayerInfos,'player');
@@ -256,7 +268,8 @@ class RaceUtility {
                                    ->WhereEqual('PlayerID',$playerID)
                                    ->WhereEqual('Lobby',$lobby)
                                    ->OrderBy('UpdateTime','DESC')
-                                   ->Limit(1);
+                                   ->Limit(1)
+                                   ->Fetch(); 
         $oldRating = !empty($row) ? $row->Rating : null;
         return CompetitionsInfoHandler::Instance($lobby)->GetResetRating($oldRating);
     }

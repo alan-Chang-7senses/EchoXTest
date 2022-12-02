@@ -156,13 +156,13 @@ class FinishRace extends BaseRace{
                 $userBagHandler->DecItemByItemID($ticket, $ticketCost);
             }
         }
-            $rankingRows = AccessorFactory::Main()->SelectExpr('PlayerID AS player, Ranking AS ranking')
-            ->FromTable('RacePlayer')
-            ->WhereIn('RacePlayerID',array_values($racePlayersArr))
-            ->FetchAll();
-        $rates = RaceUtility::RecordRatingForEachPlayer($rankingRows,RaceUtility::QualifyingSeasonID(),$this->userInfo->lobby);    
+        $rankingRows = AccessorFactory::Main()->SelectExpr('PlayerID AS player, Ranking AS ranking')
+                                              ->FromTable('RacePlayer')
+                                              ->WhereIn('RacePlayerID',array_values($racePlayersArr))
+                                              ->FetchAll();
+        $rates = RaceUtility::RecordRatingForEachPlayer($rankingRows,$this->userInfo->lobby);
         
-        // if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
+        if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
         
         foreach ($users as $idx => $user) {
             
