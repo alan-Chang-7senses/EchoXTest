@@ -205,7 +205,6 @@ class LeadboardUtility {
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
-                 ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
                  ->GroupBy('UserID')
                  ->WhereGreater('Rating', 0)
                  ->OrderBy('Rating','DESC')
