@@ -117,7 +117,6 @@ class LeadboardUtility {
                         ->WhereGreater('Rating', $playerRate)
                         ->Fetch();
 
-        $info = (new PlayerHandler($playerID))->GetInfo();
         $idName = PlayerUtility::GetIDName($playerID);
 
         $result = new RatingResult();
@@ -159,22 +158,16 @@ class LeadboardUtility {
      */
     public static function GetUsersRateRanking(array $seasonID, int $offset = 1, int $endRank = 100) : array | false
     {
-
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
-                 ->WhereEqual('SeasonID',$seasonID)
-                 ->WhereIn('Lobby',[RaceValue::LobbyPT,RaceValue::LobbyPetaTokenB])
                  ->WhereIn('SeasonID', $seasonID)
-
                  ->GroupBy('UserID')
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
                  ->FetchAll();
         if(empty($rows))return false;
-        return self::HandleRankingInfo($rows,$offset,$endRank);
         return self::HandleRankingInfo($rows, $offset, $endRank);
     }
 
@@ -245,7 +238,6 @@ class LeadboardUtility {
 
         $userInfo = (new UserHandler($userID))->GetInfo();
         $playerID = $userInfo->player;
-        $info = (new PlayerHandler($playerID))->GetInfo();
         $idName = PlayerUtility::GetIDName($playerID);
 
         $result = new RatingResult();
@@ -276,7 +268,6 @@ class LeadboardUtility {
 
         for( $i=0 ; $ranking<=$endRank && $i<count($rows) ; ++$i )
         {
-            $info = (new PlayerHandler($rows[$i]->PlayerID))->GetInfo();
             $idName = PlayerUtility::GetIDName($rows[$i]->PlayerID);
 
             $ratingResult = new RatingResult();
