@@ -3,7 +3,6 @@
 namespace Games\Users;
 
 use Games\Accessors\AccessorFactory;
-
 use Games\Consts\ItemValue;
 use Games\Consts\PlayerValue;
 use Games\Mails\MailsHandler;
@@ -40,11 +39,6 @@ class UserUtility {
         }
     }
 
-    public static function AddMailItemsWithReceive(int $userID, array $mailItems, int $mailID, int $mailDay): void {
-        $mailsHandler = new MailsHandler();
-        $userMailID = $mailsHandler->AddMail($userID, $mailID, $mailDay, 1);
-        $mailsHandler->AddMailItems($userMailID, $mailItems);
-    }
     
     /**取得使用者所持NFT角色數量 */
     public static function GetUserNFTPlayerAmount(int $userID) : int

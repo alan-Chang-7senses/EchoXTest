@@ -2,16 +2,17 @@
 
 namespace Processors\Mails;
 
-use Consts\Sessions;
 use Consts\ErrorCode;
+use Consts\Sessions;
 use Games\Consts\ItemValue;
-use Holders\ResultData;
-use Helpers\InputHelper;
-use Games\Users\ItemUtility;
-use Games\Mails\MailsHandler;
-use Processors\BaseProcessor;
-use Games\Users\UserBagHandler;
+use Games\Consts\MailValues;
 use Games\Exceptions\ItemException;
+use Games\Mails\MailsHandler;
+use Games\Users\ItemUtility;
+use Games\Users\UserBagHandler;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
 
 class ReceiveMailsRewards extends BaseProcessor
 {
@@ -32,7 +33,7 @@ class ReceiveMailsRewards extends BaseProcessor
 
         $itemsArray = [];
         if ($receiveStatus == 1) {
-            if ($mailInfo->ReceiveStatus == 1) {
+            if ($mailInfo->ReceiveStatus == MailValues::ReceiveStatusDone) {
                 throw new ItemException(ItemException::MailRewardsReceived);
             }
 
@@ -45,7 +46,7 @@ class ReceiveMailsRewards extends BaseProcessor
                 $userBagHandler->AddItems($item, ItemValue::CauseMail);
                 $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
-            $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, 1);
+            $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, MailValues::ReceiveStatusDone);
         }
         else {
             $receiveStatus = $mailInfo->ReceiveStatus;

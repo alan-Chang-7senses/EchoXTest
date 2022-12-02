@@ -6,13 +6,14 @@ use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
 use Games\Consts\ItemValue;
+use Games\Consts\MailValues;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
+use Games\Mails\MailsHandler;
 use Games\Store\MyCardUtility;
 use Games\Store\StoreHandler;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
-use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
@@ -78,7 +79,12 @@ class Restore extends BaseProcessor {
             $userBagHandler->AddItems($additem, ItemValue::CauseStore);
 
             //加入通知信件
-            UserUtility::AddMailItemsWithReceive($userID, [$additem], ConfigGenerator::Instance()->MyCardRestoreMailID, ConfigGenerator::Instance()->MyCardRestoreMailDay);
+            $mailsHandler = new MailsHandler();
+            $mailsHandler->AddMailArgument(MailValues::ArgumentTime, $storePurchaseOrders->CreateTime);
+            $userMailID = $mailsHandler->AddMail($userID, ConfigGenerator::Instance()->MyCardRestoreMailID, ConfigGenerator::Instance()->MyCardRestoreMailDay,
+                    MailValues::ReceiveStatusDone);
+            $mailsHandler->AddMailItems($userMailID, $additem);
+       
             $finishNum++;
         }
 

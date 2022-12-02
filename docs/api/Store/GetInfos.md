@@ -35,6 +35,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
+| sandboxes | object | 沙盒開關，見變數名稱 |
 | currencies | array | 按[貨幣](#Currency)順序 |
 | autoRefreshTime | int | 自動刷新剩餘時間(s) |
 | stores | array | [商店資訊](#storeData) |
@@ -112,6 +113,11 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
             "code": 0,
             "message": ""
         },
+        "sandboxes": {
+            "mycard": true,
+            "app": false,
+            "google": false
+        },        
         "currencies": [
             849,
             804,
