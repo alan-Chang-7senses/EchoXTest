@@ -196,28 +196,20 @@ class RaceUtility {
             $playCount[$row->PlayerID] = $row->PlayCount;
         }
         //取上個賽季
-        if(count($playerIDs) != count($rows))
-        $preSeasonRow = $accessor->executeBindFetch('SELECT SeasonID FROM QualifyingSeasonData 
-                                                     WHERE ID < (SELECT `ID` FROM QualifyingSeasonData 
-                                                                WHERE SeasonID = :SeasonID AND Lobby = :Lobby)
-                                                     AND `Status` = 0
-                                                     ORDER BY ID DESC
-                                                     LIMIT 1',['SeasonID' => $seasonID, 'Lobby' => $lobby]);
         $accessor->ClearCondition()->PrepareName('GetPreSeasonRating');
         foreach($playerIDs as $playerID)
         {
             if(!isset($allRatings[$playerID]))
             {
-                $oldRating = null;
-                if(!empty($preSeasonRow) && $preSeasonRow !== false)
-                {
-                    $preRatingRow = $accessor->SelectExpr('Rating')
-                             ->FromTable('LeaderboardRating')
-                             ->WhereEqual('SeasonID',$preSeasonRow->SeasonID)
-                             ->WhereEqual('Lobby',$lobby)
-                             ->Fetch();
-                    $oldRating = $preRatingRow->Rating ?? null;                             
-                }
+                $row = $accessor->ClearCondition()
+                                ->SelectExpr('Rating')
+                                ->FromTable('LeaderboardRating')
+                                ->WhereEqual('PlayerID',$playerID)
+                                ->WhereEqual('Lobby',$lobby)
+                                ->OrderBy('UpdateTime','DESC')
+                                ->Limit(1)
+                                ->Fetch();
+                $oldRating = !empty($row) ? $row->Rating : null;
                 $allRatings[$playerID] = $competitionHandler->GetResetRating($oldRating);
             }
             if(!isset($playCount[$playerID]))
@@ -235,8 +227,8 @@ class RaceUtility {
             //不幫機器人記排行榜。
             if($playerID < PlayerValue::BotIDLimit)continue;
             unset($allRatingsTemp[$playerID]);
-            $otherPlayerRankings = array_values($allRatingsTemp);
-            $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRankings,$racePlayerInfo->ranking);
+            $otherPlayerRatings = array_values($allRatingsTemp);
+            $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRatings,$racePlayerInfo->ranking);
             $binds[] = 
             [
                 'PlayerID' => $playerID,
@@ -246,10 +238,26 @@ class RaceUtility {
                 'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
                 'PlayCount' => $playCount[$playerID] + 1,
             ];
-            $ratingResults[$playerID] = $rating;
+            $ratingResults[$playerID]['new'] = $rating;
+            $ratingResults[$playerID]['old'] = $allRatings[$playerID];
+
         }
 
         $accessor->ClearAll()->FromTable('LeaderboardRating')->AddAll($binds,true);
+
         return $ratingResults;
+    }    
+    public static function GetSeasonResetRating(int $lobby, int $playerID) : int
+    {
+        $accessor = AccessorFactory::Main();                                   
+
+        $row = $accessor->ClearCondition()->SelectExpr('Rating')
+                                   ->FromTable('LeaderboardRating')
+                                   ->WhereEqual('PlayerID',$playerID)
+                                   ->WhereEqual('Lobby',$lobby)
+                                   ->OrderBy('UpdateTime','DESC')
+                                   ->Limit(1);
+        $oldRating = !empty($row) ? $row->Rating : null;
+        return CompetitionsInfoHandler::Instance($lobby)->GetResetRating($oldRating);
     }
 }

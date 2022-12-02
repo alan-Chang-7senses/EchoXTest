@@ -84,6 +84,6 @@ class CompetitionsInfoHandler
     {
         if($oldRating === null) return $this->info->baseRating;
         $rt = $oldRating * ($this->info->resetRate / CompetitionsValue::ResetRateDivisor);
-        return min(intval($rt),$this->info->minRatingReset);
+        return max(intval($rt),$this->info->minRatingReset);
     }
 }
