@@ -20,7 +20,7 @@ USE `koa_static`;
 -- 傾印  資料表 koa_static.Leaderboard 結構
 CREATE TABLE IF NOT EXISTS `Leaderboard` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
-  `GroupID` tinyint(4) DEFAULT NULL COMMENT '排行榜主項群組編號',
+  `Group` tinyint(4) DEFAULT NULL COMMENT '排行榜主項群組編號',
   `MainLeaderboradName` varchar(50) DEFAULT NULL COMMENT '主榜單字串',
   `SubLeaderboardName` varchar(50) DEFAULT NULL COMMENT '子榜單字串',
   `CompetitionRuleHint` varchar(50) DEFAULT NULL COMMENT '榜單規則字串',
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `Leaderboard` (
 
 -- 正在傾印表格  koa_static.Leaderboard 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `Leaderboard` DISABLE KEYS */;
-INSERT INTO `Leaderboard` (`Serial`, `GroupID`, `MainLeaderboradName`, `SubLeaderboardName`, `CompetitionRuleHint`, `SeasonID`, `SeasonName`, `RecordType`, `RankRuleHint`) VALUES
+INSERT INTO `Leaderboard` (`Serial`, `Group`, `MainLeaderboradName`, `SubLeaderboardName`, `CompetitionRuleHint`, `SeasonID`, `SeasonName`, `RecordType`, `RankRuleHint`) VALUES
 	(1, 0, '', '', '', 0, '玩家排行榜 ', 1, ''),
 	(2, 1, '342', '68', '', 1, '火星幣賽(A)', 0, ''),
 	(3, 1, '342', '69', '', 3, 'PT幣賽(A)', 0, ''),
