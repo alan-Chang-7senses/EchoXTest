@@ -26,13 +26,13 @@ class CompetitionsInfoPool extends PoolAccessor
 
     public function FromDB(int|string $id): CompetitionsInfoHolder|stdClass|false
     {
-        if(in_array($id,self::NoValueLobby))throw new RaceException(RaceException::NoSeasonData);
+        // if(in_array($id,self::NoValueLobby))throw new RaceException(RaceException::NoSeasonData);
         $holder = new CompetitionsInfoHolder();
         $row = AccessorFactory::Static()
             ->FromTable('CompetitionsInfo')
             ->WhereEqual('ID',$id)
             ->Fetch();
-        if($row === false)return false;    
+        if($row === false)return false;
         $holder->lobby = $row->ID;
         $holder->minRatingReset = $row->MinRatingReset;
         $holder->resetRate = $row->ResetRate;

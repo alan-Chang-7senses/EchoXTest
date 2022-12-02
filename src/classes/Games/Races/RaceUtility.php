@@ -207,7 +207,7 @@ class RaceUtility {
             $allRatings[$row->PlayerID] = $row->Rating;
             $playCount[$row->PlayerID] = $row->PlayCount;
         }
-        //取上個賽季
+        //取先前賽季的分數
         $accessor->ClearCondition()->PrepareName('GetPreSeasonRating');
         foreach($playerIDs as $playerID)
         {
