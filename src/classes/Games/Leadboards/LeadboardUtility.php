@@ -188,7 +188,7 @@ class LeadboardUtility {
     public static function GetSeasonRankingForPlayer(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
     {
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->selectExpr('Rating, UserID AS ID')
+        $rows = $accessor->selectExpr('Rating, UserID, PlayerID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereEqual('Lobby', $lobby)
@@ -209,7 +209,7 @@ class LeadboardUtility {
     public static function GetSeasonRankingForUser(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
     {
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID AS ID')
+        $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])

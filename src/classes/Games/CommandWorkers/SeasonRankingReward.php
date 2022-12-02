@@ -198,7 +198,7 @@ class SeasonRankingReward extends BaseWorker{
         {
             $items = $rewards[$ranking->rank];
 
-            $userMailID = $mailsHandler->AddMail($ranking->id, $config->SeasonRankingRewardMailID, $config->SeasonRankingRewardMailDay);
+            $userMailID = $mailsHandler->AddMail($ranking->userId, $config->SeasonRankingRewardMailID, $config->SeasonRankingRewardMailDay);
             $mailsHandler->AddMailItems($userMailID, $items);
 
             echo '== Add MailItems completed.. UserMailID => '.$userMailID.' Items => '. json_encode($items).PHP_EOL;
@@ -214,8 +214,8 @@ class SeasonRankingReward extends BaseWorker{
                 'SeasonID' => $seasonID,
                 'Lobby' => $lobby,
                 'Ranking' => $ranking->rank,
-                'UserID' => $ranking->id,
-                'PlayerID' => 0,
+                'UserID' => $ranking->userId,
+                'PlayerID' => $ranking->petaId,
                 'Content' => json_encode($content),
                 'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
             ];
