@@ -23,7 +23,7 @@ class LeaderBoardRewardInfo extends BaseProcessor
         $leaderboards = $accessor->FromTable("QualifyingData")
             ->WhereLess("StartTime", $nowtime)
             ->WhereGreater("EndTime", $nowtime)
-            ->SelectExpr("QualifyingSeasonID, Lobby")
+            ->SelectExpr("SeasonID, Lobby")
             ->FetchAll();
         $accessor->ClearAll();
 
@@ -31,10 +31,10 @@ class LeaderBoardRewardInfo extends BaseProcessor
         $leaderboardMap = [];
         foreach( $leaderboards as $item )
         {
-            $targetSeason = $leaderboardMap[$item->QualifyingSeasonID] = new stdClass;
-            $targetSeason->seasonId = $item->QualifyingSeasonID;
+            $targetSeason = $leaderboardMap[$item->SeasonID] = new stdClass;
+            $targetSeason->seasonId = $item->SeasonID;
             $targetSeason->lobby = $item->Lobby;
-            array_push($leaderboardId, $item->QualifyingSeasonID);
+            array_push($leaderboardId, $item->SeasonID);
         }
 
         $rewards = $accessor->FromTable("SeasonRankingRewardNew")

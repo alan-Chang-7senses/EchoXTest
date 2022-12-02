@@ -110,6 +110,7 @@ class LeadboardUtility {
 
         $playerRate = $row->Rating;
         $userId = $row->UserID;
+        $nickName = $row->Nickname;
         $row = $accessor->ClearCondition()
                         ->SelectExpr('COUNT(*) AS cnt')
                         ->FromTable('LeaderboardRating')
@@ -121,7 +122,7 @@ class LeadboardUtility {
 
         $result = new RatingResult();
         $result->userId = $userId;
-        $result->petaName = (string)$idName;
+        $result->petaName = (string)($nickName ?? $idName);
         $result->petaId = $playerID;
         $result->rank = $row->cnt + 1;
         $result->rate = $playerRate;
@@ -139,7 +140,7 @@ class LeadboardUtility {
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->SelectExpr('PlayerID, Rating, UserID')
+        $rows = $accessor->SelectExpr('PlayerID, Rating, UserID, Nickname')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->OrderBy('Rating','DESC')
@@ -181,7 +182,7 @@ class LeadboardUtility {
     public static function GetSeasonRankingForPlayer(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
     {
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->selectExpr('Rating, UserID, PlayerID')
+        $rows = $accessor->selectExpr('Rating, UserID, PlayerID, Nickname')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereEqual('Lobby', $lobby)
@@ -237,11 +238,13 @@ class LeadboardUtility {
 
         $userInfo = (new UserHandler($userID))->GetInfo();
         $playerID = $userInfo->player;
+        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $nickName = $playerInfo->name;
         $idName = PlayerUtility::GetIDName($playerID);
 
         $result = new RatingResult();
         $result->userId = $userID;
-        $result->petaName = (string)$idName;
+        $result->petaName = (string)($nickName ?? $idName);
         $result->petaId = $playerID;
         $result->rank = array_search($userRating->Rating, array_column($row, "Rating")) + 1;
         $result->rate = $userRating->Rating;
@@ -262,6 +265,8 @@ class LeadboardUtility {
             {
                 $userInfo = (new UserHandler($row->UserID))->GetInfo();
                 $row->PlayerID = $userInfo->player;
+                $playerInfo = (new PlayerHandler($row->PlayerID))->GetInfo();
+                $row->NickName = $playerInfo->name;
             }
         }
 
@@ -271,7 +276,7 @@ class LeadboardUtility {
 
             $ratingResult = new RatingResult();
             $ratingResult->userId = $rows[$i]->UserID;
-            $ratingResult->petaName = (string)$idName;
+            $ratingResult->petaName = (string)($rows[$i]->NickName ?? $idName);
             $ratingResult->petaId = $rows[$i]->PlayerID;
             $ratingResult->rate = $rows[$i]->Rating;
             $ratingResult->rank = $ranking;

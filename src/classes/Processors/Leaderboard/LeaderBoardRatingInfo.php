@@ -19,13 +19,19 @@ class LeaderBoardRatingInfo extends BaseProcessor
         $seasonInfo = $staticAccessor->FromTable("QualifyingData")
                 ->WhereLess("StartTime", $nowtime)
                 ->WhereGreater("EndTime", $nowtime)
-                ->SelectExpr("QualifyingSeasonID")
+                ->SelectExpr("SeasonID, Lobby")
                 ->FetchAll();
-        $seasonInfo = array_column($seasonInfo, "QualifyingSeasonID");
+        $seasonIdList = [];
+        $seasonLobbyMap = [];
+        foreach( $seasonInfo as $item )
+        {
+            array_push($seasonIdList, $item->SeasonID);
+            $seasonLobbyMap[$item->SeasonID] = $item->Lobby;
+        }
 
         $rows = $staticAccessor->ClearAll()
             ->FromTable('Leaderboard')
-            ->WhereIn('SeasonID', $seasonInfo)
+            ->WhereIn('SeasonID', $seasonIdList)
             ->FetchAll();
         if($rows === false)throw new LeaderboardException(LeaderboardException::NoAnyLeaderboardData);
 
@@ -49,6 +55,7 @@ class LeaderBoardRatingInfo extends BaseProcessor
             [
                 'id' => $row->Serial,
                 'group' => $row->Group,
+                'lobby' => $seasonLobbyMap[$seasonID],
                 'mainLeaderboardTitle' => $row->MainLeaderboradName,
                 'subLeaderboardTitle' => $row->SubLeaderboardName,
                 'ruleHint' => $row->CompetitionRuleHint,

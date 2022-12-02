@@ -35,11 +35,12 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | id | int | 資料序號 |
 | group | int | 排行榜主項群組ID |
+| lobby | int | 大廳類別 |
 | mainLeaderboardTitle | string | 主榜單字串 |
 | subLeaderboardTitle | string | 子榜單字串 |
 | ruleHint | string | 榜單規則字串 |
 | ratingTarget | int | 計分類型(0：角色, 1：玩家) |
-| rankRuleHint | int | 排名基準HINT字串 |
+| rankRuleHint | string | 排名基準HINT字串 |
 | [rewards](#rewards) | array | 獎勵資訊列表 |
 
 #### <span id="rewards"> rewards 內容</span>

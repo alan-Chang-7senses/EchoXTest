@@ -16,7 +16,7 @@ use stdClass;
 
 class LeaderBoardUserRanking extends BaseProcessor
 {
-    protected bool $mustSigned = false;
+    //protected bool $mustSigned = false;
 
     public function Process() : ResultData
     {
@@ -32,9 +32,9 @@ class LeaderBoardUserRanking extends BaseProcessor
         $seasonInfo = $accessor->FromTable("QualifyingData")
                 ->WhereLess("StartTime", $nowtime)
                 ->WhereGreater("EndTime", $nowtime)
-                ->SelectExpr("QualifyingSeasonID, Lobby")
+                ->SelectExpr("SeasonID, Lobby")
                 ->FetchAll();
-        $seasonIdList = array_column($seasonInfo, "QualifyingSeasonID");
+        $seasonIdList = array_column($seasonInfo, "SeasonID");
 
         $recordTypeMap = [];
         {
@@ -51,14 +51,14 @@ class LeaderBoardUserRanking extends BaseProcessor
         foreach( $seasonInfo as $item )
         {
             $newRankInfo = false;
-            switch( $recordTypeMap[$item->QualifyingSeasonID] )
+            switch( $recordTypeMap[$item->SeasonID] )
             {
                 case 0:// peta rank
-                    $newRankInfo = $this->ConstructPlayerRankInfo($item->QualifyingSeasonID, $userInfo->player);
+                    $newRankInfo = $this->ConstructPlayerRankInfo($item->SeasonID, $userInfo->player);
                     break;
 
                 case 1:// user rank
-                    $newRankInfo = $this->ConstructTotalRankInfo([$item->QualifyingSeasonID], $userId);
+                    $newRankInfo = $this->ConstructTotalRankInfo([$item->SeasonID], $userId);
                     break;
 
                 default:break;
