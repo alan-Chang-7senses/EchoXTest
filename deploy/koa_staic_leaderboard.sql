@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `Leaderboard` (
   PRIMARY KEY (`Serial`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='排行榜榜單資訊。';
 
+TRUNCATE `Leaderboard`;
 -- 正在傾印表格  koa_static.Leaderboard 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `Leaderboard` DISABLE KEYS */;
 INSERT INTO `Leaderboard` (`Serial`, `Group`, `MainLeaderboradName`, `SubLeaderboardName`, `CompetitionRuleHint`, `SeasonID`, `SeasonName`, `RecordType`, `RankRuleHint`) VALUES
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `QualifyingData` (
 
 -- 正在傾印表格  koa_static.QualifyingData 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingData` DISABLE KEYS */;
+TRUNCATE `QualifyingData`;
 INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
 	(1, '練習賽', 3, 1001, 1640966400, 1988035200, 0),
 	(2, '火星幣賽(A) - S1', 1, 1002, 1669996800, 1670256000, 0),
@@ -74,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `SeasonRankingRewardNew` (
   UNIQUE KEY `SeasonID_Rank` (`SeasonID`,`Rank`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='新版賽季獎勵表。';
 
+TRUNCATE `SeasonRankingRewardNew`;
 -- 正在傾印表格  koa_static.SeasonRankingRewardNew 的資料：~200 rows (近似值)
 /*!40000 ALTER TABLE `SeasonRankingRewardNew` DISABLE KEYS */;
 INSERT INTO `SeasonRankingRewardNew` (`Serial`, `SeasonID`, `SeasonName`, `Rank`, `RewarID`) VALUES
