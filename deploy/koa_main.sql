@@ -55,8 +55,6 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('PvP_B_LimitTimeStartMarqueeID', '[14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]', 'PT賽每日開始時各語系跑馬燈編號'),
 	('PvP_B_MaxTickets_1', '100', '金幣賽入場券的儲存上限'),
 	('PvP_B_MaxTickets_2', '3', 'PT賽入場券的儲存上限'),
-	('PvP_B_NewRoomRate_1', '1', '金幣晉級賽創建房間千分比'),
-	('PvP_B_NewRoomRate_2', '250', 'PT晉級賽創建房間千分比'),
 	('PvP_B_PetaLvLimit_1', '70', '參加金幣賽的Peta等級壓縮'),
 	('PvP_B_SeasonStartTime', '2022-06-24 00:00:00+8:00', '晉級賽賽季起始時間'),
 	('PvP_B_StopMatch', '1800', '晉級賽結束配對時間(秒數)'),
