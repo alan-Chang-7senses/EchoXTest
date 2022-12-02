@@ -84,22 +84,20 @@ class StoreHandler {
         }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $purchaseGroup = $accessor->executeBindFetch("SELECT PurchaseID FROM StorePurchase WHERE GROUPID = " . $groupID . " GROUP BY PurchaseID ORDER BY RAND()", []);
-        if ($purchaseGroup === false) {
-            throw new StoreException(StoreException::Error, ['[cause]' => "L89" . $groupID]);
-        }
+        $items = $accessor->executeBindFetchAll("SELECT * FROM (
+            SELECT * FROM StorePurchase v1 INNER JOIN
+            (SELECT PurchaseID AS x FROM StorePurchase WHERE GroupID = :GroupID GROUP BY PurchaseID ORDER BY RAND()  LIMIT 1) as v2
+            ON v1.PurchaseID = v2.x  ORDER BY RAND() LIMIT :Amount
+            ) v3 ORDER BY Pindex", [
+            "GroupID" => $groupID,
+            "Amount" => $amount
+        ]);
 
-        $storeTradeIDs = [];
-        $count = 0;
-        $items = $accessor->ClearAll()->FromTable("StorePurchase")->WhereEqual("GROUPID", $groupID)->WhereEqual("PurchaseID", $purchaseGroup->PurchaseID)->OrderBy("", "RAND()")->FetchAll();
-        if (!isset($items)) {
-            throw new StoreException(StoreException::Error, ['[cause]' => "L96:" . $purchaseGroup->PurchaseID]);
+        if (empty($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L96:" . $groupID]);
         }
 
         foreach ($items as $item) {
-            if ($count >= $amount) {
-                break;
-            }
             $storeTradesHolder = new StoreTradesHolder();
             $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             $storeTradesHolder->storeID = $storeID;
@@ -107,8 +105,6 @@ class StoreHandler {
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
             $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
-
-            $count++;
         }
         $this->ClearStoreTrade($tradIDs);
 
@@ -122,22 +118,22 @@ class StoreHandler {
         }
         $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
         $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $countersGroup = $accessor->executeBindFetch("SELECT CounterID FROM StoreCounters WHERE GROUPID =" . $groupID . " GROUP BY CounterID ORDER BY RAND()", []);
-        if (!isset($countersGroup)) {
-            throw new StoreException(StoreException::Error, ['[cause]' => "L127:" . $groupID]);
-        }
 
-        $items = $accessor->ClearAll()->FromTable("StoreCounters")->WhereEqual("GROUPID", $groupID)->WhereEqual("CounterID", $countersGroup->CounterID)->OrderBy("", "RAND()")->FetchAll();
-        if (!isset($items)) {
-            throw new StoreException(StoreException::Error, ['[cause]' => "L132:" . $countersGroup->CounterID]);
+        $items = $accessor->executeBindFetchAll("SELECT * FROM (
+            SELECT * FROM StoreCounters v1 INNER JOIN
+            (SELECT CounterID AS TempID FROM StoreCounters WHERE GroupID = :GroupID GROUP BY CounterID ORDER BY RAND()  LIMIT 1) as v2
+            ON v1.CounterID = v2.TempID  ORDER BY RAND() LIMIT :Amount
+            ) v3 ORDER BY Cindex", [
+            "GroupID" => $groupID,
+            "Amount" => $amount
+        ]);
+
+        if (empty($items)) {
+            throw new StoreException(StoreException::Error, ['[cause]' => "L132:" . $groupID]);
         }
 
         $storeTradeIDs = [];
-        $count = 0;
         foreach ($items as $item) {
-            if ($count >= $amount) {
-                break;
-            }
             $storeTradesHolder = new StoreTradesHolder();
             $storeTradesHolder->tradeID = StoreValue::NoTradeID;
             $storeTradesHolder->storeID = $storeID;
@@ -145,7 +141,6 @@ class StoreHandler {
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
             $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
-            $count++;
         }
         $this->ClearStoreTrade($tradIDs);
 
