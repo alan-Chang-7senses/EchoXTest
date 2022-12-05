@@ -49,7 +49,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | ranking | int | 排名 |
 | duration | float | 競賽使用時間 |
 | [items](#items) | array | 獲獎物品資訊物件陣列 |
-| leadRate | float | 領先率 |
+| [rate](#rate) | object | 積分資訊 |
 
 #### <span id="items">items 內容</span>
 
@@ -61,43 +61,56 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | icon | string | 物品圖號 |
 | amount | int | 物品數量 |
 
+#### <span id="rate">rate 內容</span>
+
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| new | int | 賽後積分 |
+| old | int | 賽前積分 |
+
 ### Example
 
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    },
-	    "users": [
+	  "error": {
+	    "code": 0,
+	    "message": ""
+	  },
+	  "users": [
+	    {
+	      "id": 3,
+	      "nickname": "test003",
+	      "player": 1010000000003545,
+	      "ranking": 1,
+	      "duration": 71.43269991874695,
+	      "items": [
 	        {
-	            "id": 1,
-	            "nickname": "test001",
-	            "player": 1010000000000001,
-	            "ranking": 1,
-	            "duration": 4.982580184936523,
-	            "items": [
-	                {
-	                    "id": -1,
-	                    "icon": "ItemIcon_0029",
-	                    "amount": 10
-	                }
-	            ],
-	            "leadRate": 46.66
-	        },
-	        {
-	            "id": 2,
-	            "nickname": "test002",
-	            "player": 1010000000000003,
-	            "ranking": 2,
-	            "duration": 4.419580184936523,
-	            "items": [
-	                {
-	                    "id": -1,
-	                    "icon": "ItemIcon_0029",
-	                    "amount": 10
-	                }
-	            ],
-	            "leadRate": 53.33
+	          "id": -2,
+	          "icon": "ItemIcon_0026",
+	          "amount": 95000
 	        }
-	    ]
+	      ],
+	      "rate": {
+	        "new": 758,
+	        "old": 753
+	      }
+	    },
+	    {
+	      "id": 6,
+	      "nickname": "test006",
+	      "player": 1010000000002520,
+	      "ranking": 2,
+	      "duration": 86.92540001869202,
+	      "items": [
+	        {
+	          "id": -2,
+	          "icon": "ItemIcon_0026",
+	          "amount": 0
+	        }
+	      ],
+	      "rate": {
+	        "new": 756,
+	        "old": 752
+	      }
+	    }
+	  ]
 	}
