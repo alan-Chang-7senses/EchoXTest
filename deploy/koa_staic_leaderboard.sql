@@ -57,12 +57,12 @@ CREATE TABLE IF NOT EXISTS `QualifyingData` (
 -- 正在傾印表格  koa_static.QualifyingData 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `QualifyingData` DISABLE KEYS */;
 TRUNCATE `QualifyingData`;
-INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES
-	(1, '練習賽', 3, 1001, 1640966400, 1988035200, 0),
-	(2, '火星幣賽(A) - S1', 1, 1002, 1669996800, 1670256000, 0),
-	(3, '火星幣賽(B) - S1', 2, 1002, 1669996800, 1670256000, 0),
-	(4, 'PT幣賽(A) - S1', 4, 1001, 1669996800, 1670256000, 0),
-	(5, 'PT幣賽(B) - S1', 5, 1001, 1669996800, 1670256000, 0);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (1, '練習賽', 3, 1001, 1640966400, 1988035200, 0);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (2, '火星幣賽(A) - S1', 1, 1002, 1669996800, 1670342400, 0);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (3, 'PT幣賽(A) - S1', 2, 1001, 1669996800, 1670342400, 0);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (4, '火星幣賽(B) - S1', 4, 1002, 1669996800, 1670342400, 0);
+INSERT INTO `QualifyingData` (`SeasonID`, `SeasonName`, `Lobby`, `Scene`, `StartTime`, `EndTime`, `CreateTime`) VALUES (5, 'PT幣賽(B) - S1', 5, 1001, 1669996800, 1670342400, 0);
+
 /*!40000 ALTER TABLE `QualifyingData` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.SeasonRankingRewardNew 結構
