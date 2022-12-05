@@ -18,7 +18,7 @@ http(s)://`域名`/Leaderboard/RivalPlayerInTotalRanking/
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| player | int | 角色編號。 |
+| player | int | PetaID 或 idName (區分大小寫) |
 
 ## Response
 

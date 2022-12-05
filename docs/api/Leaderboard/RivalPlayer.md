@@ -19,7 +19,7 @@ http(s)://`域名`/Leaderboard/RivalPlayer/
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | lobby | int | [大廳](../codes/race.md#lobby) |
-| player | int | 角色編號。 |
+| player | int | PetaID 或 idName (區分大小寫) |
 
 ## Response
 

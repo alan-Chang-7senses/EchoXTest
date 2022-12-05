@@ -2,6 +2,7 @@
 
 namespace Processors\Leaderboard;
 
+use Games\Players\PlayerUtility;
 use Games\Players\PlayerHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Leadboards\LeadboardUtility;
@@ -19,9 +20,11 @@ class RivalPlayer extends BaseRivalPlayer {
 
     public function Process(): ResultData {
         
-        $playerID = InputHelper::post('player');
+        $idName = InputHelper::post('player');
 
         $lobby = InputHelper::post('lobby');
+
+        $playerID = PlayerUtility::GetPlayerIdByIDName($idName);
 
         $result = new ResultData(ErrorCode::Success);
 
