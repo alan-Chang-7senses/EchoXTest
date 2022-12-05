@@ -86,6 +86,22 @@ class QualifyingSeasonAccessor extends BaseAccessor
 
         return $result;
     }
+
+    public function GetSeasonRecordType(): mixed
+    {
+        $rows = $this->StaticAccessor()->SelectExpr('SeasonID, RecordType')
+                                         ->FromTable('Leaderboard')
+                                         ->FetchAll();
+
+        $result = [];
+                                         
+        foreach($rows as $row)
+        {
+            $result[$row->SeasonID] = $row->RecordType;
+        }        
+
+        return $result;
+    }
     
     public function GetOpenQualifyingDataByLobby(int $lobby): mixed
     {

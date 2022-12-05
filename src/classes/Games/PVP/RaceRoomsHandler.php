@@ -17,17 +17,11 @@ class RaceRoomsHandler {
     }
 
     private function GetNewRomRate(int $lobby): int {
-        switch ($lobby) {
-            case RaceValue::LobbyCoinA:
-            case RaceValue::LobbyCoinB:
-                return ConfigGenerator::Instance()->PvP_B_NewRoomRate_1;
-            case RaceValue::LobbyPetaTokenA:
-            case RaceValue::LobbyPetaTokenB:
-                return ConfigGenerator::Instance()->PvP_B_NewRoomRate_2;
-            case RaceValue::LobbyStudy:
-                return 0; //find match room first
+        if ($lobby == RaceValue::LobbyStudy) {
+            return 0;
+        } else {
+            return CompetitionsInfoHandler::Instance($lobby)->GetInfo()->newRoomRate;
         }
-        return 1000; //find idle/new room
     }
 
     public function GetMatchRoom(int $lobby, string $version, int $lowBound, int $upBound, int $bound): stdclass|false {
@@ -59,8 +53,7 @@ class RaceRoomsHandler {
 
             if ($this->accessor->Update($idleRoom->RaceRoomID, $bind)) {
                 return $this->accessor->GetRoom($idleRoom->RaceRoomID);
-            }else
-            {
+            } else {
                 throw new RaceException(RaceException::UserMatchError);
             }
         } else {

@@ -53,6 +53,7 @@ class PlayerPool extends PoolAccessor {
         
         $holder = new PlayerInfoHolder();
         $holder->id = $playerID;
+        $holder->userID = $player->UserID;
         $holder->idName = PlayerUtility::GetIDName($playerID);
         $holder->name = $player->Nickname ?? $holder->idName;
         $holder->ele = $player->Attribute;
