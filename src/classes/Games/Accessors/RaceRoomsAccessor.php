@@ -19,7 +19,7 @@ class RaceRoomsAccessor extends BaseAccessor {
 
     public function GetMatchRooms(int $lobby, string $version, int $bound): array {
         return $this->useTable()->WhereEqual('Status', RaceValue::RoomMatching)->
-                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereGreater('LowBound', $bound)->WhereLess('UpBound', $bound)->
+                        WhereEqual('Lobby', $lobby)->WhereEqual('Version', $version)->WhereLess('LowBound', $bound)->WhereGreater('UpBound', $bound)->
                         ForUpdate()->FetchAll();
     }
 

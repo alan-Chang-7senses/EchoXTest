@@ -8,6 +8,7 @@ use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
+use Games\Leadboards\LeadboardUtility;
 use Games\Pools\UserPool;
 use Games\PVP\CompetitionsInfoHandler;
 use Games\PVP\Holders\CompetitionsInfoHolder;
@@ -108,7 +109,7 @@ abstract class BasePVPMatch extends BaseProcessor {
                     ->Fetch();
 
             if (empty($row)) {
-                $rating = $this->competitionsInfo->baseRating;
+                $rating = RaceUtility::GetSeasonResetRating($lobby,$userInfo->Player);
             } else {
                 $rating = $row->Rating;
             }
