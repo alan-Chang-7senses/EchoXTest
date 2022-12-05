@@ -363,7 +363,7 @@ class NFTFactory {
             $rows = $accessor->ClearAll()->SelectExpr('UserID')->FromTable('PlayerHolder')
                                        ->WhereIn('PlayerID',$changeholdPlayerIDs)
                                        ->FetchAll();
-            foreach($rows as $row) UserPool::Instance()->Delete($row['UserID']);
+            foreach($rows as $row) UserPool::Instance()->Delete($row->UserID);
         }
 
         UserPool::Instance()->Delete($this->userHolder->userID);
