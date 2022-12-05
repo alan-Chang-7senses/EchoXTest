@@ -286,7 +286,7 @@ class LeadboardUtility {
             $ratingResult->petaId = $rows[$i]->PlayerID;
             $ratingResult->rate = $rows[$i]->Rating;
             $ratingResult->rank = $ranking;
-            $ratingResult->playCount = $rows[$i]->UserID;
+            $ratingResult->playCount = $rows[$i]->PlayCount;
 
             if( $currRating != $rows[$i]->Rating )
             {
