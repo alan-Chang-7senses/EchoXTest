@@ -47,6 +47,7 @@ class CurrentPlayer extends BaseProcessor{
         $playerInfo = $playerHandler->GetInfo();
         $player = clone $playerInfo;
         unset($player->dna);
+        unset($player->userID);
         
         $player->skills = [];
         foreach($playerInfo->skills as $skill){

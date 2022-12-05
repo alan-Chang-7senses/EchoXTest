@@ -108,6 +108,7 @@
 			- [最有錢使用者排行榜](Leaderboard/CB15/UserRichest.md)。
 		- [領先率](Leaderboard/LeadRate.md)。
 		- [觀看其他人的Peta資料](Leaderboard/RivalPlayer.md)。
+		- [觀看總積分排行榜其他人的Peta資料](Leaderboard/RivalPlayer.md)。
 		- [排行榜](Leaderboard/LeadRank.md)。
 		- [排行榜靜態資訊](Leaderboard/LeadInfo.md)。
 	- 串接：

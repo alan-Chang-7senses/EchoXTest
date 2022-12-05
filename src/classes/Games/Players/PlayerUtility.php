@@ -79,6 +79,18 @@ class PlayerUtility {
         return (string)$playerID;
     }
 
+    public static function GetPlayerIdByIDName(string $idName) : int {
+        if(stripos($idName, 'Robot', 0) !== false)
+        {
+            return intval(substr($idName, 5));
+        }
+        else if(stripos($idName, 'NFT', 0) !== false)
+        {
+            return 1010000000000000 + intval(substr($idName, 3));
+        }
+        return intval($idName);
+    }
+
     public static function PartcodeAllDNA(PlayerDnaHolder|stdClass $dna)
     {
         $dna->head = PlayerUtility::PartCodeByDNA($dna->head);
