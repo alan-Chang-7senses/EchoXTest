@@ -238,7 +238,7 @@ class RaceUtility {
             $playerID = $racePlayerInfo->player;
             //不幫機器人記排行榜。
             if($playerID < PlayerValue::BotIDLimit)continue;
-            if($playerID < PlayerValue::freePetaMaxPlayerID)continue;
+            if(!RaceUtility::CheckPlayerID($lobby, $playerID))continue;
             unset($allRatingsTemp[$playerID]);
             $otherPlayerRatings = array_values($allRatingsTemp);
             $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRatings,$racePlayerInfo->ranking);
