@@ -39,7 +39,8 @@ class CompetitionsInfoHandler
     /**取得奪冠率 */
     private function GetWinOdds() : float
     {
-        $otherRatingAVG = array_sum($this->otherCurrentRatings) / count($this->otherCurrentRatings);
+        $otherRatingAVG = empty($this->otherCurrentRatingss) ? 0 :
+         array_sum($this->otherCurrentRatings) / count($this->otherCurrentRatings);
         return 1 / (1 + pow(10,(($otherRatingAVG - $this->currentRating) / $this->info->xValue)));
     }
     /**取得未奪冠率 */
@@ -84,6 +85,6 @@ class CompetitionsInfoHandler
     {
         if($oldRating === null) return $this->info->baseRating;
         $rt = $oldRating * ($this->info->resetRate / CompetitionsValue::ResetRateDivisor);
-        return min(intval($rt),$this->info->minRatingReset);
+        return max(intval($rt),$this->info->minRatingReset);
     }
 }

@@ -2,11 +2,11 @@
 
 ## 介紹
 
-- 依照大廳類別提供競賽的積分排行榜 Peta 資訊。
+- PTA、PTB的總積分排行榜 Peta 資訊。
 
 ## URL
 
-http(s)://`域名`/Leaderboard/RivalPlayer/
+http(s)://`域名`/Leaderboard/RivalPlayerInTotalRanking/
 
 ## Method
 
@@ -18,7 +18,6 @@ http(s)://`域名`/Leaderboard/RivalPlayer/
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| lobby | int | [大廳](../codes/race.md#lobby) |
 | player | int | PetaID 或 idName (區分大小寫) |
 
 ## Response
@@ -130,9 +129,9 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| ranking | int | 名次 |
-| playCount | int | 參賽次數 |
-| leadRate | int | 賽事積分 |
+| ranking | int | PTA、PTB 兩個賽事總積分的名次 |
+| playCount | int | PTA、PTB 兩個賽事的總參賽次數 |
+| leadRate | int | PTA、PTB 兩個賽事的總積分 |
 
 
 ### Example
