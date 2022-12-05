@@ -51,6 +51,8 @@ class LeaderBoardUserRanking extends BaseProcessor
         foreach( $seasonInfo as $item )
         {
             $newRankInfo = false;
+            if( !array_key_exists($item->SeasonID, $recordTypeMap) ) continue;
+
             switch( $recordTypeMap[$item->SeasonID] )
             {
                 case 0:// peta rank
@@ -82,10 +84,10 @@ class LeaderBoardUserRanking extends BaseProcessor
     private function ConstructPlayerRankInfo(int $seasonId, int $playerId)
     {
         $rankInfo = LeadboardUtility::GetPlayersRateRanking($seasonId);
-        if( false === $rankInfo ) return false;
+        //if( false === $rankInfo ) return false;
 
         $result = new stdClass;
-        $result->rankInfo = $rankInfo;
+        $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
         $ownRankInfo = LeadboardUtility::GetPlayerOwnRateRanking($rankInfo, $playerId, $seasonId);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;
@@ -96,10 +98,10 @@ class LeaderBoardUserRanking extends BaseProcessor
     private function ConstructTotalRankInfo(array $seasonId, int $userId)
     {
         $rankInfo = LeadboardUtility::GetUsersRateRanking($seasonId);
-        if( false === $rankInfo ) return false;
+        //if( false === $rankInfo ) return false;
 
         $result = new stdClass;
-        $result->rankInfo = $rankInfo;
+        $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
         $ownRankInfo = LeadboardUtility::GetUserOwnRateRanking($rankInfo, $userId, $seasonId);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;

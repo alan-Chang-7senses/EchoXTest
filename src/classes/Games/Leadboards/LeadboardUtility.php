@@ -93,11 +93,14 @@ class LeadboardUtility {
     /**
      * 取得特定角色當前的排名
      */
-    public static function GetPlayerOwnRateRanking(array $src, int $playerID, int $seasonID) : RatingResult | false
+    public static function GetPlayerOwnRateRanking(array | false $src, int $playerID, int $seasonID) : RatingResult | false
     {
-        $idList = array_column($src, "id");
-        $userIdx = array_search($playerID, $idList);
-        if( false !== $userIdx ) return clone $src[$userIdx];
+        if( false !== $src )
+        {
+            $idList = array_column($src, "id");
+            $userIdx = array_search($playerID, $idList);
+            if( false !== $userIdx ) return clone $src[$userIdx];
+        }
 
         $accessor = AccessorFactory::Main();
 
@@ -106,7 +109,22 @@ class LeadboardUtility {
                  ->WhereEqual('PlayerID',$playerID)
                  ->WhereEqual('SeasonID', $seasonID)
                  ->Fetch();
-        if($row === false)return false; //不在排行榜中
+        if($row === false)
+        {
+            $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+            $idName = PlayerUtility::GetIDName($playerID);
+
+            $result = new RatingResult();
+            $result->userId = $playerInfo->userID;
+            $result->petaName = (string)($playerInfo->name ?? $idName);
+            $result->petaId = $playerID;
+            $result->rank = 0;
+            $result->rate = 0;
+            $result->PlayCount = 0;
+            return $result;
+
+            return false; //不在排行榜中
+        }
 
         $playerRate = $row->Rating;
         $userId = $row->UserID;
@@ -217,11 +235,14 @@ class LeadboardUtility {
         return self::HandleRankingInfo($rows,1,$endRank);
     }
 
-    public static function GetUserOwnRateRanking(array $src, int $userID, array $seasonID) : RatingResult | false
+    public static function GetUserOwnRateRanking(array | false $src, int $userID, array $seasonID) : RatingResult | false
     {
-        $idList = array_column($src, "id");
-        $userIdx = array_search($userID, $idList);
-        if( false !== $userIdx ) return clone $src[$userIdx];
+        if( false !== $src )
+        {
+            $idList = array_column($src, "id");
+            $userIdx = array_search($userID, $idList);
+            if( false !== $userIdx ) return clone $src[$userIdx];
+        }
 
         $accessor = AccessorFactory::Main();
         $userRating = $accessor->selectExpr('SUM(Rating) Rating, SUM(PlayCount) PlayCount')
@@ -230,7 +251,27 @@ class LeadboardUtility {
                  ->WhereIn('SeasonID', $seasonID)
                  ->WhereEqual('UserID', $userID)
                  ->Fetch();
-        if( $userRating === false ) return false; //不在排行榜中
+
+        $userInfo = (new UserHandler($userID))->GetInfo();
+        $playerID = $userInfo->player;
+        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
+        $nickName = $playerInfo->name;
+        $idName = PlayerUtility::GetIDName($playerID);
+
+        if( $userRating === false ||
+            null == $userRating ||
+            null == $userRating->Rating )
+        {
+            $result = new RatingResult();
+            $result->userId = $userID;
+            $result->petaName = (string)($nickName ?? $idName);
+            $result->petaId = $playerID;
+            $result->rank = 0;
+            $result->rate = 0;
+            $result->playCount = 0;//$userRating->PlayCount;
+
+            return $result; //不在排行榜中
+        }
 
         $row = $accessor->ClearCondition()
                         ->SelectExpr('SUM(Rating) Rating, UserID')
@@ -241,11 +282,6 @@ class LeadboardUtility {
                         ->OrderBy('Rating','DESC')
                         ->FetchAll();
 
-        $userInfo = (new UserHandler($userID))->GetInfo();
-        $playerID = $userInfo->player;
-        $playerInfo = (new PlayerHandler($playerID))->GetInfo();
-        $nickName = $playerInfo->name;
-        $idName = PlayerUtility::GetIDName($playerID);
 
         $result = new RatingResult();
         $result->userId = $userID;
@@ -313,7 +349,7 @@ class LeadboardUtility {
             case 1: $ranking = LeadboardUtility::GetUserOwnRateRanking([], $userID, [$seasonID]); break;
             default: break;
         }
-        
+
         return $ranking;
     }
 }

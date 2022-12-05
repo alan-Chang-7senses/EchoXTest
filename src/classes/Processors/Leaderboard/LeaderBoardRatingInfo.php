@@ -54,7 +54,7 @@ class LeaderBoardRatingInfo extends BaseProcessor
             array_push($result->leaderBoards,
             [
                 'id' => $row->Serial,
-                'group' => $row->GroupID,
+                'group' => $row->Group,
                 'lobby' => $seasonLobbyMap[$seasonID],
                 'mainLeaderboardTitle' => $row->MainLeaderboradName,
                 'subLeaderboardTitle' => $row->SubLeaderboardName,
