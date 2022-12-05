@@ -10,4 +10,5 @@ class RatingResult
     public string $petaName;
     public int $rate;
     public int $rank;
+    public int $playCount;
 }

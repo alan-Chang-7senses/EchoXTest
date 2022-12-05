@@ -5,6 +5,7 @@ namespace Processors\Leaderboard;
 use Games\Players\PlayerHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Leadboards\LeadboardUtility;
+use Games\Consts\RaceValue;
 
 use Consts\ErrorCode;
 use Helpers\InputHelper;
@@ -15,32 +16,32 @@ use Holders\ResultData;
  *
  * @author Lin Zheng Fu <sigma@7senses.com>
  */
-class RivalPlayer extends BaseRivalPlayer {
+class RivalPlayerInTotalRanking extends BaseRivalPlayer {
 
     public function Process(): ResultData {
         
         $playerID = InputHelper::post('player');
 
-        $lobby = InputHelper::post('lobby');
-
         $result = new ResultData(ErrorCode::Success);
 
         $result->parts = $this->PartInfo($playerID);
         $result->player = $this->SkillInfo($playerID);
-        $result->ranking = $this->RnakingInfo($playerID, $lobby);
+        $result->ranking = $this->RnakingInfo($playerID);
 
         return $result;
     }    
 
-    protected function RnakingInfo(int $playerID, int $lobby): array {
+    protected function RnakingInfo(int $playerID): array {
 
         $playerInfo = (new PlayerHandler($playerID))->GetInfo();
 
         $qualifyingHandler = new QualifyingHandler();
-        $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
-        $recordType = $qualifyingHandler->GetRecordTypeBySeasonID($seasonID);
+        $seasonIDs = [
+            $qualifyingHandler->GetSeasonIDByLobby(RaceValue::LobbyPetaTokenA),
+            $qualifyingHandler->GetSeasonIDByLobby(RaceValue::LobbyPetaTokenB),
+        ];
 
-        $ranking = LeadboardUtility::GetPlayerRanking($playerID, $playerInfo->userID, $seasonID, $recordType);
+        $ranking = LeadboardUtility::GetUserOwnRateRanking([], $playerInfo->userID, $seasonIDs);
         if ($ranking == false)
         {
             return [

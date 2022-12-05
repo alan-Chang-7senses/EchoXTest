@@ -29,6 +29,7 @@ class QualifyingHandler {
 
     public array $NowSeasonIDArr;
     public array $infoArr;
+    public array $recodeArr;
 
     private QualifyingDataPool $qualifyingDataPool;
     private TicketInfoPool $ticketPool;
@@ -65,6 +66,9 @@ class QualifyingHandler {
                 $this->infoArr[$data->Lobby] = $info;
             }
         }
+
+        // 取得所有賽季的記分方式
+        $this->recodeArr = $this->pdoAccessor->GetSeasonRecordType();
     }
     
     public function DetectSeason() {
@@ -241,5 +245,12 @@ class QualifyingHandler {
             return $this->infoArr[$lobby]->SeasonID;
         }
         return RaceValue::NOSeasonID;
+    }
+
+    public function GetRecordTypeBySeasonID(int $seasonID): int {
+        if (array_key_exists($seasonID, $this->recodeArr) == true) {
+            return $this->recodeArr[$seasonID];
+        }
+        return 0;
     }
 }
