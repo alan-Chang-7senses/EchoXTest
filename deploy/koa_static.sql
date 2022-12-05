@@ -4822,7 +4822,8 @@ CREATE TABLE IF NOT EXISTS `StoreCounters` (
   `Currency` int(11) NOT NULL DEFAULT 0 COMMENT '售價貨幣',
   `Promotion` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '促銷類型',
   PRIMARY KEY (`CIndex`),
-  KEY `GroupID` (`GroupID`)
+  KEY `GroupID` (`GroupID`),
+  KEY `CounterID` (`CounterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='一般商店';
 
 -- 正在傾印表格  koa_static.StoreCounters 的資料：~36 rows (近似值)
@@ -4927,7 +4928,8 @@ CREATE TABLE IF NOT EXISTS `StorePurchase` (
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `ProductID` varchar(255) NOT NULL DEFAULT '0' COMMENT '商品ProductID',
   PRIMARY KEY (`PIndex`),
-  KEY `GroupID` (`GroupID`)
+  KEY `GroupID` (`GroupID`),
+  KEY `PurchaseID` (`PurchaseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值商店';
 
 -- 正在傾印表格  koa_static.StorePurchase 的資料：~9 rows (近似值)

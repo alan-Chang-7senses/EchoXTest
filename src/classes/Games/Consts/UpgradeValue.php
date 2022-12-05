@@ -85,21 +85,21 @@ class UpgradeValue
     [
         self::RankUpFirst => 
         [
-            'dustAmount' => 30,
+            'dustAmount' => 250,
             'crystalAmount' => 0,
-            'charge' => 30000,
+            'charge' => 2500,
         ],
         self::RankUpSecond => 
         [
-            'dustAmount' => 50,
-            'crystalAmount' => 12,
-            'charge' => 218000,
+            'dustAmount' => 1000,
+            'crystalAmount' => 120,
+            'charge' => 8500,
         ],
         self::RankUpThird => 
         [
-            'dustAmount' => 90,
-            'crystalAmount' => 18,
-            'charge' => 342000,
+            'dustAmount' => 1500,
+            'crystalAmount' => 150,
+            'charge' => 5950,
         ],
     ];
     
@@ -133,10 +133,10 @@ class UpgradeValue
 
     const SkillUpgradeCharge = 
     [
-        self::SkillUpgradeFirst => 10000,
-        self::SkillUpgradeSecond => 30000,
-        self::SkillUpgradeThird => 218000,
-        self::SkillUpgradeForth => 342000,
+        self::SkillUpgradeFirst => 250,
+        self::SkillUpgradeSecond => 2750,
+        self::SkillUpgradeThird => 5950,
+        self::SkillUpgradeForth => 6250,
     ];
 
 
