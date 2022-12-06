@@ -1,8 +1,7 @@
 <?php
-namespace Processors\User;
+namespace Processors\Tools;
 
 use Consts\ErrorCode;
-use Consts\Sessions;
 
 use Consts\EnvVar;
 use Consts\Predefined;
@@ -12,7 +11,9 @@ use Games\Users\UserHandler;
 use Games\Pools\UserPool;
 
 use Holders\ResultData;
-use Processors\BaseProcessor;
+use Helpers\InputHelper;
+
+use Exception;
 
 
 /**
@@ -20,17 +21,35 @@ use Processors\BaseProcessor;
  *
  * @author Lin Zheng Fu <sigma@7senses.com>
  */
-class ResetTutorialStep extends BaseProcessor{
+class ResetTutorialStep extends BaseTools{
     
     
     public function Process(): ResultData {
 
-        $userID = $_SESSION[Sessions::UserID];
+        if($this->IsTestEnv() == false) throw new Exception ('You do not have this permission', ErrorCode::VerifyError);
+
+        $users = json_decode(InputHelper::post('users'));
+        if($users === null) throw new Exception ('illegel parameter of users', ErrorCode::VerifyError);
+
+        $log = [];
+        foreach($users as $user)
+        {
+            $log[$user] = $this->ResetTutorial($user);
+        }
+        
+        $result = new ResultData(ErrorCode::Success);
+        $result->history = $log;
+       
+        return $result;
+    }
+
+    protected function ResetTutorial(int $userID): int
+    {
         $userInfo = (new UserHandler($userID))->GetInfo();
 
         $targetStep = 1;
 
-        if (1 != $userInfo->tutorial && $this->IsTestEnv())
+        if ($targetStep != $userInfo->tutorial)
         {
             $userAccessor = new UserAccessor();
             $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $targetStep]);
@@ -39,12 +58,9 @@ class ResetTutorialStep extends BaseProcessor{
         else
         {
             $targetStep = $userInfo->tutorial;
-        }       
+        }   
         
-        $result = new ResultData(ErrorCode::Success);
-        $result->tutorial = $targetStep;
-       
-        return $result;
+        return $targetStep;
     }
 
     protected function IsTestEnv(): bool
