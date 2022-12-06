@@ -4,9 +4,11 @@ namespace Processors\User;
 use Consts\ErrorCode;
 use Consts\Sessions;
 
+use Consts\EnvVar;
+use Consts\Predefined;
+
 use Games\Accessors\UserAccessor;
 use Games\Users\UserHandler;
-use Games\Users\TutorialUtility;
 use Games\Pools\UserPool;
 
 use Holders\ResultData;
@@ -18,7 +20,7 @@ use Processors\BaseProcessor;
  *
  * @author Lin Zheng Fu <sigma@7senses.com>
  */
-class UpdateTutorialStep extends BaseProcessor{
+class ResetTutorialStep extends BaseProcessor{
     
     
     public function Process(): ResultData {
@@ -26,22 +28,32 @@ class UpdateTutorialStep extends BaseProcessor{
         $userID = $_SESSION[Sessions::UserID];
         $userInfo = (new UserHandler($userID))->GetInfo();
 
-        $tutorial = TutorialUtility::UpdateStep($userInfo->tutorial);
+        $targetStep = 1;
 
-        if ($tutorial->nextStep != $userInfo->tutorial)
+        if (1 != $userInfo->tutorial && $this->IsTestEnv())
         {
-            TutorialUtility::AddRewards($userID, $tutorial->rewardItems);
-
             $userAccessor = new UserAccessor();
-            $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $tutorial->nextStep]);
+            $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $targetStep]);
             UserPool::Instance()->Delete($userID);
-        }        
+        } 
+        else
+        {
+            $targetStep = $userInfo->tutorial;
+        }       
         
         $result = new ResultData(ErrorCode::Success);
-        $result->tutorial = $tutorial->nextStep;
-        $result->rewardItems = $tutorial->rewardItems;
+        $result->tutorial = $targetStep;
        
         return $result;
+    }
+
+    protected function IsTestEnv(): bool
+    {
+        $testEnv = [
+            Predefined::SysLocal,
+            'beta'
+        ];
+        return in_array(getenv(EnvVar::SysEnv), $testEnv);
     }
 
 }
