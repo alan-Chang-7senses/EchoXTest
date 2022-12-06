@@ -56,6 +56,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | petaName | string | Peta暱稱 |
 | rate | int | 積分 |
 | rank | int | 排名 |
+| playCount | int | 該角色遊玩次數 |
+| itemName | string | 角色NFT itemName |
 
 ### Example
 

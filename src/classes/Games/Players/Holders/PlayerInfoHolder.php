@@ -86,4 +86,6 @@ class PlayerInfoHolder extends stdClass {
     public int $strengthLevel;
     /** @var int 骨架類別 */
     public int $skeletonType;
+
+    public string $itemName;
 }

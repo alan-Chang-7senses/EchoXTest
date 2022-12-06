@@ -237,7 +237,12 @@ class RaceUtility {
             $allRatingsTemp = $allRatings;
             $playerID = $racePlayerInfo->player;
             //不幫機器人記排行榜。
-            if($playerID < PlayerValue::BotIDLimit)continue;
+            if($playerID < PlayerValue::BotIDLimit)
+            {
+                $ratingResults[$playerID]['new'] = 0;
+                $ratingResults[$playerID]['old'] = 0;       
+                continue;
+            }
             unset($allRatingsTemp[$playerID]);
             $otherPlayerRatings = array_values($allRatingsTemp);
             $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRatings,$racePlayerInfo->ranking);
