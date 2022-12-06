@@ -2,7 +2,8 @@
 
 namespace Games\Leadboards;
 
-class RatingResult
+
+class RatingResult 
 {
     /**角色編號或使用者編號 */
     public int $userId;
@@ -11,4 +12,5 @@ class RatingResult
     public int $rate;
     public int $rank;
     public int $playCount;
+    public string $itemName;
 }

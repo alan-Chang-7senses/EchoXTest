@@ -31,6 +31,7 @@ class RivalPlayer extends BaseRivalPlayer {
         $result->parts = $this->PartInfo($playerID);
         $result->player = $this->SkillInfo($playerID);
         $result->ranking = $this->RnakingInfo($playerID, $lobby);
+        $result->itemName = (new PlayerHandler($playerID))->GetInfo()->itemName;
 
         return $result;
     }    
