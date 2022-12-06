@@ -90,7 +90,7 @@ class BattleRecord extends BaseProcessor
 
             $newItem->useItem = [];
             $itemId = RaceUtility::GetTicketID($roomInfo->lobby);
-            $itemCost = RaceUtility::GetTicketCount($roomInfo->lobby);
+            $itemCost = RaceUtility::GetTicketCost($roomInfo->lobby);
             $itemIcon = "";
             if( RaceValue::NoTicketID != $itemId )
             {
