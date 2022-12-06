@@ -31,7 +31,7 @@ class RaceUtility {
     public static function RandomEnergyAgain(int $skillHoleCount, int $equipmentCount): array {
 
         $count = RaceValue::BaseEnergyCount + $skillHoleCount + $equipmentCount;
-        
+
         $count = max(RaceValue::EnergyAgainMin, min(RaceValue::EnergyAgainMax, $count));
 
         return self::RandomEnergyBase($count);
@@ -50,15 +50,26 @@ class RaceUtility {
 
         $energy = [];
         $amount = 0;
+        $unit = [];
         for ($i = 0; $i < RaceValue::EnergyTypeCount; ++$i) {
-            $value = round($counts[$i] / $total * RaceValue::EnergyFixedCount);
+            $percent = $counts[$i] / $total * 100.0;
+            $value = floor($percent / RaceValue::EnergyFixedCount);
             $energy[] = $value;
             $amount += $value;
+            $unit[] = [$i, $percent % RaceValue::EnergyFixedCount];
         }
 
         $remain = RaceValue::EnergyFixedCount - $amount;
-        for ($i = 0; $i < $remain; ++$i) {
-            ++$energy[$i % RaceValue::EnergyTypeCount];
+        if( 0 != $remain )
+        {
+            usort($unit, function($left, $right)
+            {
+                if( $left[1] == $right[1] ) return $left[0] - $right[0];
+                return $right[1] - $left[1];
+            });
+            for ($i = 0; $i < $remain; ++$i) {
+                ++$energy[$unit[$i % RaceValue::EnergyTypeCount][0]];
+            }
         }
 
         return $energy;
@@ -87,7 +98,7 @@ class RaceUtility {
             return CompetitionsInfoHandler::Instance($lobby)->GetInfo()->ticketId;
         }
     }
-    
+
     public static function GetTicketCost(int $lobby): int {
         if ($lobby == RaceValue::LobbyStudy) {
             return 0;
@@ -157,13 +168,13 @@ class RaceUtility {
      * @return void
      */
     public static function FinishRestoreLevel(array $playerIDs) : void {
-        
+
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        
+
         $values = $accessor->valuesForWhereIn($playerIDs);
         $accessor->executeBind('UPDATE PlayerLevel SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
         $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
-        
+
         PlayerPool::Instance()->DeleteAll($playerIDs);
     }
 
@@ -201,7 +212,7 @@ class RaceUtility {
                  ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime`, `PlayCount` FROM `LeaderboardRating`
                                         WHERE `PlayerID` IN '.$whereValues->values.'
                                         AND SeasonID = :SeasonID',$whereValues->bind);
-        
+
         foreach($rows as $row)
         {
             $allRatings[$row->PlayerID] = $row->Rating;
@@ -257,7 +268,7 @@ class RaceUtility {
             unset($allRatingsTemp[$playerID]);
             $otherPlayerRatings = array_values($allRatingsTemp);
             $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRatings,$racePlayerInfo->ranking);
-            $binds[] = 
+            $binds[] =
             [
                 'PlayerID' => $playerID,
                 'SeasonID' => $seasonID,
