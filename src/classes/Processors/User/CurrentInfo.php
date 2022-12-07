@@ -21,6 +21,8 @@ class CurrentInfo extends BaseProcessor{
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userInfo = $userHandler->GetInfo();
         
+        if(empty($userInfo->player)) $userHandler->SaveData(['player' => $userInfo->players[0]]);
+
         $result = new ResultData(ErrorCode::Success);
         $result->info = [
             'userID' => $userInfo->id,
