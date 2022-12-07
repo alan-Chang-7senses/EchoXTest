@@ -180,9 +180,9 @@ class RaceUtility {
 
     /**
      * 結束競賽時。計算並紀錄每個角色積分。
-     * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
+     * 
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby) : array
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby, int $raceID) : array
     {
         //不計排行榜的賽制不計分
         if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))
@@ -253,6 +253,7 @@ class RaceUtility {
         }
         $binds = [];
         $ratingResults = [];
+        $logBind = [];
         foreach($racePlayerInfos as $racePlayerInfo)
         {
             //找出自己以外的
@@ -279,10 +280,22 @@ class RaceUtility {
             ];
             $ratingResults[$playerID]['new'] = $rating;
             $ratingResults[$playerID]['old'] = $allRatings[$playerID];
-
+            $logBind[] =
+            [
+                'UserID' => $racePlayerInfo->userID,
+                'PlayerID' => $playerID,
+                'SeasonID' => $seasonID,
+                'Lobby' => $lobby,
+                'RaceRank' => $racePlayerInfo->ranking,
+                'RaceID' => $raceID,
+                'RatingPrevious' => $ratingResults[$playerID]['old'],
+                'RatingCurrent' => $ratingResults[$playerID]['new'],
+                'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
         }
 
         $accessor->ClearAll()->FromTable('LeaderboardRating')->AddAll($binds,true);
+        AccessorFactory::Log()->FromTable('PlayerRating')->AddAll($logBind);
 
         return $ratingResults;
     }    
