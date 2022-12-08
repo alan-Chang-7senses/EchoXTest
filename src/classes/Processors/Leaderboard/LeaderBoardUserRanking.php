@@ -94,7 +94,7 @@ class LeaderBoardUserRanking extends BaseProcessor
         $result = new stdClass;
         $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
-        $ownRankInfo = LeadboardUtility::GetPlayerOwnRateRanking($rankInfo, $playerId, $seasonId);
+        $ownRankInfo = LeadboardUtility::GetPlayerOwnRateRanking($rankInfo, $playerId, $seasonId, $treshold);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;
 
         return $result;
@@ -108,7 +108,7 @@ class LeaderBoardUserRanking extends BaseProcessor
         $result = new stdClass;
         $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
-        $ownRankInfo = LeadboardUtility::GetUserOwnRateRanking($rankInfo, $userId, $seasonId);
+        $ownRankInfo = LeadboardUtility::GetUserOwnRateRanking($rankInfo, $userId, $seasonId, $treshold);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;
 
         return $result;

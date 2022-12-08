@@ -9,6 +9,7 @@ use Games\Accessors\AccessorFactory;
 use Games\Consts\RaceValue;
 use Games\Players\PlayerHandler;
 use Games\Players\PlayerUtility;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Users\UserHandler;
 use Generators\ConfigGenerator;
 use stdClass;
@@ -93,7 +94,7 @@ class LeadboardUtility {
     /**
      * 取得特定角色當前的排名
      */
-    public static function GetPlayerOwnRateRanking(array | false $src, int $playerID, int $seasonID) : RatingResult | false
+    public static function GetPlayerOwnRateRanking(array | false $src, int $playerID, int $seasonID, int $treshold) : RatingResult | false
     {
         if( false !== $src )
         {
@@ -108,6 +109,7 @@ class LeadboardUtility {
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->FromTableJoinUsingNext('PlayerNFT','INNER','PlayerID')
                  ->WhereEqual('PlayerID',$playerID)
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->WhereEqual('SeasonID', $seasonID)
                  ->Fetch();
         if($row === false)
@@ -207,11 +209,14 @@ class LeadboardUtility {
      */
     public static function GetSeasonRankingForPlayer(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
     {
+        $treshold = CompetitionsInfoHandler::Instance($lobby)->GetInfo()->treshold;
+
         $accessor = AccessorFactory::Main();
         $rows = $accessor->selectExpr('Rating, UserID, PlayerID, Nickname, PlayCount')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereEqual('Lobby', $lobby)
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->WhereGreater('Rating', 0)
                  ->OrderBy('Rating','DESC')
                  ->FetchAll();
@@ -228,11 +233,14 @@ class LeadboardUtility {
      */
     public static function GetSeasonRankingForUser(int $seasonID, int $lobby = 0, int $endRank = 100) : array | false
     {
+        $treshold = CompetitionsInfoHandler::Instance($lobby)->GetInfo()->treshold;
+
         $accessor = AccessorFactory::Main();
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID, SUM(PlayCount) PlayCount')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->GroupBy('UserID')
                  ->WhereGreater('Rating', 0)
                  ->OrderBy('Rating','DESC')
@@ -241,7 +249,7 @@ class LeadboardUtility {
         return self::HandleRankingInfo($rows,1,$endRank);
     }
 
-    public static function GetUserOwnRateRanking(array | false $src, int $userID, array $seasonID) : RatingResult | false
+    public static function GetUserOwnRateRanking(array | false $src, int $userID, array $seasonID, int $treshold) : RatingResult | false
     {
         if( false !== $src )
         {
@@ -255,6 +263,7 @@ class LeadboardUtility {
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereIn('Lobby',[RaceValue::LobbyPetaTokenA,RaceValue::LobbyPetaTokenB])
                  ->WhereIn('SeasonID', $seasonID)
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->WhereEqual('UserID', $userID)
                  ->Fetch();
 
@@ -350,14 +359,14 @@ class LeadboardUtility {
         return $rankingInfo;
     }
 
-    public static function GetPlayerRanking(int $playerID, int $userID, int $seasonID, int $recordType) : RatingResult | false
+    public static function GetPlayerRanking(int $playerID, int $userID, int $seasonID, int $recordType, int $treshold) : RatingResult | false
     {
         $ranking = false;
 
         switch($recordType)
         {
-            case 0: $ranking = LeadboardUtility::GetPlayerOwnRateRanking([], $playerID, $seasonID); break;
-            case 1: $ranking = LeadboardUtility::GetUserOwnRateRanking([], $userID, [$seasonID]); break;
+            case 0: $ranking = LeadboardUtility::GetPlayerOwnRateRanking([], $playerID, $seasonID, $treshold); break;
+            case 1: $ranking = LeadboardUtility::GetUserOwnRateRanking([], $userID, [$seasonID], $treshold); break;
             default: break;
         }
 

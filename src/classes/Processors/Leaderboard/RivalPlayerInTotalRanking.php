@@ -6,6 +6,7 @@ use Games\Players\PlayerUtility;
 use Games\Players\PlayerHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Leadboards\LeadboardUtility;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Consts\RaceValue;
 
 use Consts\ErrorCode;
@@ -44,7 +45,10 @@ class RivalPlayerInTotalRanking extends BaseRivalPlayer {
             $qualifyingHandler->GetSeasonIDByLobby(RaceValue::LobbyPetaTokenB),
         ];
 
-        $ranking = LeadboardUtility::GetUserOwnRateRanking([], $playerInfo->userID, $seasonIDs);
+        $treshold = min(CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenA)->GetInfo()->treshold, 
+                        CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenB)->GetInfo()->treshold);
+
+        $ranking = LeadboardUtility::GetUserOwnRateRanking([], $playerInfo->userID, $seasonIDs, $treshold);
         if ($ranking == false)
         {
             return [
