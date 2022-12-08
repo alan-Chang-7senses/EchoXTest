@@ -123,9 +123,7 @@ class LeadboardUtility {
             $result->rate = 0;
             $result->playCount = 0;
             $result->itemName = $playerInfo->itemName;
-            return $result;
-
-            return false; //不在排行榜中
+            return $result;//不在排行榜中
         }
 
         $playerRate = $row->Rating;
@@ -160,7 +158,7 @@ class LeadboardUtility {
      * @param int $endRank 要獲得角色的最大名次。未輸入則使用默認數量1~100名
      * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
      */
-    public static function GetPlayersRateRanking(int $seasonID, int $offset = 1, int $endRank = 100 ) : array|false
+    public static function GetPlayersRateRanking(int $seasonID, int $treshold = 1, int $offset = 1, int $endRank = 100 ) : array|false
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
@@ -168,6 +166,7 @@ class LeadboardUtility {
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->FromTableJoinUsingNext('PlayerNFT','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
                  ->FetchAll();
@@ -182,13 +181,15 @@ class LeadboardUtility {
      * @param int $endRank 要獲得使用者的最大名次。未輸入則使用默認數量1~100名
      * @param return array 回傳值：型別為RatingRestult的陣列。若無資料則回傳false
      */
-    public static function GetUsersRateRanking(array $seasonID, int $offset = 1, int $endRank = 100) : array | false
+    public static function GetUsersRateRanking(array $seasonID, int $treshold = 1, int $offset = 1, int $endRank = 100) : array | false
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
         $rows = $accessor->selectExpr('SUM(Rating) Rating, UserID, SUM(PlayCount) PlayCount')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
                  ->WhereIn('SeasonID', $seasonID)
+                 ->WhereIn('Lobby', [RaceValue::LobbyPetaTokenA, RaceValue::LobbyPetaTokenB])
+                 ->WhereGreater('PlayCount', $treshold - 1)
                  ->GroupBy('UserID')
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
@@ -305,7 +306,7 @@ class LeadboardUtility {
         $rankingInfo = [];
         $ranking = 1;
         $currRating = -1;
-        $sameRank = 1;
+        $sameRank = 0;
         $offset = max(1,$offset);
 
         if( !property_exists($rows[0], "PlayerID") )
@@ -315,7 +316,7 @@ class LeadboardUtility {
                 $userInfo = (new UserHandler($row->UserID))->GetInfo();
                 $row->PlayerID = $userInfo->player;
                 $playerInfo = (new PlayerHandler($row->PlayerID))->GetInfo();
-                $row->NickName = $playerInfo->name;
+                $row->Nickname = $playerInfo->name;
                 $row->ItemName = $playerInfo->itemName;
             }
         }
@@ -323,15 +324,6 @@ class LeadboardUtility {
         for( $i=0 ; $ranking<=$endRank && $i<count($rows) ; ++$i )
         {
             $idName = PlayerUtility::GetIDName($rows[$i]->PlayerID);
-
-            $ratingResult = new RatingResult();
-            $ratingResult->userId = $rows[$i]->UserID;
-            $ratingResult->petaName = (string)($rows[$i]->NickName ?? $idName);
-            $ratingResult->petaId = $rows[$i]->PlayerID;
-            $ratingResult->rate = $rows[$i]->Rating;
-            $ratingResult->rank = $ranking;
-            $ratingResult->playCount = $rows[$i]->PlayCount;
-            $ratingResult->itemName = $rows[$i]->ItemName ?? '';
 
             if( $currRating != $rows[$i]->Rating )
             {
@@ -343,6 +335,16 @@ class LeadboardUtility {
             {
                 ++$sameRank;
             }
+
+            $ratingResult = new RatingResult();
+            $ratingResult->userId = $rows[$i]->UserID;
+            $ratingResult->petaName = (string)($rows[$i]->Nickname ?? $idName);
+            $ratingResult->petaId = $rows[$i]->PlayerID;
+            $ratingResult->rate = $rows[$i]->Rating;
+            $ratingResult->rank = $ranking;
+            $ratingResult->playCount = $rows[$i]->PlayCount;
+            $ratingResult->itemName = $rows[$i]->ItemName ?? '';
+
             array_push($rankingInfo, $ratingResult);
         }
         return $rankingInfo;
