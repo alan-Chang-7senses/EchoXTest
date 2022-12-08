@@ -180,18 +180,18 @@ class RaceUtility {
 
     /**
      * 結束競賽時。計算並紀錄每個角色積分。
-     * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
+     * 
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby) : array
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby, int $raceID) : array
     {
         //不計排行榜的賽制不計分
         if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))
         {
             $rt = [];
-            foreach($racePlayerInfos as $raningInfos)
+            foreach($racePlayerInfos as $rancingInfos)
             {
-                $rt[$raningInfos->player]['new'] = 0;
-                $rt[$raningInfos->player]['old'] = 0;
+                $rt[$rancingInfos->player]['new'] = 0;
+                $rt[$rancingInfos->player]['old'] = 0;
             }
             return $rt;
         }
@@ -240,8 +240,20 @@ class RaceUtility {
                 $playCount[$playerID] = 0;
             }
         }
+        //沒有賽季時，不計分並回傳舊分數。
+        if($seasonID == RaceValue::NOSeasonID)
+        {
+            $rt = [];
+            foreach($racePlayerInfos as $rancingInfos)
+            {
+                $rt[$rancingInfos->player]['new'] = $allRatings[$rancingInfos->player];
+                $rt[$rancingInfos->player]['old'] = $allRatings[$rancingInfos->player];
+            }
+            return $rt;
+        }
         $binds = [];
         $ratingResults = [];
+        $logBind = [];
         foreach($racePlayerInfos as $racePlayerInfo)
         {
             //找出自己以外的
@@ -268,10 +280,22 @@ class RaceUtility {
             ];
             $ratingResults[$playerID]['new'] = $rating;
             $ratingResults[$playerID]['old'] = $allRatings[$playerID];
-
+            $logBind[] =
+            [
+                'UserID' => $racePlayerInfo->userID,
+                'PlayerID' => $playerID,
+                'SeasonID' => $seasonID,
+                'Lobby' => $lobby,
+                'RaceRank' => $racePlayerInfo->ranking,
+                'RaceID' => $raceID,
+                'RatingPrevious' => $ratingResults[$playerID]['old'],
+                'RatingCurrent' => $ratingResults[$playerID]['new'],
+                'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
         }
 
         $accessor->ClearAll()->FromTable('LeaderboardRating')->AddAll($binds,true);
+        AccessorFactory::Log()->FromTable('PlayerRating')->AddAll($logBind);
 
         return $ratingResults;
     }    
