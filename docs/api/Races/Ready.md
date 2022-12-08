@@ -66,6 +66,8 @@ Content Type: `application/json`
 | id | int | 賽局編號 |
 | [scene](#scene) | object | 場景資訊 |
 | [users](#users2) | array | 各玩家的角色競賽資料陣列 |
+| availableUsers | array | 可開局的使用者編號集合 |
+| notAvailableUsers | array | 不可開局的使用者編號集合 |
 
 #### <span id="scene">scene 內容</span>
 

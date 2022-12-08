@@ -66,6 +66,7 @@ class Ready extends BaseRace{
             $handler = new UserHandler($user->id);
             $userInfo = $handler->GetInfo();
             if($userInfo->race != RaceValue::NotInRace && $userInfo->race != RaceValue::BotMatch) throw new RaceException (RaceException::OtherUserInRace, ['[user]' => $user->id]);
+            if(empty($userInfo->player)) continue;
 
             $readyRaceInfo = new ReadyRaceInfoHolder();
             $readyRaceInfo->raceNumber = $n;
@@ -231,6 +232,11 @@ class Ready extends BaseRace{
                 
         RaceVerifyHandler::Instance()->Ready($readyUserInfos, $racePlayerIDs);
         RaceHP::Instance()->Ready($readyUserInfos, $racePlayerIDs);
+
+        $availableUsers = array_keys($readyRaceInfos);
+        $notAvailableUsers = array_values(array_diff(array_column($users,'id'),$availableUsers));
+        $result->availableUsers = $availableUsers;
+        $result->notAvailableUsers = $notAvailableUsers;
 
         return $result;
     }
