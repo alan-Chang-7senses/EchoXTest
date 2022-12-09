@@ -52,7 +52,7 @@ class RaceUtility {
         $amount = 0;
         $unit = [];
         for ($i = 0; $i < RaceValue::EnergyTypeCount; ++$i) {
-            $percent = $counts[$i] / $total * 100.0;
+            $percent = floor($counts[$i] / $total * 100.0);
             $value = floor($percent / RaceValue::EnergyFixedCount);
             $energy[] = $value;
             $amount += $value;
