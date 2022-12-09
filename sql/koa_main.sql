@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主機:                           192.168.2.152
+-- 主機:                           172.20.100.7
 -- 伺服器版本:                        10.6.5-MariaDB-1:10.6.5+maria~focal - mariadb.org binary distribution
 -- 伺服器作業系統:                      debian-linux-gnu
 -- HeidiSQL 版本:                  11.3.0.6295
@@ -64,7 +64,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('RaceRewardMultiplier', '1', '競賽獎勵倍數'),
 	('RaceVerifyDistance', '10', '驗證比賽距離誤差值'),
 	('SeasonRankingRewardMailDay', '7', '賽季排行獎勵信件過期時間(日)'),
-	('SeasonRankingRewardMailID', '1', '賽季排行獎勵信件編號'),
+	('SeasonRankingRewardMailID', '{"1":15,"2":16,"4":17,"5":18}', '賽季排行獎勵信件編號'),
 	('StoreAutoRefreshTime', '00:00:00+08:00', '每日自動刷新商店內容的時間'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
 	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)'),
