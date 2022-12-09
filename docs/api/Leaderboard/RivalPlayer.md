@@ -33,6 +33,7 @@ Content Type: `application/json`
 | [parts](#parts) | object | 當前角色 Avatar 部位 |
 | [player](#player) | object | 當前角色資料 |
 | [ranking](#ranking) | object | 當前角色排名資料 |
+| itemName | string | 角色NFT itemName |
 
 #### <span id="parts"> parts 內容</span>
 

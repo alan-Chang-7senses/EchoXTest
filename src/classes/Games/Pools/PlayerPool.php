@@ -135,6 +135,8 @@ class PlayerPool extends PoolAccessor {
         }
         
         $this->AutoPutSlot($holder);
+
+        $holder->itemName = $player->ItemName ?? '';
         
         return $holder;
     }

@@ -338,14 +338,19 @@ class NFTFactory {
         
         if(!empty($changeholdPlayerIDs))
         {
+            $rows = $accessor->ClearAll()->FromTable('PlayerHolder')
+                                       ->WhereIn('PlayerID',$changeholdPlayerIDs)
+                                       ->FetchAll();
+            foreach($rows as $row) 
+            {
+                UserPool::Instance()->Delete($row->UserID);
+                $logAccessor->AddTransferBind($this->userHolder->userID,$row->UserID,$row->PlayerID);
+                PlayerPool::Instance()->Delete($row->PlayerID);
+            }
+
             $accessor->ClearCondition()->FromTable('PlayerHolder')
             ->WhereIn('PlayerID',$changeholdPlayerIDs)
             ->Modify(['UserID' => $this->userHolder->userID,'Nickname' => null, 'SyncRate' => 0]);
-            foreach($changeholdPlayerIDs as $changeholdPlayerID)
-            {
-                PlayerPool::Instance()->Delete($changeholdPlayerID);
-                $logAccessor->AddTransferBind($this->userHolder->userID,0,$changeholdPlayerID);
-            }
             
             $rows = $accessor->ClearCondition()->FromTable('Users')
                         ->WhereIn('Player',$changeholdPlayerIDs)->FetchAll();
@@ -354,16 +359,12 @@ class NFTFactory {
             {
                 foreach($rows as $row)
                 {
-                    $userInfo =(new UserHandler($row['UserID']))->GetInfo();
+                    $userInfo =(new UserHandler($row->UserID))->GetInfo();
                     $accessor->ClearCondition()->FromTable('Users')
                     ->WhereEqual('UserID',$userInfo->id)->Modify(['Player' => $userInfo->players[0]]);
-                    // UserPool::Instance()->Delete($userInfo->id);
+                    UserPool::Instance()->Delete($userInfo->id);
                 }    
-            }            
-            $rows = $accessor->ClearCondition()->SelectExpr('UserID')->FromTable('PlayerHolder')
-                                       ->WhereIn('PlayerID',$changeholdPlayerIDs)
-                                       ->FetchAll();
-            foreach($rows as $row) UserPool::Instance()->Delete($row['UserID']);
+            }
         }
 
         UserPool::Instance()->Delete($this->userHolder->userID);

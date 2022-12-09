@@ -106,6 +106,7 @@ class LeadboardUtility {
 
         $row = $accessor
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
+                 ->FromTableJoinUsingNext('PlayerNFT','INNER','PlayerID')
                  ->WhereEqual('PlayerID',$playerID)
                  ->WhereEqual('SeasonID', $seasonID)
                  ->Fetch();
@@ -120,7 +121,8 @@ class LeadboardUtility {
             $result->petaId = $playerID;
             $result->rank = 0;
             $result->rate = 0;
-            $result->PlayCount = 0;
+            $result->playCount = 0;
+            $result->itemName = $playerInfo->itemName;
             return $result;
 
             return false; //不在排行榜中
@@ -130,6 +132,7 @@ class LeadboardUtility {
         $userId = $row->UserID;
         $nickName = $row->Nickname;
         $playCount = $row->PlayCount;
+        $itemName = $row->ItemName ?? '';
         $row = $accessor->ClearCondition()
                         ->SelectExpr('COUNT(*) AS cnt')
                         ->FromTable('LeaderboardRating')
@@ -145,7 +148,8 @@ class LeadboardUtility {
         $result->petaId = $playerID;
         $result->rank = $row->cnt + 1;
         $result->rate = $playerRate;
-        $result->PlayCount = $playCount;
+        $result->playCount = $playCount;
+        $result->itemName = $itemName;
         return $result;
     }
 
@@ -160,8 +164,9 @@ class LeadboardUtility {
     {
         $offset = min(1,$offset);
         $accessor = AccessorFactory::Main();
-        $rows = $accessor->SelectExpr('PlayerID, Rating, UserID, Nickname, PlayCount')
+        $rows = $accessor->SelectExpr('PlayerID, Rating, UserID, Nickname, PlayCount, ItemName')
                  ->FromTableJoinUsing('LeaderboardRating','PlayerHolder','INNER','PlayerID')
+                 ->FromTableJoinUsingNext('PlayerNFT','INNER','PlayerID')
                  ->WhereEqual('SeasonID',$seasonID)
                  ->OrderBy('Rating','DESC')
                  ->Limit($endRank)
@@ -269,6 +274,7 @@ class LeadboardUtility {
             $result->rank = 0;
             $result->rate = 0;
             $result->playCount = 0;//$userRating->PlayCount;
+            $result->itemName = $playerInfo->itemName;
 
             return $result; //不在排行榜中
         }
@@ -290,6 +296,7 @@ class LeadboardUtility {
         $result->rank = array_search($userRating->Rating, array_column($row, "Rating")) + 1;
         $result->rate = $userRating->Rating;
         $result->playCount = $userRating->PlayCount;
+        $result->itemName = $playerInfo->itemName;
         return $result;
     }
 
@@ -309,6 +316,7 @@ class LeadboardUtility {
                 $row->PlayerID = $userInfo->player;
                 $playerInfo = (new PlayerHandler($row->PlayerID))->GetInfo();
                 $row->NickName = $playerInfo->name;
+                $row->ItemName = $playerInfo->itemName;
             }
         }
 
@@ -323,6 +331,7 @@ class LeadboardUtility {
             $ratingResult->rate = $rows[$i]->Rating;
             $ratingResult->rank = $ranking;
             $ratingResult->playCount = $rows[$i]->PlayCount;
+            $ratingResult->itemName = $rows[$i]->ItemName ?? '';
 
             if( $currRating != $rows[$i]->Rating )
             {
