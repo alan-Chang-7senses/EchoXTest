@@ -37,18 +37,18 @@ class StoreUtility {
         $result = new StoreRefreshTimeHolder();
         $result->updateTime = $updateTime;
 
+        if ($nowtime > $checkTimeValue) {
+            $checkTimeValue = $checkTimeValue + 86400;
+        }
+
         if ($updateTime < $checkTimeValue) {
             $seconds = $checkTimeValue - $updateTime;
             $result->needRefresh = ($seconds > 86400);
         } else {
             $result->needRefresh = false;
         }
+        $result->remainSeconds = $checkTimeValue - $nowtime;
 
-        if ($nowtime > $checkTimeValue) {
-            $result->remainSeconds = $checkTimeValue + 86400 - $nowtime;
-        } else {
-            $result->remainSeconds = $checkTimeValue - $nowtime;
-        }
         return $result;
     }
 
@@ -79,7 +79,7 @@ class StoreUtility {
             StoreValue::CurrencyPT => ItemValue::CurrencyPetaToken,
             StoreValue::CurrencyMarsTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyCoinA)->GetInfo()->ticketId,
             StoreValue::CurrencyPtTicket => CompetitionsInfoHandler::Instance(RaceValue::LobbyPetaTokenA)->GetInfo()->ticketId
-           // StoreValue::CurrencyGroupTicket => ConfigGenerator::Instance()->PvP_B_TicketId_3,
+        // StoreValue::CurrencyGroupTicket => ConfigGenerator::Instance()->PvP_B_TicketId_3,
         };
     }
 

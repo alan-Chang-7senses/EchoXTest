@@ -5,6 +5,7 @@ namespace Processors\Leaderboard;
 use Games\Players\PlayerUtility;
 use Games\Players\PlayerHandler;
 use Games\PVP\QualifyingHandler;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Leadboards\LeadboardUtility;
 
 use Consts\ErrorCode;
@@ -31,6 +32,7 @@ class RivalPlayer extends BaseRivalPlayer {
         $result->parts = $this->PartInfo($playerID);
         $result->player = $this->SkillInfo($playerID);
         $result->ranking = $this->RnakingInfo($playerID, $lobby);
+        $result->itemName = (new PlayerHandler($playerID))->GetInfo()->itemName;
 
         return $result;
     }    
@@ -40,10 +42,12 @@ class RivalPlayer extends BaseRivalPlayer {
         $playerInfo = (new PlayerHandler($playerID))->GetInfo();
 
         $qualifyingHandler = new QualifyingHandler();
-        $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
+        $seasonID = 2;//$qualifyingHandler->GetSeasonIDByLobby($lobby);
         $recordType = $qualifyingHandler->GetRecordTypeBySeasonID($seasonID);
 
-        $ranking = LeadboardUtility::GetPlayerRanking($playerID, $playerInfo->userID, $seasonID, $recordType);
+        $treshold = CompetitionsInfoHandler::Instance($lobby)->GetInfo()->treshold;
+
+        $ranking = LeadboardUtility::GetPlayerRanking($playerID, $playerInfo->userID, $seasonID, $recordType, $treshold);
         if ($ranking == false)
         {
             return [

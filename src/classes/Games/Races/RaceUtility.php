@@ -31,7 +31,7 @@ class RaceUtility {
     public static function RandomEnergyAgain(int $skillHoleCount, int $equipmentCount): array {
 
         $count = RaceValue::BaseEnergyCount + $skillHoleCount + $equipmentCount;
-        
+
         $count = max(RaceValue::EnergyAgainMin, min(RaceValue::EnergyAgainMax, $count));
 
         return self::RandomEnergyBase($count);
@@ -50,15 +50,26 @@ class RaceUtility {
 
         $energy = [];
         $amount = 0;
+        $unit = [];
         for ($i = 0; $i < RaceValue::EnergyTypeCount; ++$i) {
-            $value = round($counts[$i] / $total * RaceValue::EnergyFixedCount);
+            $percent = floor($counts[$i] / $total * 100.0);
+            $value = floor($percent / RaceValue::EnergyFixedCount);
             $energy[] = $value;
             $amount += $value;
+            $unit[] = [$i, $percent % RaceValue::EnergyFixedCount];
         }
 
         $remain = RaceValue::EnergyFixedCount - $amount;
-        for ($i = 0; $i < $remain; ++$i) {
-            ++$energy[$i % RaceValue::EnergyTypeCount];
+        if( 0 != $remain )
+        {
+            usort($unit, function($left, $right)
+            {
+                if( $left[1] == $right[1] ) return $left[0] - $right[0];
+                return $right[1] - $left[1];
+            });
+            for ($i = 0; $i < $remain; ++$i) {
+                ++$energy[$unit[$i % RaceValue::EnergyTypeCount][0]];
+            }
         }
 
         return $energy;
@@ -87,7 +98,7 @@ class RaceUtility {
             return CompetitionsInfoHandler::Instance($lobby)->GetInfo()->ticketId;
         }
     }
-    
+
     public static function GetTicketCost(int $lobby): int {
         if ($lobby == RaceValue::LobbyStudy) {
             return 0;
@@ -157,30 +168,30 @@ class RaceUtility {
      * @return void
      */
     public static function FinishRestoreLevel(array $playerIDs) : void {
-        
+
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        
+
         $values = $accessor->valuesForWhereIn($playerIDs);
         $accessor->executeBind('UPDATE PlayerLevel SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
         $accessor->executeBind('UPDATE PlayerSkill SET `Level` = IF(`LevelBackup` > 0, `LevelBackup`, `Level`), `LevelBackup` = 0 WHERE PlayerID IN '.$values->values, $values->bind);
-        
+
         PlayerPool::Instance()->DeleteAll($playerIDs);
     }
 
     /**
      * 結束競賽時。計算並紀錄每個角色積分。
-     * @param array $racePlayerInfos 所有比賽角色RacePlayerInfo組成之集合
+     * 
      */
-    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby) : array
+    public static function RecordRatingForEachPlayer(array $racePlayerInfos, int $lobby, int $raceID) : array
     {
         //不計排行榜的賽制不計分
         if(!in_array($lobby,array_keys(RaceValue::LobbyCompetition)))
         {
             $rt = [];
-            foreach($racePlayerInfos as $raningInfos)
+            foreach($racePlayerInfos as $rancingInfos)
             {
-                $rt[$raningInfos->player]['new'] = 0;
-                $rt[$raningInfos->player]['old'] = 0;
+                $rt[$rancingInfos->player]['new'] = 0;
+                $rt[$rancingInfos->player]['old'] = 0;
             }
             return $rt;
         }
@@ -201,7 +212,7 @@ class RaceUtility {
                  ->executeBindFetchAll('SELECT `PlayerID`, `Rating`, `UpdateTime`, `PlayCount` FROM `LeaderboardRating`
                                         WHERE `PlayerID` IN '.$whereValues->values.'
                                         AND SeasonID = :SeasonID',$whereValues->bind);
-        
+
         foreach($rows as $row)
         {
             $allRatings[$row->PlayerID] = $row->Rating;
@@ -229,19 +240,36 @@ class RaceUtility {
                 $playCount[$playerID] = 0;
             }
         }
+        //沒有賽季時，不計分並回傳舊分數。
+        if($seasonID == RaceValue::NOSeasonID)
+        {
+            $rt = [];
+            foreach($racePlayerInfos as $rancingInfos)
+            {
+                $rt[$rancingInfos->player]['new'] = $allRatings[$rancingInfos->player];
+                $rt[$rancingInfos->player]['old'] = $allRatings[$rancingInfos->player];
+            }
+            return $rt;
+        }
         $binds = [];
         $ratingResults = [];
+        $logBind = [];
         foreach($racePlayerInfos as $racePlayerInfo)
         {
             //找出自己以外的
             $allRatingsTemp = $allRatings;
             $playerID = $racePlayerInfo->player;
             //不幫機器人記排行榜。
-            if($playerID < PlayerValue::BotIDLimit)continue;
+            if($playerID < PlayerValue::BotIDLimit)
+            {
+                $ratingResults[$playerID]['new'] = 0;
+                $ratingResults[$playerID]['old'] = 0;       
+                continue;
+            }
             unset($allRatingsTemp[$playerID]);
             $otherPlayerRatings = array_values($allRatingsTemp);
             $rating = $competitionHandler->GetRating($allRatings[$playerID],$otherPlayerRatings,$racePlayerInfo->ranking);
-            $binds[] = 
+            $binds[] =
             [
                 'PlayerID' => $playerID,
                 'SeasonID' => $seasonID,
@@ -252,10 +280,22 @@ class RaceUtility {
             ];
             $ratingResults[$playerID]['new'] = $rating;
             $ratingResults[$playerID]['old'] = $allRatings[$playerID];
-
+            $logBind[] =
+            [
+                'UserID' => $racePlayerInfo->userID,
+                'PlayerID' => $playerID,
+                'SeasonID' => $seasonID,
+                'Lobby' => $lobby,
+                'RaceRank' => $racePlayerInfo->ranking,
+                'RaceID' => $raceID,
+                'RatingPrevious' => $ratingResults[$playerID]['old'],
+                'RatingCurrent' => $ratingResults[$playerID]['new'],
+                'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
         }
 
         $accessor->ClearAll()->FromTable('LeaderboardRating')->AddAll($binds,true);
+        AccessorFactory::Log()->FromTable('PlayerRating')->AddAll($logBind);
 
         return $ratingResults;
     }    

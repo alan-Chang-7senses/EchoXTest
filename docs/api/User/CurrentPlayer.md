@@ -76,6 +76,9 @@ Content Type: `application/json`
 | slotNumber | int | 插槽數量 |
 | [skills](#skills) | array | 角色持有的技能清單陣列 |
 | skillHole | array | 技能插槽陣列<br>陣列長度為插槽數量，陣列元素值為技能編號 |
+| strengthLevel | int | 數值標記 |
+| skeletonType | int | 骨架類別 | 
+| itemName | string | NFT角色itemName。免費Peta為空字串 |
 
 #### <span id="skills">skills 內容</span>
 

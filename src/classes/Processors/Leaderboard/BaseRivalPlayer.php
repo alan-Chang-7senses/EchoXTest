@@ -46,6 +46,7 @@ abstract class BaseRivalPlayer extends BaseProcessor {
         $player = clone $playerInfo;        
         unset($player->dna);
         unset($player->userID);
+        unset($player->itemName);
 
         $player->skills = [];
         foreach($playerInfo->skills as $skill){

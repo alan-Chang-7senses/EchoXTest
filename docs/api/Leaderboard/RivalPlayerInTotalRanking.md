@@ -32,6 +32,7 @@ Content Type: `application/json`
 | [parts](#parts) | object | 當前角色 Avatar 部位 |
 | [player](#player) | object | 當前角色資料 |
 | [ranking](#ranking) | object | 當前角色排名資料 |
+| itemName | string | 角色NFT ItemName |
 
 #### <span id="parts"> parts 內容</span>
 
@@ -642,5 +643,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
             "ranking" : 0,
             "playCount" : 0,
             "leadRate" : 0
-        }
+        },
+        "itemName": "Peta # 3153"
     }
