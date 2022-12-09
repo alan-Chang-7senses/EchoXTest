@@ -80,6 +80,7 @@ class Ready extends BaseRace{
 
             ++$n;
         }
+        if(empty($userHandlers))throw new RaceException(RaceException::IncorrectPlayerNumber); 
 
         $sceneHandler = new SceneHandler($this->userInfo->scene);
         $sceneInfo = $sceneHandler->GetInfo();
