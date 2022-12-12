@@ -21,7 +21,7 @@ Content Type: `application/x-www-form-urlencoded`
 ### 參數
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| userMailID | int | 使用者信件編號 |
+| userMailIDs | string | 信件編號所組成的 JSON 陣列字串  |
 | openStatus | int | 開啟狀態(0:關閉, 1:開啟) |
 | receiveStatus | int | 領獎狀態(0:未領取, 1:已領取) |
 
@@ -36,7 +36,7 @@ Content Type: `application/json`
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | openStatus | int | 開啟狀態(0:關閉, 1:開啟) |
 | receiveStatus | int | 領獎狀態(0:未領取, 1:已領取) |
-| [rewardItems](#rewardItems) | object| 獎勵物品|
+| [rewardItems](#rewardItems) | object| 獎勵物品(已累加，物品不重複)|
 |
 
 #### <span id="rewardItems">rewardItems 內容</span>
