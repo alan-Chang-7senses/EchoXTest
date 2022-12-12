@@ -5,6 +5,7 @@ use Consts\ErrorCode;
 use Consts\Sessions;
 
 use Games\Accessors\UserAccessor;
+use Games\Users\UserHandler;
 use Games\Users\TutorialUtility;
 use Games\Pools\UserPool;
 
@@ -23,15 +24,15 @@ class UpdateTutorialStep extends BaseProcessor{
     public function Process(): ResultData {
 
         $userID = $_SESSION[Sessions::UserID];
-        $userAccessor = new UserAccessor();
-        $row = $userAccessor->rowUserByID($userID);
+        $userInfo = (new UserHandler($userID))->GetInfo();
 
-        $tutorial = TutorialUtility::UpdateStep($row->Tutorial);
+        $tutorial = TutorialUtility::UpdateStep($userInfo->tutorial);
 
-        if ($tutorial->nextStep != $row->Tutorial)
+        if ($tutorial->nextStep != $userInfo->tutorial)
         {
             TutorialUtility::AddRewards($userID, $tutorial->rewardItems);
 
+            $userAccessor = new UserAccessor();
             $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $tutorial->nextStep]);
             UserPool::Instance()->Delete($userID);
         }        

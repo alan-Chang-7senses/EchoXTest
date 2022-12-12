@@ -8,8 +8,10 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Consts\Sessions;
 use Processors\BaseProcessor;
+use Games\Consts\RaceValue;
 use Games\Exceptions\LeaderboardException;
 use Games\Leadboards\LeadboardUtility;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\Users\UserHandler;
 use Holders\ResultData;
 use stdClass;
@@ -53,14 +55,17 @@ class LeaderBoardUserRanking extends BaseProcessor
             $newRankInfo = false;
             if( !array_key_exists($item->SeasonID, $recordTypeMap) ) continue;
 
+            $treshold = 0;
+            if ( $item->Lobby != RaceValue::LobbyStudy) $treshold = CompetitionsInfoHandler::Instance($item->Lobby)->GetInfo()->treshold;
+
             switch( $recordTypeMap[$item->SeasonID] )
             {
                 case 0:// peta rank
-                    $newRankInfo = $this->ConstructPlayerRankInfo($item->SeasonID, $userInfo->player);
+                    $newRankInfo = $this->ConstructPlayerRankInfo($item->SeasonID, $userInfo->player, $treshold);
                     break;
 
                 case 1:// user rank
-                    $newRankInfo = $this->ConstructTotalRankInfo([$item->SeasonID], $userId);
+                    $newRankInfo = $this->ConstructTotalRankInfo([$item->SeasonID], $userId, $treshold);
                     break;
 
                 default:break;
@@ -81,29 +86,29 @@ class LeaderBoardUserRanking extends BaseProcessor
         return $result;
     }
 
-    private function ConstructPlayerRankInfo(int $seasonId, int $playerId)
+    private function ConstructPlayerRankInfo(int $seasonId, int $playerId, int $treshold = 1)
     {
-        $rankInfo = LeadboardUtility::GetPlayersRateRanking($seasonId);
+        $rankInfo = LeadboardUtility::GetPlayersRateRanking($seasonId, $treshold);
         //if( false === $rankInfo ) return false;
 
         $result = new stdClass;
         $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
-        $ownRankInfo = LeadboardUtility::GetPlayerOwnRateRanking($rankInfo, $playerId, $seasonId);
+        $ownRankInfo = LeadboardUtility::GetPlayerOwnRateRanking($rankInfo, $playerId, $seasonId, $treshold);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;
 
         return $result;
     }
 
-    private function ConstructTotalRankInfo(array $seasonId, int $userId)
+    private function ConstructTotalRankInfo(array $seasonId, int $userId, $treshold = 1)
     {
-        $rankInfo = LeadboardUtility::GetUsersRateRanking($seasonId);
+        $rankInfo = LeadboardUtility::GetUsersRateRanking($seasonId, $treshold);
         //if( false === $rankInfo ) return false;
 
         $result = new stdClass;
         $result->rankInfo = false === $rankInfo ? [] : $rankInfo;
 
-        $ownRankInfo = LeadboardUtility::GetUserOwnRateRanking($rankInfo, $userId, $seasonId);
+        $ownRankInfo = LeadboardUtility::GetUserOwnRateRanking($rankInfo, $userId, $seasonId, $treshold);
         if( false !== $ownRankInfo ) $result->ownRank = $ownRankInfo;
 
         return $result;

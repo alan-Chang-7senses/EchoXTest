@@ -170,6 +170,14 @@ class SeasonRankingReward extends BaseWorker{
         return $func($seasonID, $lobby, $count);
     }
 
+    private function GetSeasonRankingRewardMailID(int $lobby) : int {
+
+        $config = ConfigGenerator::Instance();
+        $mailIDs = json_decode($config->SeasonRankingRewardMailID);
+        if (isset($mailIDs->{$lobby}) == false) return 0;
+        return $mailIDs->{$lobby};
+    }
+
     // 派獎
     private function Award(int $seasonID, int $lobby, int $recordType) : string {
         
@@ -187,6 +195,12 @@ class SeasonRankingReward extends BaseWorker{
             return 'failure, No Ranking Data';
         }
 
+        $rewardMailID = $this->GetSeasonRankingRewardMailID($lobby);
+        if($rewardMailID == 0)
+        {
+            return 'failure, Mail ID Is Not Exist';
+        }
+
 
         $config = ConfigGenerator::Instance();
         $mailsHandler = new MailsHandler();
@@ -198,7 +212,7 @@ class SeasonRankingReward extends BaseWorker{
         {
             $items = $rewards[$ranking->rank];
 
-            $userMailID = $mailsHandler->AddMail($ranking->userId, $config->SeasonRankingRewardMailID, $config->SeasonRankingRewardMailDay);
+            $userMailID = $mailsHandler->AddMail($ranking->userId, $rewardMailID, $config->SeasonRankingRewardMailDay);
             $mailsHandler->AddMailItems($userMailID, $items);
 
             echo '== Add MailItems completed.. UserMailID => '.$userMailID.' Items => '. json_encode($items).PHP_EOL;
