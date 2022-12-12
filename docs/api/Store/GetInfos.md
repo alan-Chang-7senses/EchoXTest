@@ -35,7 +35,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
-| sandboxes | object | 沙盒開關，見變數名稱 |
+| sandboxes | object | 沙盒開關，見範例變數名稱 |
 | currencies | array | 按[貨幣](#Currency)順序 |
 | autoRefreshTime | int | 自動刷新剩餘時間(s) |
 | stores | array | [商店資訊](#storeData) |
