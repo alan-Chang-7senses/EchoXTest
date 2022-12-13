@@ -39,8 +39,8 @@ class LeaderBoardRewardInfo extends BaseProcessor
 
         $rewards = $accessor->FromTable("SeasonRankingRewardNew")
             ->WhereIn("SeasonID", $leaderboardId)
-            ->SelectExpr("SeasonID, Rank, RewarID")
-            ->OrderBy(["SeasonID", "Rank"])
+            ->SelectExpr("SeasonID, 'Rank', RewarID")
+            ->OrderBy(["SeasonID", "'Rank'"])
             ->FetchAll();
         $accessor->ClearAll();
 
