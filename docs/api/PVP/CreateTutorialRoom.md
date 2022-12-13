@@ -5,6 +5,7 @@
 - 當玩家進入手引導競賽，可透過此功能來建立房間(空房)。
 - 需要完成登入驗證才可正常使用此API。
 - 當玩家未有房間狀態下，才可以進行建立。
+- 建立的房間一定是火星幣賽B(獎金平均)。
 
 ## URL
 
@@ -22,7 +23,6 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| lobby | int |  [大廳](../codes/race.md#lobby)<br>(不是晉級賽) |
 | version | string |  Photon版號 |
 
 ## Response
