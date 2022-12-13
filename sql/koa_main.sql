@@ -68,7 +68,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('StoreAutoRefreshTime', '00:00:00+08:00', '每日自動刷新商店內容的時間'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
 	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)'),
-	('TutorialRewards', '[{"Step":1, "ItemID":1003, "Amount":1}]', '新手引導獎勵'),
+	('TutorialRewards', '[{"Step":1, "RewarID":21}]', '新手引導獎勵'),
 	('TutorialSceneID', '4000', '新手引導賽場編號');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
