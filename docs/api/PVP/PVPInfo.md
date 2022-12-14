@@ -82,7 +82,7 @@ Content Type: `application/json`
                 "petaLimitLevel": 70,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
                 },
                 "scene": {
@@ -103,7 +103,7 @@ Content Type: `application/json`
                 "petaLimitLevel": 70,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
                 },
                 "scene": {
@@ -124,7 +124,7 @@ Content Type: `application/json`
                 "petaLimitLevel": 0,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
                 },
                 "scene": {
@@ -145,7 +145,7 @@ Content Type: `application/json`
                 "petaLimitLevel": 0,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
                 },
                 "scene": {
