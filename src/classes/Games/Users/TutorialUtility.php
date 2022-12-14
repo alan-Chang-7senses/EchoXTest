@@ -6,6 +6,7 @@ use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
 use Games\Consts\ItemValue;
 use Games\Consts\Tutorial;
+use Games\Users\RewardHandler;
 use Generators\ConfigGenerator;
 use stdClass;
 
@@ -33,7 +34,8 @@ class TutorialUtility {
         {
             if ($reward->Step == $curStep)
             {
-                $items[] = $reward;
+                $rewardHandler = new RewardHandler($reward->RewarID);
+                $items = array_values($rewardHandler->GetItems());
             }
         }
         return $items;
