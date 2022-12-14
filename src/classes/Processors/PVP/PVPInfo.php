@@ -6,6 +6,7 @@ use Consts\ErrorCode;
 use Consts\Sessions;
 use Games\Leadboards\LeadboardUtility;
 use Games\Pools\ItemInfoPool;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
@@ -39,11 +40,14 @@ class PVPInfo extends BaseRace {
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
-            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->GetSeasonIDByLobby($lobby));
+            $competitionsInfoHandler = CompetitionsInfoHandler::Instance($lobby);
+            $rankInfo = LeadboardUtility::GetPlayerOwnRateRanking(false,$this->userInfo->player,$qualifyingHandler->GetSeasonIDByLobby($lobby),$competitionsInfoHandler->GetInfo()->treshold);
+            // if(empty($rankInfo->playCount)) $rankInfo->rate = $competitionsInfoHandler->GetPlayerRating($this->userInfo->player,$qualifyingHandler->GetSeasonIDByLobby($lobby));
             $lobbyinfo->rank = new stdClass();
             $lobbyinfo->rank->playCount = $rankInfo->playCount;
-            $lobbyinfo->rank->leadRate = $rankInfo->leadRate;
-            $lobbyinfo->rank->ranking = $rankInfo->ranking;
+            $lobbyinfo->rank->rate = $rankInfo->rate;
+            $lobbyinfo->rank->ranking = $rankInfo->rank;
+
 
             $lobbyinfo->scene = [
                 'id' => $sceneInfo->id,

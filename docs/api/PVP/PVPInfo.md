@@ -50,7 +50,7 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | playCount | int | 參賽次數 |
-| leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
+| rate | float | 積分 |
 | ranking | int | 排行榜名次 |
 |
 
