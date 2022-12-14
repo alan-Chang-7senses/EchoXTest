@@ -103,24 +103,6 @@ class UpgradeValue
         ],
     ];
     
-    const RankUpItemValue = 
-    [
-        PlayerAttr::Fire => 
-        [
-            self::Dust => ItemValue::EffectFireUp,
-            self::Crystal => ItemValue::EffectFireUpHigh,
-        ],
-        PlayerAttr::Water => 
-        [
-            self::Dust => ItemValue::EffectWaterUp,
-            self::Crystal => ItemValue::EffectWaterUpHigh,
-        ],
-        PlayerAttr::Wood => 
-        [
-            self::Dust => ItemValue::EffectWoodUp,
-            self::Crystal => ItemValue::EffectWoodUpHigh,
-        ],
-    ];
 
     const SkillLevelLimit = 
     [
