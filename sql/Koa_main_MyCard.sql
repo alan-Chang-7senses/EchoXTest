@@ -12,7 +12,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
+	('MyCardRestoreQueryTime', '1200', 'MyCard補儲查詢時間(秒),小於31天');	
+	
 -- 傾印  資料表 koa_main.StorePurchaseOrders 結構
+DROP TABLE IF EXISTS `StorePurchaseOrders`;
 CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `OrderID` varchar(250) NOT NULL DEFAULT '' COMMENT '訂單編號',
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
@@ -23,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `Message` varchar(250) NOT NULL DEFAULT '' COMMENT '狀態資訊',
-  `Receipt` varchar(256) DEFAULT NULL COMMENT '收據orAuthCode',
-  `MyCardTradeNo` varchar(256) DEFAULT NULL COMMENT 'MyCard序號',
+  `Receipt` varchar(256) DEFAULT NULL COMMENT '收據或MyCard序號',
+  `AuthCode` varchar(256) DEFAULT NULL COMMENT 'MyCard AuthCode',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`OrderID`),
