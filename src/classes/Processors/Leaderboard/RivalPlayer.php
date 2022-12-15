@@ -42,7 +42,7 @@ class RivalPlayer extends BaseRivalPlayer {
         $playerInfo = (new PlayerHandler($playerID))->GetInfo();
 
         $qualifyingHandler = new QualifyingHandler();
-        $seasonID = 2;//$qualifyingHandler->GetSeasonIDByLobby($lobby);
+        $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
         $recordType = $qualifyingHandler->GetRecordTypeBySeasonID($seasonID);
 
         $treshold = CompetitionsInfoHandler::Instance($lobby)->GetInfo()->treshold;
