@@ -2,6 +2,7 @@
 
 namespace Games\PVP;
 
+use Games\Accessors\AccessorFactory;
 use Games\Consts\CompetitionsValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\CompetitionsInfoPool;
@@ -87,4 +88,28 @@ class CompetitionsInfoHandler
         $rt = $oldRating * ($this->info->resetRate / CompetitionsValue::ResetRateDivisor);
         return max(intval($rt),$this->info->minRatingReset);
     }
+
+    /**取得當前賽季積分。無法取得過去的賽季積分 */
+    public function GetPlayerRating(int $playerID, int $currentSeasonID) : int
+    {
+        $accessor = AccessorFactory::Main();
+        
+        $lobby = $this->info->lobby;
+        $row = $accessor->executeBindFetch(
+            'SELECT Rating,SeasonID FROM LeaderboardRating
+             WHERE Lobby = '.$lobby.
+           ' AND PlayerID = '.$playerID.
+           ' AND UpdateTime = ( SELECT MAX(UpdateTime) 
+                                FROM LeaderboardRating 
+                                WHERE Lobby = '.$lobby.' AND PlayerID = '.$playerID.')
+            ',[]);
+        //從沒比過此賽制。獲得基礎積分
+        if($row === false) return $this->GetResetRating(null);
+        //此賽季有比過。直接獲得當下積分
+        if($row->SeasonID == $currentSeasonID) return $row->Rating;
+        //有比過此賽制，沒比過此賽季。獲得重置分數
+        return $this->GetResetRating($row->Rating);
+    }
+
+
 }

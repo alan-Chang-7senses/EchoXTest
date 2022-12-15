@@ -101,18 +101,8 @@ abstract class BasePVPMatch extends BaseProcessor {
             $seasonID = $qualifyingHandler->GetSeasonIDByLobby($lobby);
 
             $this->competitionsInfo = CompetitionsInfoHandler::Instance($lobby)->GetInfo();
-            $accessor->ClearCondition();
-            $row = $accessor->FromTable('LeaderboardRating')
-                    ->WhereEqual('PlayerID', $userInfo->Player)
-                    ->WhereEqual('SeasonID', $seasonID)
-                    ->WhereEqual('Lobby', $lobby)
-                    ->Fetch();
 
-            if (empty($row)) {
-                $rating = RaceUtility::GetSeasonResetRating($lobby,$userInfo->Player);
-            } else {
-                $rating = $row->Rating;
-            }
+            $rating = CompetitionsInfoHandler::Instance($lobby)->GetPlayerRating($userInfo->Player,$seasonID);
 
             $lowbound = $rating - $this->competitionsInfo->matchingRange;
             $upbound = $rating + $this->competitionsInfo->matchingRange;
