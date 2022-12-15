@@ -46,8 +46,8 @@ class Buy extends BaseBuy {
         $productInfo = $productInfos->{$rowInfo->ISOCurrency};
         $authResult = MyCardUtility::AuthGlobal($orderID, $rowInfo->Device, $this->userID, $productInfo, $productName);
         $accessor->ClearAll()->FromTable("StorePurchaseOrders")->WhereEqual('OrderID', $orderID)->Modify([
-            "Receipt" => $authResult->AuthCode,
-            "MyCardTradeNo" => $authResult->MyCardTradeNo,
+            "Receipt" => $authResult->TradeSeq,
+            "AuthCode" => $authResult->AuthCode,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
         $result = new ResultData(ErrorCode::Success);
