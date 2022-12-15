@@ -5,6 +5,7 @@ use Consts\ErrorCode;
 use Consts\Sessions;
 
 use Games\Accessors\UserAccessor;
+use Games\Accessors\AccessorFactory;
 use Games\Users\UserHandler;
 use Games\Users\TutorialUtility;
 use Games\Pools\UserPool;
@@ -32,9 +33,16 @@ class UpdateTutorialStep extends BaseProcessor{
         {
             TutorialUtility::AddRewards($userID, $tutorial->rewardItems);
 
-            $userAccessor = new UserAccessor();
-            $userAccessor->ModifyUserValuesByID($userID, ["Tutorial" => $tutorial->nextStep]);
-            UserPool::Instance()->Delete($userID);
+            $nextStep = $tutorial->nextStep;
+
+            $accessor = AccessorFactory::Main();
+            
+            $accessor->Transaction(function () use ($accessor, $userID, $nextStep) {
+                $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
+                if($row === false)return; //角色不在User表
+                $accessor->Modify(['Tutorial' => $nextStep]);
+                UserPool::Instance()->Delete($userID);
+            });
         }        
         
         $result = new ResultData(ErrorCode::Success);
