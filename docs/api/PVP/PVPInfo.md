@@ -42,6 +42,7 @@ Content Type: `application/json`
 | ticketAmount | int | 入場卷已有物品數量 |
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [rank](#rank) | object | 排行榜資訊 |
+| [simplePlayer](#simplePlayer) | object | 角色受等級影響過後的簡易數值 |
 | [scene](#scene) | object | 場景資訊 |
 | seasonRemainTime | int | 剩餘賽季時間(秒) |
 <br>
@@ -50,9 +51,20 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | playCount | int | 參賽次數 |
-| leadRate | float | 領先率百分比之數值<br>例如 12.34 代表領先率為「12.34%」 |
+| rate | float | 積分 |
 | ranking | int | 排行榜名次 |
-|
+<br>
+
+#### <span id="simplePlayer">simplePlayer 角色資訊</span>
+| 名稱 | 類型 | 說明 |
+|:-:|:-:|:-:|
+| velocity | int | 速度 |
+| stamina | int | 耐力 |
+| intelligent | int | 聰慧 |
+| breakOut | int | 爆發 |
+| will | int | 鬥志 |
+| skillLevel | int | 技能等級 |
+
 
 #### <span id="scene">scene 內容</span>
 
@@ -78,86 +90,118 @@ Content Type: `application/json`
             {
                 "lobby": 1,
                 "ticketIcon": "ItemIcon_0032",
-                "ticketAmount": 30,
-                "petaLimitLevel": 70,
+                "ticketAmount": 2241,
+                "petaLimitLevel": 1,
                 "rank": {
-                    "playCount": 0,
-                    "leadRate": 0,
-                    "ranking": 0
+                    "playCount": 3,
+                    "rate": 1509,
+                    "ranking": 1
+                },
+                "simplePlayer": {
+                    "velocity": 112.49,
+                    "stamina": 112.49,
+                    "intelligent": 112.49,
+                    "breakOut": 112.49,
+                    "will": 112.49,
+                    "skillLevel": 1
                 },
                 "scene": {
-                    "id": 1001,
-                    "name": "9001",
+                    "id": 1002,
+                    "name": "9003",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 4,
+                    "weather": 1,
+                    "windDirection": 2,
                     "windSpeed": 25,
-                    "lighting": 2
+                    "lighting": 1
                 },
-                "seasonRemainTime": 217086
+                "seasonRemainTime": 476410010
             },
             {
                 "lobby": 4,
                 "ticketIcon": "ItemIcon_0032",
-                "ticketAmount": 30,
-                "petaLimitLevel": 70,
+                "ticketAmount": 2241,
+                "petaLimitLevel": 1,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
+                },
+                "simplePlayer": {
+                    "velocity": 112.49,
+                    "stamina": 112.49,
+                    "intelligent": 112.49,
+                    "breakOut": 112.49,
+                    "will": 112.49,
+                    "skillLevel": 1
                 },
                 "scene": {
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 4,
+                    "weather": 1,
+                    "windDirection": 3,
                     "windSpeed": 25,
-                    "lighting": 2
+                    "lighting": 1
                 },
-                "seasonRemainTime": 44286
+                "seasonRemainTime": 476410010
             },
             {
                 "lobby": 2,
                 "ticketIcon": "ItemIcon_0041",
-                "ticketAmount": 0,
-                "petaLimitLevel": 0,
+                "ticketAmount": 2239,
+                "petaLimitLevel": 100,
                 "rank": {
-                    "playCount": 0,
-                    "leadRate": 0,
-                    "ranking": 0
+                    "playCount": 5,
+                    "rate": 1515,
+                    "ranking": 1
+                },
+                "simplePlayer": {
+                    "velocity": 143.01,
+                    "stamina": 144.61,
+                    "intelligent": 144.61,
+                    "breakOut": 144.61,
+                    "will": 144.61,
+                    "skillLevel": 5
                 },
                 "scene": {
-                    "id": 1001,
-                    "name": "9001",
+                    "id": 1002,
+                    "name": "9003",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 4,
+                    "weather": 1,
+                    "windDirection": 2,
                     "windSpeed": 25,
-                    "lighting": 2
+                    "lighting": 1
                 },
-                "seasonRemainTime": 217086
+                "seasonRemainTime": 476410010
             },
             {
                 "lobby": 5,
                 "ticketIcon": "ItemIcon_0041",
-                "ticketAmount": 0,
-                "petaLimitLevel": 0,
+                "ticketAmount": 2239,
+                "petaLimitLevel": 100,
                 "rank": {
                     "playCount": 0,
-                    "leadRate": 0,
+                    "rate": 0,
                     "ranking": 0
+                },
+                "simplePlayer": {
+                    "velocity": 143.01,
+                    "stamina": 144.61,
+                    "intelligent": 144.61,
+                    "breakOut": 144.61,
+                    "will": 144.61,
+                    "skillLevel": 5
                 },
                 "scene": {
                     "id": 1001,
                     "name": "9001",
                     "env": 1,
-                    "weather": 2,
-                    "windDirection": 4,
+                    "weather": 1,
+                    "windDirection": 3,
                     "windSpeed": 25,
-                    "lighting": 2
+                    "lighting": 1
                 },
-                "seasonRemainTime": 44286
+                "seasonRemainTime": 476410010
             }
         ]
     }
