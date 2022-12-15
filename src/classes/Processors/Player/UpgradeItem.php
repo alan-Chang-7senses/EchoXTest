@@ -93,8 +93,9 @@ class UpgradeItem extends BaseProcessor{
         $remain = $userInfo->coin - $costTotal;
         $accessor = AccessorFactory::Main();
         $accessor->Transaction(function () use ($accessor, $userID, $remain) {
-            $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify(['coin' => $remain]);
+            $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
             if($row === false)return; //角色不在User表
+            $accessor->Modify(['coin' => $remain]);
             UserPool::Instance()->Delete($userID);
         });
         

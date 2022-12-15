@@ -38,8 +38,9 @@ class UpdateTutorialStep extends BaseProcessor{
             $accessor = AccessorFactory::Main();
             
             $accessor->Transaction(function () use ($accessor, $userID, $nextStep) {
-                $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->Modify(['Tutorial' => $nextStep]);
+                $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
                 if($row === false)return; //角色不在User表
+                $accessor->Modify(['Tutorial' => $nextStep]);
                 UserPool::Instance()->Delete($userID);
             });
         }        
