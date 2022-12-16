@@ -74,6 +74,7 @@ class UpgradeSkill extends BaseProcessor{
         $itemsToDelete = [];
         foreach($requireItemIDAmounts as $itemID => $amount)
         {
+            if($amount <= 0)continue;
             $item = new stdClass();
             $item->ItemID = $itemID;
             $item->Amount = $amount;

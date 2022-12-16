@@ -76,6 +76,7 @@ class RankUp extends BaseProcessor{
         // 扣道具
         foreach($searchItems as $itemID => $amount)
         {
+            if($amount <= 0)continue;
             $item = new stdClass();
             $item->ItemID = $itemID;
             $item->Amount = $amount;

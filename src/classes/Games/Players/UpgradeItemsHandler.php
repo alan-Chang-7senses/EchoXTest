@@ -27,7 +27,8 @@ class UpgradeItemsHandler
         foreach($this->info->items as $item)
         {
             foreach($item as $itemID => $amount)
-            if(!empty($amount)) $rt[$itemID] = $amount;
+            // if(!empty($amount))
+            $rt[$itemID] = $amount;
         }
         return $rt;
     }
