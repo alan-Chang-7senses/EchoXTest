@@ -127,7 +127,7 @@ abstract class BaseLaunchSkill extends BaseRace{
                 $racePlayerHandler = new RacePlayerHandler($racePlayerID);
                 $racePlayerInfo = $racePlayerHandler->GetInfo();
                 
-                if($racePlayerInfo->status == RaceValue::StatusReach || $racePlayerInfo->status == RaceValue::StatusGiveUp) continue;
+                if($racePlayerInfo->status == RaceValue::StatusReach) continue;
                 
                 $racePlayerhandlerAll[$playerID] = $racePlayerHandler;
 
@@ -168,12 +168,14 @@ abstract class BaseLaunchSkill extends BaseRace{
                     $selfBinds[] = RaceUtility::BindRacePlayerEffect($racePlayerIDSelf, $type, $value, $currentTime, $endTime);
                 
                 }elseif($target == SkillValue::TargetOthers){
-                    
-                    foreach ($racePlayerHandlers[SkillValue::TargetOthers] as $handler) {
-                        $info = $handler->GetInfo();
-                        $endTime = $this->DeterminOtherTargetExpireTime($info,$skillInfo,$endTime);
-                        $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
-                        $racePlayerHandlerOthers[$info->player] = $handler;
+                    if(isset($racePlayerHandlers[SkillValue::TargetOthers]))
+                    {
+                        foreach ($racePlayerHandlers[SkillValue::TargetOthers] as $handler) {
+                            $info = $handler->GetInfo();
+                            $endTime = $this->DeterminOtherTargetExpireTime($info,$skillInfo,$endTime);
+                            $otherBinds[$info->id][] = RaceUtility::BindRacePlayerEffect($info->id, $type, $value, $currentTime, $endTime);
+                            $racePlayerHandlerOthers[$info->player] = $handler;
+                        }
                     }
                     
                 }elseif(isset($racePlayerHandlers[$target])){
