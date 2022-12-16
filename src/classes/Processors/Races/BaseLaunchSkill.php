@@ -127,7 +127,7 @@ abstract class BaseLaunchSkill extends BaseRace{
                 $racePlayerHandler = new RacePlayerHandler($racePlayerID);
                 $racePlayerInfo = $racePlayerHandler->GetInfo();
                 
-                if($racePlayerInfo->status == RaceValue::StatusReach) continue;
+                if($racePlayerInfo->status == RaceValue::StatusReach || $racePlayerInfo->status == RaceValue::StatusGiveUp) continue;
                 
                 $racePlayerhandlerAll[$playerID] = $racePlayerHandler;
 
