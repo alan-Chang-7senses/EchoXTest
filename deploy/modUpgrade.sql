@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `SkillUpgradeItems` (
   `ChipAmount` int(11) NOT NULL DEFAULT 0 COMMENT '晶片數量',
   `CoinCost` int(11) NOT NULL DEFAULT 0 COMMENT '火星幣花費',
   PRIMARY KEY (`Serial`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='技能升級所需物品資訊。';
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='技能升級所需物品資訊。';
 
--- 正在傾印表格  koa_static.SkillUpgradeItems 的資料：~28 rows (近似值)
+-- 正在傾印表格  koa_static.SkillUpgradeItems 的資料：~32 rows (近似值)
 INSERT INTO `SkillUpgradeItems` (`Serial`, `UpgradeLevel`, `SpecieCode`, `BaseItemID`, `BaseItemAmount`, `ChipItemID`, `ChipAmount`, `CoinCost`) VALUES
 	(1, 2, 11, 2000, 10, 2011, 0, 250),
 	(2, 3, 11, 2000, 15, 2011, 0, 2750),
@@ -67,4 +67,8 @@ INSERT INTO `SkillUpgradeItems` (`Serial`, `UpgradeLevel`, `SpecieCode`, `BaseIt
 	(25, 2, 0, 2000, 10, 2001, 0, 250),
 	(26, 3, 0, 2000, 15, 2001, 0, 2750),
 	(27, 4, 0, 2000, 0, 2001, 10, 5950),
-	(28, 5, 0, 2000, 0, 2001, 15, 6250);
+	(28, 5, 0, 2000, 0, 2001, 15, 6250),
+	(29, 2, 18, 2000, 10, 2002, 0, 250),
+	(30, 3, 18, 2000, 15, 2002, 0, 2750),
+	(31, 4, 18, 2000, 0, 2002, 10, 5950),
+	(32, 5, 18, 2000, 0, 2002, 15, 6250);
