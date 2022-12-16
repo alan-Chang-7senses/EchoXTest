@@ -8,7 +8,7 @@ use stdClass;
 
 class UpgradeItemsHandler
 {
-    private stdClass $info;
+    private stdClass|false $info;
 
     public function __construct(int $level, int $type, PoolAccessor $pool)
     {

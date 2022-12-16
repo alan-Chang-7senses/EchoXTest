@@ -49,10 +49,10 @@ class UpgradeSkill extends BaseProcessor{
         if($skillLevel >= $levelLimit)
         throw new PlayerException(PlayerException::SkillLevelMax,['playerID' => $playerID,'skillID' => $skillID]);
 
-        $chipID = UpgradeUtility::GetSkillUpgradeChipID($skillID);
-        $requireItemIDAmounts = UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);
+        $upgradeInfo = UpgradeUtility::GetSkillUpgradeRequire($skillLevel,$skillID,$playerID);
+        $requireItemIDAmounts = $upgradeInfo->items;
 
-        $charge = UpgradeValue::SkillUpgradeCharge[$skillLevel];
+        $charge = $upgradeInfo->coin;
         //檢查金幣是否足夠
         if($userInfo->coin < $charge)
         throw new UserException(UserException::UserCoinNotEnough,['userID' => $userID]);
@@ -98,9 +98,9 @@ class UpgradeSkill extends BaseProcessor{
             $results->hasNextLevelReachLimit = true;
             return $results;
        }
-       $chipID = UpgradeUtility::GetSkillUpgradeChipID($skillID);
-       $requireItemIDAmounts = UpgradeUtility::GetSkillUpgradeRequireItems($results->currentLevel,$chipID);
-       $chargeRequired = UpgradeValue::SkillUpgradeCharge[$results->currentLevel];
+       $upgradeInfo = UpgradeUtility::GetSkillUpgradeRequire($results->currentLevel,$skillID,$playerID);
+       $requireItemIDAmounts = $upgradeInfo->items;
+       $chargeRequired = $upgradeInfo->coin;
        
        foreach($requireItemIDAmounts as $itemID => $amount)
        {

@@ -62,46 +62,6 @@ class UpgradeValue
 
     const SkillRankUnit = 1;
 
-    const RankUpItem = 
-    [
-        PlayerAttr::Fire => 
-        [
-            self::Dust => self::ItemIDSilverDust,
-            self::Crystal => self::ItemIDSilverCrystal,
-        ],
-        PlayerAttr::Water => 
-        [
-            self::Dust => self::ItemIDSunDust,
-            self::Crystal => self::ItemIDSunCrystal
-        ],
-        PlayerAttr::Wood => 
-        [
-            self::Dust => self::ItemIDStarDust,
-            self::Crystal => self::ItemIDStarCrystal
-        ],
-    ];
-
-    const RankUpItemAmount = 
-    [
-        self::RankUpFirst => 
-        [
-            'dustAmount' => 250,
-            'crystalAmount' => 0,
-            'charge' => 2500,
-        ],
-        self::RankUpSecond => 
-        [
-            'dustAmount' => 1000,
-            'crystalAmount' => 120,
-            'charge' => 8500,
-        ],
-        self::RankUpThird => 
-        [
-            'dustAmount' => 1500,
-            'crystalAmount' => 150,
-            'charge' => 5950,
-        ],
-    ];
     
 
     const SkillLevelLimit = 
@@ -112,48 +72,5 @@ class UpgradeValue
         self::RankUpForth => 5,
         5 => 5,//並不確定有無五階，先寫上。
     ];
-
-    const SkillUpgradeCharge = 
-    [
-        self::SkillUpgradeFirst => 250,
-        self::SkillUpgradeSecond => 2750,
-        self::SkillUpgradeThird => 5950,
-        self::SkillUpgradeForth => 6250,
-    ];
-
-
-    const SkillUpgradeItemAmount = 
-    [
-        self::SkillUpgradeFirst => 
-        [
-            self::BlueBerryRock => 10,
-        ],
-        self::SkillUpgradeSecond => 
-        [
-            self::BlueBerryRock => 15,
-        ],
-        self::SkillUpgradeThird => 
-        [
-            self::Chip => 10,
-        ],
-        self::SkillUpgradeForth => 
-        [
-            self::Chip => 15,
-        ],
-    ];
-
-    const SkillUpgradeSpeciesItem = 
-    [
-        SpeciesValue::LionDNA => self::ItemIDChipLion,
-        SpeciesValue::DeerDNA => self::ItemIDChipDeer,
-        SpeciesValue::FoxDNA => self::ItemIDChipFox,
-        SpeciesValue::CatDNA => self::ItemIDChipCat,
-        SpeciesValue::TigerDNA => self::ItemIDChipTiger,
-        SpeciesValue::DogDNA => self::ItemIDChipDog,
-        SpeciesValue::MokeyDNA => self::ItemIDChipMokey,
-        self::SkillUpOther => self::ItemIDChipSpecial,
-    ];
-
-    
 
 }
