@@ -96,13 +96,14 @@ abstract class BasePlayerValues extends BaseRace{
         
         $result = new ResultData(ErrorCode::Success);
         $result->h = $raceHandler->ValueH();
+        $result->hp = RaceHP::Instance()->UpdateHP($raceInfo->racePlayers->$playerID,$result->h) / RaceValue::DivisorHP;
+        $raceHandler->SetPlayer($playerHandler);
         $result->s = $raceHandler->ValueS();
         $result->energy = $racePlayerHandler->GetInfo()->energy;
         $result->maxHP = $playerHandler->GetInfo()->stamina;
         
         
         $result->distance = RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance);        
-        $result->hp = RaceHP::Instance()->UpdateHP($raceInfo->racePlayers->$playerID,$result->h) / RaceValue::DivisorHP;
 
         //        if (RaceVerifyHandler::Instance()->PlayerValues($raceInfo->racePlayers->$playerID, $result->s, $distance) == RaceVerifyValue::VerifyCheat) {
             //            if ($this->userInfo->player === $playerID)//API:PlayerValues;  HostPlayerValue:不處理
