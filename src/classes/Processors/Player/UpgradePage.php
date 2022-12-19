@@ -7,7 +7,6 @@ use Consts\Sessions;
 use Games\Consts\PlayerValue;
 use Games\Exceptions\UserException;
 use Games\Players\Exp\PlayerEXP;
-use Games\Players\PlayerAbility;
 use Games\Players\PlayerHandler;
 use Games\Players\UpgradeData;
 use Games\Players\UpgradeUtility;

@@ -13,7 +13,9 @@ use Games\Exceptions\ItemException;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Players\UpgradeItemsHandler;
 use Games\Pools\PlayerPool;
+use Games\Pools\RankUpItemsPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -44,24 +46,17 @@ class RankUp extends BaseProcessor{
         if(PlayerValue::RankMaxLevel[$playerInfo->rank] != $playerInfo->level)
         throw new PlayerException(PlayerException::NotReachMaxLevelYet,['playerID' => $playerID]);
 
-        $dustItemID = UpgradeValue::RankUpItem[$playerInfo->ele][UpgradeValue::Dust];
-        $crystalItemID = UpgradeValue::RankUpItem[$playerInfo->ele][UpgradeValue::Crystal];
 
         
-        $amountInfo = UpgradeValue::RankUpItemAmount[$playerInfo->rank];
-        $dustAmount = $amountInfo['dustAmount'];
-        $crystalAmount = $amountInfo['crystalAmount'];
-        $charge = $amountInfo['charge'];
+        $upgradeHandler = new UpgradeItemsHandler($playerInfo->rank + 1, $playerInfo->ele,RankUpItemsPool::Instance());
+
+        $charge = $upgradeHandler->GetCoinCost();
 
         
         if($userInfo->coin < $charge)
         throw new UserException(UserException::UserCoinNotEnough,['userID' => $userID]);
 
-        $searchItems = 
-        [
-            $dustItemID => $dustAmount,
-            $crystalItemID => $crystalAmount,
-        ];
+        $searchItems = $upgradeHandler->GetUpgradeItems();
 
         //檢驗數量是否足夠
         foreach($searchItems as $itemID => $amount)
@@ -79,21 +74,15 @@ class RankUp extends BaseProcessor{
         $userHandler->SaveData(['coin' => $userInfo->coin - $charge]);
         
         // 扣道具
-        if($dustAmount > 0)
+        foreach($searchItems as $itemID => $amount)
         {
-            $itemTemp = new stdClass();
-            $itemTemp->ItemID = $dustItemID;
-            $itemTemp->Amount = $dustAmount;
-            $userBagHandler->DecItems($itemTemp,ItemValue::CauseRankUp);
+            if($amount <= 0)continue;
+            $item = new stdClass();
+            $item->ItemID = $itemID;
+            $item->Amount = $amount;
+            $userBagHandler->DecItems($item,ItemValue::CauseRankUp);
         }
-        if($crystalAmount > 0)
-        {
-            $itemTemp = new stdClass();
-            $itemTemp->ItemID = $crystalItemID;
-            $itemTemp->Amount = $crystalAmount;
-            $userBagHandler->DecItems($itemTemp,ItemValue::CauseRankUp);
-        }
-        // (new GameLogAccessor())->AddUpgradeLog($playerID,null,null,-$charge,null,null,UpgradeValue::RankUnit);
+
         (new UpgradeLogAccessor())->AddUpgradeRankLog($playerID,$charge,UpgradeValue::RankUnit);
         $results = new ResultData(ErrorCode::Success);
         return $results;

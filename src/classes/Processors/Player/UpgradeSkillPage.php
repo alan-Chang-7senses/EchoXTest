@@ -42,8 +42,8 @@ class UpgradeSkillPage extends BaseProcessor{
             $skillLevel = $playerhandler->SkillLevel($skillInfo->id);
             $skillHandler->playerHandler = $playerhandler;
             $hasReachedRankMax = $skillLevel >= $levelLimit;
-            $chipID = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeChipID($skillInfo->id);            
-            $requireItemIDs = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequireItems($skillLevel,$chipID);            
+            $requireInfo = $hasReachedRankMax ? null : UpgradeUtility::GetSkillUpgradeRequire($skillLevel,$skill->id,$playerID);
+            $requireItemIDs = $requireInfo->items ?? [];
             $itemInfos = [];
             $isEnough = false;
             if(!empty($requireItemIDs))
@@ -60,8 +60,8 @@ class UpgradeSkillPage extends BaseProcessor{
             [
                 'id' => $skillInfo->id,
                 'hasReachedLimit' => $hasReachedRankMax,
-                'requireCoin' => $hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel],
-                'isCoinEnough' =>$hasReachedRankMax ? null : UpgradeValue::SkillUpgradeCharge[$skillLevel] <= $userInfo->coin,
+                'requireCoin' => $hasReachedRankMax ? null : $requireInfo->coin,
+                'isCoinEnough' =>$hasReachedRankMax ? null : $requireInfo->coin <= $userInfo->coin,
                 'itemInfos' => $hasReachedRankMax ? null : $itemInfos,
                 'isRequireItemEnough' =>$hasReachedRankMax ? null : $isEnough,
                 'name' => $skillInfo->name,
