@@ -247,5 +247,6 @@ class SeasonRankingReward extends BaseWorker{
         echo '== update table QualifyingSeasonData column Assign => 1'.PHP_EOL;
 
         return 'success, award '.count($rankings).' times for this season';
+        
     }
 }
