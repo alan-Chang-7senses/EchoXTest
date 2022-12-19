@@ -12,6 +12,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+USE `koa_main`;
+
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('MyCardRestoreQueryTime', '1200', 'MyCard補儲查詢時間(秒),小於31天');	
 	
@@ -38,6 +40,9 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='儲值訂單資訊';
 
 -- 取消選取資料匯出。
+
+ALTER TABLE `RaceRooms`
+	CHANGE COLUMN `Version` `Version` VARCHAR(100) NOT NULL DEFAULT '0' COMMENT 'Photon版本' COLLATE 'utf8mb4_general_ci' AFTER `Lobby`;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
