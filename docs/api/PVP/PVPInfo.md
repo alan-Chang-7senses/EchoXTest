@@ -40,7 +40,7 @@ Content Type: `application/json`
 | lobby | int | [大廳種類](../codes/race.md#lobby) |
 | ticketIcon | string | 入場卷物品圖號 |
 | ticketAmount | int | 入場卷已有物品數量 |
-| petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
+| petaLimitLevel | int | Peta指定等級<br>(0代表不指定) |
 | [rank](#rank) | object | 排行榜資訊 |
 | [simplePlayer](#simplePlayer) | object | 角色受等級影響過後的簡易數值 |
 | [scene](#scene) | object | 場景資訊 |
@@ -51,19 +51,19 @@ Content Type: `application/json`
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | playCount | int | 參賽次數 |
-| rate | float | 積分 |
+| rate | int | 積分 |
 | ranking | int | 排行榜名次 |
 <br>
 
 #### <span id="simplePlayer">simplePlayer 角色資訊</span>
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| velocity | int | 速度 |
-| stamina | int | 耐力 |
-| intelligent | int | 聰慧 |
-| breakOut | int | 爆發 |
-| will | int | 鬥志 |
-| skillLevel | int | 技能等級 |
+| velocity | float | 速度 |
+| stamina | float | 耐力 |
+| intelligent | float | 聰慧 |
+| breakOut | float | 爆發 |
+| will | float | 鬥志 |
+| skillLevel | int | 指定技能等級(0代表不指定) |
 
 
 #### <span id="scene">scene 內容</span>

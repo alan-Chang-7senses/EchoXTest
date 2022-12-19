@@ -21,4 +21,5 @@ class PlayerException extends NormalException{
     const NotReachMaxLevelYet = 3008;
 
     const SkillLevelMax = 3009;
+    const NoUpgradeData = 3010;
 }

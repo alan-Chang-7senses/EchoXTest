@@ -295,7 +295,6 @@ class StoreHandler {
             "Amount" => $storePurchaseHolder->amount,
             "Plat" => $plat,
             "Status" => StoreValue::PurchaseStatusProcessing,
-            "Receipt" => "",
             "CreateTime" => $nowtime,
             "UpdateTime" => $nowtime
         ]);
@@ -314,38 +313,4 @@ class StoreHandler {
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
-
-//    public function VerrifyProduct(stdclass|StorePurchaseOrdersHolder $storePurchaseOrdersHolder): bool {
-//
-//        if ($storePurchaseOrdersHolder->Status == StoreValue::PurchaseStatusFinish) {
-//            return true;
-//        }
-//
-//        if ($storePurchaseOrdersHolder->Status != StoreValue::PurchaseStatusProcessing) {
-//            return false;
-//        }
-//
-//        if (empty($storePurchaseOrdersHolder->Receipt)) {
-//            return false;
-//        }
-//
-//        if ($storePurchaseOrdersHolder->Plat == StoreValue::PlatMyCard) {
-//            $result = PurchaseUtility::MyCardVerify($this->userID, $storePurchaseOrdersHolder->Receipt);
-//        } else {
-//            return false;
-//        }
-//
-//        $orderID = $storePurchaseOrdersHolder->OrderID;
-//
-//        if ($result == StoreValue::PurchaseVerifySuccess) {
-//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFinish);
-//            //加物品
-//            $userBagHandler = new UserBagHandler($this->userID);
-//            $additem = ItemUtility::GetBagItem($storePurchaseOrdersHolder->ItemID, $storePurchaseOrdersHolder->Amount);
-//            $userBagHandler->AddItems($additem, ItemValue::CauseStore);
-//        } else if ($result == StoreValue::PurchaseVerifyFailure) {
-//            $this->UpdatePurchaseOrderStatus($orderID, StoreValue::PurchaseStatusFailure);
-//        }
-//        return true;
-//    }
 }

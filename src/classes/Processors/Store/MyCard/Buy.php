@@ -44,9 +44,10 @@ class Buy extends BaseBuy {
         }
 
         $productInfo = $productInfos->{$rowInfo->ISOCurrency};
-        $authCode = MyCardUtility::AuthGlobal($orderID, $rowInfo->Device, $this->userID, $productInfo, $productName);
+        $authResult = MyCardUtility::AuthGlobal($orderID, $rowInfo->Device, $this->userID, $productInfo, $productName);
         $accessor->ClearAll()->FromTable("StorePurchaseOrders")->WhereEqual('OrderID', $orderID)->Modify([
-            "Receipt" => $authCode->AuthCode,
+            "Receipt" => $authResult->TradeSeq,
+            "AuthCode" => $authResult->AuthCode,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
         $result = new ResultData(ErrorCode::Success);
@@ -54,9 +55,9 @@ class Buy extends BaseBuy {
 
         if ($rowInfo->Device == StoreValue::DeviceiOS) {
             $result->AuthCode = "";
-            $result->TransactionUrl = $authCode->TransactionUrl;
+            $result->TransactionUrl = $authResult->TransactionUrl;
         } else {
-            $result->AuthCode = $authCode->AuthCode;
+            $result->AuthCode = $authResult->AuthCode;
             $result->TransactionUrl = "";
         }
         return $result;

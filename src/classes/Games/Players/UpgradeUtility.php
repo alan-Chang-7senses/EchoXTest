@@ -2,51 +2,60 @@
 
 namespace Games\Players;
 
-use Accessors\PDOAccessor;
-use Consts\EnvVar;
+use Games\Accessors\AccessorFactory;
 use Games\Consts\AbilityFactor;
 use Games\Consts\NFTDNA;
-use Games\Consts\UpgradeValue;
+use Games\Consts\PlayerValue;
 use Games\Players\Holders\PlayerBaseInfoHolder;
 use Games\Pools\ItemInfoPool;
+use Games\Pools\SkillUpgradeItemsPool;
 use stdClass;
 
 class UpgradeUtility
 {
-    public static function GetSkillUpgradeChipID(int $skillID) : string|int
+    const SkillPartDNAColumns = 
+    [
+        PlayerValue::Head => 'HeadDNA',
+        PlayerValue::Body => 'BodyDNA',
+        PlayerValue::Hand => 'HandDNA',
+        PlayerValue::Leg => 'LegDNA',
+        PlayerValue::Back => 'BackDNA',
+        PlayerValue::Hat => 'HatDNA',
+    ];
+
+    public static function GetSkillUpgradeRequire(int $skillLevel,int $skillID,int $playerID) : stdClass
     {
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
-        $skillRow = $accessor->FromTable('SkillInfo')
-                        ->WhereEqual('SkillID',$skillID)
-                        ->Fetch();
-
-
-        $accessor->ClearCondition();
-        $skillPartRow = $accessor->FromTable('SkillPart')
-                ->WhereEqual('AliasCode1',$skillRow->AliasCode)
-                ->Fetch();
-        $speciesCode = $skillPartRow === false ?
-            UpgradeValue::SkillUpOther :
-            substr($skillPartRow->PartCode, NFTDNA::PartStart, NFTDNA::SpeciesLength);
-        return UpgradeValue::SkillUpgradeSpeciesItem[$speciesCode];  
-    }
-
-    public static function GetSkillUpgradeRequireItems(int $skillLevel, int $chipID) : array
-    {
-        $requireItems = UpgradeValue::SkillUpgradeItemAmount[$skillLevel];
-        $requireItemIDAmounts = [];
-        //將物品編號轉為ItemID
-        foreach($requireItems as $itemSerial => $amount)
+        $speciesCode = 0; //未找到種族碼
+        $staticAccessor = AccessorFactory::Static();
+        $rows = $staticAccessor->selectExpr('PartCode, PartType')
+                       ->FromTableJoinOn('SkillInfo','SkillPart','LEFT','AliasCode','AliasCode1')
+                       ->WhereEqual('SkillID',$skillID)
+                       ->FetchAll();
+        if($rows !== false)
         {
-            match($itemSerial)
+            $dnaRow = AccessorFactory::Main()
+                       ->FromTable('PlayerNFT')
+                       ->WhereEqual('PlayerID',$playerID)
+                       ->Fetch();
+            foreach($rows as $row)
             {
-                UpgradeValue::BlueBerryRock 
-                => $requireItemIDAmounts[UpgradeValue::ItemIDBlueBerryRock] = $amount,
-                UpgradeValue::Chip
-                => $requireItemIDAmounts[$chipID] = $amount,
-            };
+                if(!empty($row->PartCode) && !empty($row->PartType))
+                {
+                    $partColumn = self::SkillPartDNAColumns[$row->PartType];
+                    $partCode = PlayerUtility::PartCodeByDNA($dnaRow->$partColumn);
+                    if($row->PartCode == $partCode)
+                    {
+                        $speciesCode = substr($partCode, NFTDNA::PartStart, NFTDNA::SpeciesLength);
+                        break;
+                    }
+                }
+            }
         }
-        return $requireItemIDAmounts;
+        $rt = new stdClass();
+        $handler = new UpgradeItemsHandler($skillLevel + 1,$speciesCode,SkillUpgradeItemsPool::Instance());
+        $rt->items = $handler->GetUpgradeItems(); 
+        $rt->coin = $handler->GetCoinCost();
+        return $rt;
     }
 
     public static function GetUpgradeItemInfo($itemID,$holdAmount,$requiredAmount) : stdClass

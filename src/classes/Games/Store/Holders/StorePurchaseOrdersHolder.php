@@ -34,6 +34,9 @@ class StorePurchaseOrdersHolder {
 
     /** @var string 收據 */
     public string $receipt;
+        
+    /** @var string MyCard 認證序號 */
+    public string $authCode;
 
     /** @var int 建立時間 */
     public int $createTime;
