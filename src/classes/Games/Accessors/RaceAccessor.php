@@ -15,7 +15,7 @@ class RaceAccessor extends BaseAccessor{
     }
     
     public function rowPlayerByID(int $id) : mixed{
-        return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->Fetch();
+        return $this->MainAccessor()->FromTable('RacePlayer')->WhereEqual('RacePlayerID', $id)->ForUpdate()->Fetch();
     }
 
     public function rowsPlayerByRaceIDFetchAssoc(int $id) : array{
