@@ -56,9 +56,10 @@ class StoreValue {
     //庫存(Inventory) -1:無限 0:展示用 >0:庫存數量
     const InventoryNoLimit = -1;
     const InventoryDisplay = 0;
-    //商品資訊狀態, 0:閒置, 1:使用中
+    //商品資訊狀態, 0:閒置, 1:使用中 2:商品封存(儲值商品使用)
     const TradeStatusIdle = 0;
     const TradeStatusInUse = 1;
+    const TradeStatusSeal = 2;
     //儲值流程
     const PurchaseVerifySuccess = 0;
     const PurchaseVerifyFailure = 1;
