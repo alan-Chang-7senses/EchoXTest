@@ -133,8 +133,16 @@ class QualifyingSeasonAccessor extends BaseAccessor
         ]);
     }
 
-    public function ModifyQualifyingSeasonData(int $id, array $bind): bool
+    public function ModifyQualifyingSeasonDataStatus(array $seasonIDarr): bool
     {
-        return $this->MainAccessor()->FromTable('QualifyingSeasonData')->WhereEqual('SeasonID', $id)->Modify($bind);
+        if (count($seasonIDarr) > 0) {
+            return $this->MainAccessor()->FromTable('QualifyingSeasonData')
+                        ->WhereIn('SeasonID', array_values($seasonIDarr))
+                        ->Modify([
+                            "Status" => RaceValue::QualifyingSeasonClose,
+                        ]);
+        }
+
+        return true;
     }
 }

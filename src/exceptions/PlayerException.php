@@ -11,6 +11,7 @@ $lang[PlayerException::NicknameNotEnglish] = 'Nickname not English or number';
 $lang[PlayerException::AlreadyRankMax] = 'Player: [playerID] has already rank max.';
 $lang[PlayerException::NotReachMaxLevelYet] = 'Player: [playerID] has not reach level max yet.';
 $lang[PlayerException::SkillLevelMax] = 'Player: [playerID] skill [skillID] reached level max.';
+$lang[PlayerException::NoUpgradeData] = 'Player upgrade data do not exsit.';
 
 
 return $lang;

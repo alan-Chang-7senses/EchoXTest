@@ -10,7 +10,6 @@ use Games\Accessors\QualifyingSeasonAccessor;
 use Games\Consts\RaceValue;
 use Games\Exceptions\RaceException;
 use Games\Pools\ItemInfoPool;
-use Games\Pools\QualifyingDataPool;
 use Games\Pools\TicketInfoPool;
 use Games\PVP\Holders\TicketInfoHolder;
 use Games\Races\RaceUtility;
@@ -31,12 +30,10 @@ class QualifyingHandler {
     public array $infoArr;
     public array $recodeArr;
 
-    private QualifyingDataPool $qualifyingDataPool;
     private TicketInfoPool $ticketPool;
     private QualifyingSeasonAccessor $pdoAccessor;
 
     public function __construct() {
-        $this->qualifyingDataPool = QualifyingDataPool::Instance();
         $this->ticketPool = TicketInfoPool::Instance();
         $this->pdoAccessor = new QualifyingSeasonAccessor();
         $this->DetectQualifying();
@@ -74,40 +71,39 @@ class QualifyingHandler {
     public function DetectSeason() {
         $qualifyingData = [];
         $defSeasonIDArr = [];
-        
+        $notInSeasonIDArr = [];
+
         // (QualifyingData) : 取得企劃定義的賽季大廳資料
         foreach (QualifyingHandler::Lobbies as $lobby) {
-            $data = $this->qualifyingDataPool->{$lobby};
+            $data = $this->pdoAccessor->GetOpenQualifyingDataByLobby($lobby);
             if ($data !== false) {
                 $qualifyingData[$lobby] = $data;
                 $defSeasonIDArr[$lobby] = $data->SeasonID;
+                echo '[QualifyingData] new seasonID=' . $data->SeasonID . ',  Lobby=' . $data->Lobby . ',  startTime=' . $data->StartTime .'('.date('Y-m-d H:i:s',$data->StartTime).'),  endTime=' . $data->EndTime .'('.date('Y-m-d H:i:s',$data->EndTime).')'. PHP_EOL;
             }
         }
+        
 
         // (QualifyingSeasonData) $this->NowSeasonIDArr : 目前遊戲紀錄 進行中賽季資料
         if (count($this->NowSeasonIDArr) > 0) {
-            foreach ($this->NowSeasonIDArr as $nowSeasonID) {
-                // 若逾期，則將 Status 改成 0
-                if (in_array($nowSeasonID, $defSeasonIDArr) == false) {
-                    $bind = ["Status" => 0];
-                    $this->pdoAccessor->ModifyQualifyingSeasonData($nowSeasonID, $bind);
-                    array_diff($this->NowSeasonIDArr, array($nowSeasonID));
-                }
+            // 若逾期，則將 Status 改成 0
+            $notInSeasonIDArr = array_diff($this->NowSeasonIDArr, $defSeasonIDArr);
+            $this->pdoAccessor->ModifyQualifyingSeasonDataStatus($notInSeasonIDArr);
+            
+            foreach ($notInSeasonIDArr as $notInSeasonID) {
+                echo '[QualifyingSeasonData] remove seasonID (status = 0) : '.$notInSeasonID.PHP_EOL;
             }
         }
         
         // (QualifyingSeasonData) 新增資料
-        if ($qualifyingData != false) {
+        if (count($qualifyingData) > 0) {
             foreach ($qualifyingData as $data) {
                 // 不在 目前遊戲紀錄進行中賽季資料 
                 if (in_array($data->SeasonID, $this->NowSeasonIDArr) == false) {
                     $this->pdoAccessor->AddQualifyingSeasonData($data->SeasonID, $data->Lobby);
+                    echo '[QualifyingSeasonData] add seasonID=' . $data->SeasonID . ',  Lobby=' . $data->Lobby . ',  startTime=' . $data->StartTime .'('.date('Y-m-d H:i:s',$data->StartTime).'),  endTime=' . $data->EndTime .'('.date('Y-m-d H:i:s',$data->EndTime).')'. PHP_EOL;
                 }
             }
-        }
-
-        foreach (QualifyingHandler::Lobbies as $lobby) {
-            $this->qualifyingDataPool->Delete($lobby);
         }
 
         $this->DetectQualifying();
@@ -126,7 +122,7 @@ class QualifyingHandler {
     }
 
     public function GetSeasonRemaintime(int $lobby): int {
-        $qualifyData = $this->qualifyingDataPool-> {$lobby};
+        $qualifyData = $this->pdoAccessor->GetOpenQualifyingDataByLobby($lobby);
         if ($qualifyData !== false) {
             $remainTime = $qualifyData->EndTime - $GLOBALS[Globals::TIME_BEGIN] - ConfigGenerator::Instance()->PvP_B_StopMatch;
             if ($remainTime < 0)
@@ -157,7 +153,7 @@ class QualifyingHandler {
     }
 
     public function GetSceneID(int $lobby, int $defaultSceneID): int {
-        $qualifyData = $this->qualifyingDataPool->{$lobby};
+        $qualifyData = $this->pdoAccessor->GetOpenQualifyingDataByLobby($lobby);
         if ($qualifyData !== false) {
             return $qualifyData->Scene;
         }

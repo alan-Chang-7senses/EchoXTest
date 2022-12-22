@@ -4,13 +4,17 @@ namespace Processors\PVP;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Consts\RaceValue;
 use Games\Leadboards\LeadboardUtility;
+use Games\Players\PlayerHandler;
 use Games\Pools\ItemInfoPool;
+use Games\PVP\CompetitionsInfoHandler;
 use Games\PVP\QualifyingHandler;
 use Games\Races\RaceUtility;
 use Games\Scenes\SceneHandler;
 use Games\Scenes\SceneUtility;
 use Games\Users\UserBagHandler;
+use Generators\ConfigGenerator;
 use Holders\ResultData;
 use Processors\Races\BaseRace;
 use stdClass;
@@ -31,19 +35,32 @@ class PVPInfo extends BaseRace {
             $ticketID = RaceUtility::GetTicketID($lobby);
             $ticketInfo = ItemInfoPool::Instance()->{$ticketID};
             $lobbyinfo->ticketIcon = $ticketInfo->Icon;
+            $playerLevel = ConfigGenerator::Instance()->{RaceValue::LobbyPlayerLevelConfig[$lobby]};
+            $skillLevel = ConfigGenerator::Instance()->{RaceValue::LobbySkillLevelConfig[$lobby]};
             $lobbyinfo->ticketAmount = $userBagHandler->GetItemAmount($ticketID);
-            $lobbyinfo->petaLimitLevel = $qualifyingHandler->GetPetaLimitLevel($lobby);
+            $lobbyinfo->petaLimitLevel = intval($playerLevel);
 
             $scendID = $qualifyingHandler->GetSceneID($lobby, $this->userInfo->scene);
             $sceneHandler = new SceneHandler($scendID);
             $sceneInfo = $sceneHandler->GetInfo();
             $climates = SceneUtility::CurrentClimate($sceneInfo->climates);
 
-            $rankInfo = LeadboardUtility::PlayerLeadRanking($lobby, $this->userInfo->player, $qualifyingHandler->GetSeasonIDByLobby($lobby));
+            $competitionsInfoHandler = CompetitionsInfoHandler::Instance($lobby);
+            $rankInfo = LeadboardUtility::GetPlayerOwnRateRanking(false,$this->userInfo->player,$qualifyingHandler->GetSeasonIDByLobby($lobby),$competitionsInfoHandler->GetInfo()->treshold);
             $lobbyinfo->rank = new stdClass();
             $lobbyinfo->rank->playCount = $rankInfo->playCount;
-            $lobbyinfo->rank->leadRate = $rankInfo->leadRate;
-            $lobbyinfo->rank->ranking = $rankInfo->ranking;
+            $lobbyinfo->rank->rate = $rankInfo->rate;
+            $lobbyinfo->rank->ranking = $rankInfo->rank;
+
+            $lobbyinfo->simplePlayer = new stdClass();
+
+            $specifyInfo = (new PlayerHandler($this->userInfo->player,$playerLevel,$skillLevel))->GetInfo();
+            $lobbyinfo->simplePlayer->velocity = $specifyInfo->velocity;
+            $lobbyinfo->simplePlayer->stamina = $specifyInfo->stamina;
+            $lobbyinfo->simplePlayer->intelligent = $specifyInfo->intelligent;
+            $lobbyinfo->simplePlayer->breakOut = $specifyInfo->breakOut;
+            $lobbyinfo->simplePlayer->will = $specifyInfo->will;
+            $lobbyinfo->simplePlayer->skillLevel = intval($skillLevel);
 
             $lobbyinfo->scene = [
                 'id' => $sceneInfo->id,
