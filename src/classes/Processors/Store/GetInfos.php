@@ -76,13 +76,14 @@ class GetInfos extends BaseProcessor {
             $storeInfosHolder->storeID = $storeID;
 
             if ($autoRefreshTime->needRefresh) {
-
+                $storeInfosHolder->fixTradIDs = ""; //不再使用此兩欄位
+                $storeInfosHolder->randomTradIDs = "";
                 if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
-                    $storeInfosHolder->fixTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->fixTradIDs, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeInfosHolder->randomTradIDs = $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeHandler->UpdateCountersTrades($storeID, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeHandler->UpdateCountersTrades($storeID, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }
@@ -105,8 +106,8 @@ class GetInfos extends BaseProcessor {
             $resposeStore->refreshCurrency = $storeDataHolder->refreshCostCurrency;
 
             $resposeStore->storetype = $storeDataHolder->storeType;
-            $resposeStore->fixItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->fixTradIDs);
-            $resposeStore->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->randomTradIDs);
+            $resposeStore->fixItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->fixTradIDs, $storeID, StoreValue::FixTrade);
+            $resposeStore->randomItems = $storeHandler->GetTrades($storeDataHolder->storeType, $currency, $storeInfosHolder->randomTradIDs, $storeID, StoreValue::RandomTrade);
 
             $resposeStores[] = $resposeStore;
         }

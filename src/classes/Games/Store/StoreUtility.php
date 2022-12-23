@@ -90,8 +90,6 @@ class StoreUtility {
             $holder->storeInfoID = StoreValue::NoStoreInfoID; //沒有資料
             $holder->userID = 0;
             $holder->storeID = 0;
-            $holder->fixTradIDs = "";
-            $holder->randomTradIDs = "";
             $holder->refreshRemainAmounts = 0;
             $holder->createTime = 0;
             $holder->updateTime = 0;

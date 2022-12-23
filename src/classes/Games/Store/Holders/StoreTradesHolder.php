@@ -25,6 +25,9 @@ class StoreTradesHolder extends stdClass {
 
     /** @var int 商店類型 */
     public int $storeType;
+    
+    /** @var int 是否為固定商品 */
+    public int $isFix;
 
     /** @var int 商店索引 */
     public int $cPIndex;

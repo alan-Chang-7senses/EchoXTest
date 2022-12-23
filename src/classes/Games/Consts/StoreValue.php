@@ -28,7 +28,7 @@ class StoreValue {
     const PlatApple = 1;
     const PlatGoogle = 2;
     const PlatMyCard = 3;
-    // 介面類型(UIType_固定商品數量)
+    // 介面類型(UIType_固定商品數量, 隨機數量=UIMaxFixItems - 固定商品數量)
     const UIType_12 = 1;
     const UIType_08 = 2;
     const UIType_04 = 3;
@@ -75,5 +75,8 @@ class StoreValue {
     //MyCard(他方)回應資訊
     const MyCardReturnSuccess = 1;
     const MyCardPaySuccess = 3;
+    //固定或隨機商品
+    const FixTrade = 1;
+    const RandomTrade = 2;
 
 }
