@@ -23,10 +23,12 @@ CREATE TABLE IF NOT EXISTS `StoreTrades` (
   `CPIndex` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商店索引',
   `RemainInventory` int(11) NOT NULL DEFAULT 0 COMMENT '剩餘庫存量',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
-  `dddd` int(11) DEFAULT NULL,
-  `xxx` int(11) DEFAULT 0,
   PRIMARY KEY (`TradeID`),
-  KEY `Status` (`Status`)
+  KEY `Status` (`Status`),
+  KEY `IsFix` (`IsFix`),
+  KEY `StoreType` (`StoreType`),
+  KEY `StoreID` (`StoreID`),
+  KEY `UserID` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='交易資訊';
 
 -- 取消選取資料匯出。
