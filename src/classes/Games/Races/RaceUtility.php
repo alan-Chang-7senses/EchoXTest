@@ -298,19 +298,5 @@ class RaceUtility {
         AccessorFactory::Log()->FromTable('PlayerRating')->AddAll($logBind);
 
         return $ratingResults;
-    }    
-    public static function GetSeasonResetRating(int $lobby, int $playerID) : int
-    {
-        $accessor = AccessorFactory::Main();                                   
-
-        $row = $accessor->ClearCondition()->SelectExpr('Rating')
-                                   ->FromTable('LeaderboardRating')
-                                   ->WhereEqual('PlayerID',$playerID)
-                                   ->WhereEqual('Lobby',$lobby)
-                                   ->OrderBy('UpdateTime','DESC')
-                                   ->Limit(1)
-                                   ->Fetch(); 
-        $oldRating = !empty($row) ? $row->Rating : null;
-        return CompetitionsInfoHandler::Instance($lobby)->GetResetRating($oldRating);
     }
 }

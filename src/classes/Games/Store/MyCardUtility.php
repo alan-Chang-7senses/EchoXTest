@@ -11,6 +11,7 @@ use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
 use Games\Store\Models\MyCardPaymentModel;
 use Games\Store\Models\StoreProductInfoModel;
+use Generators\ConfigGenerator;
 use Generators\DataGenerator;
 use stdClass;
 
@@ -184,7 +185,7 @@ class MyCardUtility {
                 return $result;
             } else {
                 $result->code = StoreValue::PurchaseVerifyMyCardError;
-                $result->message = urldecode($queryData->ReturnMsg);
+                $result->message = urldecode($queryData->ReturnMsg) . ' ErrorCode:'. $queryData->PayResult;
                 return $result;
             }
         } else {//查詢失敗
@@ -236,6 +237,87 @@ class MyCardUtility {
 
     public static function GetTimestring(int $timestamp): string {
         return DataGenerator::TimestringByTimezone($timestamp, 8, 'Y-m-d\TH:i:s');
+    }
+
+    public static function SDKTradeQuery(): stdClass {
+
+        $now = (int) microtime(true);
+
+        $requestData = new stdClass();
+        $requestData->FacServiceId = getenv(EnvVar::MyCardFacserviceid);
+        $requestData->FacTradeSeq = "";
+        $requestData->StartDateTime = self ::GetTimestring($now - ConfigGenerator::Instance()->MyCardRestoreQueryTime);
+        $requestData->EndDateTime = self ::GetTimestring($now);
+        $requestData->CancelStatus = 2;
+        $requestData->FacKey = getenv(EnvVar::MyCardFackey);
+        $requestData->hash = self::Hash($requestData);
+
+        $authCurl = new CurlAccessor(getenv(EnvVar::MyCardUri) . '/SDKTradeQuery');
+
+        $curlReturn = $authCurl->ExecOptions([
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($requestData),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded']
+        ]);
+
+        if ($curlReturn === false || $authCurl->GetInfo(CURLINFO_HTTP_CODE) != HTTPCode::OK) {
+            throw new StoreException(StoreException::Error, ['[cause]' => 'L260']);
+        }
+
+        $queryData = json_decode($curlReturn);
+        if ($queryData->ReturnCode == StoreValue::MyCardReturnSuccess) {
+            return $queryData;
+        } else {
+            $returnMsg = urldecode($queryData->ReturnMsg);
+            throw new StoreException(StoreException::MyCardError, ['[message]' => $returnMsg]);
+        }
+    }
+
+    public static function SDKVerify(string $userID, string $authcode, stdClass $queryData): stdClass|false {
+
+        $mainAccessor = new PDOAccessor(EnvVar::DBMain);
+        $userInfo = $mainAccessor->SelectExpr('`UserID`, `CreateTime`, `CreatedIP`')->FromTable('Users')->WhereEqual('UserID', $userID)->Fetch();
+        if ($userInfo == false) {
+            return false;
+        }
+
+        $myCardPaymentModel = new MyCardPaymentModel();
+        $myCardPaymentModel->CustomerId = $userID;
+        $myCardPaymentModel->CreateAccountDateTime = $userInfo->CreateTime;
+        $myCardPaymentModel->CreateAccountIP = $userInfo->CreatedIP;
+        $myCardPaymentModel->PaymentType = $queryData->PaymentType;
+        $myCardPaymentModel->MyCardTradeNo = $queryData->MyCardTradeNo;
+        $myCardPaymentModel->FacTradeSeq = $queryData->FacTradeSeq;
+        $myCardPaymentModel->Amount = $queryData->Amount;
+        $myCardPaymentModel->Currency = $queryData->Currency;
+
+        $payCheck = MyCardUtility::PaymentConfirm($authcode, $myCardPaymentModel);
+        if ($payCheck->code == StoreValue::PurchaseVerifySuccess) {
+            $logAccessor = new PDOAccessor(EnvVar::DBLog);
+            $row = $logAccessor->FromTable('MyCardPayment')->WhereEqual("FacTradeSeq", $myCardPaymentModel->FacTradeSeq)->Fetch();
+            if (empty($row)) {
+
+                $logAccessor->ClearCondition()->Add([
+                    "PaymentType" => $myCardPaymentModel->PaymentType,
+                    "TradeSeq" => $myCardPaymentModel->TradeSeq, //form PaymentConfirm
+                    "MyCardTradeNo" => $myCardPaymentModel->MyCardTradeNo,
+                    "FacTradeSeq" => $myCardPaymentModel->FacTradeSeq,
+                    "CustomerId" => $myCardPaymentModel->CustomerId,
+                    "Amount" => $myCardPaymentModel->Amount,
+                    "Currency" => $myCardPaymentModel->Currency,
+                    "TradeDateTime" => (int) $GLOBALS[Globals::TIME_BEGIN],
+                    "CreateAccountDateTime" => $userInfo->CreateTime,
+                    "CreateAccountIP" => $myCardPaymentModel->CreateAccountIP
+                ]);
+            } else {
+                $payCheck->message = "repeat log";
+            }
+            return $payCheck;
+        } else {
+
+            return $payCheck;
+        }
     }
 
 }

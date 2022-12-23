@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Configs` (
   PRIMARY KEY (`Name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='雜項設置';
 
--- 正在傾印表格  koa_main.Configs 的資料：~43 rows (近似值)
+-- 正在傾印表格  koa_main.Configs 的資料：~45 rows (近似值)
 /*!40000 ALTER TABLE `Configs` DISABLE KEYS */;
 INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('AllPlayerLevel', '100', '強制指定所有角色等級(0=無效)'),
@@ -46,6 +46,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('LobbyStudySkillLevel', '5', '練習賽指定技能等級(0=不指定)'),
 	('MyCardRestoreMailDay', '30', 'MyCard補儲加入信件的過期時間(日)'),
 	('MyCardRestoreMailID', '13', 'MyCard補儲加入信件的MailID'),
+	('MyCardRestoreQueryTime', '1200', 'MyCard補儲查詢時間(秒),小於31天'),
 	('NewNFTRewardMailExpireDate', '500', 'NFT創角獎勵信件之領取期限(0為空)'),
 	('NewNFTRewardMailID', '12', 'NFT創角獎勵之信件編號(0為空)'),
 	('PvP_B_FreeTicketId_1_Count', '30', '金幣賽免費入場券(每次)發放數量'),
@@ -68,7 +69,7 @@ INSERT INTO `Configs` (`Name`, `Value`, `Comment`) VALUES
 	('StoreAutoRefreshTime', '00:00:00+08:00', '每日自動刷新商店內容的時間'),
 	('TimelimitElitetestRace', '200', '菁英測試競賽時限(秒)'),
 	('TimelimitRaceFinish', '300', '競賽完賽時限(秒)'),
-	('TutorialRewards', '[{"Step":1, "ItemID":1003, "Amount":1}]', '新手引導獎勵'),
+	('TutorialRewards', '[{"Step":1, "RewarID":21}]', '新手引導獎勵'),
 	('TutorialSceneID', '4000', '新手引導賽場編號');
 /*!40000 ALTER TABLE `Configs` ENABLE KEYS */;
 
@@ -2676,7 +2677,7 @@ CREATE TABLE IF NOT EXISTS `RaceRooms` (
   `RaceRoomID` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '競賽房間編號',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `Lobby` tinyint(4) NOT NULL DEFAULT 0 COMMENT '大廳',
-  `Version` varchar(15) NOT NULL DEFAULT '0' COMMENT 'Photon版本',
+  `Version` varchar(100) NOT NULL DEFAULT '0' COMMENT 'Photon版本',
   `LowBound` int(10) NOT NULL DEFAULT 0 COMMENT '下限數值',
   `UpBound` int(10) NOT NULL DEFAULT 0 COMMENT '上限數值',
   `CreateTime` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
@@ -2785,12 +2786,13 @@ CREATE TABLE IF NOT EXISTS `StorePurchaseOrders` (
   `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
   `TradeID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '交易序號',
   `ProductID` varchar(50) NOT NULL DEFAULT '0' COMMENT '商品Key',
-  `ItemID` int(10) NOT NULL DEFAULT 0 COMMENT '商品物品Id',
+  `ItemID` int(11) NOT NULL DEFAULT 0 COMMENT '商品物品Id',
   `Amount` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '商品數量',
   `Plat` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '平台',
   `Status` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '狀態',
   `Message` varchar(250) NOT NULL DEFAULT '' COMMENT '狀態資訊',
-  `Receipt` varchar(256) DEFAULT NULL COMMENT '收據orAuthCode',
+  `Receipt` varchar(256) DEFAULT NULL COMMENT '收據或MyCard序號',
+  `AuthCode` varchar(256) DEFAULT NULL COMMENT 'MyCard AuthCode',
   `CreateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '建立時間',
   `UpdateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '更新時間',
   PRIMARY KEY (`OrderID`),

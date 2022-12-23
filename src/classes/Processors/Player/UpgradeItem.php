@@ -5,6 +5,7 @@ namespace Processors\Player;
 use Consts\ErrorCode;
 use Consts\Sessions;
 // use Games\Accessors\GameLogAccessor;
+use Games\Accessors\AccessorFactory;
 use Games\Accessors\UpgradeLogAccessor;
 use Games\Consts\ItemValue;
 use Games\Consts\UpgradeValue;
@@ -15,6 +16,7 @@ use Games\Players\PlayerHandler;
 use Games\Players\UpgradeData;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
+use Games\Pools\UserPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -88,7 +90,14 @@ class UpgradeItem extends BaseProcessor{
         
         $userBaghandler->DecItems($decItems,ItemValue::CauseGainExp);
         //扣錢
-        $userHandler->SaveData(['coin' => $userInfo->coin - $costTotal]);
+        $remain = $userInfo->coin - $costTotal;
+        $accessor = AccessorFactory::Main();
+        $accessor->Transaction(function () use ($accessor, $userID, $remain) {
+            $row = $accessor->FromTable('Users')->WhereEqual('UserID', $userID)->ForUpdate()->Fetch();
+            if($row === false)return; //角色不在User表
+            $accessor->Modify(['coin' => $remain]);
+            UserPool::Instance()->Delete($userID);
+        });
         
         //打包：成功模式、目前等級
         $results = new ResultData(ErrorCode::Success);        

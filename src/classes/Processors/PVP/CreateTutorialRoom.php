@@ -35,7 +35,7 @@ class CreateTutorialRoom  {
             throw new RaceException(RaceException::UserInRace);
         }
 
-        $lobby = InputHelper::post('lobby');
+        $lobby = RaceValue::LobbyCoinB;
         $version = InputHelper::post('version');
         $qualifyingHandler = new QualifyingHandler();
         $qualifyingHandler->CheckLobbyID($lobby);

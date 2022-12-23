@@ -28,7 +28,7 @@ class Refresh extends BaseRefresh {
 
     public function PurchaseVerify(stdClass $purchaseOrders): stdClass {
 
-        return MyCardUtility::Verify($purchaseOrders->UserID, $purchaseOrders->Receipt);
+        return MyCardUtility::Verify($purchaseOrders->UserID, $purchaseOrders->AuthCode);
     }
 
     public function Process(): ResultData {

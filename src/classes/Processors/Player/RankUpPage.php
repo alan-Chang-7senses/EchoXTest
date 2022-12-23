@@ -9,7 +9,9 @@ use Games\Consts\UpgradeValue;
 use Games\Exceptions\PlayerException;
 use Games\Exceptions\UserException;
 use Games\Players\PlayerHandler;
+use Games\Players\UpgradeItemsHandler;
 use Games\Players\UpgradeUtility;
+use Games\Pools\RankUpItemsPool;
 use Games\Users\UserBagHandler;
 use Games\Users\UserHandler;
 use Helpers\InputHelper;
@@ -34,18 +36,19 @@ class RankUpPage extends BaseProcessor{
         if($playerInfo->rank == PlayerValue::RankMax)
         throw new PlayerException(PlayerException::AlreadyRankMax,['playerID' => $playerID]);
 
-        $results = new ResultData(ErrorCode::Success);        
+        $results = new ResultData(ErrorCode::Success);      
+        $upgradeHandler = new UpgradeItemsHandler($playerInfo->rank + 1, $playerInfo->ele, RankUpItemsPool::Instance());
+        $itemRequires = $upgradeHandler->GetUpgradeItems();
 
-        $dustItemID = UpgradeValue::RankUpItem[$playerInfo->ele][UpgradeValue::Dust];
-        $crystalItemID = UpgradeValue::RankUpItem[$playerInfo->ele][UpgradeValue::Crystal];
-
-        $amountInfo = UpgradeValue::RankUpItemAmount[$playerInfo->rank];
-        $dustRequireAmount = $amountInfo['dustAmount'];
-        $crystalRequireAmount = $amountInfo['crystalAmount'];
-        $chargeRequire = $amountInfo['charge'];
-        
-        $dustAmount = $userBagHandler->GetItemAmount($dustItemID);
-        $crystalAmount = $userBagHandler->GetItemAmount($crystalItemID);
+        $chargeRequire = $upgradeHandler->GetCoinCost();
+        $itemHolds = [];
+        $isEnough = true;
+        foreach($itemRequires as $itemID => $amount)
+        {
+            $hold = $userBagHandler->GetItemAmount($itemID);
+            $itemHolds[$itemID] = $hold;
+            if($hold < $amount) $isEnough = false;
+        }
 
         $results->currentLevel = $playerInfo->level;
         $results->currentRank = 
@@ -61,9 +64,10 @@ class RankUpPage extends BaseProcessor{
             'skillLevelMax' => UpgradeValue::SkillLevelLimit[$playerInfo->rank + UpgradeValue::RankUnit],
         ];
         $results->itemInfos = [];
-        $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($dustItemID,$dustAmount,$dustRequireAmount);
-        $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($crystalItemID,$crystalAmount,$crystalRequireAmount);
-
+        foreach($itemRequires as $itemID => $amount)
+        {
+            $results->itemInfos[] = UpgradeUtility::GetUpgradeItemInfo($itemID,$itemHolds[$itemID],$amount);
+        }
         
         $results->requireCoin = 
         [
@@ -73,9 +77,7 @@ class RankUpPage extends BaseProcessor{
         
 
         $results->canRankUp = (PlayerValue::RankMaxLevel[$playerInfo->rank] == $playerInfo->level
-                    && $dustAmount >= $dustRequireAmount
-                    && $crystalAmount >= $crystalRequireAmount
-                    && $userInfo->coin >= $chargeRequire);
+                    && $isEnough && $userInfo->coin >= $chargeRequire);
                         
         return $results;
     }
