@@ -90,6 +90,8 @@ class StoreUtility {
             $holder->storeInfoID = StoreValue::NoStoreInfoID; //沒有資料
             $holder->userID = 0;
             $holder->storeID = 0;
+            $holder->fixTradIDs = "";
+            $holder->randomTradIDs = "";
             $holder->refreshRemainAmounts = 0;
             $holder->createTime = 0;
             $holder->updateTime = 0;
@@ -97,8 +99,8 @@ class StoreUtility {
             $holder->storeInfoID = $row->StoreInfoID;
             $holder->userID = $row->UserID;
             $holder->storeID = $row->StoreID;
-            $holder->fixTradIDs = $row->FixTradIDs;
-            $holder->randomTradIDs = $row->RandomTradIDs;
+            $holder->fixTradIDs = $row->FixTradIDs??"";
+            $holder->randomTradIDs = $row->RandomTradIDs??"";
             $holder->refreshRemainAmounts = $row->RefreshRemainAmounts;
             $holder->createTime = $row->CreateTime;
             $holder->updateTime = $row->UpdateTime;

@@ -68,13 +68,13 @@ class Refresh extends BaseProcessor {
         }
 
         $storeInfosHolder->refreshRemainAmounts--;
-        $storeInfosHolder->randomTradIDs = "";
 
         if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-            $storeHandler->UpdatePurchaseTrades($storeInfosHolder->storeID, $storeDataHolder->storeType, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+            $storeHandler->UpdatePurchaseTrades($storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->storeType, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
         } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
-            $storeHandler->UpdateCountersTrades($storeInfosHolder->storeID, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+            $storeHandler->UpdateCountersTrades($storeInfosHolder->storeID, $storeInfosHolder->randomTradIDs, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
         }
+        $storeInfosHolder->randomTradIDs = "";
         $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
 
         //response

@@ -76,19 +76,19 @@ class GetInfos extends BaseProcessor {
             $storeInfosHolder->storeID = $storeID;
 
             if ($autoRefreshTime->needRefresh) {
-                $storeInfosHolder->fixTradIDs = ""; //不再使用此兩欄位
-                $storeInfosHolder->randomTradIDs = "";
                 if (StoreUtility::IsPurchaseStore($storeDataHolder->storeType)) {
-                    $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeHandler->UpdatePurchaseTrades($storeID, $storeDataHolder->storeType, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeHandler->UpdatePurchaseTrades($storeID, $storeInfosHolder->fixTradIDs, $storeDataHolder->storeType, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeHandler->UpdatePurchaseTrades($storeID, $storeInfosHolder->randomTradIDs, $storeDataHolder->storeType, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else if ($storeDataHolder->storeType == StoreValue::TypeCounters) {
-                    $storeHandler->UpdateCountersTrades($storeID, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
-                    $storeHandler->UpdateCountersTrades($storeID, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
+                    $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->fixTradIDs, StoreValue::FixTrade, $storeDataHolder->fixedGroup, $maxFixAmount);
+                    $storeHandler->UpdateCountersTrades($storeID, $storeInfosHolder->randomTradIDs, StoreValue::RandomTrade, $storeDataHolder->stochasticGroup, StoreValue::UIMaxFixItems - $maxFixAmount);
                 } else {
                     continue;
                 }
-                $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
 
+                $storeInfosHolder->fixTradIDs = ""; //不再使用此兩欄位
+                $storeInfosHolder->randomTradIDs = "";
+                $storeInfosHolder->refreshRemainAmounts = $storeDataHolder->refreshCount;
                 $storeInfosHolder->storeInfoID = $storeHandler->UpdateStoreInfo($storeInfosHolder);
             } else if (empty($rowStoreInfo)) {
                 continue;

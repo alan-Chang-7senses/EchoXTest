@@ -77,12 +77,12 @@ class StoreHandler {
         }
     }
 
-    public function UpdatePurchaseTrades(int $storeID, int $storeType, int $isFix, int $groupID, int $amount): string {
+    public function UpdatePurchaseTrades(int $storeID, string|null $tradIDArrays, int $storeType, int $isFix, int $groupID, int $amount): string {
 
         if ($groupID == StoreValue::NoStoreGroup) {
             return "";
         }
-        $tradIDs = $this->GetTradeIDs($storeID, $isFix);
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : $this->GetTradeIDs($storeID, $isFix);
 
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (
@@ -117,15 +117,14 @@ class StoreHandler {
         return json_encode($storeTradeIDs);
     }
 
-    public function UpdateCountersTrades(int $storeID, int $isFix, int $groupID, int $amount): string {
-
+    public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $isFix, int $groupID, int $amount): string {
         if ($groupID == StoreValue::NoStoreGroup) {
             return "";
         }
         //$tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
-        $tradIDs = $this->GetTradeIDs($storeID, $isFix);
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : $this->GetTradeIDs($storeID, $isFix);
 
+        $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (
             SELECT * FROM StoreCounters v1 INNER JOIN
             (SELECT CounterID AS TempID FROM StoreCounters WHERE GroupID = :GroupID GROUP BY CounterID ORDER BY RAND()  LIMIT 1) as v2
@@ -164,8 +163,6 @@ class StoreHandler {
             $accessor->FromTable('StoreInfos')->Add([
                 "UserID" => $this->userID,
                 "StoreID" => $storinfo->storeID,
-                "FixTradIDs" => $storinfo->fixTradIDs,
-                "RandomTradIDs" => $storinfo->randomTradIDs,
                 "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
                 "CreateTime" => $nowtime,
                 "UpdateTime" => $nowtime
