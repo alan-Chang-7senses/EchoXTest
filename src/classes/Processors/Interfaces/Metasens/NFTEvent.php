@@ -8,6 +8,8 @@ use Consts\Sessions;
 use Exception;
 use Games\NFTs\NFTFactory;
 use Games\NFTs\NFTUtility;
+use Games\NFTs\NFTCertificate;
+use Games\NFTs\NFTItem;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -30,8 +32,12 @@ class NFTEvent extends BaseProcessor{
 
         $payload = NFTUtility::EventPayload();
         
-        if(method_exists($this, $payload->type))
+        if(method_exists($this, $payload->type)) {
             $this->{$payload->type}($payload);
+        }
+        else {
+            throw new Exception ("Unknonw type {$payload->type}", ErrorCode::ParamError);
+        }
         
         $result = new ResultData(ErrorCode::Success);
 //        $result->payload = $payload;
@@ -43,10 +49,11 @@ class NFTEvent extends BaseProcessor{
     }
     
     private function nftCreated(stdClass $payload) : void{
+        /*
         $userID = $_SESSION[Sessions::UserID];
         $nftFactory = new NFTFactory($_SESSION[Sessions::UserID]);
         $currentTime = $GLOBALS[Globals::TIME_BEGIN];
-
+        */
     }
     
     private function nftMetadataChanged(stdClass $payload) : void{
@@ -60,4 +67,31 @@ class NFTEvent extends BaseProcessor{
     private function emailBound(stdClass $payload) : void{
         
     }
+
+    private function itemRedeemed(stdClass $payload) : void{
+        NFTItem::CheckPayload($payload);
+
+        // 檢查是否已經處理
+        $serial = NFTItem::IsPayloadHandle($payload);
+        if ($serial !== NFTItem::LogNotExist) 
+        {
+            //echo "this payload is handle, serial = {$serial}".PHP_EOL;
+            return;
+        }
+
+        // 在一次檢查玩家在遊戲中是否已經有帳號
+        $user = NFTCertificate::UserExist(($payload->data->email));
+        if ($user == false)
+        {
+            // 沒有帳號，可能為先購買 NFT 再創角，先記錄，等玩家創角完畢再寄信
+            NFTItem::AddLog($serial, $payload, 0, "user : {$payload->data->email}, is not exist.");
+            throw new Exception ("Unknonw email {$payload->data->email}", ErrorCode::ParamError);
+            return;
+        }
+
+        // 道具發佈
+        NFTItem::DeployItems($serial, $user->UserID, $payload);        
+    }
+
+    
 }
