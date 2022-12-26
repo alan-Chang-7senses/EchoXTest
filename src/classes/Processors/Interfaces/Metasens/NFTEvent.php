@@ -83,14 +83,14 @@ class NFTEvent extends BaseProcessor{
         $user = NFTCertificate::UserExist(($payload->data->email));
         if ($user == false)
         {
-            // 沒有帳號，可能為先購買 NFT 再創角，先記錄，等玩家創角完畢再寄信
-            NFTItem::AddLog($serial, $payload, 0, "user : {$payload->data->email}, is not exist.");
+            // 沒有帳號，可能為先購買 NFT 再創角
+            NFTItem::AddLog($payload, 0, "user : {$payload->data->email}, is not exist.");
             throw new Exception ("Unknonw email {$payload->data->email}", ErrorCode::ParamError);
             return;
         }
 
         // 道具發佈
-        NFTItem::DeployItems($serial, $user->UserID, $payload);        
+        NFTItem::DeployItems($user->UserID, $payload);        
     }
 
     

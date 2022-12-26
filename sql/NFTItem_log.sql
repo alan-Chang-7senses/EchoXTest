@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS `NFTItemLog` (
   `Message` text DEFAULT NULL COMMENT '交易未完成原因訊息',
   `Timestamp` int(10) unsigned NOT NULL COMMENT '交易平台的時間戳',
   `CreateTime` int(10) unsigned NOT NULL COMMENT '紀錄建立時間',
-  `UpdateTime` int(10) unsigned NOT NULL COMMENT '紀錄更新時間',
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
