@@ -92,7 +92,7 @@ class DataGenerator {
         return file_get_contents('php://input');
     }
     
-    public static function ReceivePayloadJSON() : stdClass|null{
-        return json_decode(self::ReceivePayload());
+    public static function ReceivePayloadJSON() : stdClass{
+        return json_decode(self::ReceivePayload()) ?? new stdClass();
     }
 }
