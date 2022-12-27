@@ -87,4 +87,12 @@ class DataGenerator {
         // Output the 36 character UUID.
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
+    
+    public static function ReceivePayload() : string|false{
+        return file_get_contents('php://input');
+    }
+    
+    public static function ReceivePayloadJSON() : stdClass|null{
+        return json_decode(self::ReceivePayload());
+    }
 }

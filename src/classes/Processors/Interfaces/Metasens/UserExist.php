@@ -27,7 +27,7 @@ class UserExist extends BaseProcessor{
         if(($headers['Authorization'] ?? $headers['authorization']) != $nftAuthorization)
             throw new Exception('Authorzation error', ErrorCode::VerifyError);
         
-        $payload = NFTUtility::EventPayload();
+        $payload = DataGenerator::ReceivePayloadJSON();
         DataGenerator::ExistProperty($payload, 'email');
         
         $accessor = AccessorFactory::Main();
