@@ -24,8 +24,6 @@ class MailValues {
     const ReceiveStatusNone = 0; // 未收取
     const ReceiveStatusDone = 1; // 已收取
     //鎖定狀態
-    const MaxRepeatCount = 100; // 檢驗次數
-    const RepeatTime = 100000;  // 微秒
-    const UnLock = 0;           // 解鎖
-    const Lock = 1;             // 上鎖           
+    const UnLock = 0;            // 解鎖
+    const Lock = 1;              // 上鎖
 }
