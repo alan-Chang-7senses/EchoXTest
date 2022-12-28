@@ -10,6 +10,7 @@ use Games\Exceptions\ItemException;
 use Games\Mails\MailsHandler;
 use Games\Users\ItemUtility;
 use Games\Users\UserBagHandler;
+use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -28,39 +29,56 @@ class ReceiveMailsRewards extends BaseProcessor {
         $userBagHandler = new UserBagHandler($userID);
         $userMailsHandler = new MailsHandler();
         $totalItems = [];
+        $checkUserMailsIDs = [];
+        $checkException = 0;
         foreach ($userMailIDs as $userMailID) {
 
-            $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($userID, $userMailID);
+            $mailInfo = $userMailsHandler->GetUserMailByUserMailID($userID, $userMailID);
             if ($mailInfo == false) {
-                throw new ItemException(ItemException::MailNotExist);
+                $checkException = ItemException::MailNotExist;
+                continue;
             }
 
             if ($receiveStatus == 1) {
                 if ($mailInfo->ReceiveStatus == MailValues::ReceiveStatusDone) {
-                    throw new ItemException(ItemException::MailRewardsReceived);
+                    $checkException = ItemException::MailRewardsReceived;
+                    continue;
                 }
-                $addItems = $userMailsHandler->GetMailItems($userMailID);
+
+                $addItems = $userMailsHandler->GetUserMailItems($userMailID);
+
                 if ($userBagHandler->CheckAddStacklimit($addItems) == false) {
-                    throw new ItemException(ItemException::UserItemStacklimitReached);
+                    $checkException = ItemException::UserItemStacklimitReached;
+                    continue;
                 }
+
                 ItemUtility::AccumulateItems($totalItems, $addItems);
-                //$userMailsHandler->ReceiveRewards($userID, $userMailID, $openStatus, MailValues::ReceiveStatusDone);
-            } else {
-                //$receiveStatus = $mailInfo->ReceiveStatus;
-                $userMailsHandler->UpdateOpenStatus($userID, $userMailID, $openStatus);
             }
+
+            $checkUserMailsIDs[] = $userMailID;
         }
 
+        // 全部信件 全部領獎 全部開信
         $itemsArray = [];
-        if ($receiveStatus == 1) {
-            foreach ($userMailIDs as $userMailID) {
-                $userMailsHandler->ReceiveRewards($userID, $userMailID, $openStatus, MailValues::ReceiveStatusDone);
-            }           
+        if ($receiveStatus == 1) {     
+            $userMailsHandler->ReceiveRewards($userID, $checkUserMailsIDs, $openStatus, MailValues::ReceiveStatusDone);
             $userBagHandler->AddItems($totalItems, ItemValue::CauseMail);            
             foreach ($totalItems as $item) {
                 $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
             }
         }
+        else if ($receiveStatus == 0) {
+            $userMailsHandler->UpdateOpenStatus($userID, $checkUserMailsIDs, $openStatus);
+        }
+
+        // 錯誤訊息判斷
+        if ($checkException == ItemException::MailNotExist)
+            throw new ItemException(ItemException::MailNotExist);
+        else if ($checkException == ItemException::MailRewardsReceived)
+            throw new ItemException(ItemException::MailRewardsReceived);
+        else if ($checkException == ItemException::UserItemStacklimitReached)
+            throw new ItemException(ItemException::UserItemStacklimitReached);
+
 
         $result = new ResultData(ErrorCode::Success);
         $result->openStatus = $openStatus;

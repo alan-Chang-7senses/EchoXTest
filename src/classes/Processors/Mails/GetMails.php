@@ -28,10 +28,9 @@ class GetMails extends BaseProcessor
                 continue;
             }
 
-            $mailItems = $userMailsHandler->GetMailItems($userMailInfo->UserMailID);
+            $mailItems = $userMailsHandler->GetUserMailItems($userMailInfo->UserMailID);
             $items = [];
-            foreach($mailItems as $mailItem)
-            {
+            foreach($mailItems as $mailItem) {
                 $items[] = ItemUtility::GetClientSimpleInfo($mailItem->ItemID, $mailItem->Amount);
             }
             
@@ -45,10 +44,12 @@ class GetMails extends BaseProcessor
                 'argus' => $userMailInfo->MailArgument,
                 'sender' => $mailInfo->Sender,
                 'url' => $mailInfo->URL,
+                'sendTime' => $userMailInfo->CreateTime,
                 'remainingTime' => $userMailInfo->FinishTime - $GLOBALS[Globals::TIME_BEGIN],
                 'rewardItems' => $items,
             ];
         }
+
         $result = new ResultData(ErrorCode::Success);
         $result->Mails = $mails;
 

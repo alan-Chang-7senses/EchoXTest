@@ -12,5 +12,7 @@ $lang[ItemException::MailNotExist] = 'Mail does not exist or has been deleted.';
 $lang[ItemException::MailRewardsReceived] = 'Received mail reward';
 $lang[ItemException::AddItemError] = 'ItemID:[itemID] add error!!';
 $lang[ItemException::DecItemError] = 'ItemID:[itemID] dec error!!';
+$lang[ItemException::DeleteMailAfterOpenMail] = 'Delete mail after open mail.';
+$lang[ItemException::DeleteMailAfterReceiveReward] = 'Delete mail after receive reward.';
 
 return $lang;

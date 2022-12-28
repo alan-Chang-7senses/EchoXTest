@@ -23,5 +23,7 @@ class MailValues {
     //收取物品狀態
     const ReceiveStatusNone = 0; // 未收取
     const ReceiveStatusDone = 1; // 已收取
+    //信件無期限保留時間戳
+    const MailMaxTimestamp = 2147483647;
 
 }
