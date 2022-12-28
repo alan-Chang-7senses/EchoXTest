@@ -46,6 +46,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | [argus](#argus) | object | 信件參數 |
 | sender | string | 信件寄件人 |
 | url | string | 信件內容-網址 |
+| sendTime | int | 發送時間 (Timestamp) |
 | remainingTime | int | 剩餘時間 |
 | [rewardItems](#rewardItems) | object| 獎勵物品|
 |
@@ -81,8 +82,8 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 				"userMailID": 2,
 				"openStatus": 0,
 				"receiveStatus": 0,
-				"title": "Welcome to PetaRush,",
-				"content": "在時間 {time1} 送上盲盒開出 已取代名稱 的賦能 「{areaID}」30張！ 現在時間: {time1}",
+				"title": "火星幣賽場-「勝者獎金更多」賽季獎勵",
+				"content": "大會根據貴賽隊上個賽季的排名與成績，已將屬於您們的賽季獎勵送達，期待能再見到貴賽隊新一季的優秀表現。",
 				"argus": [
 					{
 						"kind": 1,
@@ -97,19 +98,59 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 						"value": "123456"
 					}
 				],
-				"sender": "Sender: Direct Team",
-				"url": "https://www.google.com",
-				"remainingTime": 604084.367775917,
+				"sender": "寄件人：研發團隊",
+				"url": "",
+				"sendTime": 1672070400,
+				"remainingTime": 475270576.0674529,
 				"rewardItems": [
 					{
-						"itemID": 1131,
-						"amount": 1,
-						"icon": "ItemIcon_0008"
+						"itemID": -4,
+						"amount": 5,
+						"icon": "ItemIcon_0040"
 					},
 					{
-						"itemID": 1121,
+						"itemID": -2,
+						"amount": 3,
+						"icon": "ItemIcon_0026"
+					},
+					{
+						"itemID": 4008,
 						"amount": 1,
-						"icon": "ItemIcon_0006"
+						"icon": "ItemIcon_023_1"
+					},
+					{
+						"itemID": 4009,
+						"amount": 1,
+						"icon": "ItemIcon_023_2"
+					},
+					{
+						"itemID": 4010,
+						"amount": 1,
+						"icon": "ItemIcon_023_3"
+					}
+				]
+			},
+			{
+				"userMailID": 1,
+				"openStatus": 0,
+				"receiveStatus": 0,
+				"title": "<color=#F6D3A4>PetaRush 精彩活動</color>",
+				"content": "歡迎來到《PetaRush》，CB2菁英測試期間，官方平台準備許多精彩活動，誠摯邀請您共襄盛舉，凡參加CB2菁英封測，就有機會將各種好禮大獎搬到OB正式版本上使用喔！\n\nCB2慶祝活動\n※\nhttps://lihi1.com/kd459",
+				"argus": [],
+				"sender": "寄件人：研發團隊",
+				"url": "",
+				"sendTime": 1671984000,
+				"remainingTime": 289329.06745290756,
+				"rewardItems": [
+					{
+						"itemID": 5100,
+						"amount": 5,
+						"icon": "ItemIcon_0032"
+					},
+					{
+						"itemID": 5201,
+						"amount": 10,
+						"icon": "ItemIcon_0041"
 					}
 				]
 			}
