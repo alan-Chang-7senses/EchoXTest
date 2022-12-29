@@ -20,7 +20,7 @@ Content Type: `application/x-www-form-urlencoded`
 ### 參數
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| userMailIDs | string | 信件編號所組成的 JSON 陣列字串  |
+| userMailID | string | 信件編號所組成的 JSON 陣列字串  |
 
 ## Response
 
