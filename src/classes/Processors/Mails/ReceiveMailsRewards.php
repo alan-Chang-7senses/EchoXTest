@@ -21,14 +21,20 @@ class ReceiveMailsRewards extends BaseProcessor {
 
     public function Process(): ResultData {
 
-        $userMailIDs = json_decode(InputHelper::post('userMailIDs'));
+        $userMailID = InputHelper::post('userMailID');
         $openStatus = InputHelper::post('openStatus');
         $receiveStatus = InputHelper::post('receiveStatus');
 
         if ($openStatus != 0)
             $openStatus = 1;
 
-        $checkException = 0;
+        // userMailID 相容新舊版 Client 解析單一信件(string) 或 多封信件(json)
+        $temp = json_decode($userMailID);
+        if (is_Array($temp) == true)
+            $userMailIDs = $temp;
+        else 
+            $userMailIDs[] = $temp;
+
         $itemsArray = [];
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $accessor->Transaction(function () use ($accessor, $userMailIDs, $openStatus, $receiveStatus, &$itemsArray) {
@@ -41,7 +47,7 @@ class ReceiveMailsRewards extends BaseProcessor {
             $userMailsHandler = new MailsHandler();
             $totalItems = [];
             $checkUserMailsIDs = [];
-            
+            $checkException = 0;
             foreach ($userMailIDs as $userMailID) {
 
                 $mailInfo = $userMailsHandler->GetUserMailByUserMailID($userID, $userMailID);
@@ -95,17 +101,16 @@ class ReceiveMailsRewards extends BaseProcessor {
                     "UpdateTime" => $GLOBALS[Globals::TIME_BEGIN],
                 ]);
             }
+
+            // 錯誤訊息判斷
+            if ($checkException == ItemException::MailNotExist)
+                throw new ItemException(ItemException::MailNotExist);
+            else if ($checkException == ItemException::MailRewardsReceived)
+                throw new ItemException(ItemException::MailRewardsReceived);
+            else if ($checkException == ItemException::UserItemStacklimitReached)
+                throw new ItemException(ItemException::UserItemStacklimitReached);
         });
 
-        // 錯誤訊息判斷
-        if ($checkException == ItemException::MailNotExist)
-            throw new ItemException(ItemException::MailNotExist);
-        else if ($checkException == ItemException::MailRewardsReceived)
-            throw new ItemException(ItemException::MailRewardsReceived);
-        else if ($checkException == ItemException::UserItemStacklimitReached)
-            throw new ItemException(ItemException::UserItemStacklimitReached);
-
-            
         $result = new ResultData(ErrorCode::Success);
         $result->openStatus = $openStatus;
         $result->receiveStatus = $receiveStatus;

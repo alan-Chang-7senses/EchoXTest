@@ -14,7 +14,14 @@ use Processors\BaseProcessor;
 class DeleteMails extends BaseProcessor {
 
     public function Process(): ResultData {
-        $userMailIDs = json_decode(InputHelper::post('userMailIDs'));
+        $userMailID = InputHelper::post('userMailID');
+
+        // userMailID 相容新舊版 Client 解析單一信件(string) 或 多封信件(json)
+        $temp = json_decode($userMailID);
+        if (is_Array($temp) == true)
+            $userMailIDs = $temp;
+        else
+            $userMailIDs[] = $temp;
 
         $userMailsHandler = new MailsHandler();
         $checkUserMailsIDs = [];
