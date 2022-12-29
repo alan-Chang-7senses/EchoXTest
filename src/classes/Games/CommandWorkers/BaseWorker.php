@@ -9,6 +9,8 @@ namespace Games\CommandWorkers;
  */
 abstract class BaseWorker {
     
+    private float $timingPrev = 0;
+
     abstract public function Process() : array;
     
     public function __construct(int $argc, array $argv) {
@@ -20,5 +22,16 @@ abstract class BaseWorker {
             
             foreach ($query as $key => $value) $this->$key = $value;
         }
+    }
+    
+    protected function EchoMessage(string $label, mixed $contents = null) : void{
+        
+        $current = microtime(true);
+        $timing = $current - $this->timingPrev;
+        $this->timingPrev = $current;
+        if($contents === null) return;
+        
+        $contents = [$label => $contents, 'Timing' => $timing.' seconds.'];
+        echo json_encode($contents, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT).PHP_EOL.PHP_EOL;
     }
 }
