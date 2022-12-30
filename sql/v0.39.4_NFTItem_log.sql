@@ -2,16 +2,15 @@ USE `koa_static`;
 
 CREATE TABLE IF NOT EXISTS `NFTItemsHandleConfig` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
-  `OutsideCode` text NOT NULL DEFAULT '' COMMENT '外部平台代號',
-  `NFTItemCode` text NOT NULL DEFAULT '' COMMENT 'NFTItem 識別碼',
+  `OutsideCode` text NOT NULL COMMENT '外部平台代號',
+  `NFTItemCode` text NOT NULL COMMENT 'NFTItem 識別碼',
   `HandleType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '收到 NFTItemCode 的處理方式',
   `MailID` int(11) NOT NULL DEFAULT -1 COMMENT '其值為信件表的信件編號,-1 代表這個欄位用不到',
   `RewardContentGroup` int(11) NOT NULL DEFAULT -1 COMMENT '其值為獎勵內容表的群組編號,-1 代表這個欄位用不到',
-  PRIMARY KEY (`Serial`),
-  UNIQUE KEY `OutsideCode_NFTItemCode` (`OutsideCode`,`NFTItemCode`) USING HASH
+  PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
+ALTER TABLE NFTItemsHandleConfig ADD UNIQUE KEY OutsideCode_NFTItemCode (`OutsideCode`(20),`NFTItemCode`(20));
 
 USE `koa_log`;
 
