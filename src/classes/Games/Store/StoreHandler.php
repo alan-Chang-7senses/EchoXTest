@@ -77,12 +77,13 @@ class StoreHandler {
         }
     }
 
-    public function UpdatePurchaseTrades(int $storeID, int $storeType, string|null $tradIDArrays, int $groupID, int $amount): string {
+    public function UpdatePurchaseTrades(int $storeID, string|null $tradIDArrays, int $storeType, int $isFix, int $groupID, int $amount): string {
 
         if ($groupID == StoreValue::NoStoreGroup) {
             return "";
         }
-        $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : $this->GetTradeIDs($storeID, $isFix);
+
         $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (
             SELECT * FROM StorePurchase v1 INNER JOIN
@@ -93,32 +94,37 @@ class StoreHandler {
             "Amount" => $amount
         ]);
 
+        $storeTradeIDs = [];
+        $idleTradeIDs = []; // 儲值商品因為有第三方的問題，所以不取代 TradeIDs
+        $this->GetIdleTradeIds($idleTradeIDs, count($items));
+
         if (empty($items)) {
             throw new StoreException(StoreException::Error, ['[cause]' => "L96:" . $groupID]);
         }
 
         foreach ($items as $item) {
             $storeTradesHolder = new StoreTradesHolder();
-            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+            $storeTradesHolder->tradeID = $this->UseIdleTradeIds($idleTradeIDs);
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = $storeType;
+            $storeTradesHolder->isFix = $isFix;
             $storeTradesHolder->cPIndex = $item->PIndex;
             $storeTradesHolder->remainInventory = StoreValue::InventoryNoLimit;
-            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
+            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
         }
-        $this->ClearStoreTrade($tradIDs);
+        $this->ResetTradeStatus($tradIDs, StoreValue::TradeStatusSeal); //儲值要封存不能釋放
 
         return json_encode($storeTradeIDs);
     }
 
-    public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $groupID, int $amount): string {
-
+    public function UpdateCountersTrades(int $storeID, string|null $tradIDArrays, int $isFix, int $groupID, int $amount): string {
         if ($groupID == StoreValue::NoStoreGroup) {
             return "";
         }
-        $tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
-        $accessor = new PDOAccessor(EnvVar::DBStatic);
+        //$tradIDs = empty($tradIDArrays) ? null : json_decode($tradIDArrays);
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : $this->GetTradeIDs($storeID, $isFix);
 
+        $accessor = new PDOAccessor(EnvVar::DBStatic);
         $items = $accessor->executeBindFetchAll("SELECT * FROM (
             SELECT * FROM StoreCounters v1 INNER JOIN
             (SELECT CounterID AS TempID FROM StoreCounters WHERE GroupID = :GroupID GROUP BY CounterID ORDER BY RAND()  LIMIT 1) as v2
@@ -133,16 +139,19 @@ class StoreHandler {
         }
 
         $storeTradeIDs = [];
+        $this->GetIdleTradeIds($tradIDs, count($items) - count($tradIDs)); //一般商品可取代 tradIDs
+
         foreach ($items as $item) {
             $storeTradesHolder = new StoreTradesHolder();
-            $storeTradesHolder->tradeID = StoreValue::NoTradeID;
+            $storeTradesHolder->tradeID = $this->UseIdleTradeIds($tradIDs);
             $storeTradesHolder->storeID = $storeID;
             $storeTradesHolder->storeType = StoreValue::TypeCounters;
+            $storeTradesHolder->isFix = $isFix;
             $storeTradesHolder->cPIndex = $item->CIndex;
             $storeTradesHolder->remainInventory = $item->Inventory;
-            $storeTradeIDs[] = $this->AddStoreTrades($storeTradesHolder);
+            $storeTradeIDs[] = $this->UpdateStoreTrades($storeTradesHolder);
         }
-        $this->ClearStoreTrade($tradIDs);
+        $this->ResetTradeStatus($tradIDs, StoreValue::TradeStatusIdle);
 
         return json_encode($storeTradeIDs);
     }
@@ -154,8 +163,6 @@ class StoreHandler {
             $accessor->FromTable('StoreInfos')->Add([
                 "UserID" => $this->userID,
                 "StoreID" => $storinfo->storeID,
-                "FixTradIDs" => $storinfo->fixTradIDs,
-                "RandomTradIDs" => $storinfo->randomTradIDs,
                 "RefreshRemainAmounts" => $storinfo->refreshRemainAmounts,
                 "CreateTime" => $nowtime,
                 "UpdateTime" => $nowtime
@@ -172,31 +179,80 @@ class StoreHandler {
         }
     }
 
-    private function ClearStoreTrade(array|null $tradIDs) {
-        if ($tradIDs == null) {
+    public function GetTradeIDs(int $storeID, int $isFix): array {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $myTradeIds = $accessor->SelectExpr('TradeID, UserID, Status, StoreID, IsFix')->FromTable('StoreTrades')->
+                WhereEqual("UserID", $this->userID)->WhereEqual("Status", StoreValue::TradeStatusInUse)->
+                WhereEqual("StoreID", $storeID)->WhereEqual("IsFix", $isFix)->
+                FetchAll();
+
+        $oldMyTradeIds = [];
+        foreach ($myTradeIds as $myTradeId) {
+            $oldMyTradeIds[] = $myTradeId->TradeID;
+        }
+
+        return $oldMyTradeIds;
+    }
+
+    private function GetIdleTradeIds(array &$oldTradeIds, int $needAmount) {
+        if ($needAmount <= 0) {
             return;
         }
 
-        foreach ($tradIDs as $tradID) {
-            StoreTradesPool::Instance()->Save($tradID, 'Update', [
-                "Status" => StoreValue::TradeStatusIdle,
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $needTradeIds = $accessor->SelectExpr('`TradeID`, `Status`')->FromTable('StoreTrades')->
+                        WhereEqual('Status', StoreValue::TradeStatusIdle)->
+                        Limit($needAmount)->FetchAll();
+
+        foreach ($needTradeIds as $needTradeId) {
+            $oldTradeIds[] = $needTradeId->TradeID;
+        }
+    }
+
+    private function UseIdleTradeIds(array &$tradeIds): int {
+        $tradeID = array_shift($tradeIds);
+        if (empty($tradeID)) {
+            return StoreValue::NoTradeID;
+        } else {
+            return $tradeID;
+        }
+    }
+
+    private function ResetTradeStatus(array|null $tradeIDs, int $tradeStatus) {
+        if ($tradeIDs == null) {
+            return;
+        }
+
+        foreach ($tradeIDs as $tradeID) {
+            StoreTradesPool::Instance()->Save($tradeID, 'Update', [
+                "Status" => $tradeStatus,
+                "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
             ]);
         }
     }
 
-    private function AddStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
+    private function UpdateStoreTrades(StoreTradesHolder|stdClass $tradeHolder): int {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $nowtime = (int) $GLOBALS[Globals::TIME_BEGIN];
-        $accessor->FromTable('StoreTrades')->Add([
+        $bind = [
             "UserID" => $this->userID,
             "StoreID" => $tradeHolder->storeID,
             "Status" => StoreValue::TradeStatusInUse,
             "StoreType" => $tradeHolder->storeType,
+            "IsFix" => $tradeHolder->isFix,
             "CPIndex" => $tradeHolder->cPIndex,
             "RemainInventory" => $tradeHolder->remainInventory,
             "UpdateTime" => $nowtime
-        ]);
-        return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
+        ];
+        if ($tradeHolder->tradeID == StoreValue::NoTradeID) {
+            // 加入新資料
+            $accessor->FromTable('StoreTrades')->Add($bind);
+            return (int) $accessor->FromTable('StoreTrades')->LastInsertID();
+        } else {
+            // 更新資料
+            StoreTradesPool::Instance()->Save($tradeHolder->tradeID, 'Update', $bind);
+            return $tradeHolder->tradeID;
+        }
     }
 
     public function UpdateStoreTradesRemain(StoreTradesHolder|stdClass $tradeHolder) {
@@ -205,9 +261,13 @@ class StoreHandler {
         ]);
     }
 
-    public function GetTrades(int $storeType, string $currency, string|null $tradIDArrays): array {
-        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : [];
+    public function GetTrades(int $storeType, string $currency, string|null $tradIDArrays, int $storeID, int $isFix): array {
+        $tradIDs = ($tradIDArrays != null) ? json_decode($tradIDArrays) : $this->GetTradeIDs($storeID, $isFix);
         $result = [];
+        if ($tradIDs === null) {
+            return $result;
+        }
+
         foreach ($tradIDs as $tradID) {
             $storeTradesHolder = StoreTradesPool::Instance()->{$tradID};
 
@@ -313,4 +373,5 @@ class StoreHandler {
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }
+
 }

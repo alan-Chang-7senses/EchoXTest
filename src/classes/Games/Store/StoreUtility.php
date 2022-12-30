@@ -99,8 +99,8 @@ class StoreUtility {
             $holder->storeInfoID = $row->StoreInfoID;
             $holder->userID = $row->UserID;
             $holder->storeID = $row->StoreID;
-            $holder->fixTradIDs = $row->FixTradIDs;
-            $holder->randomTradIDs = $row->RandomTradIDs;
+            $holder->fixTradIDs = $row->FixTradIDs??"";
+            $holder->randomTradIDs = $row->RandomTradIDs??"";
             $holder->refreshRemainAmounts = $row->RefreshRemainAmounts;
             $holder->createTime = $row->CreateTime;
             $holder->updateTime = $row->UpdateTime;
