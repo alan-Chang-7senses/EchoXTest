@@ -15,6 +15,7 @@ class LogError {
     public string $file;
     public int $line;
     public string $message;
+    public string|null $authorization;
     public array $httpQuery;
     public string $redirectURL;
     public array $trace;

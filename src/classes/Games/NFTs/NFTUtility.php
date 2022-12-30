@@ -5,7 +5,6 @@ namespace Games\NFTs;
 use Consts\EnvVar;
 use Games\Consts\PlayerValue;
 use Games\NFTs\Holders\MetadataDNAHolder;
-use Games\Consts\NFTQueryValue;
 use Games\NFTs\Holders\PartSkillHolder;
 /**
  * Description of NFTUtility
@@ -16,10 +15,6 @@ class NFTUtility {
     
     public static function Authorization() {
         return 'Basic '.base64_encode(getenv(EnvVar::NFTClientID).':'.getenv(EnvVar::NFTAPISecret));
-    }
-    
-    public static function EventPayload(){
-        return json_decode(file_get_contents('php://input'));
     }
     
     public static function ToPlayerID(int $nftID) : int{

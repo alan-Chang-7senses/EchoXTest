@@ -3,13 +3,11 @@
 namespace Processors\Interfaces\Metasens;
 
 use Consts\ErrorCode;
-use Consts\Globals;
-use Consts\Sessions;
 use Exception;
-use Games\NFTs\NFTFactory;
-use Games\NFTs\NFTUtility;
 use Games\NFTs\NFTCertificate;
 use Games\NFTs\NFTItem;
+use Games\NFTs\NFTUtility;
+use Generators\DataGenerator;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 use stdClass;
@@ -30,7 +28,7 @@ class NFTEvent extends BaseProcessor{
         if(($headers['Authorization'] ?? $headers['authorization']) != $nftAuthorization)
             throw new Exception ('Authorzation error', ErrorCode::VerifyError);
 
-        $payload = NFTUtility::EventPayload();
+        $payload = DataGenerator::ReceivePayloadJSON();
         
         if(method_exists($this, $payload->type)) {
             $this->{$payload->type}($payload);
