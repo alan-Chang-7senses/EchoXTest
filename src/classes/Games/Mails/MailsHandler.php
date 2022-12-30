@@ -6,6 +6,8 @@ use Consts\Globals;
 use Games\Accessors\MailsAccessor;
 use Games\Consts\MailValues;
 use Games\Pools\MailsInfoPool;
+use Games\Pools\MailsItemsPool;
+use Games\Users\RewardHandler;
 use Games\Pools\UserMailItemsPool;
 use Games\Pools\UserMailsPool;
 use stdClass;
@@ -18,11 +20,11 @@ class MailsHandler {
         return UserMailsPool::Instance()->{ $userID};
     }
 
-    public function GetUserMailByuUerMailID(int|string $userID, int|string $userMailID): stdClass|false {
-        $userMailsInfo = UserMailsPool::Instance()->$userID;
-        foreach ($userMailsInfo->rows as $info) {
-            if ($info->UserMailID == $userMailID) {
-                return $info;
+    public function GetUserMailByUserMailID(int|string $userID, int|string $userMailID): stdClass|false {
+        $userMails = UserMailsPool::Instance()->$userID;
+        foreach ($userMails->rows as $userMail) {
+            if ($userMail->UserMailID == $userMailID) {
+                return $userMail;
             }
         }
         return false;
@@ -40,37 +42,44 @@ class MailsHandler {
 
     public function AddMail(int|string $userID, int $mailID, int $day, int $receiveStatus = MailValues::ReceiveStatusNone): int {
         $mailsAccessor = new MailsAccessor();
-        $index = $mailsAccessor->AddMail($userID, $mailID, $day, $this->arguments, $receiveStatus);
+        $index = $mailsAccessor->AddMailWithDays($userID, $mailID, $day, $this->arguments, $receiveStatus);
         UserMailsPool::Instance()->Delete($userID);
         return $index;
     }
 
-    public function ReceiveRewards(int|string $userID, int $userMailID, int $openStatus, int $receiveStatus) {
+    public function AddMailWithTime(int|string $userID, int $mailID, int $startTime, int $endTime, int $receiveStatus = MailValues::ReceiveStatusNone): int {
+        $mailsAccessor = new MailsAccessor();
+        $index = $mailsAccessor->AddMailWithTime($userID, $mailID, $startTime, $endTime, $this->arguments, $receiveStatus);
+        UserMailsPool::Instance()->Delete($userID);
+        return $index;
+    }
+
+    public function ReceiveRewards(int|string $userID, array $userMailIDs, int $openStatus, int $receiveStatus) {
         $bind = [
             'OpenStatus' => $openStatus,
             'ReceiveStatus' => $receiveStatus,
         ];
         $mailsAccessor = new MailsAccessor();
-        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        $mailsAccessor->UpdateUserMails($userMailIDs, $bind);
         UserMailsPool::Instance()->Delete($userID);
     }
 
-    public function UpdateOpenStatus(int|string $userID, int $userMailID, int $openStatus) {
+    public function UpdateOpenStatus(int|string $userID, array $userMailIDs, int $openStatus) {
         $bind = [
             'OpenStatus' => $openStatus
         ];
         $mailsAccessor = new MailsAccessor();
-        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        $mailsAccessor->UpdateUserMails($userMailIDs, $bind);
         UserMailsPool::Instance()->Delete($userID);
     }
 
-    public function DeleteMails(int|string $userID, int $userMailID) {
+    public function DeleteMails(int|string $userID, array $userMailIDs) {
         $bind = [
             'UpdateTime' => $GLOBALS[Globals::TIME_BEGIN],
             'FinishTime' => $GLOBALS[Globals::TIME_BEGIN],
         ];
         $mailsAccessor = new MailsAccessor();
-        $mailsAccessor->UpdateUserMails($userMailID, $bind);
+        $mailsAccessor->UpdateUserMails($userMailIDs, $bind);
         UserMailsPool::Instance()->Delete($userID);
     }
 
@@ -93,7 +102,7 @@ class MailsHandler {
         return true;
     }
 
-    public function GetMailItems(int $userMailID): array {
+    public function GetUserMailItems(int $userMailID): array {
         $items = UserMailItemsPool::Instance()->{ $userMailID};
         return $items->rows;
     }
@@ -104,6 +113,27 @@ class MailsHandler {
             return false;
         }
         return $mailsInfo->{ $lang};
+    }
+
+    public function GetMailItems(int $mailsID): stdClass|false {
+        $mailItems = MailsItemsPool::Instance()->$mailsID;
+
+        $result = new stdClass();
+        if ($mailItems !== false) {
+            $rewardHandler = new RewardHandler($mailItems->RewardID);
+
+            $result->MailsID = $mailItems->MailsID;
+            $result->StartTime = $mailItems->StartTime;
+            $result->EndTime = $mailItems->EndTime;
+            $result->Items = [];
+            foreach ($rewardHandler->GetItems() as $tempItem) {
+                $item = new stdClass();
+                $item->ItemID = $tempItem->ItemID;
+                $item->Amount = $tempItem->Amount;
+                $result->Items[] = $item;
+            }
+        }
+        return $result; 
     }
 
     public function ReplaceContent(string $content, string|null|array &$argumentString): string {

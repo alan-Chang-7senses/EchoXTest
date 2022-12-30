@@ -25,4 +25,28 @@ class ItemUtility {
         return $result;
     }
 
+    /**
+     * 累加物品
+     * @param array $items <p>被累加陣列</p>
+     * @param stdClass|array $addItems <p>新加入物品資訊,字首大寫,需含ItemID、Amount</p>
+     */
+    public static function AccumulateItems(array &$items, stdClass|array $addItems) {
+
+        if (is_array($addItems)) {
+            foreach ($addItems as $addItem) {
+                self::AccumulateItem($items, $addItem);
+            }
+        } else {
+            self::AccumulateItem($items, $addItems);
+        }
+    }
+
+    private static function AccumulateItem(array &$items, stdClass $addItem) {
+        if (isset($items[$addItem->ItemID])) {
+            $items[$addItem->ItemID]->Amount += $addItem->Amount;
+        } else {
+            $items[$addItem->ItemID] = clone $addItem;
+        }
+    }
+
 }

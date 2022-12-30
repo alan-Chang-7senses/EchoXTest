@@ -26,4 +26,7 @@ class MailValues {
     //鎖定狀態
     const UnLock = 0;            // 解鎖
     const Lock = 1;              // 上鎖
+    //信件無期限保留時間戳
+    const MailMaxTimestamp = 2147483647;
+
 }

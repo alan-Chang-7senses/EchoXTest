@@ -16,4 +16,6 @@ class ItemException extends NormalException
     const MailRewardsReceived = 5008;
     const AddItemError = 5009;
     const DecItemError = 5010;
+    const DeleteMailAfterOpenMail = 5011;
+    const DeleteMailAfterReceiveReward = 5012;
 }
