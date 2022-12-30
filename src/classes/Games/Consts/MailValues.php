@@ -23,5 +23,7 @@ class MailValues {
     //收取物品狀態
     const ReceiveStatusNone = 0; // 未收取
     const ReceiveStatusDone = 1; // 已收取
-
+    //鎖定狀態
+    const UnLock = 0;            // 解鎖
+    const Lock = 1;              // 上鎖
 }
