@@ -37,7 +37,7 @@ Content Type: `application/json`
 | openStatus | int | 開啟狀態(0:關閉, 1:開啟) |
 | receiveStatus | int | 領獎狀態(0:未領取, 1:已領取) |
 | [rewardItems](#rewardItems) | object| 獎勵物品(已累加，物品不重複)|
-| errorCode | int | 領獎錯誤訊息(5007:信件不存在, 5008:信件道具已領取, 5006:信件道具超過堆疊上限) |
+| errorCode | int | 領獎錯誤訊息(0:正確, 5007:信件不存在, 5008:信件道具已領取, 5006:信件道具超過堆疊上限) |
 
 #### <span id="rewardItems">rewardItems 內容</span>
 
