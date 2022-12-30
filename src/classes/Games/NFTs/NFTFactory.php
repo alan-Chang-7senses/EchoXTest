@@ -352,19 +352,11 @@ class NFTFactory {
             ->WhereIn('PlayerID',$changeholdPlayerIDs)
             ->Modify(['UserID' => $this->userHolder->userID,'Nickname' => null, 'SyncRate' => 0]);
             
-            $rows = $accessor->ClearCondition()->FromTable('Users')
-                        ->WhereIn('Player',$changeholdPlayerIDs)->FetchAll();
-            $accessor->ClearCondition()->PrepareName('RefreshOtherUserPlayer');            
-            if($rows !== false)
-            {
-                foreach($rows as $row)
-                {
-                    $userInfo =(new UserHandler($row->UserID))->GetInfo();
-                    $accessor->ClearCondition()->FromTable('Users')
-                    ->WhereEqual('UserID',$userInfo->id)->Modify(['Player' => $userInfo->players[0]]);
-                    UserPool::Instance()->Delete($userInfo->id);
-                }    
-            }
+            $accessor->ClearCondition()
+                     ->FromTable('Users')
+                     ->WhereIn('Player',$changeholdPlayerIDs)
+                     ->Modify(['Player' => 0]);
+            
         }
 
         UserPool::Instance()->Delete($this->userHolder->userID);
