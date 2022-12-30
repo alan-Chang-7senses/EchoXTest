@@ -2,30 +2,64 @@
 
 namespace Processors\Mails;
 
-use Consts\Sessions;
 use Consts\ErrorCode;
-use Holders\ResultData;
-use Helpers\InputHelper;
-use Games\Mails\MailsHandler;
-use Processors\BaseProcessor;
+use Consts\Sessions;
 use Games\Exceptions\ItemException;
+use Games\Mails\MailsHandler;
+use Games\Pools\MailsItemsPool;
+use Helpers\InputHelper;
+use Holders\ResultData;
+use Processors\BaseProcessor;
 
-class DeleteMails extends BaseProcessor
-{
-    public function Process(): ResultData
-    {
+class DeleteMails extends BaseProcessor {
 
+    public function Process(): ResultData {
         $userMailID = InputHelper::post('userMailID');
 
+        // userMailID 相容新舊版 Client 解析單一信件(string) 或 多封信件(json)
+        $temp = json_decode($userMailID);
+        if (is_Array($temp) == true)
+            $userMailIDs = $temp;
+        else
+            $userMailIDs[] = $temp;
+
         $userMailsHandler = new MailsHandler();
-        $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($_SESSION[Sessions::UserID], $userMailID);
-        if ($mailInfo == false) {
-            throw new ItemException(ItemException::MailNotExist);
+        $checkUserMailsIDs = [];
+        $checkException = 0;
+        foreach ($userMailIDs as $userMailID) {
+
+            $mailInfo = $userMailsHandler->GetUserMailByUserMailID($_SESSION[Sessions::UserID], $userMailID);
+            if ($mailInfo == false) {
+                $checkException = ItemException::MailNotExist;
+                continue;
+            }
+
+            if ($mailInfo->OpenStatus == 0) {
+                $checkException = ItemException::DeleteMailAfterOpenMail;
+                continue;
+            }
+
+            $mailItems = MailsItemsPool::Instance()->{$mailInfo->MailsID};
+            if ($mailItems !== false && $mailInfo->ReceiveStatus == 0) {
+                $checkException = ItemException::DeleteMailAfterReceiveReward;
+                continue;
+            }
+            
+            $checkUserMailsIDs[] = $userMailID;
         }
-        $userMailsHandler->DeleteMails($_SESSION[Sessions::UserID], $userMailID);
+
+        $userMailsHandler->DeleteMails($_SESSION[Sessions::UserID], $checkUserMailsIDs);
+
+        if ($checkException == ItemException::MailNotExist)
+            throw new ItemException(ItemException::MailNotExist);
+        else if ($checkException == ItemException::DeleteMailAfterOpenMail)
+            throw new ItemException(ItemException::DeleteMailAfterOpenMail);
+        else if ($checkException == ItemException::DeleteMailAfterReceiveReward)
+            throw new ItemException(ItemException::DeleteMailAfterReceiveReward);
+
         $result = new ResultData(ErrorCode::Success);
+        
         return $result;
     }
-
 
 }

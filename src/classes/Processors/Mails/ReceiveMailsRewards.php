@@ -2,7 +2,10 @@
 
 namespace Processors\Mails;
 
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\ItemValue;
 use Games\Consts\MailValues;
@@ -14,51 +17,106 @@ use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
 
-class ReceiveMailsRewards extends BaseProcessor
-{
+class ReceiveMailsRewards extends BaseProcessor {
 
-    public function Process(): ResultData
-    {
+    public function Process(): ResultData {
+
         $userMailID = InputHelper::post('userMailID');
         $openStatus = InputHelper::post('openStatus');
         $receiveStatus = InputHelper::post('receiveStatus');
 
-        $userMailsHandler = new MailsHandler();
-        $mailInfo = $userMailsHandler->GetUserMailByuUerMailID($_SESSION[Sessions::UserID], $userMailID);
-        if ($mailInfo == false) {
-            throw new ItemException(ItemException::MailNotExist);
-        }
         if ($openStatus != 0)
             $openStatus = 1;
 
+        // userMailID 相容新舊版 Client 解析單一信件(string) 或 多封信件(json)
+        $temp = json_decode($userMailID);
+        if (is_Array($temp) == true)
+            $userMailIDs = $temp;
+        else 
+            $userMailIDs[] = $temp;
+
         $itemsArray = [];
-        if ($receiveStatus == 1) {
-            if ($mailInfo->ReceiveStatus == MailValues::ReceiveStatusDone) {
-                throw new ItemException(ItemException::MailRewardsReceived);
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $accessor->Transaction(function () use ($accessor, $userMailIDs, $openStatus, $receiveStatus, &$itemsArray) {
+            $userID = $_SESSION[Sessions::UserID];
+            $lockInfo = $accessor->FromTable('SystemLock')->
+                            WhereEqual('UserID', $userID)->WhereEqual('APIName', $GLOBALS[Globals::REDIRECT_URL])->
+                            ForUpdate()->Fetch();
+
+            $userBagHandler = new UserBagHandler($userID);
+            $userMailsHandler = new MailsHandler();
+            $totalItems = [];
+            $checkUserMailsIDs = [];
+            $checkException = 0;
+            foreach ($userMailIDs as $userMailID) {
+
+                $mailInfo = $userMailsHandler->GetUserMailByUserMailID($userID, $userMailID);
+                if ($mailInfo == false) {
+                    $checkException = ItemException::MailNotExist;
+                    continue;
+                }
+    
+                if ($receiveStatus == 1) {
+                    if ($mailInfo->ReceiveStatus == MailValues::ReceiveStatusDone) {
+                        $checkException = ItemException::MailRewardsReceived;
+                        continue;
+                    }
+    
+                    $addItems = $userMailsHandler->GetUserMailItems($userMailID);
+    
+                    if ($userBagHandler->CheckAddStacklimit($addItems) == false) {
+                        $checkException = ItemException::UserItemStacklimitReached;
+                        continue;
+                    }
+    
+                    ItemUtility::AccumulateItems($totalItems, $addItems);
+                }
+    
+                $checkUserMailsIDs[] = $userMailID;
             }
 
-            $items = $userMailsHandler->GetMailItems($userMailID);
-            $userBagHandler = new UserBagHandler($_SESSION[Sessions::UserID]);
-            if ($userBagHandler->CheckAddStacklimit($items) == false) {
+            // 全部信件 全部領獎 全部開信
+            $itemsArray = [];
+            if ($receiveStatus == 1) {     
+                $userMailsHandler->ReceiveRewards($userID, $checkUserMailsIDs, $openStatus, MailValues::ReceiveStatusDone);
+                $userBagHandler->AddItems($totalItems, ItemValue::CauseMail);            
+                foreach ($totalItems as $item) {
+                    $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
+                }
+            }
+            else if ($receiveStatus == 0) {
+                $userMailsHandler->UpdateOpenStatus($userID, $checkUserMailsIDs, $openStatus);
+            }
+
+
+            if (empty($lockInfo)) {
+                $accessor->Add([
+                    "UserID" => $userID,
+                    "APIName" => $GLOBALS[Globals::REDIRECT_URL],
+                    "LockFlag" => MailValues::UnLock,
+                    "UpdateTime" => $GLOBALS[Globals::TIME_BEGIN],
+                ]);
+            } else {
+                $accessor->Modify([
+                    "UpdateTime" => $GLOBALS[Globals::TIME_BEGIN],
+                ]);
+            }
+
+            // 錯誤訊息判斷
+            if ($checkException == ItemException::MailNotExist)
+                throw new ItemException(ItemException::MailNotExist);
+            else if ($checkException == ItemException::MailRewardsReceived)
+                throw new ItemException(ItemException::MailRewardsReceived);
+            else if ($checkException == ItemException::UserItemStacklimitReached)
                 throw new ItemException(ItemException::UserItemStacklimitReached);
-            }
-            foreach ($items as $item) {
-                $userBagHandler->AddItems($item, ItemValue::CauseMail);
-                $itemsArray[] = ItemUtility::GetClientSimpleInfo($item->ItemID, $item->Amount);
-            }
-            $userMailsHandler->ReceiveRewards($_SESSION[Sessions::UserID], $userMailID, $openStatus, MailValues::ReceiveStatusDone);
-        }
-        else {
-            $receiveStatus = $mailInfo->ReceiveStatus;
-            $userMailsHandler->UpdateOpenStatus($_SESSION[Sessions::UserID], $userMailID, $openStatus);
-        }
+        });
 
         $result = new ResultData(ErrorCode::Success);
         $result->openStatus = $openStatus;
         $result->receiveStatus = $receiveStatus;
         $result->rewardItems = $itemsArray;
+
         return $result;
     }
-
 
 }

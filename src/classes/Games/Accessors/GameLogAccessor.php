@@ -2,7 +2,6 @@
 
 namespace Games\Accessors;
 
-
 use Consts\Globals;
 use Consts\Sessions;
 use Generators\DataGenerator;
@@ -15,11 +14,17 @@ class GameLogAccessor extends BaseAccessor{
     
     public function AddBaseProcess() : void{
         
+        $content = [
+            '_GET' => $GLOBALS['_GET'],
+            '_POST' => $GLOBALS['_POST'],
+            '_PAYLOAD' => DataGenerator::ReceivePayload(),
+        ];
+        
         $this->LogAccessor()->FromTable('BaseProcess')->Add([
             'UserID' => $_SESSION[Sessions::UserID] ?? 0,
             'UserIP' => DataGenerator::UserIP(),
             'RedirectURL' => $GLOBALS[Globals::REDIRECT_URL],
-            'Content' => json_encode($_POST, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            'Content' => json_encode($content, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             'Result' => (int)$GLOBALS[Globals::RESULT_PROCESS],
             'ResultData' => $GLOBALS[Globals::RESULT_PROCESS_DATA],
             'HttpCode' => http_response_code(),

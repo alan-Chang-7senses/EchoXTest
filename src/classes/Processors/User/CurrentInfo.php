@@ -4,7 +4,9 @@ namespace Processors\User;
 
 use Consts\ErrorCode;
 use Consts\Sessions;
+use Games\Accessors\AccessorFactory;
 use Games\Mails\MailsHandler;
+use Games\Pools\UserPool;
 use Games\Users\UserUtility;
 use Games\Users\UserHandler;
 use Holders\ResultData;
@@ -21,6 +23,16 @@ class CurrentInfo extends BaseProcessor{
         $userHandler = new UserHandler($_SESSION[Sessions::UserID]);
         $userInfo = $userHandler->GetInfo();
         
+        if(empty($userInfo->player))
+        {
+            // $userHandler->SaveData(['player' => $userInfo->players[0]]);
+            AccessorFactory::Main()->FromTable('Users')
+                                   ->WhereEqual('UserID',$userInfo->id)
+                                   ->Modify(['Player' => $userInfo->players[0]]);
+            UserPool::Instance()->Delete($userInfo->id);
+            $userInfo->player = $userInfo->players[0];//供顯示使用，以不代表pool內資料。
+        }
+
         $result = new ResultData(ErrorCode::Success);
         $result->info = [
             'userID' => $userInfo->id,

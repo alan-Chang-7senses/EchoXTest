@@ -4,6 +4,8 @@ namespace Accessors;
 
 use Consts\ErrorCode;
 use Exception;
+use Generators\DataGenerator;
+use Helpers\LogHelper;
 use stdClass;
 /**
  * Description of PoolAccessor
@@ -22,8 +24,10 @@ abstract class PoolAccessor {
         $mem = MemcacheAccessor::Instance();
         
         $data = $mem->get($key);
-        if($data !== false) $data = json_decode ($data);
-        else{
+        if($data !== false){
+            $data = json_decode ($data);
+            LogHelper::Extra('POOL_'.DataGenerator::RandomString(3), ['key' => $key, 'data' => $data]);
+        }else{
             $data = $this->FromDB($id);
             $mem->set($key, json_encode($data));
         }

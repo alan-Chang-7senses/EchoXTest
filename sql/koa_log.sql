@@ -62,7 +62,17 @@ CREATE TABLE IF NOT EXISTS `NFTCreatePlayer` (
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='NFT角色創建紀錄';
 
--- 取消選取資料匯出。
+-- 傾印  資料表 koa_log.NFTItemLog 結構
+CREATE TABLE IF NOT EXISTS `NFTItemLog` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `Email` varchar(255) NOT NULL DEFAULT '0' COMMENT '電子信箱',
+  `Payload` text NOT NULL COMMENT '平台Payload',
+  `IsCompleted` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '是否完成交易,完成為1',
+  `Message` text DEFAULT NULL COMMENT '交易未完成原因訊息',
+  `Timestamp` int(10) unsigned NOT NULL COMMENT '交易平台的時間戳',
+  `CreateTime` int(10) unsigned NOT NULL COMMENT '紀錄建立時間',
+  PRIMARY KEY (`Serial`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 傾印  資料表 koa_log.NFTOwnershipTransfer 結構
 CREATE TABLE IF NOT EXISTS `NFTOwnershipTransfer` (

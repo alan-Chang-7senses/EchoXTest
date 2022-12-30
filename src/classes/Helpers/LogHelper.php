@@ -6,6 +6,7 @@ use Consts\EnvVar;
 use Consts\Folders;
 use Consts\Globals;
 use Consts\Predefined;
+use Generators\DataGenerator;
 use Holders\LogError;
 use Throwable;
 /**
@@ -32,11 +33,20 @@ class LogHelper {
             $log->timezone = date_default_timezone_get();
         }
         
+        $headers = getallheaders();
+        
+        $payload = DataGenerator::ReceivePayload();
+        $payloadContent = [
+            'content' => $payload,
+            'object' => json_decode($payload),
+        ];
+        
         $log->code = $ex->getCode();
         $log->file = $ex->getFile();
         $log->line = $ex->getLine();
         $log->message = $ex->getMessage();
-        $log->httpQuery = ['_GET' => $GLOBALS['_GET'], '_POST' => $GLOBALS['_POST']];
+        $log->authorization = $headers['Authorization'] ?? $headers['authorization'] ?? null;
+        $log->httpQuery = ['_GET' => $GLOBALS['_GET'], '_POST' => $GLOBALS['_POST'], '_PAYLOAD' => $payloadContent];
         $log->redirectURL = $GLOBALS[Globals::REDIRECT_URL];
         $log->trace = $ex->getTrace();
         $log->extra = self::$extra;

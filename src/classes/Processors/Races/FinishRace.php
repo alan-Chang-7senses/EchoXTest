@@ -153,7 +153,7 @@ class FinishRace extends BaseRace{
             foreach($users as $user) {
                 if(UserUtility::IsNonUser($user['id'])) continue;
                 $userBagHandler = new UserBagHandler($user['id']);
-                $userBagHandler->DecItemByItemID($ticket, $ticketCost);
+                $userBagHandler->DecItemByItemID($ticket, $ticketCost, ItemValue::CauseRace);
             }
         }
         $rankingRows = AccessorFactory::Main()->SelectExpr('PlayerID AS player, Ranking AS ranking, UserID AS userID')

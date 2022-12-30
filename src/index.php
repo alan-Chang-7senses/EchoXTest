@@ -43,6 +43,8 @@ $GLOBALS[Globals::RESULT_PROCESS] = false;
 $GLOBALS[Globals::RESULT_PROCESS_MESSAGE] = null;
 $GLOBALS[Globals::RESULT_RESPOSE_TYPE] = ResposeType::JSON;
 
+if($redirectURL == '/User/SSOAuthURL')    sleep(1);
+
 session_start();
 //session_destroy();
 
