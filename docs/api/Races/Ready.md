@@ -66,6 +66,8 @@ Content Type: `application/json`
 | id | int | 賽局編號 |
 | [scene](#scene) | object | 場景資訊 |
 | [users](#users2) | array | 各玩家的角色競賽資料陣列 |
+| availableUsers | array | 可開局的使用者編號集合 |
+| notAvailableUsers | array | 不可開局的使用者編號集合 |
 
 #### <span id="scene">scene 內容</span>
 
@@ -133,400 +135,343 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | target | int | [作用對象](../codes/skill.md#target) |
 
 ### Example
-
 	{
-	    "error": {
-	        "code": 0,
-	        "message": ""
-	    },
-	    "id": 10,
-	    "scene": {
-	        "env": 1,
-	        "weather": 1,
-	        "windDirection": 3,
-	        "windSpeed": 50,
-	        "lighting": 2
-	    },
-	    "users": [
+	  "error": {
+	    "code": 0,
+	    "message": ""
+	  },
+	  "id": 403,
+	  "scene": {
+	    "env": 1,
+	    "weather": 1,
+	    "windDirection": 2,
+	    "windSpeed": 25,
+	    "lighting": 1
+	  },
+	  "users": [
+	    {
+	      "id": 3,
+	      "player": 303,
+	      "energyRatio": [
+	        4,
+	        4,
+	        1,
+	        1
+	      ],
+	      "energyRandom": [
+	        2,
+	        1,
+	        1,
+	        2
+	      ],
+	      "energyTotal": [
+	        6,
+	        5,
+	        2,
+	        3
+	      ],
+	      "hp": 70.33,
+	      "s": 7.726929400000001,
+	      "h": 0.5495708460626741,
+	      "startSec": 0.046760000428318294,
+	      "skills": [
 	        {
-	            "id": 1,
-	            "player": 1010000000000001,
-	            "energyRatio": [
-	                3,
-	                2,
-	                2,
-	                3
-	            ],
-	            "energyRandom": [
-	                1,
-	                4,
-	                3,
-	                0
-	            ],
-	            "energyTotal": [
-	                4,
-	                6,
-	                5,
-	                3
-	            ],
-	            "hp": 34.43,
-	            "s": 1.8694079999999997,
-	            "h": 1.5129250379362666,
-	            "startSec": 0.05532473514509443,
-	            "skills": [
-	                {
-	                    "id": 1,
-	                    "name": "21001",
-	                    "level": 1,
-	                    "slot": 1,
-	                    "energy": [
-	                        0,
-	                        2,
-	                        0,
-	                        1
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 7.2,
-	                    "maxCondition": 2,
-	                    "maxConditionValue": 3,
-	                    "effects": [
-	                        {
-	                            "type": 114
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 2,
-	                    "name": "21002",
-	                    "level": 1,
-	                    "slot": 2,
-	                    "energy": [
-	                        2,
-	                        0,
-	                        2,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 9.8,
-	                    "maxCondition": 4,
-	                    "maxConditionValue": 1,
-	                    "effects": [
-	                        {
-	                            "type": 115
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 504,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 3,
-	                    "name": "21003",
-	                    "level": 1,
-	                    "slot": 3,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        0,
-	                        3
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 7.2,
-	                    "maxCondition": 1,
-	                    "maxConditionValue": 1,
-	                    "effects": [
-	                        {
-	                            "type": 112
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 141,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 4,
-	                    "name": "21004",
-	                    "level": 1,
-	                    "slot": 4,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        2,
-	                        2
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 9.8,
-	                    "maxCondition": 41,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 111
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 5,
-	                    "name": "21005",
-	                    "level": 1,
-	                    "slot": 5,
-	                    "energy": [
-	                        2,
-	                        0,
-	                        1,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 7.2,
-	                    "maxCondition": 31,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 113
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 6,
-	                    "name": "21006",
-	                    "level": 1,
-	                    "slot": 6,
-	                    "energy": [
-	                        1,
-	                        3,
-	                        0,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 9.8,
-	                    "maxCondition": 11,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 112
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 121,
-	                            "target": 0
-	                        }
-	                    ]
-	                }
-	            ]
+	          "id": 14,
+	          "name": "21076",
+	          "icon": "Skill_Icon_0009",
+	          "level": 1,
+	          "slot": 1,
+	          "energy": [
+	            0,
+	            0,
+	            1,
+	            1
+	          ],
+	          "cooldown": 2,
+	          "duration": 5,
+	          "maxCondition": 62,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 115
+	            },
+	            {
+	              "type": 201
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 111,
+	              "target": 0
+	            }
+	          ]
 	        },
 	        {
-	            "id": -38,
-	            "player": -38,
-	            "energyRatio": [
-	                2,
-	                0,
-	                3,
-	                5
-	            ],
-	            "energyRandom": [
-	                3,
-	                3,
-	                2,
-	                0
-	            ],
-	            "energyTotal": [
-	                5,
-	                3,
-	                5,
-	                5
-	            ],
-	            "hp": 28.14,
-	            "s": 1.4908666666666668,
-	            "h": 1.0774688179425564,
-	            "startSec": 0.06063311732328299,
-	            "skills": [
-	                {
-	                    "id": 3,
-	                    "name": "21003",
-	                    "level": 1,
-	                    "slot": 1,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        0,
-	                        3
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 7.2,
-	                    "maxCondition": 1,
-	                    "maxConditionValue": 1,
-	                    "effects": [
-	                        {
-	                            "type": 112
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 141,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 4,
-	                    "name": "21004",
-	                    "level": 1,
-	                    "slot": 2,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        2,
-	                        2
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 9.8,
-	                    "maxCondition": 41,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 111
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 5,
-	                    "name": "21005",
-	                    "level": 1,
-	                    "slot": 3,
-	                    "energy": [
-	                        2,
-	                        0,
-	                        1,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 7.2,
-	                    "maxCondition": 31,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 113
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 7,
-	                    "name": "21007",
-	                    "level": 1,
-	                    "slot": 4,
-	                    "energy": [
-	                        1,
-	                        0,
-	                        0,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": -1,
-	                    "maxCondition": 32,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 114
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 8,
-	                    "name": "21008",
-	                    "level": 1,
-	                    "slot": 5,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        0,
-	                        2
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": -1,
-	                    "maxCondition": 2,
-	                    "maxConditionValue": 3,
-	                    "effects": [
-	                        {
-	                            "type": 115
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 102,
-	                            "target": 0
-	                        }
-	                    ]
-	                },
-	                {
-	                    "id": 18,
-	                    "name": "21018",
-	                    "level": 1,
-	                    "slot": 6,
-	                    "energy": [
-	                        0,
-	                        0,
-	                        2,
-	                        0
-	                    ],
-	                    "cooldown": 2,
-	                    "duration": 5,
-	                    "maxCondition": 43,
-	                    "maxConditionValue": 0,
-	                    "effects": [
-	                        {
-	                            "type": 114
-	                        }
-	                    ],
-	                    "maxEffects": [
-	                        {
-	                            "type": 101,
-	                            "target": 0
-	                        }
-	                    ]
-	                }
-	            ]
+	          "id": 21,
+	          "name": "21091",
+	          "icon": "Skill_Icon_0003",
+	          "level": 1,
+	          "slot": 3,
+	          "energy": [
+	            2,
+	            1,
+	            0,
+	            0
+	          ],
+	          "cooldown": 2,
+	          "duration": 7.2,
+	          "maxCondition": 51,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 112
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 213,
+	              "target": 0
+	            }
+	          ]
+	        },
+	        {
+	          "id": 24,
+	          "name": "21092",
+	          "icon": "Skill_Icon_0001",
+	          "level": 1,
+	          "slot": 2,
+	          "energy": [
+	            0,
+	            3,
+	            0,
+	            0
+	          ],
+	          "cooldown": 2,
+	          "duration": 7.2,
+	          "maxCondition": 12,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 111
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 214,
+	              "target": 0
+	            }
+	          ]
+	        },
+	        {
+	          "id": 76,
+	          "name": "21138",
+	          "icon": "Skill_Icon_0003",
+	          "level": 1,
+	          "slot": 4,
+	          "energy": [
+	            3,
+	            0,
+	            0,
+	            0
+	          ],
+	          "cooldown": 2,
+	          "duration": 7.2,
+	          "maxCondition": 72,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 112
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 102,
+	              "target": 0
+	            }
+	          ]
 	        }
-	    ]
+	      ]
+	    },
+	    {
+	      "id": 6,
+	      "player": 604,
+	      "energyRatio": [
+	        2,
+	        3,
+	        2,
+	        3
+	      ],
+	      "energyRandom": [
+	        0,
+	        4,
+	        2,
+	        1
+	      ],
+	      "energyTotal": [
+	        2,
+	        7,
+	        4,
+	        4
+	      ],
+	      "hp": 68.04,
+	      "s": 8.151960160000002,
+	      "h": 0.44467148683392344,
+	      "startSec": 0.046039076697250714,
+	      "skills": [
+	        {
+	          "id": 126,
+	          "name": "21208",
+	          "icon": "Skill_Icon_0001",
+	          "level": 1,
+	          "slot": 2,
+	          "energy": [
+	            0,
+	            1,
+	            0,
+	            1
+	          ],
+	          "cooldown": 2,
+	          "duration": 5,
+	          "maxCondition": 5,
+	          "maxConditionValue": 1,
+	          "effects": [
+	            {
+	              "type": 111
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 113,
+	              "target": 0
+	            }
+	          ]
+	        },
+	        {
+	          "id": 165,
+	          "name": "21229",
+	          "icon": "Skill_Icon_0001",
+	          "level": 1,
+	          "slot": 3,
+	          "energy": [
+	            0,
+	            4,
+	            0,
+	            0
+	          ],
+	          "cooldown": 2,
+	          "duration": 9.6,
+	          "maxCondition": 12,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 111
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 111,
+	              "target": 3
+	            }
+	          ]
+	        },
+	        {
+	          "id": 180,
+	          "name": "21244",
+	          "icon": "Skill_Icon_0007",
+	          "level": 1,
+	          "slot": 4,
+	          "energy": [
+	            0,
+	            0,
+	            4,
+	            0
+	          ],
+	          "cooldown": 2,
+	          "duration": 4.8,
+	          "maxCondition": 5,
+	          "maxConditionValue": 1,
+	          "effects": [
+	            {
+	              "type": 114
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 121,
+	              "target": 0
+	            }
+	          ]
+	        },
+	        {
+	          "id": 184,
+	          "name": "21248",
+	          "icon": "Skill_Icon_0009",
+	          "level": 1,
+	          "slot": 5,
+	          "energy": [
+	            1,
+	            0,
+	            0,
+	            2
+	          ],
+	          "cooldown": 2,
+	          "duration": 7.2,
+	          "maxCondition": 41,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 115
+	            },
+	            {
+	              "type": 201
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 112,
+	              "target": 0
+	            }
+	          ]
+	        },
+	        {
+	          "id": 191,
+	          "name": "21255",
+	          "icon": "Skill_Icon_0009",
+	          "level": 1,
+	          "slot": 1,
+	          "energy": [
+	            2,
+	            0,
+	            0,
+	            2
+	          ],
+	          "cooldown": 2,
+	          "duration": 9.8,
+	          "maxCondition": 43,
+	          "maxConditionValue": 0,
+	          "effects": [
+	            {
+	              "type": 115
+	            },
+	            {
+	              "type": 201
+	            }
+	          ],
+	          "maxEffects": [
+	            {
+	              "type": 102,
+	              "target": 0
+	            }
+	          ]
+	        }
+	      ]
+	    }
+	  ],
+	  "availableUsers": [
+	    3,
+	    6
+	  ],
+	  "notAvailableUsers": [
+	
+	  ]
 	}

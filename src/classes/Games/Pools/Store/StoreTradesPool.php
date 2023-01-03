@@ -5,7 +5,6 @@ namespace Games\Pools\Store;
 use Accessors\PDOAccessor;
 use Accessors\PoolAccessor;
 use Consts\EnvVar;
-use Consts\Globals;
 use Games\Store\Holders\StoreTradesHolder;
 use stdClass;
 
@@ -53,9 +52,6 @@ class StoreTradesPool extends PoolAccessor {
         if ($data === false) {
             return false;
         }
-
-
-        $bind['UpdateTime'] = (int) $GLOBALS[Globals::TIME_BEGIN];
 
         foreach ($bind as $key => $value) {
             $data->{lcfirst($key)} = $value;

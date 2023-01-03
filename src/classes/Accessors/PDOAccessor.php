@@ -317,6 +317,6 @@ class PDOAccessor {
     }
     
     private function LogExtra(string $statement, array|null $bind){
-        LogHelper::Extra('SQL'.DataGenerator::RandomString(3), ['statement' => $statement, 'bind' => $bind]);
+        LogHelper::Extra('SQL_'.DataGenerator::RandomString(3), ['statement' => $statement, 'bind' => $bind]);
     }
 }

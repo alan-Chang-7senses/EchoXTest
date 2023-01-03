@@ -19,30 +19,59 @@ class RebuildPlayerSkills extends BaseWorker{
     
     public function Process(): array {
         
+        $this->EchoMessage('Connect Static DB');
         $staticAccessor = new PDOAccessor(EnvVar::DBStatic);
+        $this->EchoMessage('Connect Static DB', 'Finish');
         
         $rows = $staticAccessor->FromTable('SkillInfo')->FetchStyleAssoc()->FetchAll();
         $aliasCodeSkillIDs = array_combine(array_column($rows, 'AliasCode'), array_column($rows, 'SkillID'));
+        $this->EchoMessage('Fetch SkillInfo', [
+            'Format' => '[AliasCode => SkillID]',
+            'Count' => count($aliasCodeSkillIDs)
+        ]);
         
         $rows = $staticAccessor->FromTable('SkillPart')->FetchStyle(PDO::FETCH_OBJ)->FetchAll();
         $skillParts = [];
         foreach($rows as $row) $skillParts[$row->PartCode][$row->PartType] = (object)['aliasCodes' => [$row->AliasCode1, $row->AliasCode2, $row->AliasCode3], 'SkillAffixID' => $row->SkillAffixID];
+        $this->EchoMessage('Fetch SkillPart', [
+            'Format' => '[PartCode][PartType] => [AliasCodes, SkillAffixID]',
+            'Count' => count($skillParts),
+        ]);
         
         $rows = $staticAccessor->FromTable('SkillAffixAlias')->FetchAll();
         $skillAffix = [];
         foreach ($rows as $row) $skillAffix[$row->SkillAffixID] = $row;
+        $this->EchoMessage('Fetch SkillAffixAlias', [
+            'Format' => '[SkillAffixID => row]',
+            'Count' => count($skillAffix),
+        ]);
         
         $rows = $staticAccessor->FromTable('SkillNative')->FetchAll();
         $skillNative = [];
         foreach($rows as $row) $skillNative[$row->NativeCode] = $row->AliasCode;
+        $this->EchoMessage('Fetch SkillNative', [
+            'Format' => '[NativeCode => AliasCode',
+            'Count' => count($skillNative),
+        ]);
         
         $rows = $staticAccessor->FromTable('SkillPurebred')->FetchAll();
         $skillPurebred = [];
         foreach ($rows as $row) $skillPurebred[$row->SpeciesCode] = $row->AliasCode;
+        $this->EchoMessage('Fetch SkillPurebred', [
+            'Format' => '[SpeciesCode => AliasCode',
+            'Count' => count($skillPurebred),
+        ]);
         
+        $this->EchoMessage('Connect Main DB');
         $mainAccessor = new PDOAccessor(EnvVar::DBMain);
+        $this->EchoMessage('Connect Main DB', 'Finish');
+        
         $originalPlayerSkills = $mainAccessor->FromTable('PlayerSkill')->FetchAll();
         $nftPlayers = $mainAccessor->FromTable('PlayerNFT')->FetchAll();
+        $this->EchoMessage('Fetch PlayerSkill and PlayerNFT', [
+            'Original PlayerSkill' => count($originalPlayerSkills),
+            'PlayerNFT' => count($nftPlayers),
+        ]);
         
         $insertRows = [];
         $insertCount = 0;
@@ -97,18 +126,58 @@ class RebuildPlayerSkills extends BaseWorker{
             }
         }
         
-        $res['clear'] = $mainAccessor->FromTable('PlayerSkill')->Truncate();
+        $insertRowTotal = count($insertRows);
+        $insertLastRowCount = count($insertRows[$insertRowTotal - 1]);
+        $this->EchoMessage('Process PlayerSkill insert data', [
+            'Insert Row Total' => $insertRowTotal,
+            'One Row Count' => self::AddAllCount,
+            'Insert Total' => ($insertRowTotal - 1) * self::AddAllCount + $insertLastRowCount,
+        ]);
+        
+        $resClear = $mainAccessor->FromTable('PlayerSkill')->Truncate();
+        $resInsertTrue = 0;
+        $resInsertFalse = 0;
         foreach($insertRows as $rows){
-            $res['insert'][] = $mainAccessor->Ignore(true)->AddAll($rows);
+            $insertRes = $mainAccessor->Ignore(true)->AddAll($rows);
+            $insertRes ? ++$resInsertTrue : ++$resInsertFalse;
         }
         
+        $this->EchoMessage('Truncate and Insert PlayerSkill', [
+            'Truncate' => $resClear,
+            'Insert' => [
+                'True' => $resInsertTrue,
+                'False' => $resInsertFalse,
+            ]
+        ]);
+        
+        $resUpdateTrue = 0;
+        $resUpdateFalse = 0;
+        $mainAccessor->PrepareName('UpdaePlayerSkill');
         foreach($originalPlayerSkills as $row){
-            $res['update'][$row->PlayerID][$row->SkillID] = $mainAccessor->PrepareName('UpdaePlayerSkill')
+            
+            $updateRes = $mainAccessor->ClearCondition()
                     ->WhereEqual('PlayerID', $row->PlayerID)->WhereEqual('SkillID', $row->SkillID)
                     ->Modify(['Level' => $row->Level, 'Slot' => $row->Slot]);
+            
+            $updateRes ? ++$resUpdateTrue : ++$resUpdateFalse;
         }
         
-        return $res;
+        $this->EchoMessage('Update PlayerSkill to Original Level', [
+            'True' => $resUpdateTrue,
+            'False' => $resUpdateFalse,
+        ]);
+        
+        return [
+            'Truncate' => $resClear,
+            'Insert' => [
+                'True' => $resInsertTrue,
+                'False' => $resInsertFalse,
+            ],
+            'Update' => [
+                'True' => $resUpdateTrue,
+                'False' => $resUpdateFalse,
+            ],
+        ];
     }
     
     private function ProcessSkillPart(array $skillParts, string $partCode, int $partType, array &$aliasCodes, array &$count) : void{
