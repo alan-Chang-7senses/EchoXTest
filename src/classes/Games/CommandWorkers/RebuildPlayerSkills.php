@@ -157,7 +157,7 @@ class RebuildPlayerSkills extends BaseWorker{
             
             $updateRes = $mainAccessor->ClearCondition()
                     ->WhereEqual('PlayerID', $row->PlayerID)->WhereEqual('SkillID', $row->SkillID)
-                    ->Modify(['Level' => $row->Level, 'Slot' => $row->Slot]);
+                    ->Modify(['Level' => $row->Level, 'LevelBackup' => $row->LevelBackup, 'Slot' => $row->Slot]);
             
             $updateRes ? ++$resUpdateTrue : ++$resUpdateFalse;
         }
