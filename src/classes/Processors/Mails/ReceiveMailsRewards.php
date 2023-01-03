@@ -69,6 +69,9 @@ class ReceiveMailsRewards extends BaseProcessor {
 
                     if ($userBagHandler->CheckAddStacklimit($checkTotlaItems) == false) {
                         $checkException = ItemException::UserItemStacklimitReached;
+                        // 若此次信件道具數量超過上限 則回復暫存陣列
+                        $checkTotlaItems = [];
+                        ItemUtility::AccumulateItems($checkTotlaItems, $totalItems);
                         continue;
                     }
 
