@@ -4,17 +4,15 @@ namespace Games\Accessors;
 
 use Consts\Globals;
 use Games\Consts\MailValues;
-use Generators\ConfigGenerator;
 
 class MailsAccessor extends BaseAccessor {
 
     public function GetUserMails(int $userID): array {
-        $limits = ConfigGenerator::Instance()->MailShowLimit;
 
         return $this->MainAccessor()->FromTable('UserMails')
                         ->WhereEqual('UserID', $userID)->WhereGreater('FinishTime', $GLOBALS[Globals::TIME_BEGIN])
                         ->OrderBy('CreateTime', 'DESC')
-                        ->Limit($limits)->FetchAll();
+                        ->FetchAll();
     }
 
     public function AddMailWithDays(int|string $userID, int $mailID, int $days, array $arguments, int $receiveStatus = 0): int {
