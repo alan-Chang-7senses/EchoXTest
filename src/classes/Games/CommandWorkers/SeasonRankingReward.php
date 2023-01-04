@@ -210,6 +210,8 @@ class SeasonRankingReward extends BaseWorker{
 
         foreach($rankings as $ranking)
         {
+            if(array_key_exists($ranking->rank, $rewards) == false) continue;
+            
             $items = $rewards[$ranking->rank];
 
             $userMailID = $mailsHandler->AddMail($ranking->userId, $rewardMailID, $config->SeasonRankingRewardMailDay);
