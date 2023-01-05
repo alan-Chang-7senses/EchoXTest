@@ -127,6 +127,10 @@ class UserBagHandler {
                     return false;
                 }
             }
+            else if ($amount > $info->StackLimit) {
+                // 假設背包內原本就無此道具 > 若要檢查新增的道具數量 直接超過道具最大上限數量 > 直接回傳失敗
+                return false;
+            }
             return true;
         }
     }

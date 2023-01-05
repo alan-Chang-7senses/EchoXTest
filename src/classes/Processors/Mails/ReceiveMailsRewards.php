@@ -35,9 +35,10 @@ class ReceiveMailsRewards extends BaseProcessor {
         else 
             $userMailIDs[] = $temp;
 
+        $checkException = 0;
         $itemsArray = [];
         $accessor = new PDOAccessor(EnvVar::DBMain);
-        $accessor->Transaction(function () use ($accessor, $userMailIDs, $openStatus, $receiveStatus, &$itemsArray) {
+        $accessor->Transaction(function () use ($accessor, $userMailIDs, $openStatus, $receiveStatus, &$checkException, &$itemsArray) {
             $userID = $_SESSION[Sessions::UserID];
             $lockInfo = $accessor->FromTable('SystemLock')->
                             WhereEqual('UserID', $userID)->WhereEqual('APIName', $GLOBALS[Globals::REDIRECT_URL])->
@@ -47,7 +48,8 @@ class ReceiveMailsRewards extends BaseProcessor {
             $userMailsHandler = new MailsHandler();
             $totalItems = [];
             $checkUserMailsIDs = [];
-            $checkException = 0;
+            
+            $checkTotlaItems = [];
             foreach ($userMailIDs as $userMailID) {
 
                 $mailInfo = $userMailsHandler->GetUserMailByUserMailID($userID, $userMailID);
@@ -63,12 +65,16 @@ class ReceiveMailsRewards extends BaseProcessor {
                     }
     
                     $addItems = $userMailsHandler->GetUserMailItems($userMailID);
-    
-                    if ($userBagHandler->CheckAddStacklimit($addItems) == false) {
+                    ItemUtility::AccumulateItems($checkTotlaItems, $addItems);
+
+                    if ($userBagHandler->CheckAddStacklimit($checkTotlaItems) == false) {
                         $checkException = ItemException::UserItemStacklimitReached;
+                        // 若此次信件道具數量超過上限 則回復暫存陣列
+                        $checkTotlaItems = [];
+                        ItemUtility::AccumulateItems($checkTotlaItems, $totalItems);
                         continue;
                     }
-    
+
                     ItemUtility::AccumulateItems($totalItems, $addItems);
                 }
     
@@ -101,20 +107,13 @@ class ReceiveMailsRewards extends BaseProcessor {
                     "UpdateTime" => $GLOBALS[Globals::TIME_BEGIN],
                 ]);
             }
-
-            // 錯誤訊息判斷
-            if ($checkException == ItemException::MailNotExist)
-                throw new ItemException(ItemException::MailNotExist);
-            else if ($checkException == ItemException::MailRewardsReceived)
-                throw new ItemException(ItemException::MailRewardsReceived);
-            else if ($checkException == ItemException::UserItemStacklimitReached)
-                throw new ItemException(ItemException::UserItemStacklimitReached);
         });
 
         $result = new ResultData(ErrorCode::Success);
         $result->openStatus = $openStatus;
         $result->receiveStatus = $receiveStatus;
         $result->rewardItems = $itemsArray;
+        $result->errorCode = $checkException;
 
         return $result;
     }

@@ -2208,7 +2208,7 @@ CREATE TABLE IF NOT EXISTS `MailsInfo` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
   `MailsID` int(10) unsigned NOT NULL COMMENT '信件編號',
   `Lang` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '多國語言',
-  `Title` varchar(50) NOT NULL DEFAULT '' COMMENT '信件標題',
+  `Title` varchar(255) NOT NULL DEFAULT '' COMMENT '信件標題',
   `Content` text NOT NULL COMMENT '信件內容',
   `Sender` varchar(50) NOT NULL DEFAULT '' COMMENT '寄件者',
   `URL` varchar(50) NOT NULL DEFAULT '' COMMENT '連結',
@@ -2272,9 +2272,9 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sende
 	(52, 18, 0, 'PetaToken Qualifier PLAY TO EARN Seasonal Rewards', 'We have delivered your Seasonal Rewards according to your team\'s ranking and performance in the last season. We look forward to seeing your team\'s excellent performance in the new season.', 'Sender: Direct Team', ''),
 	(53, 18, 2, 'PetaToken Qualifier PLAY TO EARN Seasonal Rewards', 'We have delivered your Seasonal Rewards according to your team\'s ranking and performance in the last season. We look forward to seeing your team\'s excellent performance in the new season.', 'Sender: Direct Team', ''),
 	(54, 18, 12, 'PT賽場-「獎金比例平均」賽季獎勵', '大會根據貴賽隊上個賽季的排名與成績，已將屬於您們的賽季獎勵送達，期待能再見到貴賽隊新一季的優秀表現。', '寄件人：研發團隊', ''),
-	(55, 19, 0, 'PetaRush Demo (活動名稱)  Event Reward delivery', 'Dear PetaRush Player,\r\nAttached is the PT reward to thank you for attending our PetaRush Demo event.\r\nPlease note that the reward must be claimed within 14 days, or it will be expired and have no future return.', 'Sender: Direct Team', ''),
-	(56, 19, 2, 'PetaRush Demo (活動名稱)  Event Reward delivery', 'Dear PetaRush Player,\r\nAttached is the PT reward to thank you for attending our PetaRush Demo event.\r\nPlease note that the reward must be claimed within 14 days, or it will be expired and have no future return.', 'Sender: Direct Team', ''),
-	(57, 19, 12, 'PetaRush Demo (活動名稱)活動獎勵', '親愛的玩家您好：\r\n附件是您參與〝Demo〞活動的〝PT〞獎勵，活動獎勵信件務必在14天內領取，否則將會被系統回收，若有未領取的活動獎勵被系統回收，將不能請求補發。', '寄件人：研發團隊', ''),
+	(55, 19, 0, 'PetaRush (活動名稱)  TEST', 'Dear PetaRush Player,\nThis is a test mail. No reward in here.', 'Sender: Direct Team', ''),
+	(56, 19, 2, 'PetaRush (活動名稱)  TEST', 'Dear PetaRush Player,\nThis is a test mail. No reward in here.', 'Sender: Direct Team', ''),
+	(57, 19, 12, 'PetaRush (活動名稱) 測試', '親愛的玩家您好：\n這是一封測試信件，裡面並沒有任何獎勵', '寄件人：研發團隊', ''),
 	(58, 20, 0, 'Get PT Ticket with the Invitation Code', 'Thank you for purchasing the Peta NFT blind box on the METASENS Web3 platform! Here are the five PT tickets you redeemed from the invitation code in the purchasing procession!', 'Sender: Direct Team', ''),
 	(59, 20, 2, 'Get PT Ticket with the Invitation Code', 'Thank you for purchasing the Peta NFT blind box on the METASENS Web3 platform! Here are the five PT tickets you redeemed from the invitation code in the purchasing procession!', 'Sender: Direct Team', ''),
 	(60, 20, 12, '邀請碼送 PT 券', '您好，很感謝您在 METASENS 平台購買 Peta NFT 盲盒，因為您在購買時輸入了推薦碼，所以可以再額外獲得 5 張 PT 券。', '寄件人：研發團隊', ''),
@@ -2295,7 +2295,10 @@ INSERT INTO `MailsInfo` (`Serial`, `MailsID`, `Lang`, `Title`, `Content`, `Sende
 	(75, 25, 12, 'PetaRush Demo期間 除蟲大作戰獎勵', '親愛的玩家您好：\n\n附件是您參與〝Demo 期間 除蟲大作戰〞活動的〝火星劵〞獎勵，活動獎勵信件務必在14天內領取，否則將會被系統回收，若有未領取的活動獎勵被系統回收，將不能請求補發。', '寄件人：營運團隊', ''),
 	(76, 26, 0, 'PetaRush Ancient Spirit Holder PT Ticket Reward', 'Dear PetaRush Player:\r\n\r\nAttached is the ""PT Ticket"" reward for the Ancient Spirit holder\r\n\r\nPlease note that the reward must be claimed within 14 days, or it will be expired and have no future return.', 'Sender:PetaRush Management Team', ''),
 	(77, 26, 2, 'PetaRush Ancient Spirit Holder PT Ticket Reward', 'Dear PetaRush Player:\r\n\r\nAttached is the ""PT Ticket"" reward for the Ancient Spirit holder\r\n\r\nPlease note that the reward must be claimed within 14 days, or it will be expired and have no future return.', 'Sender:PetaRush Management Team', ''),
-	(78, 26, 12, 'PetaRush 祖靈持有者 PT券福利', '親愛的玩家您好：\r\n\r\n附件是祖靈持有者的〝PT劵〞福利，活動獎勵信件務必在14天內領取，否則將會被系統回收，若有未領取的活動獎勵被系統回收，將不能請求補發。', '寄件人：營運團隊', '');
+	(78, 26, 12, 'PetaRush 祖靈持有者 PT券福利', '親愛的玩家您好：\r\n\r\n附件是祖靈持有者的〝PT劵〞福利，活動獎勵信件務必在14天內領取，否則將會被系統回收，若有未領取的活動獎勵被系統回收，將不能請求補發。', '寄件人：營運團隊', ''),
+	(79, 27, 12, '感謝您購買 PT 券', '感謝你對 PetaRush 的支持，在此送上您在 METASENS 平台使用的「{areaID}」{N}張，讓你在火星上盡情的奔跑！', '寄件人：營運團隊', ''),
+	(80, 27, 0, 'Thank you for purchasing the PT Ticket!', 'To appreciate your support to PetaRush, we are here to send you the (N) (area ID) tickets used on the METASENS platform as a token of our thanks!\nEnjoy the race on Mars!', 'Sender:PetaRush Management Team', ''),
+	(81, 27, 2, 'Thank you for purchasing the PT Ticket!', 'To appreciate your support to PetaRush, we are here to send you the (N) (area ID) tickets used on the METASENS platform as a token of our thanks!\nEnjoy the race on Mars!', 'Sender:PetaRush Management Team', '');
 /*!40000 ALTER TABLE `MailsInfo` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MailsItems 結構
@@ -2307,6 +2310,29 @@ CREATE TABLE IF NOT EXISTS `MailsItems` (
   `RewardID` int(11) NOT NULL DEFAULT 0 COMMENT '獎勵編號',
   PRIMARY KEY (`Serials`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='信件道具資料';
+
+-- 正在傾印表格  koa_static.MailsItems 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `MailsItems` DISABLE KEYS */;
+INSERT INTO `MailsItems` (`Serials`, `MailsID`, `StartTime`, `EndTime`, `RewardID`) VALUES
+	(1, 1, 1640966400, 1672416000, 0),
+	(2, 5, 1640966400, 1672416000, 0),
+	(3, 6, 1640966400, 1672416000, 0),
+	(4, 7, 1640966400, 1672416000, 0),
+	(5, 8, 1640966400, 1672416000, 0),
+	(6, 9, 1640966400, 1672416000, 0),
+	(7, 11, 1640966400, 1672416000, 0),
+	(8, 12, 1640966400, 1672416000, 0),
+	(9, 13, 1640966400, 1672416000, 0),
+	(10, 19, 1640966400, 1672416000, 0),
+	(11, 20, 1640966400, 1672416000, 0),
+	(12, 21, 1640966400, 1672416000, 0),
+	(13, 22, 1640966400, 1672416000, 0),
+	(14, 23, 1640966400, 1672416000, 0),
+	(15, 24, 1640966400, 1672416000, 0),
+	(16, 25, 1640966400, 1672416000, 0),
+	(17, 26, 1640966400, 1672416000, 0),
+	(18, 27, 1640966400, 1672416000, 0);
+/*!40000 ALTER TABLE `MailsItems` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.MainBanner 結構
 CREATE TABLE IF NOT EXISTS `MainBanner` (
@@ -2370,14 +2396,20 @@ INSERT INTO `MetadataActivity` (`ActivityName`, `Source`, `Native`, `SkeletonTyp
 -- 傾印  資料表 koa_static.NFTItemsHandleConfig 結構
 CREATE TABLE IF NOT EXISTS `NFTItemsHandleConfig` (
   `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
-  `OutsideCode` text NOT NULL DEFAULT '' COMMENT '外部平台代號',
-  `NFTItemCode` text NOT NULL DEFAULT '' COMMENT 'NFTItem 識別碼',
+  `OutsideCode` text NOT NULL COMMENT '外部平台代號',
+  `NFTItemCode` text NOT NULL COMMENT 'NFTItem 識別碼',
   `HandleType` tinyint(3) unsigned NOT NULL DEFAULT 0 COMMENT '收到 NFTItemCode 的處理方式',
   `MailID` int(11) NOT NULL DEFAULT -1 COMMENT '其值為信件表的信件編號,-1 代表這個欄位用不到',
   `RewardContentGroup` int(11) NOT NULL DEFAULT -1 COMMENT '其值為獎勵內容表的群組編號,-1 代表這個欄位用不到',
   PRIMARY KEY (`Serial`),
-  UNIQUE KEY `OutsideCode_NFTItemCode` (`OutsideCode`,`NFTItemCode`) USING HASH
+  UNIQUE KEY `OutsideCode_NFTItemCode` (`OutsideCode`(20),`NFTItemCode`(20))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 正在傾印表格  koa_static.NFTItemsHandleConfig 的資料：~0 rows (近似值)
+/*!40000 ALTER TABLE `NFTItemsHandleConfig` DISABLE KEYS */;
+INSERT INTO `NFTItemsHandleConfig` (`Serial`, `OutsideCode`, `NFTItemCode`, `HandleType`, `MailID`, `RewardContentGroup`) VALUES
+	(1, 'metasens', 'item-pt-voucher-001', 0, 27, 27);
+/*!40000 ALTER TABLE `NFTItemsHandleConfig` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.PVEChapter 結構
 CREATE TABLE IF NOT EXISTS `PVEChapter` (
@@ -3310,34 +3342,34 @@ INSERT INTO `RewardContent` (`Serial`, `ContentGroupID`, `ItemID`, `Amount`, `Pr
 	(248, 2000087, -2, 290, 0),
 	(249, 2000088, -2, 280, 0),
 	(250, 2000111, -4, 95, 0),
-	(251, 2000121, -4, 142, 0),
+	(251, 2000121, -4, 143, 0),
 	(252, 2000122, -4, 47, 0),
-	(253, 2000131, -4, 146, 0),
+	(253, 2000131, -4, 148, 0),
 	(254, 2000132, -4, 90, 0),
 	(255, 2000133, -4, 47, 0),
-	(256, 2000141, -4, 152, 0),
+	(256, 2000141, -4, 153, 0),
 	(257, 2000142, -4, 106, 0),
 	(258, 2000143, -4, 73, 0),
 	(259, 2000144, -4, 47, 0),
-	(260, 2000151, -4, 156, 0),
+	(260, 2000151, -4, 158, 0),
 	(261, 2000152, -4, 118, 0),
 	(262, 2000153, -4, 99, 0),
 	(263, 2000154, -4, 52, 0),
 	(264, 2000155, -4, 47, 0),
-	(265, 2000161, -4, 161, 0),
+	(265, 2000161, -4, 166, 0),
 	(266, 2000162, -4, 133, 0),
 	(267, 2000163, -4, 106, 0),
 	(268, 2000164, -4, 69, 0),
 	(269, 2000165, -4, 49, 0),
 	(270, 2000166, -4, 47, 0),
-	(271, 2000171, -4, 165, 0),
+	(271, 2000171, -4, 169, 0),
 	(272, 2000172, -4, 142, 0),
 	(273, 2000173, -4, 118, 0),
 	(274, 2000174, -4, 87, 0),
 	(275, 2000175, -4, 52, 0),
 	(276, 2000176, -4, 49, 0),
 	(277, 2000177, -4, 47, 0),
-	(278, 2000181, -4, 171, 0),
+	(278, 2000181, -4, 173, 0),
 	(279, 2000182, -4, 144, 0),
 	(280, 2000183, -4, 121, 0),
 	(281, 2000184, -4, 118, 0),
@@ -4226,7 +4258,8 @@ INSERT INTO `RewardContent` (`Serial`, `ContentGroupID`, `ItemID`, `Amount`, `Pr
 	(1164, 26, 4026, 1, 10),
 	(1165, 26, 5100, 1, 10),
 	(1166, 26, 5201, 1, 10),
-	(1167, 26, 5202, 1, 10);
+	(1167, 26, 5202, 1, 10),
+	(1168, 27, 5201, 1, 1);
 /*!40000 ALTER TABLE `RewardContent` ENABLE KEYS */;
 
 -- 傾印  資料表 koa_static.RewardInfo 結構
@@ -31138,7 +31171,6 @@ INSERT INTO `StoreCounters` (`CIndex`, `GroupID`, `CounterID`, `ItemID`, `Amount
 	(15, 2001, 2001, 4011, 1, -1, 13000, -2, 0),
 	(16, 2002, 2002, -2, 1000, -1, 240, -3, 0),
 	(17, 2002, 2002, -2, 10000, -1, 2200, -3, 0),
-	(18, 2002, 2002, 5201, 1, -1, 100, -4, 0),
 	(19, 2003, 2003, 1001, 1, -1, 5, -3, 0),
 	(20, 2003, 2003, 1002, 1, -1, 20, -3, 0),
 	(21, 2003, 2003, 1003, 1, -1, 50, -3, 0),
