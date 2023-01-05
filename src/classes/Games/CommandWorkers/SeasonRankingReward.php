@@ -110,7 +110,7 @@ class SeasonRankingReward extends BaseWorker{
     // 取得名次獎勵
     private function GetReward(int $seasonID) : array|false {
         
-        echo '== Get Reward from SeasonRankingRewardNew, SeasonID => '.$seasonID.PHP_EOL;
+        //echo '== Get Reward from SeasonRankingRewardNew, SeasonID => '.$seasonID.PHP_EOL;
 
         // 取得賽季表
         $rows = AccessorFactory::Static()->FromTable('SeasonRankingRewardNew')
@@ -119,7 +119,7 @@ class SeasonRankingReward extends BaseWorker{
 
         if(empty($rows))
         {
-            echo '== Failure, No reward data for SeasonID => '.$seasonID.PHP_EOL;
+            //echo '== Failure, No reward data for SeasonID => '.$seasonID.PHP_EOL;
             return false;
         }
 
@@ -147,7 +147,7 @@ class SeasonRankingReward extends BaseWorker{
         {
             if(array_key_exists($ranking, $rewardTable) == false)
             {
-                echo '== Failure, Miss reward data of Ranking => '.$ranking.PHP_EOL;
+                //echo '== Failure, Miss reward data of Ranking => '.$ranking.PHP_EOL;
                 return false;
             }          
         }
@@ -158,10 +158,10 @@ class SeasonRankingReward extends BaseWorker{
     // 取得名次
     private function GetRanking(int $seasonID, int $lobby, int $recordType, int $count) : array|false {
 
-        echo '== Get Ranking from Leadboard, SeasonID => '.$seasonID.', Lobby => '.$lobby.', recordType => '.$recordType.', Count => '.$count.PHP_EOL;
+        //echo '== Get Ranking from Leadboard, SeasonID => '.$seasonID.', Lobby => '.$lobby.', recordType => '.$recordType.', Count => '.$count.PHP_EOL;
         if (array_key_exists($recordType, self::LeadRateFunc) == false)
         {
-            echo '== Failure, Illegel recordType => '.$recordType.PHP_EOL;
+            //echo '== Failure, Illegel recordType => '.$recordType.PHP_EOL;
             return false;
         }
 
@@ -211,13 +211,13 @@ class SeasonRankingReward extends BaseWorker{
         foreach($rankings as $ranking)
         {
             if(array_key_exists($ranking->rank, $rewards) == false) continue;
-            
+
             $items = $rewards[$ranking->rank];
 
             $userMailID = $mailsHandler->AddMail($ranking->userId, $rewardMailID, $config->SeasonRankingRewardMailDay);
             $mailsHandler->AddMailItems($userMailID, $items);
 
-            echo '== Add MailItems completed.. UserMailID => '.$userMailID.' Items => '. json_encode($items).PHP_EOL;
+            //echo '== Add MailItems completed.. UserMailID => '.$userMailID.' Items => '. json_encode($items).PHP_EOL;
 
             $content = array_map(function($val){
                 return [
@@ -238,7 +238,7 @@ class SeasonRankingReward extends BaseWorker{
 
             $logAccessor->Add($logContent);
 
-            echo '== Add Log completed.. content => '. json_encode($logContent).PHP_EOL;
+            //echo '== Add Log completed.. content => '. json_encode($logContent).PHP_EOL;
 
         }
 
@@ -246,7 +246,7 @@ class SeasonRankingReward extends BaseWorker{
                                 ->WhereEqual('SeasonID', $seasonID)
                                 ->Modify(['Assign' => 1,]);
 
-        echo '== update table QualifyingSeasonData column Assign => 1'.PHP_EOL;
+        //echo '== update table QualifyingSeasonData column Assign => 1'.PHP_EOL;
 
         return 'success, award '.count($rankings).' times for this season';
         
