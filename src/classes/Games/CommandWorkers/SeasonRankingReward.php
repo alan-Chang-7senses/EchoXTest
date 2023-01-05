@@ -191,45 +191,41 @@ class SeasonRankingReward extends BaseWorker{
             return 'failure, Mail ID Is Not Exist';
         }
 
-        AccessorFactory::Main()->Transaction(function () use ($seasonID, $lobby, $rewards, $rankings, $rewardMailID) {
+        $config = ConfigGenerator::Instance();
+        $mailsHandler = new MailsHandler();
 
-            $config = ConfigGenerator::Instance();
-            $mailsHandler = new MailsHandler();
+        $logAccessor = AccessorFactory::Log();
+        $logAccessor->FromTable('SeasonRankingReward');
 
-            $logAccessor = AccessorFactory::Log();
-            $logAccessor->FromTable('SeasonRankingReward');
+        foreach($rankings as $ranking)
+        {
+            if(array_key_exists($ranking->rank, $rewards) == false) continue;
 
-            foreach($rankings as $ranking)
-            {
-                if(array_key_exists($ranking->rank, $rewards) == false) continue;
+            $items = $rewards[$ranking->rank];
 
-                $items = $rewards[$ranking->rank];
+            $userMailID = $mailsHandler->AddMail($ranking->userId, $rewardMailID, $config->SeasonRankingRewardMailDay);
+            $mailsHandler->AddMailItems($userMailID, $items);
 
-                $userMailID = $mailsHandler->AddMail($ranking->userId, $rewardMailID, $config->SeasonRankingRewardMailDay);
-                $mailsHandler->AddMailItems($userMailID, $items);
-
-                $content = array_map(function($val){
-                    return [
-                        'ItemID' => $val->ItemID,
-                        'Amount' => $val->Amount
-                    ];
-                }, $items);
-                
-                $logContent = [
-                    'SeasonID' => $seasonID,
-                    'Lobby' => $lobby,
-                    'Ranking' => $ranking->rank,
-                    'UserID' => $ranking->userId,
-                    'PlayerID' => $ranking->petaId,
-                    'Content' => json_encode($content),
-                    'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            $content = array_map(function($val){
+                return [
+                    'ItemID' => $val->ItemID,
+                    'Amount' => $val->Amount
                 ];
+            }, $items);
+                
+            $logContent = [
+                'SeasonID' => $seasonID,
+                'Lobby' => $lobby,
+                'Ranking' => $ranking->rank,
+                'UserID' => $ranking->userId,
+                'PlayerID' => $ranking->petaId,
+                'Content' => json_encode($content),
+                'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            ];
 
-                $logAccessor->Add($logContent);
+            $logAccessor->Add($logContent);
 
-            }
-
-        });
+        }
 
         
 
