@@ -7,6 +7,7 @@ use Consts\Globals;
 use Consts\Sessions;
 use Games\Mails\MailsHandler;
 use Games\Users\ItemUtility;
+use Generators\ConfigGenerator;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -22,7 +23,15 @@ class GetMails extends BaseProcessor
         $userMailsInfo = $userMailsHandler->GetUserMails($userid);
         $mails = [];
 
+        $limits = ConfigGenerator::Instance()->MailShowLimit;
+        $showCount = 0;
+        
         foreach ($userMailsInfo->rows as $userMailInfo) {
+            $showCount++;
+            if ($showCount > $limits) {
+                break;
+            }
+
             $mailInfo = $userMailsHandler->GetMailInfo($userMailInfo->MailsID, $lang);
             if ($mailInfo == false) {
                 continue;
@@ -52,7 +61,7 @@ class GetMails extends BaseProcessor
 
         $result = new ResultData(ErrorCode::Success);
         $result->Mails = $mails;
-
+        $result->totalMailsCount = count($userMailsInfo->rows);
         return $result;
     }
 } 

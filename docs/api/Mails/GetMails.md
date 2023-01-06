@@ -31,7 +31,7 @@ Content Type: `application/json`
 |:-:|:-:|:-:|
 | error | object | 錯誤代碼與訊息<br>（[Response 的 error 內容](../response.md#error)） |
 | [Mails](#mails) | object | 信件資訊 |
-|
+| totalMailsCount | int | 玩家擁有全部信件總數 |
 
 #### <span id="mails">mails 內容</span>
 _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
@@ -154,5 +154,6 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 					}
 				]
 			}
-		]
+		],
+		"totalMailsCount": 2
 	}

@@ -37,7 +37,7 @@ Content Type: `application/json`
 | openStatus | int | 開啟狀態(0:關閉, 1:開啟) |
 | receiveStatus | int | 領獎狀態(0:未領取, 1:已領取) |
 | [rewardItems](#rewardItems) | object| 獎勵物品(已累加，物品不重複)|
-|
+| errorCode | int | 領獎錯誤訊息(0:正確, 5007:信件不存在, 5008:信件道具已領取, 5006:信件道具超過堆疊上限) |
 
 #### <span id="rewardItems">rewardItems 內容</span>
 
@@ -50,29 +50,52 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 | icon | string | Icon 圖號 |
 |
 
-### Example
+### Example 1
 	{
 		"error": {
 			"code": 0,
 			"message": ""
 		},
-   		"openStatus": 1,
-	    "receiveStatus": "1",
+		"openStatus": 1,
+		"receiveStatus": "1",
 		"rewardItems": [
 			{
-				"itemID": 1001,
-				"amount": 1,
-				"icon": "ItemIcon_1001"
+				"itemID": -4,
+				"amount": 5,
+				"icon": "ItemIcon_0040"
 			},
 			{
-				"itemID": 1002,
-				"amount": 2,
-				"icon": "ItemIcon_1002"
-			},
-			{
-				"itemID": 1003,
+				"itemID": -2,
 				"amount": 3,
-				"icon": "ItemIcon_1003"
+				"icon": "ItemIcon_0026"
+			},
+			{
+				"itemID": 4008,
+				"amount": 1,
+				"icon": "ItemIcon_023_1"
+			},
+			{
+				"itemID": 4009,
+				"amount": 1,
+				"icon": "ItemIcon_023_2"
+			},
+			{
+				"itemID": 4010,
+				"amount": 1,
+				"icon": "ItemIcon_023_3"
 			}
-		]
+		],
+		"errorCode": 0
+	}
+
+### Example 2
+	{
+		"error": {
+			"code": 0,
+			"message": ""
+		},
+		"openStatus": 1,
+		"receiveStatus": "1",
+		"rewardItems": [],
+		"errorCode": 5006
 	}

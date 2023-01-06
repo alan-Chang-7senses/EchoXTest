@@ -39,8 +39,8 @@ class DeleteMails extends BaseProcessor {
                 continue;
             }
 
-            $mailItems = MailsItemsPool::Instance()->{$mailInfo->MailsID};
-            if ($mailItems !== false && $mailInfo->ReceiveStatus == 0) {
+            $mailItems = $userMailsHandler->GetUserMailItems($userMailID);
+            if ($mailItems !== false && count($mailItems) > 0 && $mailInfo->ReceiveStatus == 0) {
                 $checkException = ItemException::DeleteMailAfterReceiveReward;
                 continue;
             }

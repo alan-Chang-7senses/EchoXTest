@@ -345,16 +345,18 @@ class LeadboardUtility {
                 ++$sameRank;
             }
 
-            $ratingResult = new RatingResult();
-            $ratingResult->userId = $rows[$i]->UserID;
-            $ratingResult->petaName = (string)($rows[$i]->Nickname ?? $idName);
-            $ratingResult->petaId = $rows[$i]->PlayerID;
-            $ratingResult->rate = $rows[$i]->Rating;
-            $ratingResult->rank = $ranking;
-            $ratingResult->playCount = $rows[$i]->PlayCount;
-            $ratingResult->itemName = $rows[$i]->ItemName ?? '';
-
-            array_push($rankingInfo, $ratingResult);
+            if ($ranking<=$endRank)
+            {
+                $ratingResult = new RatingResult();
+                $ratingResult->userId = $rows[$i]->UserID;
+                $ratingResult->petaName = (string)($rows[$i]->Nickname ?? $idName);
+                $ratingResult->petaId = $rows[$i]->PlayerID;
+                $ratingResult->rate = $rows[$i]->Rating;
+                $ratingResult->rank = $ranking;
+                $ratingResult->playCount = $rows[$i]->PlayCount;
+                $ratingResult->itemName = $rows[$i]->ItemName ?? '';
+                array_push($rankingInfo, $ratingResult);
+            }                        
         }
         return $rankingInfo;
     }
