@@ -69,6 +69,10 @@ class EnvVar {
     const NFTUri = 'NFT_URI';
     const NFTClientID = 'NFT_CLIENTID';
     const NFTAPISecret = 'NFT_APISECRET';
+
+    const PTPOINT_URI = 'PTPOINT_URI';
+    const PTPOINT_CLIENTID = 'PTPOINT_CLIENTID';
+    const PTPOINT_SECRET = 'PTPOINT_SECRET';
     
     const QuickSDKCallBackKeyAndroid = 'QuickSDK_CallBackKey_Android';
     const QuickSDKCallBackKeyiOS = 'QuickSDK_CallBackKey_iOS';
