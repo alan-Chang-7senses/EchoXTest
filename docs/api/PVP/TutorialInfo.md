@@ -44,7 +44,9 @@ Content Type: `application/json`
 | ticketAmount | int | 入場卷已有物品數量 |
 | petaLimitLevel | int | Peta限制等級<br>(0代表不限制) |
 | [rank](#rank) | object | 排行榜資訊 |
+| [simplePlayer](#simplePlayer) | object | 角色受等級影響過後的簡易數值 |
 | [scene](#scene) | object | 場景資訊 |
+| seasonRemainTime | int | 剩餘賽季時間(秒) |
 <br>
 
 #### <span id="rank">rank 排行榜資訊</span>
@@ -87,6 +89,14 @@ Content Type: `application/json`
                     "leadRate": 0,
                     "ranking": 0
                 },
+                "simplePlayer": {
+                    "velocity": 112.49,
+                    "stamina": 112.49,
+                    "intelligent": 112.49,
+                    "breakOut": 112.49,
+                    "will": 112.49,
+                    "skillLevel": 1
+                },
                 "scene": {
                     "id": 1001,
                     "name": "9001",
@@ -106,6 +116,14 @@ Content Type: `application/json`
                     "playCount": 0,
                     "leadRate": 0,
                     "ranking": 0
+                },
+                "simplePlayer": {
+                    "velocity": 112.49,
+                    "stamina": 112.49,
+                    "intelligent": 112.49,
+                    "breakOut": 112.49,
+                    "will": 112.49,
+                    "skillLevel": 1
                 },
                 "scene": {
                     "id": 1001,
