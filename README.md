@@ -86,7 +86,8 @@
 	- koa_log.sql。
 	- koa_main.sql。
 	- koa_static.sql。
-- 使用 Postman 或任意瀏覽器調用 API「http://localhost:37001/User/Login」（不需任何參數），若回應以下資訊，即表示環境部署完成：
+- 使用 Postman 或任意瀏覽器調用登入 API（不需任何參數），若回應以下資訊，即表示環境部署完成：  
+<http://localhost:37001/User/Login>
 
 		{
 		    "error": {
