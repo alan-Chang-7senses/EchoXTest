@@ -132,6 +132,7 @@
 	- koa_static.sql。
 
 8. 依據前述 2. 步驟定義的版號於 koa_main 資料庫的 ConfigVersions 資料表設定遊戲前後端相容版號。
+9. 設定 [命令列程式](#cli) 的「 更新賽季、釋放比賽、賽季結算獎勵」排程。
 
 ### 環境變數
 
@@ -187,6 +188,49 @@
 - GOOGLE\_APIKEY: Google APIKEY 密鑰
 - GOOGLE\_PACKAGENAME: 前端目前使用的包名
 
+## <span id="cli">命令列程式</span>
+
+於目錄 /src/cli 中，透過 php Games.php 運行 /src/classes/Games/CommandWorkers 的功能。
+
+### 更新賽季
+
+- 用途：建立新賽季資料。
+- 使用時機：排程，每 30 分鐘執行一次。
+- 指令：
+
+		php /var/www/html/cli/Games.php ChangeQualifyingSeason
+
+### 釋放比賽
+
+- 用途：未知異常造成競賽無法進行，導致相關使用者狀態卡在競賽中，可將過期賽局釋放（結束），讓使用者脫離比賽，而能正常進行遊戲。
+- 使用時機：排程，每 5 分鐘執行一次。
+- 指令：
+
+		php /var/www/html/cli/Games.php ReleaseRace
+		
+### 賽季結算獎勵
+
+- 用途：當賽季結束時，結算賽季排名並發放獎勵。
+- 使用時機：排程，每小時的 01 與 31 分各執行一次。
+- 指令：
+
+		php /var/www/html/cli/Games.php SeasonRankingReward
+		
+###  重建角色技能
+
+- 用途：當企劃對技能設定資料異動太大（如異動部位技能），導致現有角色持有技能不符時，須透過此命令重建技能。
+- 使用時機：關機維護時，手動執行。
+- 指令：
+
+		php /var/www/html/cli/Games.php RebuildPlayerSkills
+		
+### MycardRestore
+
+- 用途：當 MyCard 無法與我方串接 API 導致未完成交易無法補儲時，可透過此命令主動處理。
+- 使用時機：特殊情況才使用，通常於開發環境測試時設定排程每 5 分鐘執行一次。
+- 指令：
+
+		php /var/www/html/cli/Games.php MyCardRestore
 
 ## XDebug for Visual Studio Code
 
