@@ -20,7 +20,8 @@
 
 ### docs - 說明文件資料夾
 
-- __api：__ [API 文件首頁](docs/api/index.md)。
+- [API 文件](docs/api/index.md)。
+- [資料庫備註說明](docs/db/index.md)。
 
 ### sql - 部署與更新版本 SQL 檔案資料夾
 
