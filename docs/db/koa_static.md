@@ -11,9 +11,11 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| ID | 此欄位等同[大廳（賽制）](../api/codes/race.md#lobby)的值 |-|
 | WeeksPerSeason | 賽季時長 | *此欄位已棄用* |
 | ResetRate | 重置積分比例 | 千分比。1/1000 |
 | NewRoomRate | 新房間機率 | 千分比。1/1000 |
+| TicketId | 門票道具編號 | 數值為ItemInfo的ItemID |
 
 ## DirtyWord - 禁字集
 
@@ -26,6 +28,10 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | Type | 類型 | 0 = 速度<br>1 = 平衡<br>2 = 持久 |
+
+## ItemCharge - 升級道具使用手續費
+- 內容為升級道具之道具ID與使用時的手續費(火星幣)數量。
+- 目前只應用在角色"升級"功能。
 
 ## ItemInfo - 物品資訊
 
@@ -48,12 +54,43 @@
 |:-:|:-:|:-:|
 | Lang | [語言](../api/codes/other.md#lang) | - |
 
+## MetadataActivity - 角色NFT Metadata的對應
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Source | 來源標記 | 對應koa_main.PlayerNFT的欄位 |
+| Native | 原生種標記 | 對應koa_main.PlayerNFT的欄位 |
+| SkeletonType | 骨架類別 | 對應koa_main.PlayerNFT的欄位 |
+| CreateRewardItemID | 創角獎勵之道具編號 | 對應ItemInfo的ItemID |
+
 ## NFTItemsHandleConfig - NFT道具資料表
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | MailID | 信件表 | -1 = 不使用 |
 | RewardContentGroup | 獎勵內容 | -1 = 不使用 |
+
+## PVEChapter - PVE章節內容
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| RewardIDFirst | 第一階段獎勵編號 | 對應RewardInfo表中的RewardID |
+| RewardIDSecond | 第二階段獎勵編號 | 對應RewardInfo表中的RewardID |
+| RewardIDThird | 第三階段獎勵編號 | 對應RewardInfo表中的RewardID |
+
+## PVELevel - PVE關卡設定表
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| FirstItemIDs | 初次通關獎勵之道具編號 | 對應ItemInfo的ItemID<br>複數物品時可用逗號隔開 |
+| SustainItemIDs | 固定通關獎勵之道具編號 | 對應ItemInfo的ItemID<br>複數物品時可用逗號隔開 |
+| UserTrackNumber | 玩家角色競賽時所在跑道 | 1~8跑道編號 |
+| FirstAI | 第一隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| FirstAITrackNumber | 第一隻機器人競賽時所在跑道 | 1~8跑道編號 |
+| SecondAI | 第二隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| SecondAITrackNumber | 第二隻機器人競賽時所在跑道 | 1~8跑道編號 |
+| ThirdAI | 第三隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| ThirdAITrackNumber | 第三隻機器人競賽時所在跑道 | 1~8跑道編號 |
 
 ## QualifyingData - 賽季設定表
 
@@ -67,6 +104,8 @@
 |:-:|:-:|:-:|
 | RankUpLevel | 升階階段 | 2 = 一升二<br>3 = 二升三<br>4 = 三升四 |
 | Attribute | 升階屬性 | 1 = 火<br>2 = 水<br>3 = 木 |
+| DustItemID | 粉塵道具ID | 對應ItemInfo的ItemID |
+| CrystalItemID | 晶石道具ID | 對應ItemInfo的ItemID |
 
 ## RewardContent - 獎勵內容
 
@@ -193,6 +232,8 @@
 |:-:|:-:|:-:|
 | UpgradeLevel | 升技階段 | 2 = 一升二<br>3 = 二升三<br>4 = 三升四<br>5 = 四升五 |
 | SpecieCode | 技能物種DNA編號 | 11 = 獅<br>12 = 鹿<br>13 = 狐狸<br>14 = 貓<br>15 = 虎<br>16 = 狗<br>17 = 猴<br>18 = 熊<br>0 = 其他(詞綴技能、純種技能等) |
+| BaseItemID | 基礎道具ID | 對應ItemInfo的ItemID |
+| ChipItemID | 高階道具ID | 對應ItemInfo的ItemID |
 
 ## StoreCounters - 一般商店
 
@@ -207,3 +248,35 @@
 |:-:|:-:|:-:|
 | IsOpen | 是否開放 | 0 = 關閉<br>1 = 開啟 |
 | StoreType | 商店類型 | 1 = 一般商店<br>2 = APP商店<br>3 = Google商店<br>4 = MyCard |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## UpgradeBonus - 角色升級經驗加成Buff
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| BonusID | 加成Buff編號 |1 = 大成功<br>2 = 超級成功|
+| Multiplier | 加成倍率 | 值須除以100 |
+
+## UpgradeMode - 角色升級模式
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Mode | 升級模式 | 1 = 普通培養 |
+| ChargeMultiply | 手續費倍率 | 須除以100 |
+| BigBonusProbability | 大成功倍率 | 須除以100 |
+| UltimateBonusProbability | 超級成功倍率 | 須除以100 |
+- 當前已廢棄省錢培養、豪爽培養功能。故只有普通培養資料。

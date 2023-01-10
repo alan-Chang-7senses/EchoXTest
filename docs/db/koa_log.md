@@ -13,6 +13,11 @@
 
 - 提供 MyCard 撈取儲值紀錄資訊，不可刪除。
 
+
+## NFTCreatePlayer - NFT創角紀錄
+- 紀錄NFT角色創立時的相關資訊。
+
+
 ## NFTItemLog - NFT道具使用(銷毀)紀錄
 
 - 平台燒毀 NFT，對遊戲發送 itemRedeemed 事件的紀錄資訊。
@@ -21,11 +26,28 @@
 |:-:|:-:|:-:|
 | IsCompleted | 交易是否完成 | 1 = 完成<br>0 = 未完成 |
 
+
+## NFTOwnershipTransfer - NFT角色所有權轉移紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| NewOnwerUserID | 新持有者的使用者ID | 0表示無法得知使用者 |
+| OldOnwerUserID | 舊持有者的使用者ID | 0表示無法得知使用者 |
+
+- 此log只代表在遊戲端資料庫中角色所有權的轉移。無法得知真實NFT交易的情況。
+
+
 ## PlayerRating - 玩家積分紀錄
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+
+## PowerLog - 玩家電力變化紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Cause | 變化原因 | 0 = 自然恢復<br>1 = 系統獎勵<br>2 = 使用UCG<br>3 = 一般PVE通關<br>4 = PVE掃蕩通關 |
 
 ## PVECleared - PVE通關紀錄
 
@@ -43,7 +65,13 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
-| BonusType | 經驗加成種類 | 0 = 無加成<br>1 = 成功<br>2 = 超級成功 |
+| BonusType | 經驗加成種類 | 0 = 無加成<br>1 = 成功<br>2 = 超級成功|
+
+## UpgradeLevel - 角色升階紀錄
+ - 紀錄角色等級突破時的資料
+
+## UpgradeSkill - 角色技能升星紀錄
+ - 紀錄角色技能升星時的資料
 
 ## UserItemsLog - 使用者物品紀錄
 
