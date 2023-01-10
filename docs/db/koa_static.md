@@ -100,6 +100,7 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | SceneEnv  |  [環境](../api/codes/scene.md#env) | - |
+| SceneType | [跑道類別](../api/codes/scene.md#type) | - |
 
 ## SkillEffect - 技能效果表
 
@@ -207,3 +208,14 @@
 |:-:|:-:|:-:|
 | IsOpen | 是否開放 | 0 = 關閉<br>1 = 開啟 |
 | StoreType | 商店類型 | 1 = 一般商店<br>2 = APP商店<br>3 = Google商店<br>4 = MyCard |
+
+## VoiceFileInfo - 播報員資訊
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| VoiceId | 流水號 | - |
+| FileName | 音效檔名稱 | - |
+| Trigger | 觸發點，同一觸發點的音效檔資訊會被視為同一群組 | - |
+| DelayTime | 觸發事件之後延遲播放的秒數 | - |
+| Volumn | 音量初始倍率 | - |
+| ExInfo | 額外資訊，用以提供給觸發點進行判斷使用 | - |
