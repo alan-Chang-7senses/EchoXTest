@@ -19,7 +19,13 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 |  |
+| Email | 玩家遊戲內帳號綁定信箱 |  |
+| Payload | 平台傳送的 Payload 資訊 |  |
 | IsCompleted | 交易是否完成 | 1 = 完成<br>0 = 未完成 |
+| Message | 除錯訊息 | 失敗時提示失敗原因<br>成功時提示 mailID 和 道具資訊 |
+| Timestamp | 交易平台的時間戳 | 用來判斷平台是否已經傳送過此交易訊息 |
+| CreateTime | 紀錄建立時間 | 紀錄建立時間 |
 
 ## PlayerRating - 玩家積分紀錄
 
@@ -37,7 +43,14 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 |  |
+| SeasonID | 賽季 ID |  |
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| Ranking | 賽季排名 |  |
+| UserID | User ID |  |
+| PlayerID | 賽季參賽Peta ID |  |
+| Content | 獲得的賽季獎勵資訊 |  |
+| LogTime | 資料建立時間 |  |
 
 ## UpgradeLevel - 角色升等紀錄
 

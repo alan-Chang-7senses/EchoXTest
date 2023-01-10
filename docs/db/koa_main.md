@@ -17,14 +17,25 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| SeasonID | 賽季 ID | - |
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| PlayerID | 賽季參賽 Peta ID | - |
+| Rating | 賽季積分 | - |
+| UpdateTime | 賽季積分更新時間 | - |
+| PlayCount | Peta 參賽次數 | - |
 
 ## Marquee - 跑馬燈
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
-| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| Serial | 流水號 | - |
+| Status | 狀態 | 1 = 啟用 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| Sorting | 排序權重 | - |
+| Content | 跑馬燈內文 | - |
+| CreateTime | 建立時間 | - |
+| UpdateTime | 更新時間 | - |
 
 ## PlayerHolder - 角色持有資訊
 
@@ -60,8 +71,12 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| ID | 流水號 | - |
+| SeasonID | 賽季 ID | - |
+| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
 | Status | 狀態 | 0 = 關<br>1 = 開 |
 | Assign | 是否派獎 | 0 = 無<br>1 = 有 |
+| UpdateTime | 資料更新時間 | - |
 
 ## RaceBeginHours - 競賽開局時間計量
 
@@ -184,13 +199,27 @@
 - 使用者初次登入遊戲可獲得免費 Peta，此為隨機提供給使用者選擇與獲得，初期版本只能擇一獲得，故在前端操作未完成之前，於此表暫存提供選擇的角色資料。
 - CB2 版本，使用者不需選擇而直接獲得全部角色。
 
+## UserMailItems - 玩家信件夾帶道具
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| UserMailID | 玩家信件編號 | 對應 UserMails 的 UserMailID |
+| ItemID | 夾帶的道具 ID | - |
+| Amount | 夾帶的道具數量 | - |
+
 ## UserMails - 玩家信件
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| UserMailID | 信件流水號 | - |
+| UserID | 信件擁有者的 User ID | - |
+| MailsID | 信件內文語系顯示 ID | - |
 | MailArgument | 信件參數 | 傳給前端取代字元參數 |
 | OpenStatus | 開啟狀態 | 0 = 關閉<br>1 = 開啟 |
 | ReceiveStatus | 領取狀態 | 0 = 未領取<br>1 = 已領取 |
+| CreateTime | 信件建立時間 | - |
+| UpdateTime | 信件狀態更新時間 | - |
+| FinishTime | 信件有效日期 | - |
 
 ## UserPVELevel - 玩家PVE關卡資料
 
