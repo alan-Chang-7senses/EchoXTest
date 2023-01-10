@@ -41,18 +41,55 @@
 | UseType | [使用類型](../api/codes/item.md#useType) | - |
 | EffectType | [效果類型](../api/codes/skill.md#effectType) | 0 = 無效果 |
 
+## Leaderboard - 賽季排行榜資料
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| GroupID | 排行榜主項群組編號 | - |
+| MainLeaderboradName | 主榜單字串 | - |
+| SubLeaderboardName | 子榜單字串 | - |
+| CompetitionRuleHint | 榜單規則字串 | - |
+| SeasonID | 該榜單賽季識別碼 | - |
+| SeasonName | 該榜單賽季企劃識別碼 | - |
+| RecordType | 計分類型 | 0 = 角色<br>1 = 玩家 |
+| RankRuleHint | 排名基準提示字串 | - |
+
 ## MailsInfo - 信箱
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| MailsID | 信件編號 | 信件內文的資料索引 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| Title | 信件標題 | - |
+| Content | 信件內容 | - |
+| Sender | 寄件者 | - |
 | URL | 網址 | *已棄用* |
+
+## MailsItems - 信箱道具資料
+
+- 提供一組信件的範本資料，供後台手動寄信給遊戲玩家使用。
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| MailsID | 信件編號 | 信件內文的資料索引 |
+| StartTime | 開始時間 | - |
+| EndTime | 結束時間 | - |
+| RewardID | 獎勵編號 | - |
 
 ## MainBanner - 主畫面 Banner
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| Status | 狀態 | 1 = 啟用 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| ImageURL | 圖片網址 | - |
+| PageType | [Banner 目標類型](../api/codes/other.md#bannerTarget)  | - |
+| PageURL | 頁面網址 | - |
+
 
 ## MetadataActivity - 角色NFT Metadata的對應
 
@@ -67,6 +104,10 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| OutsideCode | 外部平台代號 | - |
+| NFTItemCode | NFTItem 識別碼 | - |
+| HandleType | 收到 NFTItemCode 的處理方式 | 0 = 發送信件 |
 | MailID | 信件表 | -1 = 不使用 |
 | RewardContentGroup | 獎勵內容 | -1 = 不使用 |
 
@@ -96,7 +137,13 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| SeasonID | 賽季編號 | - |
+| SeasonName | 企劃註解 | - |
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| Scene | 場地編號 | - |
+| StartTime | 開始時間 | - |
+| EndTime | 結束時間 | - |
+| CreateTime | 建立時間 | - |
 
 ## RankUpItems - 升階道具表
 
@@ -139,6 +186,16 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | SceneEnv  |  [環境](../api/codes/scene.md#env) | - |
+
+## SeasonRankingRewardNew - 賽季獎勵清單
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| SeasonID | 賽季編號 | - |
+| SeasonName | 企劃註解 | - |
+| Rank | 賽季排名 | - |
+| RewarID | 獎勵編號 | - |
 
 ## SkillEffect - 技能效果表
 
