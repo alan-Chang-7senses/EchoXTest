@@ -27,19 +27,63 @@
 |:-:|:-:|:-:|
 | Type | 類型 | 0 = 速度<br>1 = 平衡<br>2 = 持久 |
 
-## ItemInfo - 物品資訊
+
+## FreeTicket - 免費門票發放時間表(日) 
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 門票編號 | - |
+| Ticket_Coin | 金幣賽單人 | - |
+| Ticket_PT | PT賽單人 | - |
+| Ticket_Group | PT賽群體 | - |
+
+- 紀錄可領票卷區間時間，內容為 00:00:00 (UTC + 0 時分秒)格式，可多筆區間，領完一筆，下一筆為
+下次可領時間，資料用罄則從頭開始，無限輪迴。
+
+## HintText - 提示文字															
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| HintID | 提示編號 | - |
+| Lang | [語言](../api/codes/other.md#lang) | - |
+| Title | 標題 | - |
+| Content | 內容 | - |
+
+- 各式所需的提示訊息，由前端設定所需時機，經由API取得
+
+## ItemInfo - 物品資訊
+
+物品編號	物品名稱代號	物品敘述代號	物品種類	圖號	堆疊上限	
+使用類型	效果類型	效果值	獎勵編號	來源																
+ItemID	ItemName	Description	itemType	icon	StackLimit	
+UseType	EffectType	EffectValue	RewardID	Source																
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| ItemID | 物品編號 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| ItemName | 物品名稱代號 | 前端多國語系編號 |
+| Description | 物品敘述代號 | 前端多國語系編號 |
 | ItemType | [物品種類](../api/codes/item.md#itemType) | - |
+| icon | 圖號 | - |
+| StackLimit | 堆疊上限 | - |
 | UseType | [使用類型](../api/codes/item.md#useType) | - |
 | EffectType | [效果類型](../api/codes/skill.md#effectType) | 0 = 無效果 |
+| EffectValue | 效果值 | - |
+| RewardID | 獎勵編號 | - |
+| Source | 來源 | - |
+
 
 ## MailsInfo - 信箱
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 |  |
+| MailsID | 信件編號 |  |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| Title | 標題 |  |
+| Content | 內容 |  |
+| Sender | 寄件者 |  |
 | URL | 網址 | *已棄用* |
 
 ## MainBanner - 主畫面 Banner
@@ -61,6 +105,17 @@
 |:-:|:-:|:-:|
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
 
+## RaceSceneVerify - 比賽場景驗證表
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| SceneID | 場景 | - |
+| TrackNumber | 賽道 | - |
+| BeginDistance | 開始距離 | - |
+| TotalDistance | 總長 | - |
+
+- 此資料為前端提供json格式檔案更新
+
 ## RankUpItems - 升階道具表
 
 | 欄位名稱 | 說明 | 備註 |
@@ -72,8 +127,13 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| ContentGroupID | 群組編號 | - |
 | ItemID | 獎勵內容 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| Amount | 獎勵數量 | - |
+| Proportion | 獎勵權重或機率(千分比) | - |
 
+- 須配合 RewardInfo 使用
 - Proportion 欄位代表「獎勵權重」或「獎勵機率」，須依據獎勵模式決定：
 	- 若為獎勵權重，則為同一群組編號（ContentGroupID 欄位）的獎勵內容比例。
 	- 若為獎勵機率，則為千分比獲得機率。
@@ -82,7 +142,12 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| RewardID | 獎勵編號 | - |
 | Modes | 獎勵發放模式| 1 = 發放所有獎勵<br>2 = 玩家自選獎勵<br>3 = 依權重隨機獎勵(可重複)<br>5 = 依機率隨機獎勵 |
+| Times | 發放次數 | - |
+| ContentGroupID | 獎勵內容群組 | - |
+
+- 根據發放模式，由 RewardContent 獲取群組物品，並發放給使用者。
 
 ## SceneClimate - 場景氣候
 
@@ -195,15 +260,51 @@
 | SpecieCode | 技能物種DNA編號 | 11 = 獅<br>12 = 鹿<br>13 = 狐狸<br>14 = 貓<br>15 = 虎<br>16 = 狗<br>17 = 猴<br>18 = 熊<br>0 = 其他(詞綴技能、純種技能等) |
 
 ## StoreCounters - 一般商店
-
+	
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| CIndex | 索引值 | - |
+| GroupID | 群組 | - |
+| CounterID | 專櫃Id | - |
+| ItemID | 商品Id | - |
+| Amount | 商品數量 | - |
 | Inventory | 庫存 | -1 = 無限 |
-| Promotion | 促銷類型 | 0 = 無<br>1-9 = 10-100% off<br>10 = Giveaway |
+| Price | 售價 | - |
+| Currency | 售價貨幣 | - |
+| Promotion | 促銷類型 | (僅前端顯示用)0 = 無<br>1-9 = 10-100% off<br>10 = Giveaway |
 
 ## StoreData - 商店資訊
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| StoreID | 商店編號 | - |
 | IsOpen | 是否開放 | 0 = 關閉<br>1 = 開啟 |
+| MultiName | 商店名稱 | - |
 | StoreType | 商店類型 | 1 = 一般商店<br>2 = APP商店<br>3 = Google商店<br>4 = MyCard |
+| UIStyle | 介面類型 | - |
+| FixedGroup | 固定商品專櫃群組 | - |
+| StochasticGroup | 隨機商品專櫃群組 | - |
+| RefreshCount | 每日刷新次數 | - |
+| RefreshCost | 刷新費用 | - |
+| RefreshCostCurrency | 刷新費用之貨幣 | - |
+
+## StoreProductInfo - 儲值商店品項資訊
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| ProductID | 商品Key | - |
+| MultiNo | 產品名稱 | - |
+| Price | 售價 | - |
+| ISOCurrency | 貨幣 | - |
+
+## StorePurchase - 儲值商店
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| PIndex | 索引值 | - |
+| GroupID | 群組 | - |
+| PurchaseID | 課金Id | - |
+| ItemID | 商品Id | - |
+| Amount | 商品數量 | - |
+| ProductID | 商品Key | - |
