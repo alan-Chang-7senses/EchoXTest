@@ -45,7 +45,7 @@ class PointCurlHelper
         return hash('sha256',http_build_query($signatureData));
     }
 
-    public function GetResponse() : mixed
+    public function SendAndGetResponse() : mixed
     {
         $queryString = http_build_query($this->queryStringParams);
         if(!empty($queryString)) $queryString = '?' . $queryString;
@@ -67,6 +67,6 @@ class PointCurlHelper
             $execOptions[CURLOPT_POSTFIELDS] = $this->bodyParams;
         }
 
-        return $curl->ExecOptions($execOptions);
+        return json_decode($curl->ExecOptions($execOptions));
     }
 }
