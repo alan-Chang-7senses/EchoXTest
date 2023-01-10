@@ -95,7 +95,7 @@
 |:-:|:-:|:-:|
 | BonusType | 經驗加成種類 | 0 = 無加成<br>1 = 成功<br>2 = 超級成功|
 
-## UpgradeLevel - 角色升階紀錄
+## UpgradeRank - 角色升階紀錄
  - 紀錄角色等級突破時的資料
 
 ## UpgradeSkill - 角色技能升星紀錄
