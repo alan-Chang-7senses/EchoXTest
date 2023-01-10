@@ -12,6 +12,21 @@
 ## MyCardPayment - MyCard 儲值資訊
 
 - 提供 MyCard 撈取儲值紀錄資訊，不可刪除。
+- 所需資料為 MyCard 堤供，使用於差異性查詢用(技術文件3.7) 。
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 |  |
+| PaymentType | 付費方式 | 見技術文件(附錄 A) |
+| TradeSeq | MyCard 交易序號 |  |
+| MyCardTradeNo | 交易號碼，見技術文件(3.3.5 ) |  |
+| FacTradeSeq | 廠商交易序號 | 同 StorePurchaseOrders.OrderID |
+| CustomerId | 使用者編號 | 同 Users.UserID |
+| Amount | 支付金額 |  |
+| Currency | 支付的幣種 | 見 https://www.iso.org/iso-4217-currency-codes.html |
+| TradeDateTime | 建立時間 |  |
+| CreateAccountDateTime |  創立帳號時間 |  |
+| CreateAccountIP | 創立帳號 IP |  |
 
 ## NFTItemLog - NFT道具使用(銷毀)紀錄
 
