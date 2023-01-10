@@ -305,7 +305,7 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | IsOpen | 是否開放 | 0 = 關閉<br>1 = 開啟 |
-
+| StoreType | 商店類型 | 1 = 一般商店<br>2 = APP商店<br>3 = Google商店<br>4 = MyCard |
 
 ## UpgradeBonus - 角色升級經驗加成Buff
 
