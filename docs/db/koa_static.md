@@ -61,7 +61,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
-| ItemID | 物品編號 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| ItemID | [物品編號](../api/codes/item.md#ItemID) | - |
 | ItemName | 物品名稱代號 | 前端多國語系編號 |
 | Description | 物品敘述代號 | 前端多國語系編號 |
 | ItemType | [物品種類](../api/codes/item.md#itemType) | - |
@@ -129,7 +129,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 |:-:|:-:|:-:|
 | Serial | 流水號 | - |
 | ContentGroupID | 群組編號 | - |
-| ItemID | 獎勵內容 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| ItemID | [獎勵內容](../api/codes/item.md#ItemID) | - |
 | Amount | 獎勵數量 | - |
 | Proportion | 獎勵權重或機率(千分比) | - |
 
@@ -266,7 +266,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 | CIndex | 索引值 | - |
 | GroupID | 群組 | - |
 | CounterID | 專櫃Id | - |
-| ItemID | 商品Id | - |
+| ItemID | [物品編號](../api/codes/item.md#ItemID) | - |
 | Amount | 商品數量 | - |
 | Inventory | 庫存 | -1 = 無限 |
 | Price | 售價 | - |
@@ -294,9 +294,9 @@ UseType	EffectType	EffectValue	RewardID	Source
 |:-:|:-:|:-:|
 | Serial | 流水號 | - |
 | ProductID | 商品Key | - |
-| MultiNo | 產品名稱 | - |
+| MultiNo | 產品名稱 | 多語系索引 |
 | Price | 售價 | - |
-| ISOCurrency | 貨幣 | - |
+| ISOCurrency | 貨幣 | https://www.iso.org/iso-4217-currency-codes.html  |
 
 ## StorePurchase - 儲值商店
 
@@ -305,6 +305,6 @@ UseType	EffectType	EffectValue	RewardID	Source
 | PIndex | 索引值 | - |
 | GroupID | 群組 | - |
 | PurchaseID | 課金Id | - |
-| ItemID | 商品Id | - |
+| ItemID | [物品編號](../api/codes/item.md#ItemID) | - |
 | Amount | 商品數量 | - |
 | ProductID | 商品Key | - |

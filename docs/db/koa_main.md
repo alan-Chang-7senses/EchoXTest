@@ -191,10 +191,10 @@
 |:-:|:-:|:-:|
 | OrderID | 訂單編號 | - |
 | UserID | 使用者編號 | - |
-| TradeID | 交易序號 |  | - |
-| ProductID | 商品Key |  | - |
-| ItemID | 商品物品ID |  | - |
-| Amount | 商品數量 |  | - |
+| TradeID | 交易序號 | - |
+| ProductID | 商品Key | - |
+| ItemID | [商品物品ID](../api/codes/item.md#ItemID) | - |
+| Amount | 商品數量 | - |
 | Plat | [儲值平台](../api/Store/GetInfos.md#PlatType)| - |
 | Status | 狀態 | 0 = 取消<br>1 = 購買中<br>2 = 已購買<br>3 = 購買失敗<br>4 = 購買驗證中 |
 | Message | 狀態資訊 | - |
@@ -223,7 +223,7 @@
 |:-:|:-:|:-:|
 | UserID | 使用者編號 | - |
 | Device | 使用裝置 | 1 = iOS<br>2 = Andriod |
-| ISOCurrency | 使用幣別(ISO) | MyCard需要知道手機目前幣別 | 
+| ISOCurrency | 使用幣別(ISO) | MyCard需要知道手機目前幣別<br>https://www.iso.org/iso-4217-currency-codes.html | 
 | Plat | [儲值平台](../api/Store/GetInfos.md#PlatType) | - |
 | AutoRefreshTime | 商店自動刷新時間 | - |
 
@@ -249,7 +249,7 @@
 |:-:|:-:|:-:|
 | UserItemID | 使用者物品編號 | - |
 | UserID | 使用者編號 | - |
-| ItemID | 物品編號 | - |
+| ItemID | [物品編號](../api/codes/item.md#ItemID) | - |
 | Amount | 數量 | - |
 | CreateTime | 建立時間 | - |
 | UpdateTime | 更新時間 | - |
