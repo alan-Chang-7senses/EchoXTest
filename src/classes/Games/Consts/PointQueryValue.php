@@ -11,7 +11,7 @@ class PointQueryValue
     const URLAddPoint = 'v1/deposit-orders';
     const URLGetUserBalance = 'v1/users/balances';
 
-    const StatusReturnError = -1;
+    const StatusReturnError = 'ERROR';
     const StatusNew = 'NEW';
     const StatusComplete = 'COMPLETE';
 

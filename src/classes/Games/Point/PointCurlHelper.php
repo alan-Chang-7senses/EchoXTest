@@ -67,6 +67,6 @@ class PointCurlHelper
             $execOptions[CURLOPT_POSTFIELDS] = $this->bodyParams;
         }
 
-        return json_decode($curl->ExecOptions($execOptions));
+        return json_decode($curl->ExecOptions($execOptions)) ?? false;
     }
 }
