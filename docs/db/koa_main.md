@@ -12,19 +12,32 @@
 		{
 		    "ReceiveTicket":false
 		}
-		
+## EnergyRunOutBonus - 能量耗盡效果紀錄
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| BonusID | [獎勵編號](../api/codes/race.md#能量耗盡獎勵) |-|
 ## LeaderboardRating - 角色積分排行榜
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | 會因更新而跳號 |
+| SeasonID | 賽季ID | 值來自koa_main.QualifySeasonData, koa_static.QualifyingData |
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| PlayerID | 角色編號 | -10001 ~ -10007 = 新手教學 AI 角色<br>-1 ~ -10000 = 一般 AI 角色<br>1 ~ 1010000000000000 = 免費 Peta 角色<br> 大於 1010000000000000 = NFT 角色 |
+| Rating | 積分 | 賽季當前的積分。會隨著玩家在該賽季比賽而改變，直到賽季結束 |
+| UpdateTime | 更新時間 | 每次改寫積分時都會更新。若賽季已結束，則會與koa_log.PlayerRating中該賽季最新的一筆紀錄的LogTime相同 |
 
 ## Marquee - 跑馬燈
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
-| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| Serial | 流水號 | - |
+| Status | 狀態 | 1 = 啟用 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| Sorting | 排序權重 | - |
+| Content | 跑馬燈內文 | - |
+| CreateTime | 建立時間 | - |
+| UpdateTime | 更新時間 | - |
 
 ## PlayerHolder - 角色持有資訊
 
@@ -60,14 +73,21 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| ID | 流水號 | - |
+| SeasonID | 賽季 ID | - |
+| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
 | Status | 狀態 | 0 = 關<br>1 = 開 |
 | Assign | 是否派獎 | 0 = 無<br>1 = 有 |
+| UpdateTime | 資料更新時間 | - |
 
 ## RaceBeginHours - 競賽開局時間計量
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+
+## RaceHP - 競賽H值紀錄
+- 因HP為後端計算。需紀錄競賽中角色當下的H值。
 
 ## RacePlayer - 競賽角色資料
 
@@ -179,23 +199,51 @@
 
 - 因 API 為非同步訪問機制，當同一使用者同時間發送多次相同 API 時，可能因非同步存取資料造成結果不如預期，此部份針對資料庫可透過 Transaction 對該筆資料進行鎖定／解鎖來處理，但此期間如果可能需要新增資料筆數則無依據可鎖定／解鎖，故使用此表管控序列流程。
 
+## UserDiamond - 使用者鑽石資訊
+- 此表未啟用。無相關功能實作
+
 ## UserFreePeta - 當前可選擇免費Peta
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| FreePetaInfo | 隨機產生的三隻角色資料。為json格式。 | - |
 
 - 使用者初次登入遊戲可獲得免費 Peta，此為隨機提供給使用者選擇與獲得，初期版本只能擇一獲得，故在前端操作未完成之前，於此表暫存提供選擇的角色資料。
 - CB2 版本，使用者不需選擇而直接獲得全部角色。
+
+## UserMailItems - 玩家信件夾帶道具
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| UserMailID | 玩家信件編號 | 對應 UserMails 的 UserMailID |
+| ItemID | 夾帶的道具 ID | - |
+| Amount | 夾帶的道具數量 | - |
 
 ## UserMails - 玩家信件
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| UserMailID | 信件流水號 | - |
+| UserID | 信件擁有者的 User ID | - |
+| MailsID | 信件內文語系顯示 ID | - |
 | MailArgument | 信件參數 | 傳給前端取代字元參數 |
 | OpenStatus | 開啟狀態 | 0 = 關閉<br>1 = 開啟 |
 | ReceiveStatus | 領取狀態 | 0 = 未領取<br>1 = 已領取 |
+| CreateTime | 信件建立時間 | - |
+| UpdateTime | 信件狀態更新時間 | - |
+| FinishTime | 信件有效日期 | - |
+
+## UserPower - 使用者電力更新紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| PowerUpdateTime | 電力更新時間 | 非更新當下的時間。值為：上次更新時間 + 每點電力恢復所需時間 * 欲恢復電力點數 |
 
 ## UserPVELevel - 玩家PVE關卡資料
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| MedalAmount | 獲得獎牌數量 | 獎牌數量為0時代表該關卡尚未通關 |
 | Status | 關卡狀態 | 0 = 閒置<br>1 = 進行中 |
 
 ## UserRetainPoints - 使用者留存積分

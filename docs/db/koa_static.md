@@ -11,9 +11,11 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| ID | 此欄位等同[大廳（賽制）](../api/codes/race.md#lobby)的值 |-|
 | WeeksPerSeason | 賽季時長 | *此欄位已棄用* |
 | ResetRate | 重置積分比例 | 千分比。1/1000 |
 | NewRoomRate | 新房間機率 | 千分比。1/1000 |
+| TicketId | 門票道具編號 | 數值為ItemInfo的ItemID |
 
 ## DirtyWord - 禁字集
 
@@ -27,6 +29,10 @@
 |:-:|:-:|:-:|
 | Type | 類型 | 0 = 速度<br>1 = 平衡<br>2 = 持久 |
 
+## ItemCharge - 升級道具使用手續費
+- 內容為升級道具之道具ID與使用時的手續費(火星幣)數量。
+- 目前只應用在角色"升級"功能。
+
 ## ItemInfo - 物品資訊
 
 | 欄位名稱 | 說明 | 備註 |
@@ -35,31 +41,109 @@
 | UseType | [使用類型](../api/codes/item.md#useType) | - |
 | EffectType | [效果類型](../api/codes/skill.md#effectType) | 0 = 無效果 |
 
+## Leaderboard - 賽季排行榜資料
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| GroupID | 排行榜主項群組編號 | - |
+| MainLeaderboradName | 主榜單字串 | - |
+| SubLeaderboardName | 子榜單字串 | - |
+| CompetitionRuleHint | 榜單規則字串 | - |
+| SeasonID | 該榜單賽季識別碼 | - |
+| SeasonName | 該榜單賽季企劃識別碼 | - |
+| RecordType | 計分類型 | 0 = 角色<br>1 = 玩家 |
+| RankRuleHint | 排名基準提示字串 | - |
+
 ## MailsInfo - 信箱
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| MailsID | 信件編號 | 信件內文的資料索引 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| Title | 信件標題 | - |
+| Content | 信件內容 | - |
+| Sender | 寄件者 | - |
 | URL | 網址 | *已棄用* |
+
+## MailsItems - 信箱道具資料
+
+- 提供一組信件的範本資料，供後台手動寄信給遊戲玩家使用。
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| MailsID | 信件編號 | 信件內文的資料索引 |
+| StartTime | 開始時間 | - |
+| EndTime | 結束時間 | - |
+| RewardID | 獎勵編號 | - |
 
 ## MainBanner - 主畫面 Banner
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| Status | 狀態 | 1 = 啟用 |
 | Lang | [語言](../api/codes/other.md#lang) | - |
+| ImageURL | 圖片網址 | - |
+| PageType | [Banner 目標類型](../api/codes/other.md#bannerTarget)  | - |
+| PageURL | 頁面網址 | - |
+
+
+## MetadataActivity - 角色NFT Metadata的對應
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Source | 來源標記 | 對應koa_main.PlayerNFT的欄位 |
+| Native | 原生種標記 | 對應koa_main.PlayerNFT的欄位 |
+| SkeletonType | 骨架類別 | 對應koa_main.PlayerNFT的欄位 |
+| CreateRewardItemID | 創角獎勵之道具編號 | 對應ItemInfo的ItemID |
 
 ## NFTItemsHandleConfig - NFT道具資料表
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| OutsideCode | 外部平台代號 | - |
+| NFTItemCode | NFTItem 識別碼 | - |
+| HandleType | 收到 NFTItemCode 的處理方式 | 0 = 發送信件 |
 | MailID | 信件表 | -1 = 不使用 |
 | RewardContentGroup | 獎勵內容 | -1 = 不使用 |
+
+## PVEChapter - PVE章節內容
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| RewardIDFirst | 第一階段獎勵編號 | 對應RewardInfo表中的RewardID |
+| RewardIDSecond | 第二階段獎勵編號 | 對應RewardInfo表中的RewardID |
+| RewardIDThird | 第三階段獎勵編號 | 對應RewardInfo表中的RewardID |
+
+## PVELevel - PVE關卡設定表
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| FirstItemIDs | 初次通關獎勵之道具編號 | 對應ItemInfo的ItemID<br>複數物品時可用逗號隔開 |
+| SustainItemIDs | 固定通關獎勵之道具編號 | 對應ItemInfo的ItemID<br>複數物品時可用逗號隔開 |
+| UserTrackNumber | 玩家角色競賽時所在跑道 | 1~8跑道編號 |
+| FirstAI | 第一隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| FirstAITrackNumber | 第一隻機器人競賽時所在跑道 | 1~8跑道編號 |
+| SecondAI | 第二隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| SecondAITrackNumber | 第二隻機器人競賽時所在跑道 | 1~8跑道編號 |
+| ThirdAI | 第三隻機器人角色編號 | 對應koa_main.PlayerNFT中的PlayerID |
+| ThirdAITrackNumber | 第三隻機器人競賽時所在跑道 | 1~8跑道編號 |
 
 ## QualifyingData - 賽季設定表
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| SeasonID | 賽季編號 | - |
+| SeasonName | 企劃註解 | - |
 | Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+| Scene | 場地編號 | - |
+| StartTime | 開始時間 | - |
+| EndTime | 結束時間 | - |
+| CreateTime | 建立時間 | - |
 
 ## RankUpItems - 升階道具表
 
@@ -67,6 +151,8 @@
 |:-:|:-:|:-:|
 | RankUpLevel | 升階階段 | 2 = 一升二<br>3 = 二升三<br>4 = 三升四 |
 | Attribute | 升階屬性 | 1 = 火<br>2 = 水<br>3 = 木 |
+| DustItemID | 粉塵道具ID | 對應ItemInfo的ItemID |
+| CrystalItemID | 晶石道具ID | 對應ItemInfo的ItemID |
 
 ## RewardContent - 獎勵內容
 
@@ -100,6 +186,17 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | SceneEnv  |  [環境](../api/codes/scene.md#env) | - |
+| SceneType | [跑道類別](../api/codes/scene.md#type) | - |
+
+## SeasonRankingRewardNew - 賽季獎勵清單
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 | - |
+| SeasonID | 賽季編號 | - |
+| SeasonName | 企劃註解 | - |
+| Rank | 賽季排名 | - |
+| RewarID | 獎勵編號 | - |
 
 ## SkillEffect - 技能效果表
 
@@ -193,6 +290,8 @@
 |:-:|:-:|:-:|
 | UpgradeLevel | 升技階段 | 2 = 一升二<br>3 = 二升三<br>4 = 三升四<br>5 = 四升五 |
 | SpecieCode | 技能物種DNA編號 | 11 = 獅<br>12 = 鹿<br>13 = 狐狸<br>14 = 貓<br>15 = 虎<br>16 = 狗<br>17 = 猴<br>18 = 熊<br>0 = 其他(詞綴技能、純種技能等) |
+| BaseItemID | 基礎道具ID | 對應ItemInfo的ItemID |
+| ChipItemID | 高階道具ID | 對應ItemInfo的ItemID |
 
 ## StoreCounters - 一般商店
 
@@ -207,3 +306,49 @@
 |:-:|:-:|:-:|
 | IsOpen | 是否開放 | 0 = 關閉<br>1 = 開啟 |
 | StoreType | 商店類型 | 1 = 一般商店<br>2 = APP商店<br>3 = Google商店<br>4 = MyCard |
+
+## UpgradeBonus - 角色升級經驗加成Buff
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| BonusID | 加成Buff編號 |1 = 大成功<br>2 = 超級成功|
+| Multiplier | 加成倍率 | 值須除以100 |
+
+## UpgradeMode - 角色升級模式
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Mode | 升級模式 | 1 = 普通培養 |
+| ChargeMultiply | 手續費倍率 | 須除以100 |
+| BigBonusProbability | 大成功倍率 | 須除以100 |
+| UltimateBonusProbability | 超級成功倍率 | 須除以100 |
+- 當前已廢棄省錢培養、豪爽培養功能。故只有普通培養資料。
+
+## VoiceFileInfo - 播報員資訊
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| VoiceId | 流水號 | - |
+| FileName | 音效檔名稱 | - |
+| Trigger | 觸發點，同一觸發點的音效檔資訊會被視為同一群組 | - |
+| DelayTime | 觸發事件之後延遲播放的秒數 | - |
+| Volumn | 音量初始倍率 | - |
+| ExInfo | 額外資訊，用以提供給觸發點進行判斷使用 | - |
+
+## VIPPrivailege - VIP權限控制表
+ - 暫時無此功能與實作
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
