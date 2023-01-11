@@ -21,10 +21,26 @@ Content Type: `application/x-www-form-urlencoded`
 
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| device | int | 裝置(1:iOS 2:Android) |
-| plat | int | 目前平台(1:Apple 2:Google 3:MyCard) |
+| device | int | [裝置](#DeviceType) |
+| plat | int | [目前儲值平台](#PlatType) |
 | currency | string | 目前幣別(ISO 4217), 3碼 |
 <br>
+
+### <span id="DeviceType">儲值使用裝置</span>
+| 編碼 | 定義 |
+|:-:|:-:|
+| 1 | iOS |
+| 2 | Android |
+<br>
+
+### <span id="PlatType">儲值平台種類</span>
+
+| 編碼 | 定義 |
+|:-:|:-:|
+| 1 | Apple Store |
+| 2 | Google Store |
+| 3 | MyCard |
+
 
 ## Response
 

@@ -12,18 +12,18 @@
 ## MyCardPayment - MyCard 儲值資訊
 
 - 提供 MyCard 撈取儲值紀錄資訊，不可刪除。
-- 所需資料為 MyCard 堤供，使用於差異性查詢用(技術文件3.7) 。
+- 所需查詢資料為 MyCard 堤供，由我方紀錄，使用於差異性查詢用(技術文件3.7) 。
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | Serial | 流水號 |  |
 | PaymentType | 付費方式 | 見技術文件(附錄 A) |
 | TradeSeq | MyCard 交易序號 |  |
-| MyCardTradeNo | 交易號碼，見技術文件(3.3.5 ) |  |
+| MyCardTradeNo | 交易號碼 | 見技術文件(3.3.5 ) |
 | FacTradeSeq | 廠商交易序號 | 同 StorePurchaseOrders.OrderID |
 | CustomerId | 使用者編號 | 同 Users.UserID |
 | Amount | 支付金額 |  |
-| Currency | 支付的幣種 | 見 https://www.iso.org/iso-4217-currency-codes.html |
+| Currency | 支付的幣種 | https://www.iso.org/iso-4217-currency-codes.html |
 | TradeDateTime | 建立時間 |  |
 | CreateAccountDateTime |  創立帳號時間 |  |
 | CreateAccountIP | 創立帳號 IP |  |
@@ -103,8 +103,10 @@
 
 ## UserItemsLog - 使用者物品紀錄
 
+- 使用者獲得或失去物品的流向，原因和活動必須特別紀錄。
+
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
-| ItemID | 物品編號 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| ItemID | [物品編號](../api/codes/item.md#ItemID)  | - |
 | Cause | 原因 | 0 = 預設<br>1 = 在背包使用道具<br>2 = 信件<br>3 = 競賽<br>4 = 獲取經驗值<br>5 = 提升階級<br>6 = 提升技能等級<br>7 = 建立帳號<br>8 = PVE通關<br>9 = PVE獎牌獎勵<br>10 = 商店<br>11 = 創立NFT角色<br>12 = 新手引導獎勵 |
 | Action | 動作 | 1 = 獲得<br>2 = 使用 |
