@@ -53,12 +53,7 @@
 - 各式所需的提示訊息，由前端設定所需時機，經由API取得
 
 ## ItemInfo - 物品資訊
-
-物品編號	物品名稱代號	物品敘述代號	物品種類	圖號	堆疊上限	
-使用類型	效果類型	效果值	獎勵編號	來源																
-ItemID	ItemName	Description	itemType	icon	StackLimit	
-UseType	EffectType	EffectValue	RewardID	Source																
-
+														
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | ItemID | [物品編號](../api/codes/item.md#ItemID) | - |
@@ -114,7 +109,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 | BeginDistance | 開始距離 | - |
 | TotalDistance | 總長 | - |
 
-- 此資料為前端提供json格式檔案更新
+- 此資料由前端提供json格式檔案更新
 
 ## RankUpItems - 升階道具表
 
@@ -270,7 +265,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 | Amount | 商品數量 | - |
 | Inventory | 庫存 | -1 = 無限 |
 | Price | 售價 | - |
-| Currency | 售價貨幣 | - |
+| Currency | [售價貨幣](../api/codes/item.md#ItemID) | - |
 | Promotion | 促銷類型 | (僅前端顯示用)0 = 無<br>1-9 = 10-100% off<br>10 = Giveaway |
 
 ## StoreData - 商店資訊
@@ -286,7 +281,7 @@ UseType	EffectType	EffectValue	RewardID	Source
 | StochasticGroup | 隨機商品專櫃群組 | - |
 | RefreshCount | 每日刷新次數 | - |
 | RefreshCost | 刷新費用 | - |
-| RefreshCostCurrency | 刷新費用之貨幣 | - |
+| RefreshCostCurrency | [刷新費用之貨幣](../api/codes/item.md#ItemID) | - |
 
 ## StoreProductInfo - 儲值商店品項資訊
 

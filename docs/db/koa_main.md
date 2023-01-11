@@ -155,7 +155,7 @@
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
 | RacePlayerID | 競賽角色編號 | - |
-| VerifyState | 驗證狀態 | 0 = 無<br>1 = 開局<br>2 = 起跑<br>3 = 施放技能<br>4 = 託管施放技能<br>5 = 更新數值<br>6 = 再次獲得能量<br>比賽結束<br>能量耗盡額外獎勵 |
+| VerifyState | 驗證狀態 | 0 = 無<br>1 = 開局<br>2 = 起跑<br>3 = 施放技能<br>4 = 託管施放技能<br>5 = 更新數值<br>6 = 再次獲得能量<br>7 = 比賽結束<br>8 = 能量耗盡額外獎勵 |
 | ServerDistance | 後端移動總距離 | ClientDistance-ServerDistance > config.RaceVerifyDistance = 可能作弊 |
 | Speed | 當前速度 | - |
 | ServerDistance | 後端移動總距離 | server計算,每次相關api進入更新 |
@@ -164,6 +164,9 @@
 | UpdateTime | 更新時間 | - |
 | StartTime | 開始時間 | 比賽開始使間 |
 | CreateTime | 建立時間 | - |
+
+- 用來驗證比賽是否作弊，當收到使用者的API時，進行距離運算 = 時間X速度
+- 當比賽結束時，前端距離 > 後端距離視為作弊
 
 ## Sessions - 使用者 Session 資料
 
@@ -185,6 +188,8 @@
 | CreateTime | 建立時間 | - |
 | UpdateTime | 更新時間 | - |
 
+- 根據 StoreID 紀錄使用者目前有的商店資訊。
+
 ## StorePurchaseOrders - 儲值訂單資訊
 
 | 欄位名稱 | 說明 | 備註 |
@@ -203,6 +208,8 @@
 | CreateTime | 建立時間 | - |
 | UpdateTime | 更新時間 | - |
 
+- 儲值下單的紀錄，資料不能清除，因為有付費重購問題。
+
 ## StoreTrades - 交易資訊
 
 | 欄位名稱 | 說明 | 備註 |
@@ -210,12 +217,16 @@
 | TradeID | 交易序號 | - |
 | UserID | 使用者編號 | - |
 | StoreID | 商店編號 | - |
-| Status | 狀態 | 0 = 閒置<br>1 = 使用中 |
+| Status | 狀態 | 0 = 閒置<br>1 = 使用中 <br> 2 = 封存 |
 | StoreType | 商店類型 | 1 = 一般商品<br>2 = Apple商品<br>3 = Google商品<br>4 = MyCard商品 |
 | IsFix | 是否為固定商品 | 0 = 預設<br>1 = 固定商品<br>2 = 隨機商品 |
 | CPIndex | 商店索引 | StoreCounters.CIndex 或<br> StorePurchase.PIndex |
 | RemainInventory | 剩餘庫存量 | - |
 | UpdateTime | 更新時間 | - |
+
+- 紀錄商店中每一格商品的資訊，不管是儲值商品或一般商品，由 StoreID 去分辯，CPIndex對應不同表
+- Status = 0 時，此資料可在刷新時再利用
+- Status = 2 時，為儲值商店商品封存，避免儲值付款成功後，資料被異動
 
 ## StoreUserInfos - 交易商店資訊
 				
@@ -233,7 +244,10 @@
 
 | 欄位名稱 | 說明 | 備註 |
 |:-:|:-:|:-:|
+| UserID | 使用者編號 | - |
+| APIName | 使用的API名稱 | - |
 | LockFlag | 鎖定標記 | 0 = 解鎖<br>1 = 鎖定 |
+| UpdateTime | 更新時間 | - |
 
 - 因 API 為非同步訪問機制，當同一使用者同時間發送多次相同 API 時，可能因非同步存取資料造成結果不如預期，此部份針對資料庫可透過 Transaction 對該筆資料進行鎖定／解鎖來處理，但此期間如果可能需要新增資料筆數則無依據可鎖定／解鎖，故使用此表管控序列流程。
 
