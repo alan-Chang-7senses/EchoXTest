@@ -289,7 +289,6 @@
 | CreateTime | 建立時間 | - |
 | UpdateTime | 更新時間 | - |
 
-
 ## UserMailItems - 玩家信件夾帶道具
 
 | 欄位名稱 | 說明 | 備註 |
