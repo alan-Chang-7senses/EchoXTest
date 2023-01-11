@@ -1,0 +1,54 @@
+# 資料庫備註說明 - koa_log - Log 資料庫
+
+## BaseProcess - 基礎處理 log
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| UserID | 使用者ID | 0  = 非登入狀態 |
+| Result | 處理結果 | 1 = 成功<br>0 = 失敗 |
+| HttpCode | [HTTP回應狀態碼](../api/codes/httpCode.md) | - |
+| Message | 處理結果訊息 | 處理成功時 = null<br>處理失敗時 = ResultData 的 message 內容<br>若 ResultData 的 code = 999，記錄額外的錯誤訊息 |
+
+## MyCardPayment - MyCard 儲值資訊
+
+- 提供 MyCard 撈取儲值紀錄資訊，不可刪除。
+
+## NFTItemLog - NFT道具使用(銷毀)紀錄
+
+- 平台燒毀 NFT，對遊戲發送 itemRedeemed 事件的紀錄資訊。
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| IsCompleted | 交易是否完成 | 1 = 完成<br>0 = 未完成 |
+
+## PlayerRating - 玩家積分紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+
+## PVECleared - PVE通關紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| SyncRate | 獲得同步率量 | 單位為1/1000000 |
+
+## SeasonRankingReward - 賽季排名獎勵紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Lobby | [大廳（賽制）](../api/codes/race.md#lobby) | - |
+
+## UpgradeLevel - 角色升等紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| BonusType | 經驗加成種類 | 0 = 無加成<br>1 = 成功<br>2 = 超級成功 |
+
+## UserItemsLog - 使用者物品紀錄
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| ItemID | 物品編號 | -1 = 電力<br>-2 = 火星幣<br>-3 = 晶鑽<br>-4 = PT幣<br>大於 0 = 物品編號 |
+| Cause | 原因 | 0 = 預設<br>1 = 在背包使用道具<br>2 = 信件<br>3 = 競賽<br>4 = 獲取經驗值<br>5 = 提升階級<br>6 = 提升技能等級<br>7 = 建立帳號<br>8 = PVE通關<br>9 = PVE獎牌獎勵<br>10 = 商店<br>11 = 創立NFT角色<br>12 = 新手引導獎勵 |
+| Action | 動作 | 1 = 獲得<br>2 = 使用 |
