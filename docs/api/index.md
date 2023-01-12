@@ -1,4 +1,4 @@
-# King of Animals Games API
+# Peta Rush API
 
 ## 介紹
 

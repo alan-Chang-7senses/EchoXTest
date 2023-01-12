@@ -65,7 +65,7 @@ _此欄位資料為物件陣列，以下為單一陣列元素的物件內容：_
 
 | 名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
-| itemID | int | 物品編號 |
+| itemID | int | [物品編號](../codes/item.md#ItemID) |
 | amount | int | 物品數量 |
 | icon | string | Icon 圖號 |
 |
