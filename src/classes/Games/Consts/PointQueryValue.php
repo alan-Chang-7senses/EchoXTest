@@ -27,5 +27,5 @@ class PointQueryValue
     [
         self::OrderTypeDeposit => 1,
     ];
-
+    const MultiplierPT = 100;
 }

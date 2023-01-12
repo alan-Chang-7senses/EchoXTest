@@ -5,14 +5,16 @@ namespace Games\Point;
 use Consts\Globals;
 use Games\Accessors\AccessorFactory;
 use Games\Consts\PointQueryValue;
+use Games\Pools\UserPool;
 
 class UserPoint
 {
-    private int $userID;
-    private string $username;
     const InComplete = 0;
     const InProcess = 1;
     const Complete = 2;
+    const PadAmount = 20;
+    private int $userID;
+    private string $username;
 
     public function __construct(int $userID, string $username)
     {
@@ -35,12 +37,16 @@ class UserPoint
         $curlReturn = $helper->SendAndGetResponse();
         if(empty($curlReturn))return false;
         if($curlReturn->status->code != PointQueryValue::CodeSuccess)return false;
+        AccessorFactory::Main()->FromTable('Users')
+                               ->WhereEqual('UserID',$this->userID)
+                               ->Modify(['PetaToken' => $curlReturn->data->balance * PointQueryValue::MultiplierPT]);
+        UserPool::Instance()->Delete($this->userID);
         return $curlReturn->data->balance;
     }
 
     public function IsPointSync() : bool
     {
-        $accessor = AccessorFactory::Log();
+        $accessor = AccessorFactory::Main();
         $row = $accessor->SelectExpr('COUNT(*) as C')
                  ->FromTable('PointOrderIncomplete')
                  ->WhereEqual('UserID',$this->userID)
@@ -49,22 +55,23 @@ class UserPoint
         return $row->C == 0;                 
     }
 
-    public function AddPoint(int|float $amount, string $symbol, int|null $specifyOrderID = null) : bool
+    public function AddPoint(int|float $amount, string $symbol) : bool
     {
-        $logAccessor = AccessorFactory::Log();
+        $accessor = AccessorFactory::Main();
         $nowTime = $GLOBALS[Globals::TIME_BEGIN];
-        $logAccessor->FromTable('PointOrder')->Add(
+        $bind = 
         [
             'Symbol' => $symbol,
             'UserID' => $this->userID,
             'Username' => $this->username,
             'Amount' => $amount,
             'LogTime' => $nowTime,
-            'OrderType' => PointQueryValue::OrderTypeDeposit,
-        ]);
-        $serial = $logAccessor->LastInsertID();
-        $orderID = $specifyOrderID ?? $serial + PointQueryValue::OrderIDMin;
-        $bind =['OrderID' => $orderID];
+            'OrderType' => PointQueryValue::OrderTypes[PointQueryValue::OrderTypeDeposit],
+        ];
+        $accessor->FromTable('UserPointOrder')->Add($bind);
+        $serial = $accessor->LastInsertID();
+        $orderID = str_pad((string)$serial,self::PadAmount,'0',STR_PAD_LEFT);
+        $bind['OrderID'] = $orderID;
         $helper = new PointCurlHelper('post',PointQueryValue::URLAddPoint);
         $helper->AddBodyParams('symbol',$symbol);
         $helper->AddBodyParams('amount',$amount);
@@ -72,30 +79,17 @@ class UserPoint
         $helper->AddBodyParams('userId',$this->username);
         $curlReturn = $helper->SendAndGetResponse();
 
-        if(empty($curlReturn))
+        $this->LogOrder($bind,$curlReturn);
+        if(empty($curlReturn->status))
         {
-            $bind['OrderStatus'] = PointQueryValue::StatusReturnError;
-            $logAccessor->WhereEqual('SerialNumber', $serial)->Modify($bind);
-            self::AddIncompleteLog($serial,$this->userID);
+            $this->AddIncompleteOrder((int)$orderID);
             return false;
         } 
-
-        if(empty($curlReturn->status->code) || $curlReturn->status->code !== PointQueryValue::CodeSuccess)
+        if($curlReturn->status->code !== PointQueryValue::CodeSuccess)
         {
-            self::AddIncompleteLog($serial,$this->userID);
-            $bind['OrderStatus'] = PointQueryValue::StatusReturnError;
-            $bind['RespondCode'] = $curlReturn->status->code;
-            $bind['Message'] = $curlReturn->status->message;
-            $logAccessor->WhereEqual('SerialNumber', $serial)->Modify($bind);
+            $this->AddIncompleteOrder((int)$orderID);
             return false;
         }
-
-        $bind['OrderStatus'] = $curlReturn->data->status;
-        $bind['RespondCode'] = $curlReturn->status->code;
-        $bind['Message'] = $curlReturn->status->message;
-        $bind['RespondOrderID'] = $curlReturn->data->orderId;
-        $bind['RespondAmount'] = $curlReturn->data->amount;
-        $logAccessor->WhereEqual('SerialNumber', $serial)->Modify($bind);
         return true;
     }
 
@@ -106,7 +100,7 @@ class UserPoint
 
     private function RefreshPoint()
     {
-        $accessor = AccessorFactory::Log();
+        $accessor = AccessorFactory::Main();
         $userID = $this->userID;
         $incompleteRows = $accessor->Transaction(function() use ($accessor,$userID)
         {
@@ -117,56 +111,120 @@ class UserPoint
                      ->FetchAll();
             if($rows !== false)
             {
-                $serials = array_column($rows,'SerialNumber');
+                $orderIDs = array_column($rows,'OrderID');
                 $accessor->ClearCondition()
                          ->FromTable('PointOrderIncomplete')
-                         ->WhereIn('SerialNumber',$serials)
+                         ->WhereIn('OrderID',$orderIDs)
                          ->Modify(['ProcessStatus' => self::InProcess]);
-                return $rows;                         
+                return $rows;  
             }
         });
         if($incompleteRows == false)return;
 
         $rows = $accessor->ClearCondition()
-                         ->FromTable('PointOrder')
-                         ->WhereIn('SerialNumber',array_column($incompleteRows,'OrderSerialNumber'))
+                         ->FromTable('UserPointOrder')
+                         ->WhereIn('OrderID',array_column($incompleteRows,'OrderID'))
                          ->FetchAll();
         if($rows === false)return;
         
+        $successDeposits = [];
+        $failedDeposits = [];
         foreach($rows as $row)
         {
             $info = new RefreshInfo();
             $info->amount = $row->Amount;
             $info->orderType = $row->OrderType;
-            $info->orderID = $row->OrderID;
+            $info->orderID = str_pad((string)$row->OrderID,self::PadAmount,'0',STR_PAD_LEFT);
             $info->symbol = $row->Symbol;
-            $this->RefreshPointByRefreshInfo($info);
+            $isDone = $this->RefreshPointByRefreshInfo($info);
+            if($isDone) $successDeposits[] = $info->orderID;
+            else $failedDeposits[] = $info->orderID;
         }
-
-        $incompleteSerials = array_column($incompleteRows,'SerialNumber');
-        $accessor->ClearCondition()
-                 ->FromTable('PointOrderIncomplete')
-                 ->WhereIn('SerialNumber',$incompleteSerials)
-                 ->Modify(['ProcessStatus' => self::Complete]);
+        if(!empty($successDeposits))
+        {
+            $accessor->ClearCondition()
+                     ->FromTable('PointOrderIncomplete')
+                     ->WhereIn('OrderID',$successDeposits)
+                     ->Modify(['ProcessStatus' => self::Complete]);
+        }
+        if(!empty($failedDeposits))
+        {
+            $accessor->ClearCondition()
+                     ->FromTable('PointOrderIncomplete')
+                     ->WhereIn('OrderID',$failedDeposits)
+                     ->Modify(['ProcessStatus' => self::InComplete]);
+        }
     }
     //提供排程使用
-    public function RefreshPointByRefreshInfo(RefreshInfo $info)
+    public function RefreshPointByRefreshInfo(RefreshInfo $info) : bool
     {
-        match($info->orderType)
+        return match($info->orderType)
         {
-            PointQueryValue::OrderTypeDeposit
-            => $this->AddPoint($info->amount,$info->symbol,$info->orderID),
+            PointQueryValue::OrderTypes[PointQueryValue::OrderTypeDeposit]
+            => $this->ReAddPoint((string)$info->orderID,$info->symbol,$info->amount),
+            default => false,
         };
     }
 
-    private function AddIncompleteLog(int $serial)
+    private function ReAddPoint(string $orderID, string $symbol, float $amount) : bool
     {
-        $logAccessor = AccessorFactory::Log();
-        $logAccessor->ClearCondition()
-        ->FromTable('PointOrderIncomplete')
-        ->Add([
+        $helper = new PointCurlHelper('post',PointQueryValue::URLAddPoint);
+        $helper->AddBodyParams('symbol',$symbol);
+        $helper->AddBodyParams('amount',$amount);
+        $helper->AddBodyParams('refOrderId',$orderID);
+        $helper->AddBodyParams('userId',$this->username);
+        $curlReturn = $helper->SendAndGetResponse();
+        $bind = 
+        [
+            'OrderID' => $orderID,
+            'Symbol' => $symbol,
             'UserID' => $this->userID,
-            'OrderSerialNumber' => $serial,
-        ]);
-    }   
+            'Username' => $this->username,
+            'Amount' => $amount,
+            'LogTime' => $GLOBALS[Globals::TIME_BEGIN],
+            'OrderType' => PointQueryValue::OrderTypes[PointQueryValue::OrderTypeDeposit],
+        ];
+        $this->LogOrder($bind,$curlReturn);
+        if(empty($curlReturn->status->code))return false;
+        return $curlReturn->status->code == PointQueryValue::CodeSuccess;
+    }
+
+    private function AddIncompleteOrder(int $orderID)
+    {
+        $accessor = AccessorFactory::Main();
+        $accessor->ClearCondition()
+            ->FromTable('PointOrderIncomplete')
+            ->Add([
+                    'UserID' => $this->userID,
+                    'OrderID' => $orderID,
+                 ]);
+    }
+
+    private function LogOrder(array $bind, $curlReturn)
+    {
+        if(empty($curlReturn->status))
+        {
+            $bind['OrderStatus'] = PointQueryValue::StatusReturnError;
+            AccessorFactory::Log()->FromTable('PointOrder')->Add($bind);
+            return;
+        } 
+        if($curlReturn->status->code !== PointQueryValue::CodeSuccess)
+        {
+            $bind['OrderStatus'] = PointQueryValue::StatusReturnError;
+            $bind['RespondCode'] = $curlReturn->status->code;
+            $bind['Message'] = $curlReturn->status->message;
+            AccessorFactory::Log()->FromTable('PointOrder')->Add($bind);
+            return;
+        }
+        
+        $bind['OrderStatus'] = $curlReturn->data->status;
+        $bind['RespondCode'] = $curlReturn->status->code;
+        $bind['Message'] = $curlReturn->status->message;
+        $bind['RespondOrderID'] = $curlReturn->data->orderId;
+        $bind['RespondAmount'] = $curlReturn->data->amount;
+        $bind['CallbackStatus'] = $curlReturn->data->callbackStatus;
+        $bind['RedirectURL'] = $curlReturn->data->redirectUrl;
+        AccessorFactory::Log()->FromTable('PointOrder')->Add($bind);
+    }
+    
 }

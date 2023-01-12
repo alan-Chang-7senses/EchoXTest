@@ -8,9 +8,11 @@ use Consts\ErrorCode;
 use Consts\Globals;
 use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
+use Games\Consts\PointQueryValue;
 use Games\Consts\RaceValue;
 use Games\Consts\RewardValue;
 use Games\Exceptions\RaceException;
+use Games\Point\UserPoint;
 use Games\Pools\ItemInfoPool;
 use Games\Pools\RacePlayerPool;
 use Games\Pools\RacePool;
@@ -161,9 +163,8 @@ class FinishRace extends BaseRace{
                                               ->WhereIn('RacePlayerID',array_values($racePlayersArr))
                                               ->FetchAll();
         $rates = RaceUtility::RecordRatingForEachPlayer($rankingRows,$this->userInfo->lobby,$raceID);
-        
-        if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
-        
+        $this->AddPoint($items);        
+        // if(isset($this->leaderboardLeadFunc[$this->userInfo->lobby])) $leadRates = $this->{$this->leaderboardLeadFunc[$this->userInfo->lobby]}();
         foreach ($users as $idx => $user) {
             
             if(UserUtility::IsNonUser($user['id'])) continue;
@@ -299,5 +300,32 @@ class FinishRace extends BaseRace{
         if(!empty($insert)) $accessor->FromTable($table)->AddAll($insert);
         
         return $leadRates;
+    }
+
+    private function AddPoint(array &$rewardInfo)
+    {
+        $pointSymbol = 
+        [
+            -4 => PointQueryValue::SymbolPT
+        ];
+        $users = array_keys($rewardInfo);
+        $accessor = AccessorFactory::Main();
+        $rows = $accessor->selectExpr('UserID, Username')
+                 ->FromTable('Users')
+                 ->WhereIn('UserID',$users)
+                 ->FetchAll();
+        foreach($rows as $row)
+        {
+            $items = $rewardInfo[$row->UserID];
+            foreach($items as $key => $val)
+            {
+                if(!isset($pointSymbol[$val->ItemID]))continue;
+                if($val->Amount <= 0)continue;
+                $symbol = $pointSymbol[$val->ItemID];
+                $userPoint = new UserPoint($row->UserID,$row->Username);
+                $isAddPointSuccess = $userPoint->AddPoint($val->Amount / PointQueryValue::MultiplierPT,$symbol);
+                if(!$isAddPointSuccess)unset($rewardInfo[$row->UserID][$key]);
+            }
+        }         
     }
 }
