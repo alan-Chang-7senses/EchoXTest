@@ -140,20 +140,7 @@ class UserPoint
             if($isDone) $successDeposits[] = $info->orderID;
             else $failedDeposits[] = $info->orderID;
         }
-        if(!empty($successDeposits))
-        {
-            $accessor->ClearCondition()
-                     ->FromTable('PointOrderIncomplete')
-                     ->WhereIn('OrderID',$successDeposits)
-                     ->Modify(['ProcessStatus' => self::Complete]);
-        }
-        if(!empty($failedDeposits))
-        {
-            $accessor->ClearCondition()
-                     ->FromTable('PointOrderIncomplete')
-                     ->WhereIn('OrderID',$failedDeposits)
-                     ->Modify(['ProcessStatus' => self::InComplete]);
-        }
+        self::FinishRefresh($successDeposits,$failedDeposits);
     }
     //提供排程使用
     public function RefreshPointByRefreshInfo(RefreshInfo $info) : bool
@@ -164,6 +151,25 @@ class UserPoint
             => $this->ReAddPoint((string)$info->orderID,$info->symbol,$info->amount),
             default => false,
         };
+    }
+
+    public static function FinishRefresh(array $successOrderIDs, array $failedOrderIDs)
+    {
+        $accessor = AccessorFactory::Main();
+        if(!empty($successOrderIDs))
+        {
+            $accessor->ClearCondition()
+                     ->FromTable('PointOrderIncomplete')
+                     ->WhereIn('OrderID',$successOrderIDs)
+                     ->Modify(['ProcessStatus' => self::Complete]);
+        }
+        if(!empty($failedOrderIDs))
+        {
+            $accessor->ClearCondition()
+                     ->FromTable('PointOrderIncomplete')
+                     ->WhereIn('OrderID',$failedOrderIDs)
+                     ->Modify(['ProcessStatus' => self::InComplete]);
+        }
     }
 
     private function ReAddPoint(string $orderID, string $symbol, float $amount) : bool
