@@ -35,12 +35,12 @@ class UserPoint
         $helper->AddQueryStringParams('userId',$this->username);
         $helper->AddQueryStringParams('symbol',$symbol);
         $curlReturn = $helper->SendAndGetResponse();
-        if(empty($curlReturn))return false;
+        if(empty($curlReturn->status->code))return false;
         if($curlReturn->status->code != PointQueryValue::CodeSuccess)return false;
-        AccessorFactory::Main()->FromTable('Users')
-                               ->WhereEqual('UserID',$this->userID)
-                               ->Modify(['PetaToken' => $curlReturn->data->balance * PointQueryValue::MultiplierPT]);
-        UserPool::Instance()->Delete($this->userID);
+        // AccessorFactory::Main()->FromTable('Users')
+        //                        ->WhereEqual('UserID',$this->userID)
+        //                        ->Modify(['PetaToken' => $curlReturn->data->balance * PointQueryValue::MultiplierPT]);
+        // UserPool::Instance()->Delete($this->userID);
         return $curlReturn->data->balance;
     }
 

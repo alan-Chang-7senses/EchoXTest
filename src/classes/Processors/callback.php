@@ -12,7 +12,9 @@ use Consts\Sessions;
 use Exception;
 use Games\Accessors\AccessorFactory;
 use Games\Consts\ItemValue;
+use Games\Consts\PointQueryValue;
 use Games\Mails\MailsHandler;
+use Games\Point\UserPoint;
 use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
@@ -163,6 +165,9 @@ class callback extends BaseProcessor{
         $result->script = 'location.href = "uniwebview://'.$uniwebviewMessage.'?code='.ErrorCode::Success.'&message=";';
         $result->content = 'id: '.$userProfile->data->id.'<br>email: '.$userProfile->data->email;
         
+        $ptPoint = (new UserPoint($userID,$userProfile->data->id))->GetPoint(PointQueryValue::SymbolPT);
+        if($ptPoint !== false)
+        AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
         return $result;
     }
 }

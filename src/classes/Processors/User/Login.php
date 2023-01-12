@@ -5,7 +5,10 @@ use Consts\ErrorCode;
 use Consts\Predefined;
 use Consts\Sessions;
 use Exceptions\LoginException;
+use Games\Accessors\AccessorFactory;
 use Games\Accessors\UserAccessor;
+use Games\Consts\PointQueryValue;
+use Games\Point\UserPoint;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -47,7 +50,10 @@ class Login extends BaseProcessor{
             'lobby' => $row->Lobby,
             'room' => $row->Room,
         ];
-        
+
+        $ptPoint = (new UserPoint($row->UserID,$row->Username))->GetPoint(PointQueryValue::SymbolPT);
+        if($ptPoint !== false)
+        AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
         return $result;
     }
 

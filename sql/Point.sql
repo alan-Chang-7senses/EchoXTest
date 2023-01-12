@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `UserPointOrder` (
   `Username` varchar(50) NOT NULL DEFAULT '' COMMENT 'Metasens使用者編號',
   `Amount` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '愈修改點數數量',
   `LogTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
-  `OrderType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '訂單種類',
+  `OrderType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '訂單種類。1.加點, 2.扣點',
   `CallbackStatus` varchar(50) DEFAULT NULL COMMENT 'Metasens回呼狀態(僅扣點需求)',
   `RedirectURL` text DEFAULT NULL COMMENT '完成訂單導頁連結(僅扣點需求)',
   PRIMARY KEY (`OrderID`)
