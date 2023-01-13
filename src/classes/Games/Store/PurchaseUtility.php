@@ -29,6 +29,8 @@ class PurchaseUtility {
         $results = $service->purchases_subscriptions->get($package_name, $subscriptionId, $token, array());
 
         print_r($results); //This object has all the data about the subscription
+        //成功加入購買 Log
+        
         echo "expiration: " . $results->expiryTimeMillis;
     }
 
