@@ -169,7 +169,7 @@ class callback extends BaseProcessor{
         $ptPoint = (new UserPoint($userID,$userProfile->data->id))->GetPoint(PointQueryValue::SymbolPT);
         if($ptPoint !== false)
         {
-            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$userID)->Modify(['PetaToken' => $ptPoint]);
+            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$userID)->Modify(['PetaToken' => $ptPoint * PointQueryValue::MultiplierPT]);
             UserPool::Instance()->Delete($userID);
         }
         return $result;

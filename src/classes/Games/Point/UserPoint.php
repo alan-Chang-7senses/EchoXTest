@@ -28,9 +28,9 @@ class UserPoint
         $this->username = $username;
     }
 
-    public function GetPoint(string $symbol) : float|false
+    public function GetPoint(string $symbol, bool $refreshIncomplete = true) : float|false
     {
-        $this->RefreshPoint();
+        if($refreshIncomplete) $this->RefreshPoint();
         $helper = new PointCurlHelper('get',PointQueryValue::URLGetUserBalance);
         $helper->AddQueryStringParams('userId',$this->username);
         $helper->AddQueryStringParams('symbol',$symbol);

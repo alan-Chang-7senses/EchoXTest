@@ -55,7 +55,7 @@ class Login extends BaseProcessor{
         $ptPoint = (new UserPoint($row->UserID,$row->Username))->GetPoint(PointQueryValue::SymbolPT);
         if($ptPoint !== false)
         {
-            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
+            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint * PointQueryValue::MultiplierPT]);
             UserPool::Instance()->Delete($row->UserID);
         }
         return $result;

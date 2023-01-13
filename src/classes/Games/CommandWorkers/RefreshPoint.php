@@ -3,8 +3,10 @@
 namespace Games\CommandWorkers;
 
 use Games\Accessors\AccessorFactory;
+use Games\Consts\PointQueryValue;
 use Games\Point\RefreshInfo;
 use Games\Point\UserPoint;
+use Games\Pools\UserPool;
 
 class RefreshPoint extends BaseWorker
 {
@@ -36,6 +38,7 @@ class RefreshPoint extends BaseWorker
         if($rows === false)return ["No user have to sync point."];
         $successDeposits = [];
         $failedDeposits = [];
+        $refreshUsers = [];
         foreach($rows as $row)
         {
             $userPoint = new UserPoint($row->UserID,$row->Username);
@@ -47,10 +50,22 @@ class RefreshPoint extends BaseWorker
             $isDone = $userPoint->RefreshPointByRefreshInfo($info);
             if($isDone) $successDeposits[] = $info->orderID;
             else $failedDeposits[] = $info->orderID;
+
+            $refreshUsers[$row->UserID] = $row->Username;
         }
 
         UserPoint::FinishRefresh($successDeposits,$failedDeposits);
-
+        $accessor->ClearCondition()->PrepareName('RefreshUserPetaToken');
+        foreach($refreshUsers as $userID => $username)
+        {
+            $refreshPTPoint = (new UserPoint($userID,$username))->GetPoint(PointQueryValue::SymbolPT,false);
+            if($refreshPTPoint !== false)
+            {
+                $accessor->FromTable('Users')->WhereEqual('UserID',$userID)->Modify(['PetaToken' => $refreshPTPoint * PointQueryValue::MultiplierPT]);
+                UserPool::Instance()->Delete($userID);
+            }
+            
+        }
         
         return 
         [
