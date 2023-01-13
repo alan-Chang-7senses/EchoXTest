@@ -82,6 +82,7 @@ class EnvVar {
     const MyCardSandboxmode = 'MYCARD_SANDBOXMODE';
     const MyCardFackey = 'MYCARD_FACKEY';   
     
+    const GoogleAppCredentials = 'GOOGLE_APPLICATION_CREDENTIALS';
     const GoogleAppName= 'GOOGLE_APPNAME';
     const GoogleApiKey = 'GOOGLE_APIKEY';
     const GooglePackagename = 'GOOGLE_PACKAGENAME';

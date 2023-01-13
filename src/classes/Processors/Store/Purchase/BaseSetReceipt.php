@@ -23,7 +23,7 @@ abstract class BaseSetReceipt extends BaseProcessor {
 
     abstract function GetRecepit(): string;
 
-    protected function SetReceipt(): ResultData {
+    protected function Process(): ResultData {
 
         $orderID = InputHelper::post('orderID');
         $receipt = $this->GetRecepit();
