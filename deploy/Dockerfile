@@ -10,6 +10,8 @@ RUN docker-php-ext-enable memcache
 COPY src/ /var/www/html/
 #RUN chmod 777 /var/www/html/logs/ \
 #   && chown www-data:www-data -R /var/www/html/logs/
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer update
 
 FROM base AS development
 RUN pecl install xdebug
