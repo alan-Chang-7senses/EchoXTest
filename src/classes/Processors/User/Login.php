@@ -9,6 +9,7 @@ use Games\Accessors\AccessorFactory;
 use Games\Accessors\UserAccessor;
 use Games\Consts\PointQueryValue;
 use Games\Point\UserPoint;
+use Games\Pools\UserPool;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\BaseProcessor;
@@ -53,7 +54,10 @@ class Login extends BaseProcessor{
 
         $ptPoint = (new UserPoint($row->UserID,$row->Username))->GetPoint(PointQueryValue::SymbolPT);
         if($ptPoint !== false)
-        AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
+        {
+            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
+            UserPool::Instance()->Delete($row->UserID);
+        }
         return $result;
     }
 

@@ -15,6 +15,7 @@ use Games\Consts\ItemValue;
 use Games\Consts\PointQueryValue;
 use Games\Mails\MailsHandler;
 use Games\Point\UserPoint;
+use Games\Pools\UserPool;
 use Games\Users\UserUtility;
 use Generators\ConfigGenerator;
 use Generators\DataGenerator;
@@ -167,7 +168,10 @@ class callback extends BaseProcessor{
         
         $ptPoint = (new UserPoint($userID,$userProfile->data->id))->GetPoint(PointQueryValue::SymbolPT);
         if($ptPoint !== false)
-        AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$row->UserID)->Modify(['PetaToken' => $ptPoint]);
+        {
+            AccessorFactory::Main()->FromTable('Users')->WhereEqual('UserID',$userID)->Modify(['PetaToken' => $ptPoint]);
+            UserPool::Instance()->Delete($userID);
+        }
         return $result;
     }
 }
