@@ -48,7 +48,10 @@ class DeleteMails extends BaseProcessor {
             $checkUserMailsIDs[] = $userMailID;
         }
 
-        $userMailsHandler->DeleteMails($_SESSION[Sessions::UserID], $checkUserMailsIDs);
+        if (count($checkUserMailsIDs) != 0)
+        {
+            $userMailsHandler->DeleteMails($_SESSION[Sessions::UserID], $checkUserMailsIDs);
+        }
 
         if ($checkException == ItemException::MailNotExist)
             throw new ItemException(ItemException::MailNotExist);
