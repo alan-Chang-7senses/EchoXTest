@@ -83,6 +83,7 @@ class EnvVar {
     const MyCardFackey = 'MYCARD_FACKEY';   
     
     const GoogleAppCredentials = 'GOOGLE_APPLICATION_CREDENTIALS';
+    const GoogleServiceAccount = 'GOOGLE_SERVICE_ACCOUNT';
     const GoogleAppName= 'GOOGLE_APPNAME';
     const GoogleApiKey = 'GOOGLE_APIKEY';
     const GooglePackagename = 'GOOGLE_PACKAGENAME';

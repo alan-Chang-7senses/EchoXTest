@@ -5,6 +5,7 @@ namespace Processors\Store\Purchase;
 use Accessors\PDOAccessor;
 use Consts\EnvVar;
 use Consts\ErrorCode;
+use Consts\Globals;
 use Games\Consts\ItemValue;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
@@ -92,6 +93,23 @@ abstract class BaseRefresh extends BaseProcessor {
         $result->tradeID = $tradeID;
         $result->remainInventory = $remainInventory;
         return $result;
+    }
+
+    function UpdateReceipt(string $receipt) {
+        $accessor = new PDOAccessor(EnvVar::DBMain);
+        $orderData = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $this->orderID)->WhereEqual("UserID", $this->userID)->WhereEqual("Plat", $this->nowPlat)->Fetch();
+        if ($orderData == false) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        if (!empty($orderData->Receipt) && ($orderData->Receipt == $receipt)) {
+            throw new StoreException(StoreException::Error);
+        }
+
+        $accessor->Modify([
+            "Receipt" => $receipt,
+            "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+        ]);
     }
 
 }

@@ -7,6 +7,7 @@ spl_autoload_register(function($className){
     $file = __DIR__.DS.'classes'.DS.str_replace('\\', DS, $className.'.php');
     if(file_exists($file)) require $file;
 });
+require __DIR__ . '/vendor/autoload.php';
 
 set_error_handler(function($errno, $message){
     
