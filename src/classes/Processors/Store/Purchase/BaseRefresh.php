@@ -95,19 +95,15 @@ abstract class BaseRefresh extends BaseProcessor {
         return $result;
     }
 
-    function UpdateReceipt(string $receipt) {
+    function UpdateAuthCode(string $value) {
         $accessor = new PDOAccessor(EnvVar::DBMain);
         $orderData = $accessor->FromTable('StorePurchaseOrders')->WhereEqual("OrderID", $this->orderID)->WhereEqual("UserID", $this->userID)->WhereEqual("Plat", $this->nowPlat)->Fetch();
         if ($orderData == false) {
             throw new StoreException(StoreException::Error);
         }
 
-        if (!empty($orderData->Receipt) && ($orderData->Receipt == $receipt)) {
-            throw new StoreException(StoreException::Error);
-        }
-
         $accessor->Modify([
-            "Receipt" => $receipt,
+            "AuthCode" => $value,
             "UpdateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
         ]);
     }

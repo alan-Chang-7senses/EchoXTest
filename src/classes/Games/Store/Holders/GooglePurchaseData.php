@@ -3,6 +3,7 @@
 namespace Games\Store\Holders;
 
 use stdClass;
+use function GuzzleHttp\json_decode;
 
 /*
  * Description of GoogleHolder
@@ -12,14 +13,50 @@ use stdClass;
 
 class GooglePurchaseData extends stdClass {
 
-    public function __construct(string $jsonstr) {
-        $data = json_decode($jsonstr);
+    public function __construct(string $metatstr, string $receiptStr) {
 
-        $this->autoRenewing = $data->autoRenewing;
+        $meta = urldecode($metatstr);
+        $metadata = json_decode($meta);
+
+        $this->localizedPriceString = $metadata->localizedPriceString;
+        $this->localizedTitle = $metadata->localizedTitle;
+        $this->localizedDescription = $metadata->localizedDescription;
+        $this->isoCurrencyCode = $metadata->isoCurrencyCode;
+        $this->localizedPrice = $metadata->localizedPrice;
+
+        //$receipt = urldecode($receiptStr);
+        $receipt = $receiptStr;
+        $data = json_decode($receipt);
+        $this->transactionID = $data->TransactionID;
+        $payLoad = json_decode($data->Payload);
+        $signature = $payLoad->signature;
+        //todo $signature
+        
+        
+        $jsonData  = json_decode($payLoad->json);        
+        
+        
+        //$this->autoRenewing = $jsonData->autoRenewing;
+        $this->orderId = $jsonData->orderId;
+        $this->packageName = $jsonData->packageName;
+        $this->productId = $jsonData->productId;
+        $this->purchaseTime = $jsonData->purchaseTime;
+        $this->purchaseState = $jsonData->purchaseState;
+        //$this->developerPayload = $jsonData->developerPayload;
+        $this->purchaseToken = $jsonData->purchaseToken;
     }
 
+    public string $localizedPriceString;
+    public string $localizedTitle;
+    public string $localizedDescription;
+    public string $isoCurrencyCode;
+    public float $localizedPrice;
+    
+    public string $transactionID;
+
+    
     /** @var string  表示訂閱項目是否自動續訂 */
-    public string $autoRenewing;
+    public string|null $autoRenewing;
 
     /** @var int 交易的專屬訂購單。 */
     public string $orderId;
@@ -28,7 +65,7 @@ class GooglePurchaseData extends stdClass {
     public string $packageName;
 
     /** @var int 該商品的產品 ID */
-    public int $productId;
+    public string $productId;
 
     /** @var int 產品的購買時間 */
     public string $purchaseTime;
@@ -37,9 +74,11 @@ class GooglePurchaseData extends stdClass {
     public string $purchaseState;
 
     /** @var string 開發人員指定的字串 */
-    public string $developerPayload;
+    //public string $developerPayload;
 
     /** 專門用來識別指定商品和使用者成對資料的購買交易權杖 */
     public string $purchaseToken;
+    
+    
 
 }
