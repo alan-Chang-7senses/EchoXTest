@@ -2,7 +2,7 @@
 
 ## 介紹
 
-- 遊戲中 Google 儲值，設定收據，輪詢Google/Refresh。
+- 遊戲中 Google 儲值，設定收據，並更新玩家資訊。
 
 ## URL
 
@@ -21,7 +21,8 @@ Content Type: `application/x-www-form-urlencoded`
 | 參數名稱 | 類型 | 說明 |
 |:-:|:-:|:-:|
 | orderID | string | 訂單序號 |
-| Receipt | string | 收據 |
+| Metadata | string | Google上的基本購買資料 |
+| Receipt | string | Google收據 |
 
 <br>
 

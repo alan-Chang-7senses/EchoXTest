@@ -181,10 +181,9 @@
 - MYCARD\_FACGAMENAME： 與 MyCard 串接的遊戲名稱。
 - MYCARD\_SANDBOXMODE：MyCard 沙盒測試開關，開啟沙盒模式時為「字串 true」，發行環境需設置為「字串 false」。
 - MYCARD\_FACKEY：MyCard 簽證密鑰。
-
-#### 以下未實作完成
-
-- GOOGLE\_APPLICATION\_CREDENTIALS: 內建Google憑證位置(變數名稱不能改)
+- GOOGLE\_APPLICATION\_CREDENTIALS: 內建Google憑證位置,json檔(變數名稱不能改)
+- GOOGLE\_SERVICE\_ACCOUNT : 平台服務帳號,json檔
+- GOOGLE\_APPNAME : App名稱
 - GOOGLE\_APIKEY: Google APIKEY 密鑰
 - GOOGLE\_PACKAGENAME: 前端目前使用的包名
 
