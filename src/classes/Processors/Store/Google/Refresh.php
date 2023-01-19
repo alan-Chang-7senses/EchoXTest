@@ -12,7 +12,7 @@ use stdClass;
 
 /*
  * Description of Google Refresh
- * 更新目前購買格狀態，和貨幣資訊
+ * (不使用)更新目前購買格狀態，和貨幣資訊
  */
 
 class Refresh extends BaseRefresh {

@@ -185,6 +185,7 @@
 - GOOGLE\_SERVICE\_ACCOUNT : 平台服務帳號,json檔
 - GOOGLE\_APPNAME : App名稱
 - GOOGLE\_APIKEY: Google APIKEY 密鑰
+- GOOGLE\_PURCHASEKEY: 購買 Google public key 
 - GOOGLE\_PACKAGENAME: 前端目前使用的包名
 
 ## <span id="cli">命令列程式</span>

@@ -13,9 +13,7 @@ use Games\Store\Holders\GooglePurchaseData;
 use Helpers\InputHelper;
 use Holders\ResultData;
 use Processors\Store\Purchase\BaseRefresh;
-use Processors\Tools\Gene\Funcs\MailRepeatTxt;
 use stdClass;
-use function GuzzleHttp\json_encode;
 
 /*
  * Description of Google Cancel
@@ -49,7 +47,6 @@ class SetReceipt extends BaseRefresh {
                 ]);
             }
         }
-
         return $result;
     }
 

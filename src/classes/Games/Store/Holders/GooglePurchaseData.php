@@ -2,8 +2,9 @@
 
 namespace Games\Store\Holders;
 
+use Games\Exceptions\StoreException;
+use Games\Store\GoogleUtility;
 use stdClass;
-use function GuzzleHttp\json_decode;
 
 /*
  * Description of GoogleHolder
@@ -14,21 +15,13 @@ use function GuzzleHttp\json_decode;
 class GooglePurchaseData extends stdClass {
 
     public function __construct(string $metatstr, string $receiptStr) {
-
-        $metadata = json_decode($metatstr);
-
-        $this->localizedPriceString = $metadata->localizedPriceString;
-        $this->localizedTitle = $metadata->localizedTitle;
-        $this->localizedDescription = $metadata->localizedDescription;
-        $this->isoCurrencyCode = $metadata->isoCurrencyCode;
-        $this->localizedPrice = $metadata->localizedPrice;
-
         $data = json_decode($receiptStr);
-        $this->transactionID = $data->TransactionID;
         $payLoad = json_decode($data->Payload);
-
+        if (GoogleUtility::VerifySignature($payLoad->json, $payLoad->signature) == false) {
+            throw new StoreException(StoreException::Error, ['[cause]' => 'signature error']);
+        }
+        $this->transactionID = $data->TransactionID;
         $jsonData = json_decode($payLoad->json);
-
         $this->orderId = $jsonData->orderId;
         $this->packageName = $jsonData->packageName;
         $this->productId = $jsonData->productId;
@@ -36,6 +29,13 @@ class GooglePurchaseData extends stdClass {
         $this->purchaseState = $jsonData->purchaseState;
         //$this->developerPayload = $jsonData->developerPayload;
         $this->purchaseToken = $jsonData->purchaseToken;
+
+        $metadata = json_decode($metatstr);
+        $this->localizedPriceString = $metadata->localizedPriceString;
+        $this->localizedTitle = $metadata->localizedTitle;
+        $this->localizedDescription = $metadata->localizedDescription;
+        $this->isoCurrencyCode = $metadata->isoCurrencyCode;
+        $this->localizedPrice = $metadata->localizedPrice;
     }
 
     public string $localizedPriceString;

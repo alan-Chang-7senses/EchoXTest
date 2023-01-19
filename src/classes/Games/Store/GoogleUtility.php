@@ -12,8 +12,6 @@ use Google\Service\AndroidPublisher\ProductPurchase;
 use Google\Service\AndroidPublisher\ProductPurchasesAcknowledgeRequest;
 use stdClass;
 use Throwable;
-use function GuzzleHttp\json_decode;
-use function GuzzleHttp\json_encode;
 
 /**
  * Google 相關
@@ -103,6 +101,19 @@ class GoogleUtility {
             $error = json_decode($ex->getMessage());
             $result->message = $error->error->message;
             return $result;
+        }
+    }
+
+    public static function VerifySignature(string $json, string $signature): bool {
+        $base64EncodedPublicKeyFromGoogle = getenv(EnvVar::GooglePurchaseKey);
+        $openSslFriendlyKey = "-----BEGIN PUBLIC KEY-----\n" . chunk_split($base64EncodedPublicKeyFromGoogle, 64, "\n") . "-----END PUBLIC KEY-----";
+        $publicKeyId = openssl_get_publickey($openSslFriendlyKey);
+        $ok = openssl_verify($json, base64_decode($signature), $publicKeyId, OPENSSL_ALGO_SHA1);
+
+        if ($ok == 1) {
+            return true;
+        } else {
+            return false;
         }
     }
 
