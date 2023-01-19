@@ -5,22 +5,19 @@ namespace Games\Store;
 use Consts\EnvVar;
 use Consts\Globals;
 use Games\Consts\StoreValue;
-use Games\Exceptions\StoreException;
-use Games\Store\Holders\GoogleInfoHolder;
 use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Client;
 use Google\Service\AndroidPublisher;
 use Google\Service\AndroidPublisher\ProductPurchase;
 use Google\Service\AndroidPublisher\ProductPurchasesAcknowledgeRequest;
-use Processors\Tools\Gene\Funcs\MailRepeatTxt;
 use stdClass;
 use Throwable;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
 /**
- *  Google 相關
- * 儲值
+ * Google 相關
+ * 1.儲值 2.
  */
 class GoogleUtility {
 
@@ -86,21 +83,26 @@ class GoogleUtility {
             $service = Self::GetService();
             $package_name = getenv(EnvVar::GooglePackagename);
             $postBody = new ProductPurchasesAcknowledgeRequest(['developerPayload' => ""]);
-            $results = $service->purchases_products->acknowledge($package_name, $sku, $token, $postBody);
+            $response = $service->purchases_products->acknowledge($package_name, $sku, $token, $postBody);
 
-            //test
-            MailRepeatTxt::Instance()->AddMessage("Acknowledge", json_encode($results));
-            //test
-            //
-            //如果成功，則回應內容為空白
-            //成功加入購買 Log
-            //
-            $result = new \stdClass;
-            $result->code = StoreValue::PurchaseVerifySuccess;
-            $result->message = "pay finish";
-            return $result;
+            //如果成功，則回應內容為空白      
+            if (empty((array) $response)) {
+                $result = new stdClass();
+                $result->code = StoreValue::PurchaseVerifySuccess;
+                $result->message = "pay finish";
+                return $result;
+            } else {
+                $result = new stdClass();
+                $result->code = StoreValue::PurchaseVerifyFailure;
+                $result->message = json_encode($response);
+                return $result;
+            }
         } catch (Throwable $ex) {
-            return new StoreException(StoreException::Error, $ex->getMessage());
+            $result = new stdClass();
+            $result->code = StoreValue::PurchaseVerifyFailure;
+            $error = json_decode($ex->getMessage());
+            $result->message = $error->error->message;
+            return $result;
         }
     }
 

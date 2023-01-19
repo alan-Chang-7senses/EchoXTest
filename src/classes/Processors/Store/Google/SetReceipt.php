@@ -2,7 +2,9 @@
 
 namespace Processors\Store\Google;
 
-use Consts\ErrorCode;
+use Accessors\PDOAccessor;
+use Consts\EnvVar;
+use Consts\Globals;
 use Consts\Sessions;
 use Games\Consts\StoreValue;
 use Games\Exceptions\StoreException;
@@ -13,6 +15,7 @@ use Holders\ResultData;
 use Processors\Store\Purchase\BaseRefresh;
 use Processors\Tools\Gene\Funcs\MailRepeatTxt;
 use stdClass;
+use function GuzzleHttp\json_encode;
 
 /*
  * Description of Google Cancel
@@ -22,39 +25,57 @@ use stdClass;
 class SetReceipt extends BaseRefresh {
 
     protected int $nowPlat = StoreValue::PlatGoogle;
+    private GooglePurchaseData $purchaseData;
+    private string $receipt;
 
     public function PurchaseVerify(stdClass $purchaseOrders): stdClass {
 
-        return GoogleUtility::Verify($purchaseOrders->ProductID, $purchaseOrders->AuthCode);
+        $result = GoogleUtility::Verify($this->purchaseData->productId, $this->purchaseData->purchaseToken);
+
+        //add purchase log        
+        if ($result->code == StoreValue::PurchaseVerifySuccess) {
+            $logAccessor = new PDOAccessor(EnvVar::DBLog);
+            $row = $logAccessor->FromTable('PlatPayment')->WhereEqual("OrderID", $this->orderID)->Fetch();
+            if (empty($row)) {
+                $logAccessor->ClearCondition()->Add([
+                    "UserID" => $this->userID,
+                    "PlatType" => $this->nowPlat,
+                    "TransactionID" => $this->purchaseData->transactionID,
+                    "PlatOrderID" => $this->purchaseData->orderId,
+                    "OrderID" => $this->orderID,
+                    "Amount" => $this->purchaseData->localizedPrice,
+                    "Currency" => $this->purchaseData->isoCurrencyCode,
+                    "TradeDateTime" => (int) $GLOBALS[Globals::TIME_BEGIN]
+                ]);
+            }
+        }
+
+        return $result;
     }
 
-    public function Process(): ResultData {
-        
-        return new ResultData(ErrorCode::Success);
-        
-        
+    function Process(): ResultData {
+
         $this->userID = $_SESSION[Sessions::UserID];
         $this->orderID = InputHelper::post('orderID');
         $metadata = InputHelper::post('Metadata');
-        $receipt = InputHelper::post('Receipt');
-        
-        //test
-        MailRepeatTxt::Instance()->AddMessage("Metadata", $metadata);
-        MailRepeatTxt::Instance()->AddMessage("Receipt", $receipt);
-        //test
-        
-        $purchaseData = new GooglePurchaseData($metadata, $receipt);
+        $this->receipt = InputHelper::post('Receipt');
+        $this->purchaseData = new GooglePurchaseData($metadata, $this->receipt);
 
-        if ($purchaseData->purchaseState == 0) {
-            $this->UpdateAuthCode($purchaseData->purchaseToken);
-            $info = GoogleUtility::GetInfo($purchaseData->productId, $purchaseData->purchaseToken);
-            if ($info->purchaseState == 0) {
-                //test
-                MailRepeatTxt::Instance()->AddMessage("Info", $metadata);
-                //test
-                return $this->HandleRefresh();
+        if ($this->purchaseData->purchaseState == StoreValue::GooglePurchased) {
+            $this->UpdateAuthCode($this->purchaseData->purchaseToken);
+            $info = GoogleUtility::GetInfo($this->purchaseData->productId, $this->purchaseData->purchaseToken);
+
+            //test
+            MailRepeatTxt::Instance()->AddMessage("Info", json_encode($info));
+            //test
+            if ($info->acknowledgementState == StoreValue::GoogleAcknowledgeConfirm) { //已購買
+                throw new StoreException(StoreException::PurchaseIsComplete);
             } else {
-                throw new StoreException(StoreException::PurchaseFailure);
+                if ($info->purchaseState == StoreValue::GooglePurchased) {
+                    return $this->HandleRefresh();
+                } else {
+                    throw new StoreException(StoreException::PurchaseFailure);
+                }
             }
         } else {
             throw new StoreException(StoreException::PurchaseFailure);
