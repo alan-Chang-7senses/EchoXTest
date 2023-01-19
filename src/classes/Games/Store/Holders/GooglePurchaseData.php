@@ -15,8 +15,7 @@ class GooglePurchaseData extends stdClass {
 
     public function __construct(string $metatstr, string $receiptStr) {
 
-        $meta = urldecode($metatstr);
-        $metadata = json_decode($meta);
+        $metadata = json_decode($metatstr);
 
         $this->localizedPriceString = $metadata->localizedPriceString;
         $this->localizedTitle = $metadata->localizedTitle;
@@ -24,19 +23,12 @@ class GooglePurchaseData extends stdClass {
         $this->isoCurrencyCode = $metadata->isoCurrencyCode;
         $this->localizedPrice = $metadata->localizedPrice;
 
-        //$receipt = urldecode($receiptStr);
-        $receipt = $receiptStr;
-        $data = json_decode($receipt);
+        $data = json_decode($receiptStr);
         $this->transactionID = $data->TransactionID;
         $payLoad = json_decode($data->Payload);
-        $signature = $payLoad->signature;
-        //todo $signature
-        
-        
-        $jsonData  = json_decode($payLoad->json);        
-        
-        
-        //$this->autoRenewing = $jsonData->autoRenewing;
+
+        $jsonData = json_decode($payLoad->json);
+
         $this->orderId = $jsonData->orderId;
         $this->packageName = $jsonData->packageName;
         $this->productId = $jsonData->productId;
@@ -51,12 +43,7 @@ class GooglePurchaseData extends stdClass {
     public string $localizedDescription;
     public string $isoCurrencyCode;
     public float $localizedPrice;
-    
     public string $transactionID;
-
-    
-    /** @var string  表示訂閱項目是否自動續訂 */
-    public string|null $autoRenewing;
 
     /** @var int 交易的專屬訂購單。 */
     public string $orderId;
@@ -78,7 +65,5 @@ class GooglePurchaseData extends stdClass {
 
     /** 專門用來識別指定商品和使用者成對資料的購買交易權杖 */
     public string $purchaseToken;
-    
-    
 
 }

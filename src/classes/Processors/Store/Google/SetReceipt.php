@@ -65,9 +65,6 @@ class SetReceipt extends BaseRefresh {
             $this->UpdateAuthCode($this->purchaseData->purchaseToken);
             $info = GoogleUtility::GetInfo($this->purchaseData->productId, $this->purchaseData->purchaseToken);
 
-            //test
-            MailRepeatTxt::Instance()->AddMessage("Info", json_encode($info));
-            //test
             if ($info->acknowledgementState == StoreValue::GoogleAcknowledgeConfirm) { //已購買
                 throw new StoreException(StoreException::PurchaseIsComplete);
             } else {

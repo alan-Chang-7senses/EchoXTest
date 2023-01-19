@@ -32,13 +32,3 @@ CREATE TABLE IF NOT EXISTS `PlatPayment` (
   KEY `OrderID` (`OrderID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='一般儲值資訊';
 
--- 正在傾印表格  koa_log.PlatPayment 的資料：~0 rows (近似值)
-/*!40000 ALTER TABLE `PlatPayment` DISABLE KEYS */;
-REPLACE INTO `PlatPayment` (`Serial`, `UserID`, `PlatType`, `TransactionID`, `PlatOrderID`, `OrderID`, `Amount`, `Currency`, `TradeDateTime`) VALUES
-	(1, 11, 2, 'kiebcecodnlpidfbbbkkbefb.AO-J1Ow6QhbINFbBfAR5Wiltp4ufiz0MmJYf3Fxk9gsogiisj3KDBrnuYbbaHJ33rKBY0QlEki4a_JM9Jppm9cNrxbjSTqobng', 'GPA.3361-3388-9570-57464', '9b1517c9-cdde-406f-8799-c3f7cb304549', 2, 'TWD', 1674110899);
-/*!40000 ALTER TABLE `PlatPayment` ENABLE KEYS */;
-
-/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
-/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
