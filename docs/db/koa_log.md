@@ -110,3 +110,21 @@
 | ItemID | [物品編號](../api/codes/item.md#ItemID)  | - |
 | Cause | 原因 | 0 = 預設<br>1 = 在背包使用道具<br>2 = 信件<br>3 = 競賽<br>4 = 獲取經驗值<br>5 = 提升階級<br>6 = 提升技能等級<br>7 = 建立帳號<br>8 = PVE通關<br>9 = PVE獎牌獎勵<br>10 = 商店<br>11 = 創立NFT角色<br>12 = 新手引導獎勵 |
 | Action | 動作 | 1 = 獲得<br>2 = 使用 |
+
+
+
+## PlatPayment - 一般儲值資訊
+
+- 提供一般儲值紀錄資訊( Google、Apple)，不可刪除。
+
+| 欄位名稱 | 說明 | 備註 |
+|:-:|:-:|:-:|
+| Serial | 流水號 |  |
+| UserID | 使用者編號 | 同 Users.UserID |
+| PlatType | [儲值平台](../api/Store/GetInfos.md#PlatType)| - |
+| TransactionID | 平台交易序號 | 不同儲值平台，會有不同資訊 |
+| PlatOrderID | 平台商品下單序號 | - |
+| OrderID | 廠商交易序號 | 同 StorePurchaseOrders.OrderID |
+| Amount | 支付金額 | - |
+| Currency | 支付的幣種 | https://www.iso.org/iso-4217-currency-codes.html |
+| TradeDateTime | 建立時間 | - |

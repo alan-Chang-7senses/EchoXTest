@@ -87,6 +87,10 @@
 			- [儲值購買](Store/MyCard/Buy.md)	
 			- [儲值取消](Store/MyCard/Cancel.md)	
 			- [儲值刷新](Store/MyCard/Refresh.md)	
+		- Google
+			- [儲值購買](Store/Google/Buy.md)	
+			- [儲值取消](Store/Google/Cancel.md)	
+			- [設定收據](Store/Google/SetReceipt.md)				
 	- 公告：（須知）
 		- [跑馬燈](Notices/Marquee.md)。
 		- [提示文字](Notices/HintText.md)。

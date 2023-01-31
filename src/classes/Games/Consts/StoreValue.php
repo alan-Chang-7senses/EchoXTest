@@ -75,6 +75,12 @@ class StoreValue {
     //MyCard(他方)回應資訊
     const MyCardReturnSuccess = 1;
     const MyCardPaySuccess = 3;
+    //Google(他方)回應資訊    
+    const GooglePurchased = 0;
+    const GoogleCanceled = 1;
+    const GooglePending = 2;
+    const GoogleAcknowledgeWait = 0;
+    const GoogleAcknowledgeConfirm = 1;
     //固定或隨機商品
     const FixTrade = 1;
     const RandomTrade = 2;

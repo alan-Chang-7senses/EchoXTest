@@ -15,6 +15,7 @@ services:
             - 37001:80
         volumes: 
             - ./src:/var/www/html
+            - /var/www/html/vendor
         environment:
             SYSENV: local
 #            PROCESS_TIMING: 'true'
@@ -70,9 +71,11 @@ services:
             MYCARD_SANDBOXMODE: 'true'
             MYCARD_FACKEY: 'xxxxxxxxxxx'
 
-            GOOGLE_APPLICATION_CREDENTIALS: /configs/googlepurchase.json
+            GOOGLE_APPLICATION_CREDENTIALS: /configs/credentials.json
+            GOOGLE_SERVICE_ACCOUNT: /configs/account.json
             GOOGLE_APPNAME: petarushTest02
-            GOOGLE_APIKEY: AIzaSyAfI7Q6RJ7ogw0tXjHXHrbfe9qcneTMVvU
+            GOOGLE_APIKEY: AIza___
+            GOOGLE_PURCHASEKEY: MIIBI___
             GOOGLE_PACKAGENAME: com.mwc.test
 
 #            XDEBUG_CLIENT_HOST: 192.168.3.243
