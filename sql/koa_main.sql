@@ -891,6 +891,15 @@ CREATE TABLE IF NOT EXISTS `PlayerSkill` (
   KEY `CharacterID` (`PlayerID`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色技能等級\r\n只記錄該角色所具備的技能';
 
+-- 傾印  資料表 koa_main.PointOrderIncomplete 結構
+CREATE TABLE IF NOT EXISTS `PointOrderIncomplete` (
+  `OrderID` bigint(20) unsigned zerofill NOT NULL DEFAULT 00000000000000000000 COMMENT '訂單表流水號',
+  `UserID` int(11) NOT NULL COMMENT '使用者編號',
+  `ProcessStatus` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0.未處理, 1.處理中, 2.已完成',
+  PRIMARY KEY (`OrderID`),
+  KEY `UserID` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='未成功之訂單紀錄，用於每次刷新點數時重新發送訂單。';
+
 -- 正在傾印表格  koa_main.PlayerSkill 的資料：~18,467 rows (近似值)
 /*!40000 ALTER TABLE `PlayerSkill` DISABLE KEYS */;
 INSERT INTO `PlayerSkill` (`PlayerID`, `SkillID`, `Level`, `LevelBackup`, `Slot`) VALUES
@@ -2896,6 +2905,20 @@ CREATE TABLE IF NOT EXISTS `UserMails` (
   KEY `ReceiveStatus` (`ReceiveStatus`),
   KEY `FinishTime` (`FinishTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 傾印  資料表 koa_main.UserPointOrder 結構
+CREATE TABLE IF NOT EXISTS `UserPointOrder` (
+  `OrderID` bigint(20) unsigned zerofill NOT NULL AUTO_INCREMENT COMMENT '訂單編號',
+  `Symbol` varchar(50) NOT NULL DEFAULT '' COMMENT '點數種類代號',
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Username` varchar(50) NOT NULL DEFAULT '' COMMENT 'Metasens使用者編號',
+  `Amount` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '愈修改點數數量',
+  `LogTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  `OrderType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '訂單種類',
+  `CallbackStatus` varchar(50) DEFAULT NULL COMMENT 'Metasens回呼狀態(僅扣點需求)',
+  `RedirectURL` text DEFAULT NULL COMMENT '完成訂單導頁連結(僅扣點需求)',
+  PRIMARY KEY (`OrderID`)
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='點數系統：加點、扣點等紀錄。';
 
 -- 傾印  資料表 koa_main.UserPower 結構
 CREATE TABLE IF NOT EXISTS `UserPower` (

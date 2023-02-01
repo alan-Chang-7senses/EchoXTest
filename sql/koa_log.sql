@@ -84,6 +84,21 @@ CREATE TABLE IF NOT EXISTS `NFTOwnershipTransfer` (
   PRIMARY KEY (`Serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='NFT所有權轉移紀錄';
 
+-- 傾印  資料表 koa_log.PlatPayment 結構
+CREATE TABLE IF NOT EXISTS `PlatPayment` (
+  `Serial` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `UserID` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `PlatType` tinyint(4) unsigned NOT NULL DEFAULT 0 COMMENT '付費平台',
+  `TransactionID` varchar(255) NOT NULL DEFAULT '' COMMENT '平台交易訊號',
+  `PlatOrderID` varchar(255) NOT NULL DEFAULT '' COMMENT '平台商品交易序號',
+  `OrderID` varchar(255) NOT NULL DEFAULT '' COMMENT '商品下單序號',
+  `Amount` float unsigned NOT NULL DEFAULT 0 COMMENT '支付金額',
+  `Currency` varchar(255) NOT NULL DEFAULT '' COMMENT '支付的幣種',
+  `TradeDateTime` int(10) unsigned NOT NULL DEFAULT 0 COMMENT '時間',
+  PRIMARY KEY (`Serial`),
+  KEY `OrderID` (`OrderID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='一般儲值資訊';
+
 -- 傾印  資料表 koa_log.PlayerRating 結構
 CREATE TABLE IF NOT EXISTS `PlayerRating` (
   `Serial` int(11) NOT NULL AUTO_INCREMENT,
@@ -99,6 +114,26 @@ CREATE TABLE IF NOT EXISTS `PlayerRating` (
   PRIMARY KEY (`Serial`),
   KEY `SeasonID` (`SeasonID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='玩家積分紀錄';
+
+-- 傾印  資料表 koa_log.PointOrder 結構
+CREATE TABLE IF NOT EXISTS `PointOrder` (
+  `SerialNumber` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水號',
+  `OrderID` varchar(50) NOT NULL DEFAULT '' COMMENT '訂單編號',
+  `Symbol` varchar(50) NOT NULL DEFAULT '' COMMENT '點數種類代號',
+  `UserID` int(11) NOT NULL DEFAULT 0 COMMENT '使用者編號',
+  `Username` varchar(50) NOT NULL DEFAULT '' COMMENT 'Metasens使用者編號',
+  `Amount` decimal(20,6) NOT NULL DEFAULT 0.000000 COMMENT '愈修改點數數量',
+  `LogTime` int(11) NOT NULL DEFAULT 0 COMMENT '紀錄時間',
+  `OrderType` tinyint(4) NOT NULL DEFAULT 0 COMMENT '訂單種類。1.加點, 2.扣點',
+  `OrderStatus` varchar(50) DEFAULT NULL COMMENT '訂單狀態(回應值)',
+  `RespondCode` varchar(50) DEFAULT NULL COMMENT '回應代號',
+  `Message` varchar(50) DEFAULT NULL COMMENT '回應訊息',
+  `RespondOrderID` varchar(255) DEFAULT NULL COMMENT 'Metasens訂單編號',
+  `RespondAmount` varchar(50) DEFAULT NULL COMMENT '回應點數修改數量',
+  `CallbackStatus` varchar(50) DEFAULT NULL COMMENT 'Metasens回呼狀態(僅扣點需求)',
+  `RedirectURL` text DEFAULT NULL COMMENT '完成訂單導頁連結(僅扣點需求)',
+  PRIMARY KEY (`SerialNumber`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='點數系統：加點、扣點等紀錄。';
 
 -- 傾印  資料表 koa_log.PowerLog 結構
 CREATE TABLE IF NOT EXISTS `PowerLog` (
