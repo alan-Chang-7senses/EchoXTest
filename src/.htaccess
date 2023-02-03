@@ -1,0 +1,7 @@
+RewriteEngine ON
+
+#RewriteRule ^(phpinfo.php|proxyTest.php) - [L]
+
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [NC,L,QSA]

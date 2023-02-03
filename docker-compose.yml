@@ -1,0 +1,39 @@
+## YAML Template.
+---
+version: '3.3'
+
+services:
+    api:
+        build:
+            context: .
+            target: development
+        image: echox_test
+        container_name: echox_test
+        ports: 
+            - 37001:80
+        volumes: 
+            - ./src:/var/www/html
+        environment:
+            SYSENV: local
+            TIMEZONE_DEFAULT: 8
+            
+    
+
+            DB_MAIN_HOST: db
+            DB_MAIN_PORT: 3306
+            DB_MAIN_USERNAME: root
+            DB_MAIN_PASSWORD: 1111
+            DB_MAIN_NAME: echox_test
+            
+            XDEBUG_CLIENT_HOST: 172.20.100.181
+            XDEBUG_CLIENT_PORT: 9003
+    db:
+        image: mariadb
+        container_name: EchoXTestDatabase
+        ports:
+            - 37002:3306
+        volumes:
+            - ./data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 1111
+            
